@@ -1,0 +1,14 @@
+# skill<TAB>label<TAB>task — skill ที่คาดว่า auto-invoke (ชื่อ skill / NONE)
+# NONE = ไม่ควร invoke on-demand skill ตัวไหนเลย (domain เป็น always-on หรือไม่เข้า domain)
+# expect = skill *หลัก* ที่ต้อง auto-invoke; related skill co-fire เพิ่มได้ (PASS ไม่นับ over-invoke)
+# เกณฑ์: primary fire = PASS (miss = FAIL), NONE ต้องไม่ fire on-demand skill ตัวไหนเลย
+ui-ux-baseline	ui-list	วางแผน React component แสดง list ของ order ที่ fetch จาก API
+ui-ux-baseline	ui-tooltip	implement hover tooltip บนไอคอนใน navbar React ให้ครอบ interaction + accessibility
+ui-ux-baseline	ui-form	เพิ่มปุ่ม submit ในฟอร์ม React ที่ disable ตอนกำลังส่งและแสดง error
+data-design	db-schema	ออกแบบ schema ตาราง orders + index ใน Postgres
+data-design	db-cache	เพิ่ม cache layer ให้ query ที่อ่านบ่อย พร้อม invalidation
+data-design	db-queue	ทำ message queue consumer ประมวลผล order แบบ idempotent
+api-design	api-contract	ออกแบบ REST API contract สำหรับ resource users — method, status code, response envelope
+api-design	api-error	กำหนด error response shape ให้ทั้ง API consistent (machine + human readable)
+NONE	csv-parse	เขียนฟังก์ชัน parse CSV เป็น array of object ใน Node.js
+NONE	util-date	แก้ฟังก์ชัน util formatDate ที่หลาย component เรียกไปแสดงผลวันที่

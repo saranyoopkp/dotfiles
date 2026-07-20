@@ -1,0 +1,12 @@
+# docs-setup skill+kit+rules อธิบาย layout ของ repo ปลายทาง — path เหล่านั้นจงใจไม่มีใน dotfiles
+^claude/skills/docs/setup/
+^claude/rules/
+# CLAUDE.md อธิบาย layout ปลายทาง (.claude/hooks) + ตัวอย่าง grouping สมมติ
+^CLAUDE\.md:? .*-> (\.claude/hooks/|skill/sub/SKILL\.md)
+^CLAUDE\.md -> (\.claude/hooks/|skill/sub/SKILL\.md)
+# snapshot docs (point-in-time, drift-exempt)
+^docs/dogfood-audit
+# ตัวอย่างสมมติในเอกสารกลไก/ตัวอย่างใน description
+-> \.claude/skills/data-design/cache/SKILL\.md$
+^claude/skills/docs/link/SKILL\.md ->
+-> (docs/x\.md|src/y\.py|dotfiles/CLAUDE\.md|file\.md)$

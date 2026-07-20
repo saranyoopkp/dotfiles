@@ -1,0 +1,152 @@
+<!-- 🔴 STANDARD บังคับ: CLAUDE.md ห้ามถือ "fact ที่นับ/ลิสต์เองได้" เป็นค่า hardcode —
+     จำนวนไฟล์/บรรทัด/table/migration, รายชื่อไฟล์, shape ของ schema/DTO
+     = ชี้คำสั่ง (`ls`, `wc -l`, `grep -c`) หรือชี้ source file แทนการพิมพ์เลข/ชื่อลงไป
+     เหตุผล: fact ที่ copy มาแปะ = fact ที่จะ stale แล้วถูกเชื่อ (CLAUDE.md โหลดทุก session
+     = ดูเป็นความจริงแต่ไม่มีใคร re-verify) เช่น เขียน "12 tables" ไว้ แล้วเพิ่ม table ที่ 13
+     โดยลืมแก้ → doc โกหกเงียบ ๆ. ถ้าจำเป็นต้องมีเลข → เขียนคำสั่งที่คำนวณมันกำกับข้าง ๆ -->
+
+# <ProjectName> (<domain/one-liner>)
+
+> สถานะ: **<LIVE / WIP / phase>** — <deploy target / สภาพปัจจุบันแบบย่อ>
+> <status ที่เป็น point-in-time จริง เช่น image tag/phase — **ไม่ใช่** จำนวนที่นับเองได้ (ดู STANDARD บน)>
+> **<quirk/การแก้ล่าสุดที่ต้องรู้ก่อนทำงาน — ใส่วันที่ + เหตุผล + วิธีแก้ เช่น:
+> "⚡ Edge cache (แก้ 2026-07-01): เดิม X เพราะ Y → แก้ด้วย Z. ยืนยัน: ...">**
+
+## Inventory / Modules
+<!-- สถานะปัจจุบันต่อ module: 1–3 บรรทัด/ตัว ถ้าโตกว่านั้น → แยกไป docs/<module>.md แล้วเหลือ pointer -->
+- **<module>** — <สรุป + ไฟล์หลัก + quirk สั้น ๆ>
+
+## Deploy / Redeploy
+<!-- คำสั่ง copy-paste ได้จริง เรียงเป็นขั้น + เงื่อนไข "ถ้า X เปลี่ยน ทำแค่ Y" -->
+1. `<command>`
+2. `<command>`
+
+<!-- สามข้อล่างนี้เป็น *คุณสมบัติของระบบ* (เปลี่ยนนาน ๆ ครั้ง) ไม่ใช่ของ release รอบนี้ —
+     ห้ามกรอกชื่อ migration/ticket ของรอบปัจจุบัน (นั่นคือหน้าที่ของ PR/commit ไม่ใช่ที่นี่)
+     repo ที่ไม่ได้ deploy (library/CLI) → ลบ section นี้ทิ้งทั้งก้อน -->
+- **pipeline ไม่ทำให้เอง**: <ของที่ต้องทำมือทุกครั้งที่มีของใหม่ เช่น migration ไม่ auto-run,
+  table ใหม่ต้อง grant เอง, env ใหม่ต้องไปตั้งที่ <ที่ไหน> — หรือ "pipeline ทำครบ ไม่มีของทำมือ">
+- **Rollback**: <ย้อนยังไง (tag/image เดิม) + อะไรที่ย้อนไม่ได้ (data migration ฯลฯ)>
+- **Verify หลัง deploy**: <flow จริงที่ต้องยิงหนึ่งรอบถึงเรียกว่าขึ้นสำเร็จ — rollout เขียว ≠ ระบบทำงาน>
+
+### Compatibility (N / N-1 compatibility) — ระบบที่รันอยู่ มีของเก่ากับของใหม่อยู่ด้วยกันเสมอชั่วขณะ (ต้องเช็คทุกการเปลี่ยนแปลง)
+<!-- checklist นี้ใช้ได้ทุก repo — เก็บไว้แม้ยังไม่มีอะไรกรอก; เพิ่มข้อเฉพาะของระบบนี้ต่อท้ายได้ -->
+**ของใหม่ต้องทำงานกับของเก่าได้ และของเก่าต้องไม่พังเพราะของใหม่** (backward + forward compatible)
+→ ทำได้ = **ลำดับการปล่อยไม่สำคัญ** ใครขึ้นก่อน/ทีหลัง/ย้อนกลับ ก็ยังทำงาน
+"ของเก่ากับของใหม่" = อะไรก็ตามที่ถูกเปลี่ยนคนละเวลา ไม่ใช่แค่ตอน deploy: โค้ด↔schema ·
+server ใหม่↔tab/mobile app ที่ยังไม่รีเฟรช · producer ใหม่↔message เก่าที่ค้างในคิว↔consumer ที่ยังไม่ขึ้น
+(instance เก่า-ใหม่รันคู่กันระหว่าง rolling deploy อยู่แล้วโดยธรรมชาติ)
+
+- **ลบ / rename / เปลี่ยนความหมาย / บังคับ required = แบ่ง 2 รอบเสมอ** (expand → contract)
+  (รอบ 1 `expand`: เพิ่มของใหม่ + เขียนทั้งเก่าใหม่ + อ่านจากใหม่ · รอบ 2 `contract`: ลบของเก่าเมื่อไม่มีใครใช้แล้ว)
+  — เพิ่มของใหม่อย่างเดียว = ปลอดภัย ทำรอบเดียวได้
+- **โค้ดใหม่พึ่งอะไรที่ยังไม่ถูกสร้าง?** (migration, grant/สิทธิ์, env, ไฟล์, table, event type)
+  → นั่นคือ dependency ไม่ใช่ "แค่ยังไม่ได้ทำ" — ไม่ครบ = ยังไม่ deploy
+- **rollback = ย้อนโค้ดอย่างเดียวพอไหม?** ถ้าต้องย้อน state ด้วย = การเปลี่ยนแปลงนี้ไม่ปลอดภัย ออกแบบใหม่
+- **precondition ไม่ครบ ต้อง fail loud ไม่ใช่ข้ามเงียบ** — พังเงียบบน production แย่กว่าหยุด deploy เสมอ
+- **สร้างของใหม่แล้วทดสอบ "การใช้งานจริง" ของมัน** — สร้างสำเร็จ ≠ ใช้งานได้ (เช่น สร้าง role แล้ว
+  ต้องลองเขียนจริงด้วย ไม่ใช่แค่เช็คว่ามี)
+
+## Local dev
+<!-- คำสั่งรัน dev + quirks ของเครื่อง/toolchain ที่เคยเจ็บมาแล้ว (ระบุ symptom + fix) -->
+
+## Structure & Run
+<!-- โครง workspace, source of truth ของ schema/config, คำสั่งพื้นฐาน -->
+
+## Conventions
+<!-- ภาษา (เว็บ=EN, internal=TH ได้), naming, กติกาที่ตกลงแล้ว -->
+
+## Mission / Boundary
+<!-- ทำอะไร ไม่ทำอะไร ทำไม — กัน scope creep + กัน re-litigate -->
+
+## Architecture Decisions (ตัดสินใจแล้ว)
+<!-- ทุกข้อมีเหตุผล: "เลือก X (ไม่ใช่ Y) เพราะ ..." รวม "ทำไมไม่" ของทางที่ไม่เลือก
+     รูปแบบ: **<หัวข้อสั้น> (YYYY-MM-DD)**: เลือก X เพราะ Y (ไม่ใช่ Z เพราะ W)
+     section นี้คือสถานะปัจจุบัน ไม่ใช่ changelog — decision ที่ถูกแทนที่ ให้แก้ entry เดิม
+     (ไม่ลบ) แล้วมาร์ค "superseded by <decision ใหม่, วันที่>"; โตเกิน ~15 บรรทัด/decision
+     → แยกไป docs/decisions/<topic>.md เหลือสรุป+ลิงก์ -->
+
+## Constraints
+<!-- งบ / infra / เวลา — สิ่งที่กำหนดว่าอะไรทำได้-ไม่ได้ -->
+
+## ข้อควรระวัง
+<!-- กับดักเชิงกลยุทธ์/เทคนิคที่รู้แล้ว -->
+
+## Future boundaries (จดเผื่อ ยังไม่ commit)
+<!-- ไอเดียที่ "ยังไม่ตัดสินใจ" — จดกัน design ปัจจุบัน block อนาคต -->
+
+## TODO ถัดไป
+- [ ] <งานถัดไปแบบ actionable>
+
+## เอกสารเพิ่มเติม
+<!-- index ให้มองเห็นทุกชั้นจากไฟล์เดียว — ต้อง sync กับไฟล์จริงเสมอ (เพิ่ม/ย้าย/ลบ = อัปเดตที่นี่ใน commit เดียวกัน)
+     ชื่อไฟล์ = โดเมนไม่ใช่เวลา; docs/ เกิน ~7 ไฟล์ → จัด subfolder ตามโดเมนแล้ว group index ตามนั้น -->
+- `docs/<topic>.md` — <หนึ่งบรรทัดว่ามีอะไร + ทำไมต้องเปิด>
+- `memory/MEMORY.md` — index ของ fact สั้น ๆ ทั้งหมด
+
+## เส้นแบ่ง CLAUDE.md / docs/ / memory/ (มาตรฐาน — ใช้ตัดสินก่อนจดทุกครั้ง)
+
+เส้นแบ่งคือ**กลไกที่มันถูกอ่าน** ไม่ใช่หัวข้อของเนื้อหา:
+
+| ชั้น | ถูกอ่านแบบ | หน่วย | เขียนเมื่อตอบ "ใช่" กับคำถามนี้ |
+|---|---|---|---|
+| `CLAUDE.md` | **push** — โหลดเต็มทุก session (ทุกบรรทัด = ภาษีทุก session) | ภาพรวม + operational | "ถ้าไม่เห็นทุก session จะทำงานผิดไหม" |
+| `docs/<topic>.md` | **pull** — เปิดเมื่อ*รู้ตัว*ว่าทำเรื่องนั้น | เรื่องละไฟล์ ยาวได้ | "จะถูกเปิดอ่านเมื่อลงมือทำเรื่องนั้นไหม" |
+| `memory/<fact>.md` | **recall** — ถูก surface โดย*ไม่ต้องรู้ตัวว่าต้องหา* (จาก description) | fact เม็ดเดียว/ไฟล์ สั้น | "session หน้าต้องใช้สิ่งนี้ก่อนจะรู้ว่าต้องหามันไหม" |
+
+- เนื้อเรื่องเดียวกันแยกสองบ้านได้ตาม*หน้าที่*: ประวัติ/เหตุผลเต็ม → docs/, fact ที่ต้องนึกออกเอง
+  (quirk, preference, กับดัก) → memory/, CLAUDE.md เหลือ 1-3 บรรทัด + pointer
+- ตัวเลข/ข้อมูลที่ reproduce ได้จาก script/คำสั่ง → ไม่จดที่ไหนเลย ชี้ไป source
+- **monorepo/submodule**: เอกสารของ module อยู่ในตัว module — root เก็บ pointer +
+  short info (1-3 บรรทัด/module); เฉพาะเรื่อง cross-cutting (deploy รวม, contract
+  ระหว่าง module) อยู่ root
+
+**สองชั้นในโค้ด (อยู่ใต้ตารางเดียวกัน — ถูกอ่านใกล้โค้ดที่สุด):**
+- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → ใส่ได้เฉพาะ why/constraint ที่โค้ดแสดง
+  เองไม่ได้ **≤2 บรรทัด + pointer เข้า docs** — รายละเอียด/ประวัติ/ผลทดลอง inline = ผิดบ้าน;
+  ห้าม commented-out code (git จำให้) และห้ามเล่าว่าบรรทัดถัดไปทำอะไร;
+  **ขาอ่าน: เจอ comment ที่มี pointer ตอนแก้จุดนั้น = เปิด doc ตามก่อนแก้** ไม่ใช่ข้าม
+- **docstring** = ถูกอ่านตอน*จะเรียกใช้/แก้* function-module นั้น → interface contract
+  (ทำอะไร, input/output, invariant, side effect) ตามธรรมเนียมภาษา (PEP 257, JSDoc);
+  public interface ต้องมี — และ**ขาอ่านสำคัญเท่าขาเขียน**: ก่อนใช้/แก้ของเดิม อ่าน docstring
+  ก่อน ไม่เดาจากชื่อ; contract ขัดพฤติกรรมจริง = บั๊กที่ต้องแก้ในงานเดียวกัน;
+  **เปิดด้วย contract ถูกต้องแล้วต่อด้วยเรียงความ/postmortem/changelog = ผิดบ้าน** →
+  เนื้อนั้นไป docs/ (docstring บวมคือ comment ยาวที่ใส่เสื้อ JSDoc)
+- **codetag** (`TODO(scope):` — PEP 350) = เครื่องหมายงานค้าง ไม่ใช่คำอธิบายโค้ด —
+  **จุดต่างสำคัญคืออายุ**: comment/docstring อยู่ตราบที่โค้ดอยู่ แต่ codetag *ต้องตาย*
+  (ลบใน commit เดียวกับงานที่ปิดมัน — ค้าง = โกหกตารางสถานะ; แช่นาน = หนี้ระดับ feature
+  ต้องย้ายขึ้น TODO ของ CLAUDE.md ไม่ใช่ฝังในโค้ด)
+
+(อิงหลักสากล: Clean Code/Ousterhout — comment=why · PEP 257/JSDoc — docstring=contract ·
+ADR สำหรับ decision · Diátaxis + SSOT สำหรับแยกเอกสารตามหน้าที่การอ่าน)
+
+## Memory policy (สำหรับ Claude — อ่านทุก session)
+
+**`memory/` ใน repo คือ memory ตัวจริงชุดเดียว** — ฝั่ง harness
+(`~/.claude/projects/<project-id>/memory`) เป็น **link** ชี้มาที่นี่ (junction บน Windows /
+symlink บน unix) เขียน/อ่าน memory ตามปกติได้เลย ไฟล์ลง repo อัตโนมัติ:
+
+- memory ใหม่ที่บันทึก = untracked file ใน repo → คัดกรองแล้ว commit พร้อมงาน:
+  **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
+- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — โน้ต ops sensitive (secret/IP/server path)
+  → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/` (gitignored ทั้งคู่,
+  อ้างด้วย pointer แทน; ห้าม index ของใน private ลง `memory/MEMORY.md` ที่ commit)
+- ถ้าพบว่า harness memory dir **ไม่ใช่ link** (เช่น repo ย้ายเครื่อง/เครื่องใหม่) → สร้างใหม่:
+  - Windows: `New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<id>\memory" -Target "<repo>\memory"`
+  - unix: `ln -s <repo>/memory ~/.claude/projects/<id>/memory`
+  - `<id>` = absolute path ของ repo โดยแทนอักขระที่ไม่ใช่ a-z/0-9 ด้วย `-`
+  - มี dir เดิมอยู่แล้ว → merge ไฟล์เข้า repo ก่อน แล้ว rename ของเดิมเป็น `.bak`
+- fact ที่ผิด/หมดอายุ → ลบไฟล์ + ลบบรรทัดใน `memory/MEMORY.md`
+
+**Task-close checklist (ทำทุกครั้งที่ปิดงานหนึ่งชิ้น ไม่ต้องรอจบ session):**
+1. CLAUDE.md/docs ยังตรงกับความจริงหลังงานนี้ไหม — ถ้าไม่ อัปเดตทันที:
+   feature ใหม่ = +1–3 บรรทัดใน Inventory (มีอะไร/ไฟล์หลัก/quirk) + decision พร้อมเหตุผลถ้ามี
+   — จดเฉพาะสิ่งที่**โค้ดเล่าเองไม่ได้** (ทำไม/ข้อจำกัด/กับดัก) ห้ามเล่า implementation ซ้ำ
+2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret)
+3. commit เอกสารไป**พร้อมกับงาน** (commit เดียวกัน) — รวมถึงลบ `TODO(scope)` ในโค้ด
+   ที่งานนี้ปิดแล้ว (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
+4. **section ไหนใน CLAUDE.md โตเกิน ~15 บรรทัด → promote ทันที**: ย้ายเนื้อไป
+   `docs/<topic>.md` (หรือ `memory/<fact>.md` ถ้าเป็น fact สั้น) แล้วเหลือสรุป 1–3 บรรทัด
+   + ลิงก์ — ห้ามปล่อยให้ CLAUDE.md เป็นที่กองเนื้อหา (มันถูกโหลดเต็มทุก session)
+_(มี lifecycle hooks ใน `.claude/settings.json` คอยเตือนที่ SessionStart / TaskCompleted /
+Stop / PreCompact อยู่แล้ว — เจอข้อความ `[docs-setup]` = ทำตามนั้นก่อนไปต่อ)_

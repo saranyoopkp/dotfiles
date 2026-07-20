@@ -1,0 +1,65 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": [
+              "-c",
+              "bash $(git rev-parse --show-toplevel 2>/dev/null | sed 's/\\\\/\\//g')/.claude/hooks/docs-drift.sh SessionStart"
+            ],
+            "timeout": 15,
+            "statusMessage": "docs-setup: checking docs state"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": [
+              "-c",
+              "bash $(git rev-parse --show-toplevel 2>/dev/null | sed 's/\\\\/\\//g')/.claude/hooks/docs-drift.sh Stop"
+            ],
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": [
+              "-c",
+              "bash $(git rev-parse --show-toplevel 2>/dev/null | sed 's/\\\\/\\//g')/.claude/hooks/docs-drift.sh TaskCompleted"
+            ],
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": [
+              "-c",
+              "bash $(git rev-parse --show-toplevel 2>/dev/null | sed 's/\\\\/\\//g')/.claude/hooks/docs-drift.sh PreCompact"
+            ],
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
