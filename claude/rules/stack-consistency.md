@@ -6,5 +6,6 @@
 - contract ที่หลายส่วนพึ่งพาต้องมี source of truth เดียว เช่น schema, types, constants และ error shape
 - convention ที่ใช้ร่วมกันควรอยู่ร่วมกัน; utility หรือ contract ที่ซ้ำและมี owner ร่วมจึงค่อย consolidate
 - ความไม่สอดคล้องเดิมไม่ใช่เหตุผลให้เพิ่มความไม่สอดคล้องใหม่
+- ก่อนเพิ่ม dependency ให้ตรวจของเดิม, ownership และ migration cost; shared API/schema/error code ต้องมี source of truth เดียว ไม่เขียนซ้ำคนละฝั่ง
 
 ไม่บังคับ consolidate ทุกกรณี: เลือกตาม coupling, lifecycle และต้นทุน migration.

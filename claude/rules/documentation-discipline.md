@@ -7,5 +7,6 @@
 - ความรู้หนึ่งชิ้นมีเจ้าของเดียว: source ที่ generate ได้ให้ชี้ไปยัง code/schema/command แทนคัดลอก
 - ห้าม commit secret หรือข้อมูลอ่อนไหว; ใช้ไฟล์ที่ ignore และ pointer ที่ปลอดภัย
 - snapshot เช่น design note หรือ postmortem ต้องติดวันที่; living document ต้องตรวจให้ตรงกับของจริง
+- facts ที่นับหรือ generate ได้จาก code/schema/command ต้องชี้ source แทนคัดลอก; comment เก็บ why/constraint, docstring เก็บ contract, history/runbook อยู่ docs
 
 งานจัดวางเนื้อหา, setup, link และ stale check ใช้ skill `/docs:*` ตามประเภทงาน.

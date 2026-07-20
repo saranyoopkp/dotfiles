@@ -30,7 +30,8 @@
 
 - **Rollback:** <ย้อน code อย่างไร และ state ใดที่ย้อนเองไม่ได้>
 - **Verify:** <flow หรือ health check ที่ยืนยันผลจริง>
-- **Compatibility:** การเปลี่ยน public contract/schema ที่ลบ เปลี่ยนชื่อ เปลี่ยนความหมาย หรือบังคับ required ต้องวางแผน expand → migrate → contract และต้อง rollback code ได้โดยไม่พึ่งการย้อนข้อมูล
+- **Compatibility:** ของเก่าและของใหม่อาจทำงานร่วมกันระหว่าง deploy, client refresh หรือ queue backlog. การลบ เปลี่ยนชื่อ เปลี่ยนความหมาย หรือบังคับ required ต้องทำ expand → migrate → contract: เพิ่มของใหม่และรองรับของเก่าก่อน, migrate/backfill, แล้วค่อยลบเมื่อไม่มี consumer เดิม
+- **Deploy preconditions:** ระบุ migration, permission, env, event type หรือ resource ใหม่ที่ต้องมีก่อน code; หากไม่ครบให้ fail loud ไม่ข้ามเงียบ และตรวจการใช้งานจริงของสิ่งที่สร้าง—not เพียงว่ามันมีอยู่
 
 ## ขอบเขตและข้อจำกัด
 
@@ -66,13 +67,16 @@
 | `memory/` | fact/quirk สั้นที่ต้องนึกออกก่อนรู้ว่าจะค้นหา |
 | comment/docstring | constraint ติดโค้ด หรือ contract ของ interface |
 
-ความรู้หนึ่งชิ้นมี source of truth เดียว และข้อมูลที่สร้างใหม่ได้ให้ชี้ไปยัง code/schema/command แทนคัดลอกมาไว้ที่นี่
+ความรู้หนึ่งชิ้นมี source of truth เดียว และข้อมูลที่สร้างใหม่ได้ให้ชี้ไปยัง code/schema/command แทนคัดลอกมาไว้ที่นี่ ห้าม hardcode จำนวน/รายชื่อไฟล์/table/migration หรือ shape ของ schema/DTO ที่ตรวจจากของจริงได้ เพราะจะ stale และถูกเชื่อผิด ๆ
+
+ใน monorepo หรือ submodule เอกสารของ module อยู่กับ module; root เก็บเพียงภาพรวมและเรื่อง cross-cutting เช่น deploy รวม หรือ contract ระหว่าง module เมื่อเอกสารโตให้จัดตามโดเมนและรักษา index ให้ตรงกับไฟล์จริง
 
 ### วินัยเอกสารในโค้ด
 
 - comment อธิบายเหตุผลหรือข้อจำกัดที่โค้ดสื่อเองไม่ได้; อย่าใช้เป็น changelog หรือเล่า how ที่เห็นจากโค้ดอยู่แล้ว
 - docstring อธิบาย contract ของ public interface เมื่อชื่อ/type ไม่เพียงพอ: input/output, side effect และ invariant ที่สำคัญ
 - รายละเอียด design, runbook, ผลทดลอง และประวัติอยู่ใน `docs/`; งานค้างที่ผูกกับจุดในโค้ดใช้ `TODO(scope):` และลบเมื่อปิดงาน
+- `TODO(scope):` คือเครื่องหมายงานค้าง ไม่ใช่คำอธิบายโค้ด: งานที่ปิดแล้วต้องลบใน commit เดียวกัน; งานค้างระดับ feature ให้ย้ายขึ้นส่วนงานถัดไป ไม่ฝังไว้ในไฟล์เดียว
 - ก่อนย้ายหรือ rename เอกสาร ให้ตรวจ pointer/link ที่เกี่ยวข้องด้วยคำสั่งหรือเครื่องมือที่มีใน repository
 
 ## Memory policy
@@ -99,6 +103,8 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<project-id
 1. อัปเดตเอกสารหรือ decision ที่งานนี้ทำให้เปลี่ยน โดยไม่เล่า implementation ซ้ำ
 2. บันทึก fact/quirk ที่ต้อง recall ใน memory หากมี
 3. เมื่อ setup หรือย้ายเครื่อง ให้ยืนยันว่า harness memory ยัง link มาที่ `memory/`; ตรวจ link หลังย้ายเอกสาร และ commit เอกสารพร้อมงาน
+
+เมื่อได้รับข้อความจาก lifecycle hook ให้ตรวจเรื่องที่มันเตือนก่อนปิดงาน: hook เป็น reminder ไม่ใช่หลักฐานว่าการตรวจผ่านแล้ว
 
 ## การตรวจสอบความจริงของเอกสาร
 

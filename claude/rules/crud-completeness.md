@@ -6,5 +6,6 @@
 - write ทุกชนิดมี validation, authorization และนิยาม field ที่แก้ได้
 - การลบต้องระบุผลต่อข้อมูลสัมพันธ์และ retention; ใช้ soft delete เมื่อการกู้คืนหรือ audit จำเป็น
 - action ที่ส่งผลข้างเคียงต้องทนต่อ double-submit/retry
+- การตัด operation ออกเป็น decision ที่ต้องบันทึกตาม lifecycle และสิทธิ์ของ resource ไม่ใช่สิ่งที่ตกหล่น
 
 รายละเอียดของ HTTP contract ใช้ skill `api-design`; เรื่องสิทธิ์ใช้ rule `authz-multitenancy`.
