@@ -1,6 +1,6 @@
 # Docs Setup Kit
 
-Kit นี้สร้างระบบเอกสารขั้นต่ำต่อ repository: `CLAUDE.md`, `docs/`, `memory/` และ hook เตือน docs drift
+Kit นี้สร้างระบบเอกสารขั้นต่ำต่อ repository: `CLAUDE.md`, `docs/`, `memory/` และ hook เตือน docs drift. Repository ปลายทางต้องใช้ต่อได้แม้ไม่มี dotfiles, rules หรือ skills ชุดนี้ติดตั้งอยู่
 
 ## สิ่งที่สร้างและเจ้าของ
 
@@ -12,7 +12,9 @@ Kit นี้สร้างระบบเอกสารขั้นต่ำ�
 | `.claude/hooks/docs-drift.sh` | เตือนจังหวะตรวจเอกสาร | kit |
 | `.claude/settings.json` | ตั้งค่า hook | kit |
 
-ไฟล์ที่ copy เข้า repo ต้อง self-contained: ห้ามอ้าง path ของ kit หรือ user-level rule. ข้อมูล sensitive อยู่ใน `docs/private/` หรือ `memory/private/` ที่ gitignore เท่านั้น
+ไฟล์ที่ copy เข้า repo ต้อง self-contained: ห้ามอ้าง path ของ kit, user-level rule หรือชื่อ skill ที่อาจไม่มีบนเครื่องอื่น. `CLAUDE.template.md` จึงมี operating contract แบบ portable (scope, evidence, safety, verification และ handoff) พร้อม policy สำหรับการเลือกที่อยู่ของความรู้, memory, task-close และการตรวจความจริงของเอกสารอยู่ในตัว
+
+Identity ของ kit นี้คือ: **lean current context ใน `CLAUDE.md` → รายละเอียดใน `docs/` → facts ที่ต้อง recall ใน `memory/`**. นี่คือ convention ที่คัดลอกไปพร้อมกันทุก repo ไม่ใช่ dependency บน dotfiles repository นี้
 
 ## ใช้งาน
 
@@ -28,7 +30,7 @@ bash <path-to-kit>/init.sh /path/to/repo
 
 ## Memory link
 
-`~/.claude/projects/<id>/memory` เป็น junction บน Windows หรือ symlink บน Unix ที่ชี้มายัง `<repo>/memory`; จึงไม่มีการ sync ด้วยมือ
+`~/.claude/projects/<id>/memory` **ต้อง**เป็น junction บน Windows หรือ symlink บน Unix ที่ชี้มายัง `<repo>/memory`; จึงไม่มีการ sync ด้วยมือ และ setup ไม่สมบูรณ์หาก path นี้เป็น directory ปกติ
 
 หากย้ายเครื่อง ให้รัน init อีกครั้ง หากพบ memory เดิมที่ไม่ใช่ link ให้ merge เข้า repo ก่อนเก็บ backup
 
@@ -40,7 +42,6 @@ hook runner อาจต่างจาก Bash tool ของ agent; การ�
 
 ## ขอบเขต
 
-- ใช้ `/docs:placement` เมื่อต้องเลือกบ้านของเนื้อหา
-- ใช้ `/docs:link` หลังย้าย/rename เอกสาร
-- ใช้ `/docs:stale` เพื่อตรวจว่าเอกสารยังตรงกับระบบจริง
-- hook เป็น reminder ไม่ใช่หลักฐานว่าเอกสารหรือระบบถูกต้อง
+- เลือกบ้านตามจังหวะที่ผู้อ่านต้องใช้: current context → `CLAUDE.md`, รายละเอียดตามหัวข้อ → `docs/`, fact ที่ต้อง recall → `memory/`, contract/constraint ติดโค้ด → comment หรือ docstring
+- หลังย้าย/rename เอกสาร ให้ตรวจ link ด้วยคำสั่งหรือเครื่องมือที่มีอยู่
+- เมื่อตรวจ stale ให้เทียบ claim กับ command, code, config หรือ test ที่ live; hook เป็น reminder ไม่ใช่หลักฐานว่าเอกสารหรือระบบถูกต้อง
