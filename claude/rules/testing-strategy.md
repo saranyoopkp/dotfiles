@@ -1,30 +1,9 @@
 # Testing Strategy
 
-test ไม่ใช่เป้าหมาย — ความมั่นใจว่าระบบถูกต้องต่างหาก; เขียน test ตรงจุดที่ความมั่นใจ
-ราคาแพงสุด ไม่ใช่ไล่ coverage:
+ทดสอบเพื่อเพิ่มความมั่นใจในความเสี่ยง ไม่ใช่เพื่อ coverage
 
-## อะไรต้องมี test (เรียงตามลำดับความสำคัญ)
-1. **logic ที่ผิดแล้วเจ็บจริง** — เงิน/ส่วนแบ่ง/ภาษี (เทียบตัวเลขคำนวณมือ),
-   สิทธิ์/tenant isolation (matrix ตาม authz rule), การคำนวณเชิงธุรกิจที่มีเงื่อนไขซ้อน
-2. **boundary/edge ที่รู้ว่ามี** — เส้นตัดเวลา (เที่ยงคืน/สิ้นเดือน), ค่า 0/ติดลบ/ว่าง,
-   duplicate input (idempotency), เศษจากการ split
-3. **contract ระหว่างส่วน** — shape ของ API response, event payload — จุดที่สองฝั่ง
-   พัฒนาแยกกันแล้ว drift ได้
-4. **regression ของ bug ที่เคยเจอ** — bug ที่แก้แล้วทุกตัวได้ test กันกลับมา
-   (bug ซ้ำ = แพงกว่า bug ใหม่เสมอ)
-
-## อะไรไม่ต้องเขียน test
-- glue code ตรง ๆ, CRUD บาง ๆ, UI layout — ให้ type system + smoke test จับ;
-  test ที่ล้อ implementation (เปลี่ยนโค้ดนิดเดียวก็แดง) = ภาระ ไม่ใช่ความมั่นใจ
-
-## วินัย
-- **test พัง = แก้ ไม่ใช่ skip/comment** — test ที่ถูก skip ค้างไว้คือ test ที่ตายแล้ว
-  (ลบทิ้งยังซื่อสัตย์กว่า)
-- **ก่อนปิดงาน: รัน test ที่เกี่ยว + ทดสอบ flow จริงหนึ่งรอบ** — build ผ่าน ≠ ใช้งานได้
-  (ตาม verify-before-done); ก่อน deploy: smoke test เส้นทางหลักบนของจริง
-- test data/fixture ครบทุกสถานะสำคัญ (ทุก role, หลาย tenant, หลายสกุลเงิน —
-  ตามโดเมนของระบบ) ไม่ใช่มีแต่ happy path ของ admin
-- test ต้องรันได้ด้วยคำสั่งเดียวที่จดไว้ใน CLAUDE.md — test ที่รันยากจะไม่ถูกรัน
-
-ระดับความเข้มปรับตาม stage (ตาม production-readiness rule) — แต่ข้อ 1 (เงิน/สิทธิ์)
-คือขั้นต่ำเสมอแม้เป็น MVP
+- ให้ความสำคัญกับ business logic, authorization, money, boundary/time, contract และ regression ที่เคยเกิด
+- happy-path CRUD หรือ UI layout ใช้ type check, targeted test หรือ smoke test ได้เมื่อให้ความมั่นใจพอ
+- test ที่พังต้องแก้ ลบ หรืออธิบายการ quarantine อย่างมีเจ้าของ; ห้ามปล่อย skip ค้างเงียบ ๆ
+- รันการตรวจที่เกี่ยวข้องและยืนยันพฤติกรรมสำคัญตามความเสี่ยงก่อนสรุปงาน
+- fixture ต้องครอบคลุม state ที่มีนัยสำคัญต่องานนั้น ไม่จำเป็นต้องจำลองทุกโลก

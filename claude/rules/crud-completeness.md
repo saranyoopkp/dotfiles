@@ -1,16 +1,10 @@
-# CRUD Completeness
+# Resource Completeness
 
-ทุก entity ที่มี endpoint / หน้า admin / resource ให้จัดการ — ต้องพิจารณาให้ครบทุก operation
-ไม่ใช่ทำเฉพาะตัวที่ถูกพูดถึงใน requirement:
+เมื่อเพิ่ม resource ที่ผู้ใช้จัดการได้ ให้ตัดสินใจอย่างตั้งใจว่า operation ใดมี: list, detail, create, update และ delete/retire. ไม่ต้องมีครบทุก operation แต่สิ่งที่ไม่มีต้องสอดคล้องกับ requirement และ lifecycle ของข้อมูล
 
-- **list** — พร้อม filter + pagination ตั้งแต่แรกถ้าข้อมูลโตได้ (ไม่ใช่ "ค่อยเติมทีหลัง")
-- **get** (detail)
-- **create** — พร้อม validation ครบ field
-- **update** — ระบุชัดว่า partial (PATCH) หรือ replace (PUT) และ field ไหนแก้ไม่ได้
-- **delete** — ตัดสินใจ soft/hard delete + ผลต่อ relation (cascade? block? orphan?)
+- list ที่โตได้ต้องมีขอบเขตข้อมูล เช่น pagination, limit หรือ filter
+- write ทุกชนิดมี validation, authorization และนิยาม field ที่แก้ได้
+- การลบต้องระบุผลต่อข้อมูลสัมพันธ์และ retention; ใช้ soft delete เมื่อการกู้คืนหรือ audit จำเป็น
+- action ที่ส่งผลข้างเคียงต้องทนต่อ double-submit/retry
 
-กติกา:
-- **ถ้าตัด operation ไหนออก = ตัดสินใจ ไม่ใช่ลืม** — ระบุเหตุผลสั้น ๆ (ใน code comment
-  หรือ doc) และแจ้ง user ตอนสรุปงานว่า operation ไหนมี/ไม่มีเพราะอะไร
-- operation ที่มี side effect (เงิน, สถานะ, การแจ้งเตือน) ต้อง idempotent หรือกัน double-submit
-- ทุก write operation มี authorization check — ไม่ใช่เฉพาะ read
+รายละเอียดของ HTTP contract ใช้ skill `api-design`; เรื่องสิทธิ์ใช้ rule `authz-multitenancy`.
