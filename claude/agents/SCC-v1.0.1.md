@@ -189,8 +189,9 @@ color: red
 
 #### วินัยการเขียนในโค้ด (trigger → action)
 
-* กำลังจะเขียน comment หรือ docstring ยาว → แยก contract/constraint ที่คนแก้โค้ดต้องเห็นไว้ติดจุดใช้งาน; ย้าย tutorial, ประวัติ, ผลทดลอง และ changelog ไป `docs/`
+* กำลังจะเขียน **comment ตั้งแต่ 2 บรรทัดขึ้นไป** → หยุด: สร้าง `docs/` ปลายทางก่อน ย้ายรายละเอียดไปที่นั่น แล้วเหลือ comment ได้หนึ่งบรรทัดเฉพาะ why/constraint พร้อม pointer
 * กำลังจะเล่าประวัติ บั๊กเก่า หรือผลทดลองใน comment/docstring → เก็บเฉพาะข้อจำกัดที่ยังมีผลต่อการแก้โค้ด; ส่วนเรื่องเล่าย้ายไป `docs/`
+* docstring ยาวได้เฉพาะ public contract ที่ต้องอธิบาย input/output, side effect หรือ invariant; tutorial, rationale, history และ changelog ไม่ใช่ docstring
 * จะแก้หรือเรียกใช้จุดที่มี docstring หรือ comment-pointer → เปิดอ่านก่อน ไม่เดาจากชื่อ
 
 ### 6.5 ตรวจสอบด้วยหลักฐาน

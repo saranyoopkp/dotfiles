@@ -1,18 +1,36 @@
 ---
 name: ui-ux-baseline
-description: "Baseline UX for building or changing user-facing views: feedback states, interaction safety, accessibility and responsive behavior. Use when a change affects UI behavior or layout."
+description: มาตรฐานขั้นต่ำ UI/UX/frontend — 4 data states (loading skeleton/empty/error/loaded), interaction+focus states, chat-feed sticky-bottom pattern, navigation, responsive, accessibility. ใช้เมื่อสร้าง/แก้ frontend component, หน้าจอ, layout, form, list/feed, chat, loading/empty/error state, responsive/mobile, หรือ UI ใด ๆ (React/Vue/Svelte/ไฟล์ .tsx/.jsx/.vue/.css). โหลดก่อนลงมือทำงาน UI เสมอ
 ---
 
 # UI/UX Baseline
 
-Use the project design system and existing interaction patterns first. Apply checks that match the affected user journey rather than adding every state to every component.
+มาตรฐานขั้นต่ำ — ทำโดยไม่ต้องรอสั่ง; ถ้า design ที่ขอมาขัดข้อไหน ให้ทักและเสนอทางเลือกก่อนลงมือ
 
-- ทุก state ที่ผู้ใช้อาจพบจาก data flow หรือ action ของตนต้องมี feedback และทางไปต่อที่ชัดเจน เช่น loading, empty, error หรือ success เมื่อ state นั้นเกิดได้จริง; ไม่ต้องสร้าง state เพื่อให้ครบ checklist
-- Prevent duplicate destructive or costly actions; make pending work and recoverable failures understandable.
-- form แสดง validation ใกล้ field ที่เกี่ยวข้อง, ย้าย focus ไปจุดผิดแรกเมื่อ submit ไม่ผ่าน และรักษาข้อมูลที่ผู้ใช้กรอกไว้เมื่อ request ล้มเหลว
-- action ที่ลบ ยกเลิก หรือเปลี่ยนสิ่งที่ย้อนยาก ให้ใช้ confirmation หรือ undo ตามระดับผลกระทบ
-- Lists, feeds and real-time views preserve the user's position and provide a clear strategy for new, missing or failed items when relevant.
-- Interactive controls are keyboard-operable, have an accessible name, visible focus and a disabled/loading state when needed.
-- Validate responsive layout, overflow and contrast for the changed view; respect `prefers-reduced-motion`, and make touch controls large and separated enough to use reliably. Use semantic HTML before custom accessibility workarounds.
+## Loading / data states — ทุก state ที่ผู้ใช้อาจพบต้องมีทางไปต่อ
+- loading, empty, error และ loaded ต้องมีเมื่อเกิดได้จริงจาก data flow หรือ action ของผู้ใช้—not เพื่อให้ครบ checklist
+- loading ที่รู้ shape ของ content ใช้ skeleton ของ layout จริง; empty มีข้อความและทางไปต่อ; error บอกปัญหาและ retry เมื่อทำได้
+- ห้าม layout shift ตอนเปลี่ยน state (skeleton ขนาดใกล้ content จริง)
 
-Before delivery, exercise the primary changed journey at a representative viewport and state. State any meaningful state or device not checked.
+## Chat / feed / realtime list (pattern ตายตัว — ทำครบทุกข้อ)
+- **sticky bottom**: อยู่ล่างสุด + ข้อความใหม่เข้า → auto-scroll ตาม
+- **scroll ขึ้น = ปลด sticky**: user เลื่อนอ่านย้อน แล้วมีข้อความใหม่ → **ห้าม scroll ทับ**
+  ให้แสดง indicator "มีข้อความใหม่ ↓" กดแล้วค่อยลงล่าง
+- **ส่งข้อความเอง → scroll ลงเสมอ** (การส่งคือ intent กลับล่างสุด)
+- **history = pagination on scroll ขึ้น** (โหลดเป็นช่วง, รักษา scroll position ตอน prepend)
+  — ห้ามโหลดทั้งหมดตั้งแต่แรก
+- **realtime client-state**: debounce mutation จาก socket event (มาเป็น burst); effect
+  ห้าม depend on reference ที่เปลี่ยนทุก refetch — ใช้ derived primitive (กัน feedback
+  loop ยิง request รัว); event-driven หลัก polling เป็น fallback ช้า; media reserve ขนาดก่อนโหลด
+
+## Navigation / layout
+- nav หลักอยู่ตำแหน่งเดิมทุกหน้า — ห้ามย้าย/สลับตามหน้า
+- action หลักของหน้าเข้าถึงได้จาก viewport แรกโดยไม่ต้อง scroll
+- destructive action (ลบ/ยกเลิก/สลับสถานะสำคัญ) ต้องมี confirm และบอกผลลัพธ์
+
+## Interaction / accessibility states (ทุก interactive element)
+- hover / active / **focus-visible** / disabled — ครบทุกตัว (focus สำหรับ keyboard user
+  ห้ามลืม: element ที่ interactive แต่ไม่มี focus state = keyboard user มองไม่เห็นตัวเอง)
+- keyboard reachable: ปุ่มจริงคือ `<button>` ไม่ใช่ `<div onClick>` (ได้ focus + Enter/Space + role ฟรี)
+- tooltip/disclosure ตาม WAI-ARIA APG (อย่าใส่ aria ซ้ำกับ accessible name)
+- responsive: เช็ค mobile viewport ก่อนปิดงานทุกครั้ง ไม่ใช่เฉพาะตอนถูกขอ

@@ -1,12 +1,21 @@
-# Production Readiness
+# Production Readiness Baseline
 
-ใช้กับงานที่มีผู้ใช้หรือระบบจริงได้รับผลกระทบ; ปรับตาม stage และความเสี่ยงของ repo
+สำหรับงานที่จะขึ้น production (ไม่ใช่ prototype/ทดลอง) — ขั้นต่ำที่ต้องมีโดยไม่ต้องรอสั่ง:
 
-- boundary ภายนอกมี validation, failure path และ error ที่ไม่รั่วข้อมูลภายใน
-- secret ไม่อยู่ใน source, log หรือเอกสารที่ track; หากเคยรั่วให้ rotate
-- action สำคัญต้องตามรอยได้โดยไม่ log secret/PII และมีวิธีตรวจ health ของระบบ
-- migration, contract และ rollback ต้องปลอดภัยต่อ version ที่อยู่ร่วมกัน (ดู `compatibility-and-rollout`)
-- ก่อนอ้างว่าพร้อมใช้งาน ให้ตรวจ flow จริงหรือระบุชัดว่าอะไรยังไม่ได้ตรวจ
-- งานที่กระทบข้อมูลหรือผู้ใช้ต้องมี observability/recovery ที่พอดีกับความเสี่ยง: log ที่ตามรอยได้, health signal, backup/rollback path และไม่มี secret/PII หลุดใน log
+- **Error handling**: ทุก external call / IO มี failure path ที่ตั้งใจ (ไม่ใช่ปล่อย exception
+  ทะลุ) และ user-facing error ไม่ leak internal detail
+- **Validation ที่ boundary**: input จากนอกระบบ (user, API, file) validate ก่อนใช้เสมอ —
+  ฝั่ง server เป็นหลัก ฝั่ง client เป็น UX เสริม
+- **Logging**: จุดสำคัญ (auth, เงิน, การลบ, integration ภายนอก) มี log ที่ตามรอยได้;
+  ห้าม log secret/PII
+- **Secrets**: อยู่ใน env/gitignored file เท่านั้น — ห้าม hardcode/ลง git (เอกสารด้วย —
+  ใช้ `docs/private/`); ฝั่ง CI: **variable อ่านได้/โผล่ใน log — ของลับต้องเป็น *secret***;
+  **เคยหลุดลง git = compromised — purge history ไม่พอ ต้อง rotate เสมอ**
+- **Migration / การเปลี่ยน contract ปลอดภัย**: ของเก่ากับของใหม่ต้องอยู่ด้วยกันได้ระหว่าง
+  deploy → ดู `compatibility-and-rollout.md` (expand→contract, rollback = ย้อนโค้ดอย่างเดียว)
+- **กัน double-submit / retry**: ปุ่มสำคัญ disabled ระหว่างส่ง; endpoint ที่มีผลข้างเคียง
+  ควร idempotent
+- ก่อนสรุปว่างานเสร็จ: ทดสอบ flow จริงอย่างน้อยหนึ่งรอบ — build ผ่าน ≠ ใช้งานได้
 
-เรื่อง recovery/monitoring เชิงลึกใช้ `operations-observability`; การทดสอบเลือกตาม `testing-strategy`.
+ระดับความเข้มปรับตาม stage ของ project (MVP เข้มน้อยกว่า production) — ถ้า repo ระบุ stage
+ใน CLAUDE.md ให้ถือตามนั้น; ไม่ระบุ = ถามหรือ default production-grade
