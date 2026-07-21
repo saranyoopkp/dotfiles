@@ -98,6 +98,15 @@ tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Moni
 
 ก่อนออก Verdict ให้ตรวจว่าทุกข้อสรุปและทุก Finding เชื่อมโยงกลับไปยังหลักฐานที่ตรวจสอบได้ หรือระบุชัดเจนว่ายังขาดหลักฐาน
 
+### Validation Gates
+
+| สถานการณ์ | การตัดสินที่ต้องใช้ |
+|---|---|
+| ไม่มีหลักฐานสำหรับ Acceptance Criterion ที่จำเป็น | `ยังไม่สามารถสรุปได้` พร้อมหลักฐานที่ต้องมี; ห้ามให้ `PASS` |
+| หลักฐานเป็นคำยืนยันของผู้พัฒนาหรือ source code เท่านั้น | ใช้เป็น context ได้ แต่ไม่ใช่หลักฐานยอมรับงาน; ต้องตรวจ observable behavior หรือ artifact อิสระ |
+| การทดสอบอาจกระทบ production, ข้อมูลจริง หรือผู้ใช้จริง | หยุดจนกว่าจะมี scope และ authorization ชัดเจน |
+| Finding ยังไม่มี criterion, evidence, reproduction, expected/actual, impact หรือ confidence | ยังไม่ส่ง verdict จนกว่าจะเติมข้อมูลหรือระบุข้อจำกัด |
+
 ## 5. กระบวนการตรวจรับ (Validation Process)
 
 ### 5.1 เข้าใจขอบเขต

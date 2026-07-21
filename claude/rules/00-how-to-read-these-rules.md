@@ -8,3 +8,10 @@ Rules คือ default เชิงหลักการ ไม่ใช่ che
 4. **rules ต้องเล็กและมีบ้านเดียว** — เก็บเฉพาะหลักการข้ามงานที่พลาดแล้วเสียหายหรือพบซ้ำ; รายละเอียดตามประเภทงานอยู่ใน skill
 
 เมื่อมีทางเลือกที่เปลี่ยน trade-off สำคัญสำหรับผู้ใช้ ให้เสนอทางเลือกและต้นทุนสั้น ๆ; ไม่ต้องเพิ่มข้อความมาตรฐานในงานที่ไม่มี trade-off เช่นนั้น
+
+## Core execution gates
+
+- Requirement/contract ไม่ชัด → ค้นหาใน repository ก่อน; ถ้ายังเปลี่ยนผลลัพธ์หรือความปลอดภัยอย่างมีนัยสำคัญ ให้ถาม ไม่เดา
+- แก้ source, runtime config, schema, dependency หรือ public contract → ระบุ scope และรัน targeted verification; รันไม่ได้ต้องบอกข้อจำกัด
+- จะอ้างว่าเสร็จ/ทำงาน/พร้อมใช้ → อ้างหลักฐานที่ตรงกับข้ออ้าง; แก้ไขแล้วแต่ยังไม่ตรวจ ต้องพูดเช่นนั้น
+- destructive, deploy, secret/permission change หรือ breaking public change → ต้องมี authorization และแผนผลกระทบก่อนทำ

@@ -13,6 +13,19 @@
 - **ตรวจตามความเสี่ยง:** ใช้หลักฐานที่ตรงกับข้ออ้างที่สุด เช่น targeted test, runtime/API/UI check, contract check, log หรือ static analysis; ระบุสิ่งที่ยังตรวจไม่ได้และเหตุผล ห้ามอ้างว่าทำงานแล้วหรือพร้อมใช้งานหากไม่มีหลักฐานพอ
 - **ส่งมอบให้ตรวจสอบได้:** สรุปสิ่งที่เปลี่ยน หลักฐาน ความเสี่ยง/ข้อจำกัด และงานติดตามที่จำเป็น หากมีผู้ตรวจรับอิสระหรือ acceptance process ของโครงการ ให้ส่ง requirement, scope, evidence และ known limits โดยไม่ชี้นำ verdict
 
+### Execution gates — ต้องทำเมื่อเข้า trigger
+
+| Trigger ที่สังเกตได้ | Action ที่ต้องทำก่อนเดินต่อหรือปิดงาน |
+|---|---|
+| Requirement, contract, configuration หรือ intent ยังไม่ชัด | ค้นหาใน repository และหลักฐานที่เข้าถึงได้ก่อน; ถ้ายังเปลี่ยนผลลัพธ์/ความปลอดภัย/ขอบเขตอย่างมีนัยสำคัญ ให้ถามผู้ใช้ ไม่กำหนดความหมายเอง |
+| แก้ source, runtime config, schema, dependency หรือ public contract | ระบุ scope ที่กระทบและรัน targeted verification ที่ตรงกับการเปลี่ยน; รันไม่ได้ต้องระบุคำสั่งที่ควรรันและเหตุผล |
+| จะอ้างว่า “ทำงานแล้ว”, “เสร็จ”, “ผ่าน”, หรือ “พร้อมใช้” | ระบุหลักฐานที่พิสูจน์ข้ออ้างนั้น; ไม่มีหลักฐานให้บอกเพียงว่าแก้ไขแล้วแต่ยังไม่ยืนยัน |
+| จะลบข้อมูล, deploy, เปลี่ยน secret/permission, เพิ่ม dependency, หรือเปลี่ยน public API แบบ breaking | หยุดและขอ authorization/ยืนยัน scope ที่ชัดเจนก่อนทำ |
+| ย้าย, rename หรือลบไฟล์/เอกสารที่มี reference | ตรวจ links, imports, config และ consumer ที่เกี่ยวข้องก่อนสรุป |
+| แก้ behavior ที่ผู้ใช้หรือ production สังเกตได้ | ตรวจ happy path และ failure/edge path ที่สัมพันธ์กับความเสี่ยง; สรุปสิ่งที่ยังไม่ได้ตรวจ |
+| ปิดงานที่ทำให้ docs, decision, contract หรือ operational procedure เปลี่ยน | อัปเดต source of truth เดียวใน commit เดียวกัน; ห้ามปล่อยข้อมูลเดิมที่ขัดกับของจริง |
+| setup หรือย้ายเครื่อง | ยืนยันว่า harness memory path เป็น link ไปที่ repository `memory/`; ไม่ใช่ link = setup ยังไม่เสร็จ |
+
 ## ระบบโดยย่อ
 
 - **<module/service>** — <หน้าที่, entry point/source of truth, quirk สั้น ๆ>
