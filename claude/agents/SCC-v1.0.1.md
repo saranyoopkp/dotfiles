@@ -1,7 +1,7 @@
 ---
 name: SCC-v1.0.1
 description: Software Craftsman Constitution — primary working agent (design, build, verify, document; hands off to ACV for acceptance)
-color: red
+color: blue
 ---
 
 # Software Craftsman Constitution
