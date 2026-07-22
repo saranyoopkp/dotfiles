@@ -104,6 +104,11 @@ tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Moni
 |---|---|
 | ไม่มีหลักฐานสำหรับ Acceptance Criterion ที่จำเป็น | `ยังไม่สามารถสรุปได้` พร้อมหลักฐานที่ต้องมี; ห้ามให้ `PASS` |
 | หลักฐานเป็นคำยืนยันของผู้พัฒนาหรือ source code เท่านั้น | ใช้เป็น context ได้ แต่ไม่ใช่หลักฐานยอมรับงาน; ต้องตรวจ observable behavior หรือ artifact อิสระ |
+| ไม่มีข้อความคำขอ, scope ที่ตกลง หรือ approval ที่ตรวจสอบได้สำหรับงานที่นำมาส่ง | ระบุว่า `ยังไม่สามารถสรุปได้` สำหรับการตรวจรับ scope นั้น; ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ |
+| ข้อสรุปหรือ Finding อ้างข้อจำกัดของ platform, framework, runtime, browser/OS, protocol/standard หรือ third-party dependency | ใช้ primary source ที่ตรง version/context เพื่อยืนยันข้อจำกัดทั่วไป และใช้ runtime/contract ของ repo เพื่อยืนยันผลกระทบจริง; อย่างใดอย่างหนึ่งแทนกันไม่ได้ |
+| งานแตะ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract | ตรวจการจำแนก behavioral change และเทียบ observable behavior กับ baseline/contract ที่เกี่ยวข้อง |
+| พบ behavioral change แต่ไม่มีบันทึกผลกระทบ ทางเลือก และการตัดสินใจก่อนลงมือ | `ยังไม่สามารถสรุปได้`; ห้ามถือว่าเป็น behavior-preserving หรือ `PASS` จากผลทดสอบอย่างเดียว |
+| มีการตัดสินใจเปลี่ยน behavior ที่ตรวจสอบได้ | ตรวจว่าผลที่ส่งมอบตรงกับ behavior ที่อนุมัติ และ compatibility/rollback risk ที่ระบุไว้ ไม่ใช่ตัดสินแทนผู้ใช้ว่าควรเลือกทางใด |
 | การทดสอบอาจกระทบ production, ข้อมูลจริง หรือผู้ใช้จริง | หยุดจนกว่าจะมี scope และ authorization ชัดเจน |
 | Finding ยังไม่มี criterion, evidence, reproduction, expected/actual, impact หรือ confidence | ยังไม่ส่ง verdict จนกว่าจะเติมข้อมูลหรือระบุข้อจำกัด |
 
@@ -116,6 +121,9 @@ tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Moni
 * Requirement คืออะไร
 * Acceptance Criteria คืออะไร
 * Scope ของการเปลี่ยนแปลงคืออะไร
+* ข้อความคำขอหรือ approval ใดเป็นที่มาของ scope นี้ และมีขอบเขตอะไรที่ไม่ได้อนุมัติ
+* มี behavior baseline/contract เดิมที่ต้องคงไว้หรือไม่
+* หาก behavior เปลี่ยน มีผลกระทบ ทางเลือก และการตัดสินใจของผู้ใช้ก่อนลงมือที่ตรวจสอบได้หรือไม่
 * มีข้อมูลอะไรที่ยังขาด
 
 หากข้อมูลไม่เพียงพอ ให้ระบุข้อมูลที่ต้องการเพิ่มเติม
@@ -125,6 +133,7 @@ tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Moni
 ตรวจสอบจากข้อมูลที่ได้รับ เช่น
 
 * Requirement
+* ข้อความคำขอ, scope ที่ตกลง หรือ approval ที่เกี่ยวข้อง
 * Acceptance Criteria
 * Test Results
 * API Contract
@@ -160,6 +169,7 @@ ACV สามารถสร้างหลักฐานอิสระผ่�
 * Requirement Coverage
 * Functional Behavior
 * Business Rules
+* Behavioral Compatibility — ผลที่สังเกตได้ยังตรง baseline/contract เดิม หรือถ้าเปลี่ยน ตรงตามการตัดสินใจที่อนุมัติ
 * Regression Risk
 * User Experience
 * Accessibility

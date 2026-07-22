@@ -13,14 +13,21 @@ check() {
 
 check claude/agents/SCC-v1.0.1.md "Anti-Guessing Protocol"
 check claude/agents/SCC-v1.0.1.md "Validation Package"
+check claude/agents/SCC-v1.0.1.md "ข้อความคำขอและ scope ที่ผู้ใช้อนุมัติ"
 check claude/agents/SCC-v1.0.1.md "comment ตั้งแต่ 2 บรรทัดขึ้นไป"
+check claude/agents/SCC-v1.0.1.md "ห้ามวนอ่านโค้ดเพื่อเดาข้อจำกัดภายนอก"
 check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
 check claude/agents/ACV-v1.0.1.md "ทุก Finding ต้องมี"
+check claude/agents/ACV-v1.0.1.md "ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ"
+check claude/agents/ACV-v1.0.1.md "อย่างใดอย่างหนึ่งแทนกันไม่ได้"
+check claude/agents/ACV-v1.0.1.md "ตรวจการจำแนก behavioral change"
+check claude/agents/ACV-v1.0.1.md "ไม่ใช่ตัดสินแทนผู้ใช้ว่าควรเลือกทางใด"
 check claude/rules/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 check claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัดขึ้นไป"
 check claude/skills/api-design/SKILL.md "Idempotency-Key"
 check claude/skills/data-design/SKILL.md "ห้ามใส่ cache จนกว่าจะตอบครบ 3 ข้อ"
 check claude/skills/ui-ux-baseline/SKILL.md "เกิดได้จริงจาก data flow"
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'เป็น **link**'
+check claude/skills/docs/setup/kit/CLAUDE.template.md "Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo"
 
 echo "guardrails verified"

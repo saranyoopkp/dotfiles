@@ -47,6 +47,13 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 - **สร้างของใหม่แล้วทดสอบ "การใช้งานจริง" ของมัน** — สร้างสำเร็จ ≠ ใช้งานได้ (เช่น สร้าง role แล้ว
   ต้องลองเขียนจริงด้วย ไม่ใช่แค่เช็คว่ามี)
 
+## Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo
+
+- ก่อนสรุปหรือสร้าง workaround จากพฤติกรรมของ platform/framework/runtime/browser/OS/protocol/third-party dependency ให้แยกว่าเป็น `repo-specific` หรือ `external constraint`
+- อ่าน code/config/runtime เพื่อรู้ integration และ version ก่อน; หากข้อสรุปขึ้นกับข้อจำกัดภายนอก ขัดกับมาตรฐานที่คาดไว้ หรือ workaround มีนัยสำคัญ ให้ค้น official documentation/specification/release note ที่ตรง version/context ก่อนตัดสินใจ
+- source ภายนอกพิสูจน์ข้อจำกัดทั่วไปเท่านั้น; ต้องใช้ code/config/runtime ยืนยันแยกว่ากระทบ repo นี้อย่างไร
+- หา source ไม่ได้หรือหลักฐานขัดกัน = ระบุสิ่งที่ยังไม่ยืนยันและทางเลือก; ห้ามเดาข้อจำกัดเพื่อปิดงาน
+
 ## Local dev
 <!-- คำสั่งรัน dev + quirks ของเครื่อง/toolchain ที่เคยเจ็บมาแล้ว (ระบุ symptom + fix) -->
 

@@ -95,6 +95,12 @@ color: red
 
 | Trigger | ต้องทำ |
 |---|---|
+| ข้อสรุปหรือ workaround ขึ้นกับ platform, framework, runtime, browser/OS, protocol/standard หรือ third-party dependency | ตรวจ repo เพื่อระบุ integration/version ก่อน แล้วค้น primary source ที่ตรง context; ห้ามวนอ่านโค้ดเพื่อเดาข้อจำกัดภายนอก |
+| จะอ้าง external constraint หรือสร้าง workaround ที่มีนัยสำคัญ | แยกหลักฐาน: source ภายนอกยืนยันข้อจำกัดทั่วไป, code/config/runtime ยืนยันผลต่อ repo; ระบุทั้งสองส่วนก่อนตัดสินใจ |
+| primary source หาไม่ได้หรือหลักฐานภายนอกขัดกัน | ระบุสิ่งที่ยังไม่ยืนยันและทางเลือก; ห้ามสร้างข้อจำกัดสมมติขึ้นเพื่อปิดงาน |
+| ก่อนแก้ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract | จำแนกว่า user, API/data consumer หรือ operator สังเกตพฤติกรรมต่างจากเดิมหรือไม่ |
+| พบว่า behavior เปลี่ยนหรือเป็น breaking change | อธิบายผลกระทบ, compatibility/rollback risk และทางเลือกก่อนลงมือ ให้ผู้ใช้ตัดสินใจ; ห้ามเลือก semantic change เงียบ ๆ |
+| ยืนยันได้ว่า behavior เดิมคงอยู่ | ระบุสั้น ๆ ว่าเป็น behavior-preserving/internal change แล้วดำเนินการต่อได้ |
 | Requirement, contract, configuration หรือเจตนายังไม่ชัด | ค้นหาใน task/repository ก่อน; หากยังเปลี่ยนผลลัพธ์ ความปลอดภัย หรือ scope อย่างมีนัยสำคัญ ให้ถามผู้ใช้ |
 | แก้ source, runtime config, schema, dependency หรือ public contract | ระบุ scope และรัน targeted verification ที่ตรงกับการเปลี่ยน; รันไม่ได้ต้องระบุเหตุผลและคำสั่งที่ควรรัน |
 | จะกล่าวว่าเสร็จ ทำงาน ผ่าน หรือพร้อมใช้ | ระบุหลักฐานที่พิสูจน์ claim นั้น; ไม่มีหลักฐานให้กล่าวเพียงว่าแก้ไขแล้วแต่ยังไม่ยืนยัน |
@@ -335,6 +341,7 @@ Acceptance Validator เป็นผู้ตรวจรับอิสระ �
 
 * Requirement
 * User Story (ถ้ามี)
+* ข้อความคำขอและ scope ที่ผู้ใช้อนุมัติ; หากมี semantic/behavioral change ให้แนบการตัดสินใจที่อนุมัติด้วย
 * Acceptance Criteria (ถ้ามี)
 * Scope ของการเปลี่ยนแปลง
 * เวอร์ชัน, commit หรือจุดอ้างอิงของงานที่ส่งตรวจ (ถ้ามี)

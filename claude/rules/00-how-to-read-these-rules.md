@@ -41,3 +41,20 @@ rules เหล่านี้คือ **หลักการ (principle) ไ�
    ที่ผูกกับ*ประเภทงาน* (frontend/UI → skill `ui-ux-baseline`) ทำเป็น skill: description บาง ๆ
    โหลดทุก session เป็น routing signal, body โหลดตอน invoke — **เจองาน domain นั้นเมื่อไหร่
    invoke skill ที่ตรงก่อนลงมือ** (rules/ เก็บเฉพาะหลักการ cross-cutting ที่ใช้เกือบทุกงาน)
+
+## Behavioral-change gate
+
+ก่อนแก้ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract ให้จำแนกว่า user, API/data consumer หรือ operator สังเกตพฤติกรรมต่างจากเดิมหรือไม่
+
+- ถ้า behavior เปลี่ยนหรือมี breaking change: อธิบายผลกระทบ, compatibility/rollback risk และทางเลือกที่เป็นไปได้ **ก่อนลงมือ** เพื่อให้ผู้ใช้ตัดสินใจ; ห้ามเลือก semantic change เงียบ ๆ
+- ถ้า behavior เดิมคงอยู่: ระบุสั้น ๆ ว่าเป็น behavior-preserving/internal change แล้วดำเนินการได้ ไม่ต้องยกระดับเป็น breaking change
+
+## Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo
+
+ก่อนสรุปหรือสร้าง workaround จากพฤติกรรมที่อาจถูกกำหนดโดย platform, framework, runtime, browser/OS, protocol/standard หรือ third-party dependency ให้จำแนกก่อนว่าเป็น `repo-specific` หรือ `external constraint`.
+
+- ตรวจ repository และหลักฐาน runtime ที่เกี่ยวข้องก่อน เพื่อเข้าใจ integration, version และสิ่งที่โครงการตัดสินใจไว้ — แต่ห้ามวนอ่านโค้ดเพื่อเดาข้อจำกัดภายนอกที่มีเอกสาร/มาตรฐานตอบได้
+- หากข้อสรุปหรือแนวทางแก้ขึ้นกับ external constraint, ขัดกับสิ่งที่มาตรฐานควรเป็น หรือกำลังจะสร้าง workaround ที่มีนัยสำคัญ: ค้นหา primary source ที่ตรง version/context (official documentation, specification, release note) ก่อนตัดสินใจ
+- แยกหลักฐานให้ชัด: source ภายนอกยืนยันข้อจำกัดทั่วไป; code/config/runtime ยืนยันว่า repo นี้ได้รับผลอย่างไร — อย่างใดอย่างหนึ่งแทนกันไม่ได้
+- หากหา primary source ไม่ได้หรือหลักฐานขัดกัน: ระบุสิ่งที่ยังไม่ยืนยันและทางเลือก; ห้ามแต่งข้อจำกัดขึ้นเพื่อปิดงาน
+- ไม่ต้อง research ภายนอกเมื่อข้อเท็จจริงพิสูจน์ได้ครบจาก contract/runtime ของ repo และไม่ได้อ้างข้อจำกัดของโลกภายนอก
