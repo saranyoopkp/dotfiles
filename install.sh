@@ -35,6 +35,7 @@ for sub in "$REPO"/claude/skills/*/*/SKILL.md; do
   else
     [ -d "$link" ] && { mv "$link" "$link.bak-pre-dotfiles"; echo "skill $gname: backed up old dir"; }
     make_link "$link" "$subdir"
+    echo "skill $gname: linked"
   fi
 done
 for d in "$REPO"/claude/skills/*/; do

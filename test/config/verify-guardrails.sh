@@ -26,7 +26,15 @@ check claude/rules/documentation-discipline.md "ตั้งแต่ 2 บร�
 check claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัดขึ้นไป"
 check claude/skills/api-design/SKILL.md "Idempotency-Key"
 check claude/skills/data-design/SKILL.md "ห้ามใส่ cache จนกว่าจะตอบครบ 3 ข้อ"
-check claude/skills/ui-ux-baseline/SKILL.md "เกิดได้จริงจาก data flow"
+check claude/skills/ui-ux-baseline/SKILL.md "interactive element ทุกชนิด"
+check claude/skills/ui-ux-baseline/resource-states/SKILL.md "เกิดได้จริงจาก data flow"
+check claude/skills/ui-ux-baseline/realtime-conversation/SKILL.md "scroll ขึ้น = ปลด sticky"
+check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "focus-visible"
+check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md "อย่าเริ่มด้วย Toast เพราะทำง่าย"
+check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md "partial failure ห้ามสรุปว่า “สำเร็จ”"
+check claude/skills/ops/infra-change/SKILL.md "ก่อน apply อธิบาย target, plan, risk, rollback/mitigation และขอ authorization"
+check claude/skills/ops/incident-response/SKILL.md "owner authorization ก่อนทำ"
+check claude/skills/ops/observability/SKILL.md "event log เงียบอย่างเดียวไม่ใช่ health signal"
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'เป็น **link**'
 check claude/skills/docs/setup/kit/CLAUDE.template.md "Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo"
 

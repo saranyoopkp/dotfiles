@@ -1,36 +1,23 @@
 ---
 name: ui-ux-baseline
-description: มาตรฐานขั้นต่ำ UI/UX/frontend — 4 data states (loading skeleton/empty/error/loaded), interaction+focus states, chat-feed sticky-bottom pattern, navigation, responsive, accessibility. ใช้เมื่อสร้าง/แก้ frontend component, หน้าจอ, layout, form, list/feed, chat, loading/empty/error state, responsive/mobile, หรือ UI ใด ๆ (React/Vue/Svelte/ไฟล์ .tsx/.jsx/.vue/.css). โหลดก่อนลงมือทำงาน UI เสมอ
+description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้เมื่อสร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component หรือไฟล์ .tsx/.jsx/.vue/.css. ก่อนลงมือให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline
 
-มาตรฐานขั้นต่ำ — ทำโดยไม่ต้องรอสั่ง; ถ้า design ที่ขอมาขัดข้อไหน ให้ทักและเสนอทางเลือกก่อนลงมือ
+ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วอ่าน child skill ที่ตรง **ก่อน** ออกแบบหรือเขียนโค้ด
 
-## Loading / data states — ทุก state ที่ผู้ใช้อาจพบต้องมีทางไปต่อ
-- loading, empty, error และ loaded ต้องมีเมื่อเกิดได้จริงจาก data flow หรือ action ของผู้ใช้—not เพื่อให้ครบ checklist
-- loading ที่รู้ shape ของ content ใช้ skeleton ของ layout จริง; empty มีข้อความและทางไปต่อ; error บอกปัญหาและ retry เมื่อทำได้
-- ห้าม layout shift ตอนเปลี่ยน state (skeleton ขนาดใกล้ content จริง)
+| ลักษณะงาน | ต้องอ่าน |
+|---|---|
+| render resource จาก server/client state | `ui-ux-baseline:resource-states` |
+| submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
+| เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
+| search, filter, sort, table/list, pagination, selection หรือ bulk action | `ui-ux-baseline:collections` |
+| chat, feed, event stream, presence หรือข้อมูลที่เข้าตามเวลา | `ui-ux-baseline:realtime-conversation` |
+| page layout, navigation, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
+| interactive element ทุกชนิด | `ui-ux-baseline:interaction-a11y` |
+| สร้างหรือแก้ shared component, token หรือ variant | `ui-ux-baseline:design-system` |
 
-## Chat / feed / realtime list (pattern ตายตัว — ทำครบทุกข้อ)
-- **sticky bottom**: อยู่ล่างสุด + ข้อความใหม่เข้า → auto-scroll ตาม
-- **scroll ขึ้น = ปลด sticky**: user เลื่อนอ่านย้อน แล้วมีข้อความใหม่ → **ห้าม scroll ทับ**
-  ให้แสดง indicator "มีข้อความใหม่ ↓" กดแล้วค่อยลงล่าง
-- **ส่งข้อความเอง → scroll ลงเสมอ** (การส่งคือ intent กลับล่างสุด)
-- **history = pagination on scroll ขึ้น** (โหลดเป็นช่วง, รักษา scroll position ตอน prepend)
-  — ห้ามโหลดทั้งหมดตั้งแต่แรก
-- **realtime client-state**: debounce mutation จาก socket event (มาเป็น burst); effect
-  ห้าม depend on reference ที่เปลี่ยนทุก refetch — ใช้ derived primitive (กัน feedback
-  loop ยิง request รัว); event-driven หลัก polling เป็น fallback ช้า; media reserve ขนาดก่อนโหลด
+งานเดียวอ่านได้หลาย child ตาม data flow จริง; ห้ามโหลดทั้งหมดเพียงเพื่อทำ checklist และห้ามข้าม child ที่ trigger ตรงเพียงเพราะ UI ดูเล็ก
 
-## Navigation / layout
-- nav หลักอยู่ตำแหน่งเดิมทุกหน้า — ห้ามย้าย/สลับตามหน้า
-- action หลักของหน้าเข้าถึงได้จาก viewport แรกโดยไม่ต้อง scroll
-- destructive action (ลบ/ยกเลิก/สลับสถานะสำคัญ) ต้องมี confirm และบอกผลลัพธ์
-
-## Interaction / accessibility states (ทุก interactive element)
-- hover / active / **focus-visible** / disabled — ครบทุกตัว (focus สำหรับ keyboard user
-  ห้ามลืม: element ที่ interactive แต่ไม่มี focus state = keyboard user มองไม่เห็นตัวเอง)
-- keyboard reachable: ปุ่มจริงคือ `<button>` ไม่ใช่ `<div onClick>` (ได้ focus + Enter/Space + role ฟรี)
-- tooltip/disclosure ตาม WAI-ARIA APG (อย่าใส่ aria ซ้ำกับ accessible name)
-- responsive: เช็ค mobile viewport ก่อนปิดงานทุกครั้ง ไม่ใช่เฉพาะตอนถูกขอ
+หาก design ที่ขอมาขัดกับ constraint จาก child skill ให้สรุปผลกระทบและทางเลือกก่อนลงมือ ตาม behavioral-change gate ของโครงการ
