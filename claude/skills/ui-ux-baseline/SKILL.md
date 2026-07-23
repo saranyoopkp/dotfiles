@@ -10,6 +10,9 @@ description: Router สำหรับมาตรฐาน UI/UX/frontend ใ�
 | ลักษณะงาน | ต้องอ่าน |
 |---|---|
 | สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอ direction ด้านภาพลักษณ์ | `ui-ux-baseline:visual-direction` |
+| ปรับ Visual Design หรือ UI effect ของหน้าจอเดิม เช่น spacing, typography, shadow, blur, gradient, overlay โดยคง brand/flow เดิม | `ui-ux-baseline:visual-polish` |
+| เพิ่มหรือแก้ transition, animation, progress, reveal, scroll behavior หรือ microinteraction | `ui-ux-baseline:motion-microinteractions` |
+| สร้างหรือแก้ shared color/type/spacing/grid/theme/elevation/icon หรือ motion token | `ui-ux-baseline:design-foundations` |
 | render resource จาก server/client state | `ui-ux-baseline:resource-states` |
 | submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
@@ -17,7 +20,7 @@ description: Router สำหรับมาตรฐาน UI/UX/frontend ใ�
 | chat, feed, event stream, presence หรือข้อมูลที่เข้าตามเวลา | `ui-ux-baseline:realtime-conversation` |
 | page layout, navigation, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
 | interactive element ทุกชนิด | `ui-ux-baseline:interaction-a11y` |
-| สร้างหรือแก้ shared component, token หรือ variant | `ui-ux-baseline:design-system` |
+| สร้างหรือแก้ shared component, primitive หรือ variant | `ui-ux-baseline:design-system` |
 
 งานเดียวอ่านได้หลาย child ตาม data flow จริง; ห้ามโหลดทั้งหมดเพียงเพื่อทำ checklist และห้ามข้าม child ที่ trigger ตรงเพียงเพราะ UI ดูเล็ก
 

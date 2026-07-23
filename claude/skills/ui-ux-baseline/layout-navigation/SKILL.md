@@ -12,3 +12,4 @@ description: ออกแบบ page layout, information hierarchy, navigation, 
 - layout เปลี่ยน state แล้วต้องคง orientation ของผู้ใช้: title, context, selection และ action ที่กำลังทำไม่ควรกระโดดหรือหายเงียบ ๆ
 
 เกณฑ์ accessibility ของ interactive element อยู่ที่ `interaction-a11y`; อย่าซ้ำ ARIA/keyboard detail ที่นี่
+scale ของ grid/spacing อยู่ `design-foundations`; ส่วนการจัดลำดับและวาง content/action ของหน้านี้ยังเป็น owner ของ skill นี้

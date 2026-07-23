@@ -21,4 +21,4 @@ description: เลือกและออกแบบ toast, banner, inline er
 - success จาก optimistic UI หรือ background job ต้องไม่สื่อว่า server ยืนยันแล้วจนกว่าจะยืนยันจริง; แสดง pending/reconciliation ให้เหมาะกับความเสี่ยง
 - ใช้ semantic status/alert และ announcement ให้เหมาะกับความเร่งด่วน; อย่าพึ่งสี, motion หรือ toast ที่หายเองเป็นช่องทางเดียว และอย่าขโมย focus จากงานที่ผู้ใช้กำลังทำโดยไม่มีเหตุผล
 
-Toast/Banner component API, token และ visual variant อยู่ที่ `ui-ux-baseline:design-system`; accessibility pattern เชิง interaction อยู่ที่ `ui-ux-baseline:interaction-a11y`. Skill นี้เป็นเจ้าของ **policy การเลือกและเนื้อหาของ feedback**.
+Toast/Banner component API และ visual variant อยู่ที่ `ui-ux-baseline:design-system`; token อยู่ที่ `ui-ux-baseline:design-foundations`; accessibility pattern เชิง interaction อยู่ที่ `ui-ux-baseline:interaction-a11y`. Skill นี้เป็นเจ้าของ **policy การเลือกและเนื้อหาของ feedback**.
