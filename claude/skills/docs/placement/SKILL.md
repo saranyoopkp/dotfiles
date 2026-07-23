@@ -35,7 +35,7 @@ description: เกณฑ์ตัดสินว่าความรู้แ�
   commented-out code (ลบ — git จำให้)
 - **ก่อนกดเขียน comment บรรทัดที่ 2 = สัญญาณว่ากำลังเขียน docs ผิดที่** — หยุด ย้าย
 
-## วินัย docstring (จุดบอดประจำของ agent — ห้ามเมิน)
+## วินัย docstring
 
 - **ฝั่งเขียน**: public function/class/module + script entry ทุกตัวได้ docstring ระบุ contract
   (ทำอะไร, input/output, invariant, side effect) — ตามธรรมเนียมภาษานั้น (PEP 257, JSDoc, ฯลฯ);

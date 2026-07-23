@@ -96,37 +96,10 @@ hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md
 deterministic audit lead (line-comment ติดต่อกันตั้งแต่ 2 บรรทัดใน diff) ไม่ตัดสิน docstring หรือ
 แก้ไฟล์ให้อัตโนมัติ.
 
-### ~~`acv-gate.sh`~~ — **ถอดออกจาก kit แล้ว (2026-07-17)**
-
-เคยมี Stop hook ที่ **block** เมื่อ session แก้ไฟล์ source แต่ไม่เคยเรียก agent `ACV-v1.0`
-(wire ผ่าน `settings.local.json` + patch ด้วย node) — **ถอดออกทั้งชุดตามคำสั่ง owner**
-กู้ของเดิมได้จาก git: `git log --diff-filter=D -- '*acv-gate.sh'`
-
-ทำไมถึงถอด (ไว้กันคนย้อนมาทำใหม่โดยไม่รู้ที่มา):
-- มันคือ **enforcement ที่ยังพิสูจน์ไม่ได้** — logic ผ่านทุกเคสบน Bash tool แต่ **ไม่เคย
-  live-fire ผ่าน hook runner จริง** (Bash tool ≠ hook subsystem, `claude -p` ไม่ยิง Stop hook)
-- ข้อมูลที่มีชี้ว่า **prompt-level ก็ขยับได้จริงโดยไม่ต้องมี gate**: ACV compliance ขึ้น
-  39% → 64% จาก SCC prompt รอบ cutover-1 ล้วน ๆ (gate ยังไม่เคย deploy ตอนวัด)
-- ราคา ACV (~6 นาที / ~213k token ต่อครั้ง) แปลว่า gate ที่บังคับแบบ "มี Edit = ต้องตรวจ"
-  ตีกว้างเกินความเสี่ยงจริงของงาน
-
-**สิ่งที่ยังไม่ถูกแก้ (known gap)**: Acceptance Validation Protocol ตอนนี้พึ่ง SCC prompt
-อย่างเดียว = พึ่งความจำของโมเดล ไม่มีระบบบังคับ — ถ้า compliance ตกกลับ ให้ revisit
-โดยเริ่มจาก "ACV เวอร์ชันเบา" ก่อนกลับมาที่ hard gate
-`settings.json` เป็น template เดียวใช้ได้ทุก OS จริง — args เป็น `["-c", "bash $(git
-rev-parse --show-toplevel ...)/.claude/hooks/docs-drift.sh <Event>"]`: คำนวณ repo root
-ด้วย `git rev-parse --show-toplevel` ตรง ๆ (ไม่พึ่ง `$CLAUDE_PROJECT_DIR` เลย — เคยพบว่า
-harness ทำให้ตัวแปรนี้ว่างเปล่า/backslash หายไปในบาง launch context), normalize ด้วย
-`sed`, แล้วเรียก `bash` explicit ซ้ำอีกชั้นข้างใน `-c` (ไม่ exec path ตรง ๆ — ไม่ต้อง
-พึ่ง execute bit ที่อาจหายข้าม git/OS boundary) — `docs-drift.sh` เองก็คำนวณ root ด้วย
-วิธีเดียวกันทุกประการ (สองชั้น sync กัน ไม่มี env var แทรกกลาง) — ดู decision log ใน
-dotfiles CLAUDE.md
-ถ้าอยากรู้ที่มา
-
 ## Inline work-notes (TODO ในโค้ด → ตารางสถานะ)
 
 รูปแบบนี้คือ **codetag** (PEP 350; รูปวงเล็บดัดแปลงจาก Google convention `TODO(username)` —
-เราใช้ scope/โดเมนแทน username เพราะ agent ไม่มีชื่อและ scope ใช้ join ตารางได้)
+เราใช้ scope/โดเมนแทนผู้รับผิดชอบส่วนบุคคล เพื่อให้ grep และ join ตารางสถานะได้สม่ำเสมอ)
 
 - **format ตายตัว greppable**: `TODO(scope): ข้อความ` / `FIXME(scope):` / `HACK(scope): เหตุผล`
   — ห้าม TODO เปล่าไร้ scope/บริบท (โน้ตที่ grep ไม่เจอ = โน้ตที่ไม่มีอยู่)
