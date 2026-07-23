@@ -1,0 +1,4 @@
+# Ops routing cases are separate so the generic suite remains easy to scan.
+ops	ops-infra	วางแผนเปลี่ยน Terraform IAM policy ของ production พร้อมประเมิน blast radius และ rollback
+ops	ops-incident	ระบบ production error rate พุ่งหลัง deploy ช่วย triage incident และเสนอ mitigation โดยยังไม่เปลี่ยนระบบ
+ops	ops-observe	เพิ่ม health signal และ alert ให้ worker queue ที่อาจหยุดทำงานเงียบ ๆ

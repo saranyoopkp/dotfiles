@@ -82,6 +82,12 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 ## Future boundaries (จดเผื่อ ยังไม่ commit)
 <!-- ไอเดียที่ "ยังไม่ตัดสินใจ" — จดกัน design ปัจจุบัน block อนาคต -->
 
+## Execution tracking
+<!-- เมื่อ harness มี Task tools: งานที่มีหลายขั้น, ข้ามหลาย turn, มี verification/handoff หรือ blocker/decision
+     ต้องสร้าง task list ก่อน mutation และ update ตามหลักฐาน (in-progress / blocked / completed). งานตอบคำถาม,
+     read-only inspection หรือแก้จุดเดียวจบใน turn เดียวไม่ต้องสร้าง checklist เพื่อพิธีกรรม. ไม่มี tool ให้สรุป
+     แผน/สถานะแบบกระชับในคำตอบแทน; ห้ามอ้างว่าติดตามผ่าน tool ที่ไม่มี -->
+
 ## TODO ถัดไป
 - [ ] <งานถัดไปแบบ actionable>
 
@@ -156,4 +162,4 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
    `docs/<topic>.md` (หรือ `memory/<fact>.md` ถ้าเป็น fact สั้น) แล้วเหลือสรุป 1–3 บรรทัด
    + ลิงก์ — ห้ามปล่อยให้ CLAUDE.md เป็นที่กองเนื้อหา (มันถูกโหลดเต็มทุก session)
 _(มี lifecycle hooks ใน `.claude/settings.json` คอยเตือนที่ SessionStart / TaskCompleted /
-Stop / PreCompact อยู่แล้ว — เจอข้อความ `[docs-setup]` = ทำตามนั้นก่อนไปต่อ)_
+Stop / PreCompact อยู่แล้ว — เจอข้อความ `[docs]` = ทำตามนั้นก่อนไปต่อ)_

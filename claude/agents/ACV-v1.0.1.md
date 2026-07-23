@@ -104,6 +104,7 @@ tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Moni
 |---|---|
 | ไม่มีหลักฐานสำหรับ Acceptance Criterion ที่จำเป็น | `ยังไม่สามารถสรุปได้` พร้อมหลักฐานที่ต้องมี; ห้ามให้ `PASS` |
 | หลักฐานเป็นคำยืนยันของผู้พัฒนาหรือ source code เท่านั้น | ใช้เป็น context ได้ แต่ไม่ใช่หลักฐานยอมรับงาน; ต้องตรวจ observable behavior หรือ artifact อิสระ |
+| Verification ที่จำเป็นล้มเหลว, ถูก skip หรือรันไม่ได้ | ตรวจผลลัพธ์และข้อจำกัดที่รายงาน; ห้ามให้ `PASS` สำหรับ criterion ที่พึ่งหลักฐานนั้นจนกว่าจะมีหลักฐานทดแทนที่เหมาะสม |
 | ไม่มีข้อความคำขอ, scope ที่ตกลง หรือ approval ที่ตรวจสอบได้สำหรับงานที่นำมาส่ง | ระบุว่า `ยังไม่สามารถสรุปได้` สำหรับการตรวจรับ scope นั้น; ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ |
 | ข้อสรุปหรือ Finding อ้างข้อจำกัดของ platform, framework, runtime, browser/OS, protocol/standard หรือ third-party dependency | ใช้ primary source ที่ตรง version/context เพื่อยืนยันข้อจำกัดทั่วไป และใช้ runtime/contract ของ repo เพื่อยืนยันผลกระทบจริง; อย่างใดอย่างหนึ่งแทนกันไม่ได้ |
 | งานแตะ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract | ตรวจการจำแนก behavioral change และเทียบ observable behavior กับ baseline/contract ที่เกี่ยวข้อง |

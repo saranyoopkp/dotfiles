@@ -11,7 +11,8 @@
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # on-demand skills ที่มีอยู่ (เพิ่มเมื่อย้าย rule เป็น skill เพิ่ม)
-ONDEMAND_SKILLS="ui-ux-baseline data-design api-design"
+ONDEMAND_SKILLS="ui-ux-baseline data-design api-design ops"
+SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ops.tsv")
 [ -f "$HERE/.local.sh" ] && . "$HERE/.local.sh"
 if [ -n "${ROUTING_SANDBOX:-}" ]; then
   SANDBOX="$ROUTING_SANDBOX"; mkdir -p "$SANDBOX"
@@ -49,12 +50,12 @@ n=0
 while IFS=$'\t' read -r expect label task; do
   case "${expect:-}" in ''|'#'*) continue ;; esac
   ( cd "$SANDBOX" && timeout 180 claude -p --output-format stream-json --verbose \
-      --agent SCC-v1.0 --dangerously-skip-permissions \
+      --agent SCC-v1.0.1 --dangerously-skip-permissions \
       "งาน: $task
 
 วางแผนจริง (ไม่ต้องเขียนโค้ด)" > "$RUN_DIR/$label.stream.jsonl" 2>/dev/null ) &
   n=$((n+1))
-done < "$HERE/scenarios.tsv"
+done < <(cat "${SCENARIO_FILES[@]}")
 echo "ยิง $n scenario ขนานกัน — รอ..."
 wait
 echo "เสร็จ — parse:"
@@ -70,7 +71,7 @@ while IFS=$'\t' read -r expect label task; do
   if [ "$ok" = 1 ]; then line="  PASS  $(printf '%-12s' "$label") expect=$(printf '%-14s' "$expect") invoked=[${invoked:-}]"; pass=$((pass+1))
   else               line="  FAIL  $(printf '%-12s' "$label") expect=$(printf '%-14s' "$expect") invoked=[${invoked:-}]  → ดู $label.stream.jsonl"; fail=$((fail+1)); fi
   echo "$line" | tee -a "$RUN_DIR/summary.txt"
-done < "$HERE/scenarios.tsv"
+done < <(cat "${SCENARIO_FILES[@]}")
 
 echo "---- pass=$pass fail=$fail" | tee -a "$RUN_DIR/summary.txt"
 [ "$fail" -eq 0 ]

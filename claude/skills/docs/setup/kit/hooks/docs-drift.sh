@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# docs-drift.sh — docs-setup lifecycle hook (ทุก OS — Windows รันผ่าน Git Bash)
+# docs-drift.sh — documentation/memory lifecycle hook (ทุก OS — Windows รันผ่าน Git Bash)
 # Called from .claude/settings.json with $1 = SessionStart|Stop|TaskCompleted|PreCompact
 # (FileChanged case ยังอยู่ด้านล่างแต่ "not wired" — harness ไม่เคย fire event นี้จริง
 # แม้ documented ไว้; ทดสอบยิงจริง 3 ช่องทางแล้วเงียบทุกครั้ง 2026-07-12 — เก็บ dead
@@ -20,6 +20,23 @@ DRIFT="$(git -C "$ROOT" status --porcelain -- CLAUDE.md docs memory 2>/dev/null 
 
 json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
 
+# Detect newly-added consecutive line comments; this is an audit lead, not a semantic verdict.
+new_multiline_comments() {
+  git -C "$ROOT" diff --no-ext-diff --unified=0 HEAD -- 2>/dev/null |
+    awk '
+      /^\+\+\+ b\// { file=substr($0, 7); next }
+      /^@@ / { h=$0; sub(/^.*\+/, "", h); sub(/,.*/, "", h); line=h-1; run=0; next }
+      /^\+/ && !/^\+\+\+/ {
+        line++; text=substr($0,2)
+        if (text ~ /^[[:space:]]*(#|\/\/)/) { run++; if (run == 2) print file ":" (line-1) }
+        else run=0
+        next
+      }
+      /^ / { line++; run=0; next }
+      /^-/ { run=0; next }
+    ' | sort -u | paste -sd ', ' -
+}
+
 emit() { # $1 = context text, $2 = extra json fields (optional, starts with ,)
   printf '{"hookSpecificOutput":{"hookEventName":"%s","additionalContext":"%s"%s}}\n' \
     "$EVENT" "$(json_escape "$1")" "${2:-}"
@@ -28,11 +45,11 @@ emit() { # $1 = context text, $2 = extra json fields (optional, starts with ,)
 case "$EVENT" in
   SessionStart)
     PARTS=""
-    [ -n "$DRIFT" ] && PARTS="[docs-setup] Uncommitted docs/memory left over from a previous session: $DRIFT. Curate (strip personal metadata like originSessionId, verify no secrets) and commit before starting new work."
+    [ -n "$DRIFT" ] && PARTS="[docs] Uncommitted docs/memory left over from a previous session: $DRIFT. Curate (strip personal metadata like originSessionId, verify no secrets) and commit before starting new work."
     if [ -f "$ROOT/CLAUDE.md" ]; then
       LINES="$(wc -l < "$ROOT/CLAUDE.md" | tr -d ' ')"
       if [ "$LINES" -gt 200 ]; then
-        PARTS="$PARTS [docs-setup] CLAUDE.md is $LINES lines (>200) - it is loaded in full every session. Promote oversized sections (>~15 lines) into docs/<topic>.md or memory/ and leave 1-3 line summaries + links."
+        PARTS="$PARTS [docs] CLAUDE.md is $LINES lines (>200) - it is loaded in full every session. Promote oversized sections (>~15 lines) into docs/<topic>.md or memory/ and leave 1-3 line summaries + links."
       fi
     fi
     # link check — เตือนเฉพาะเมื่อ "พิสูจน์ได้ว่าไม่ link" เท่านั้น (fail-safe:
@@ -41,7 +58,7 @@ case "$EVENT" in
     MEM="$HOME/.claude/projects/$ID/memory"
     if [ -d "$ROOT/memory" ] && [ -d "$HOME/.claude/projects" ] && [ -e "$MEM" ]; then
       if ! [ "$MEM" -ef "$ROOT/memory" ] && ! [ -L "$MEM" ]; then
-        PARTS="$PARTS [docs-setup] Harness memory dir exists but is NOT linked to this repo's memory/ (separate copies will drift). Re-run the docs-setup init script to relink (see CLAUDE.md 'Memory policy')."
+        PARTS="$PARTS [docs] Harness memory dir exists but is NOT linked to this repo's memory/ (separate copies will drift). Re-run this repository's memory-link setup procedure (see CLAUDE.md 'Memory policy')."
       fi
     fi
     native_path() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) cygpath -w "$1" ;; *) printf '%s' "$1" ;; esac; }
@@ -61,7 +78,7 @@ case "$EVENT" in
       LAST="$(cat "$STAMP" 2>/dev/null || true)"
       if [ "$HASH" != "$LAST" ]; then
         printf '%s' "$HASH" > "$STAMP"
-        PARTS="[docs-setup] Docs/memory changes are uncommitted: $DRIFT. If a piece of work just finished, update CLAUDE.md/docs to reflect it and commit docs together with the work (or propose the commit to the user)."
+        PARTS="[docs] Docs/memory changes are uncommitted: $DRIFT. If a piece of work just finished, update CLAUDE.md/docs to reflect it and commit docs together with the work (or propose the commit to the user)."
       fi
     fi
     # verify reminder — เตือน ณ จุดปิด turn เมื่อมี source change ค้าง (แก้ salience gap:
@@ -77,24 +94,28 @@ case "$EVENT" in
         PARTS="$PARTS [verify] Uncommitted source changes at turn end. Before reporting this work as done: exercise the affected flow for runtime evidence (build/tests passing is not the same as working), and apply your agent's acceptance/review standard at the level this change's risk calls for."
       fi
     fi
+    COMMENTS="$(new_multiline_comments)"
+    if [ -n "$COMMENTS" ]; then
+      PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Keep only one-line why/constraint with a pointer to project docs; move narrative/history/detail into project documentation. Keep multi-line docstrings only for public interface contracts."
+    fi
     PARTS="${PARTS# }"
     [ -n "$PARTS" ] && emit "$PARTS"
     ;;
   TaskCompleted)
-    MSG="[docs-setup] Task completed - checkpoint: (1) does CLAUDE.md/docs still reflect reality after this task? (2) any new memory worth saving? (3) commit doc changes together with the work. (4) verify the delivered behavior with runtime evidence and apply your acceptance/review standard before reporting done."
+    MSG="[docs] Task completed - checkpoint: (1) does CLAUDE.md/docs still reflect reality after this task? (2) any new memory worth saving? (3) commit doc changes together with the work. (4) verify the delivered behavior with runtime evidence and apply your acceptance/review standard before reporting done."
     [ -n "$DRIFT" ] && MSG="$MSG Currently uncommitted: $DRIFT."
     emit "$MSG"
     ;;
   PreCompact)
     # NOTE: harness rejects hookSpecificOutput.additionalContext for PreCompact
     # (docs say otherwise - live behavior wins). Use top-level systemMessage.
-    printf '{"systemMessage":"[docs-setup] Compacting - persist important decisions/learnings into memory/ or docs/ now; unwritten details may be lost in the summary."}\n'
+    printf '{"systemMessage":"[docs] Compacting - persist important decisions/learnings into memory/ or docs/ now; unwritten details may be lost in the summary."}\n'
     ;;
   FileChanged)
     INPUT="$(cat)"
     FP="$(printf '%s' "$INPUT" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
     CT="$(printf '%s' "$INPUT" | sed -n 's/.*"change_type"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
-    [ -n "$FP" ] && emit "[docs-setup] Watched doc file changed on disk: $FP ($CT). It may have been edited outside this session - re-read it before relying on its previous content."
+    [ -n "$FP" ] && emit "[docs] Watched doc file changed on disk: $FP ($CT). It may have been edited outside this session - re-read it before relying on its previous content."
     ;;
 esac
 exit 0

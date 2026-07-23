@@ -81,7 +81,7 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 |---|---|
 | `SessionStart` | sweep ของค้างจาก session ก่อน (uncommitted docs/memory) + ตรวจว่า link ยังดี + register watchPaths |
 | `TaskCompleted` | checkpoint ณ จุดปิดงาน: เอกสารตามทันไหม / มี memory ควรจดไหม / commit พร้อมงาน |
-| `Stop` | โหมดนุ่ม: เตือนเมื่อมี docs/memory ค้างไม่ commit (throttle — เตือนครั้งเดียวต่อสถานะ ไม่สแปมทุก turn) |
+| `Stop` | โหมดนุ่ม: เตือนเมื่อมี docs/memory ค้างไม่ commit, source change ที่ยังไม่มี runtime evidence และ line-comment ใหม่ตั้งแต่ 2 บรรทัด (throttle — เตือนครั้งเดียวต่อสถานะ ไม่สแปมทุก turn) |
 | `PreCompact` | ก่อน context ถูกบีบ: จดของสำคัญลง memory/docs ก่อนหายไปกับ summary |
 
 > `FileChanged` เคย wire ไว้แต่**ตัดออกแล้ว** (2026-07-12) — ทดสอบยิงจริงพบว่า harness
@@ -90,7 +90,11 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 > session) ถูกครอบด้วย reminder ของ harness เองอยู่แล้ว (system-reminder "modified by
 > the user or a linter") จึงไม่มี gap จริง
 
-ทุกตัว **แจ้งผ่าน additionalContext ไม่ block** — Claude เห็นข้อความ `[docs-setup]` แล้วจัดการเอง
+ทุกตัว **แจ้งผ่าน additionalContext ไม่ block** — Claude เห็นข้อความ `[docs]` แล้วจัดการเอง
+hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md`, `docs/` และ `memory/`; ห้ามอ้าง rule
+หรือ skill ของ dotfiles เพราะ repo ปลายทางอาจไม่มีสิ่งเหล่านั้น. การตรวจ comment เป็นเพียง
+deterministic audit lead (line-comment ติดต่อกันตั้งแต่ 2 บรรทัดใน diff) ไม่ตัดสิน docstring หรือ
+แก้ไฟล์ให้อัตโนมัติ.
 
 ### ~~`acv-gate.sh`~~ — **ถอดออกจาก kit แล้ว (2026-07-17)**
 

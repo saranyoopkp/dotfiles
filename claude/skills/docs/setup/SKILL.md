@@ -28,7 +28,7 @@ User ใช้ระบบเอกสารแบบเดียวกันท
   init สร้างให้; อ้างด้วย pointer และห้าม index ลง `memory/MEMORY.md` ที่ commit)
 - อัปเดตเอกสารใน **commit เดียวกับงาน** เสมอ; internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
 - **lifecycle hooks** (`.claude/hooks/` + `.claude/settings.json`, init ติดตั้งให้) เตือน docs drift
-  ที่ SessionStart / TaskCompleted / Stop / PreCompact — ข้อความ `[docs-setup]`
+  ที่ SessionStart / TaskCompleted / Stop / PreCompact — ข้อความ `[docs]`
   ใน context = ทำตามก่อนไปต่อ
 
 ## Context gathering (ทำก่อนเติม/refactor CLAUDE.md เสมอ)

@@ -87,6 +87,15 @@ docs-drift.sh Stop hook (เตือนเมื่อมี source change ค�
 **เกณฑ์ตัดสิน**: lookback รอบหน้า ACV/self-verify ใน edit-session ขึ้นจาก 11% =
 salience คือตัวขับ / ไม่ขึ้น = ต้องดู enforcement.
 
+### Follow-up guard update (2026-07-23)
+
+เพิ่ม Intent gate และ failure-escalation ใน rule/SCC/ACV: คำถามหรือรายงานปัญหาไม่ใช่คำสั่ง
+mutation; verification ที่ล้มเหลว/ถูก skip ต้องมี evidence, alternative หรือ blocker ก่อนสรุปผล.
+เพิ่ม execution-tracking gate: เมื่อมี Task tools และงานหลายขั้น/หลาย turn/มี handoff หรือ blocker
+ต้องสร้างและ update task จากหลักฐาน; งานคำถามหรือ read-only สั้น ๆ ไม่สร้าง checklist เพื่อพิธีกรรม.
+ฝั่ง kit เพิ่ม Stop audit ที่จับ line-comment ใหม่ตั้งแต่ 2 บรรทัดใน diff แบบไม่ block เพื่อดัน
+รายละเอียดไป project docs; hook ต้อง self-contained และห้ามอ้าง rule/skill ของ dotfiles.
+
 ## สัญญาณความเชื่อถือ 3 ชั้น (นิยาม + ค่าล่าสุด 07-17)
 
 | ชั้น | นิยาม | ค่า | ทิศ |
