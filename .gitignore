@@ -1,4 +1,7 @@
 
+# macOS Finder metadata
+.DS_Store
+
 # per-machine routing-test sandbox override
 test/routing/.local.sh
 MY-NOTE
