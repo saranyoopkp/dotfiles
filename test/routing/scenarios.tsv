@@ -5,6 +5,7 @@
 ui-ux-baseline	ui-list	วางแผน React component แสดง list ของ order ที่ fetch จาก API
 ui-ux-baseline	ui-tooltip	implement hover tooltip บนไอคอนใน navbar React ให้ครอบ interaction + accessibility
 ui-ux-baseline	ui-form	เพิ่มปุ่ม submit ในฟอร์ม React ที่ disable ตอนกำลังส่งและแสดง error
+ui-ux-baseline	ui-visual-direction	ออกแบบ landing page ใหม่สำหรับ studio ทำเครื่องดนตรี analogue โดยต้องมี visual identity ที่ไม่เหมือน SaaS template
 data-design	db-schema	ออกแบบ schema ตาราง orders + index ใน Postgres
 data-design	db-cache	เพิ่ม cache layer ให้ query ที่อ่านบ่อย พร้อม invalidation
 data-design	db-queue	ทำ message queue consumer ประมวลผล order แบบ idempotent

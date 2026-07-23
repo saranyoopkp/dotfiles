@@ -34,12 +34,22 @@ if rg -q 'docs:placement|docs-setup|/docs:' "$ROOT/claude/skills/docs/setup/kit/
   echo "hook must not reference an optional skill" >&2
   exit 1
 fi
-check claude/skills/api-design/SKILL.md "Idempotency-Key"
+check claude/skills/api-design/SKILL.md "api-design:contract-core"
+check claude/skills/api-design/contract-core/SKILL.md "OpenAPI หรือ JSON Schema"
+check claude/skills/api-design/errors/SKILL.md "Problem Details"
+check claude/skills/api-design/collections/SKILL.md "tie-breaker ที่ stable"
+check claude/skills/api-design/mutations/SKILL.md "Idempotency-Key"
+check claude/skills/api-design/async-operations/SKILL.md "202 Accepted"
+check claude/skills/api-design/caching-concurrency/SKILL.md "If-Match"
+check claude/skills/api-design/evolution/SKILL.md "behavioral-change gate"
 check claude/skills/data-design/SKILL.md "ห้ามใส่ cache จนกว่าจะตอบครบ 3 ข้อ"
 check claude/skills/ui-ux-baseline/SKILL.md "interactive element ทุกชนิด"
+check claude/skills/ui-ux-baseline/SKILL.md "ui-ux-baseline:visual-direction"
 check claude/skills/ui-ux-baseline/resource-states/SKILL.md "เกิดได้จริงจาก data flow"
 check claude/skills/ui-ux-baseline/realtime-conversation/SKILL.md "scroll ขึ้น = ปลด sticky"
 check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "focus-visible"
+check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "prefers-reduced-motion"
+check claude/skills/ui-ux-baseline/visual-direction/SKILL.md "aesthetic thesis"
 check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md "อย่าเริ่มด้วย Toast เพราะทำง่าย"
 check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md "partial failure ห้ามสรุปว่า “สำเร็จ”"
 check claude/skills/ops/infra-change/SKILL.md "ก่อน apply อธิบาย target, plan, risk, rollback/mitigation และขอ authorization"

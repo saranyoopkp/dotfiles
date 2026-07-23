@@ -9,6 +9,7 @@ description: Router สำหรับมาตรฐาน UI/UX/frontend ใ�
 
 | ลักษณะงาน | ต้องอ่าน |
 |---|---|
+| สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอ direction ด้านภาพลักษณ์ | `ui-ux-baseline:visual-direction` |
 | render resource จาก server/client state | `ui-ux-baseline:resource-states` |
 | submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |

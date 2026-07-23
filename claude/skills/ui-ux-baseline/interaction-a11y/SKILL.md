@@ -10,5 +10,6 @@ description: มาตรฐาน interaction และ accessibility สำห
 - ทุก action ต้อง keyboard reachable และทำงานด้วย keyboard ตาม native expectation; อย่าเขียน role/keyboard handler ซ้ำเมื่อ native element ทำให้ได้แล้ว
 - dialog, menu, tooltip และ disclosure ให้ทำตาม WAI-ARIA APG: focus management, Escape, labeling และ announcement ถูกต้อง; อย่าใส่ ARIA ซ้ำกับ accessible name ที่มีอยู่
 - validation/error และ dynamic update ต้องมี name, instruction และ announcement ที่ผู้ใช้ assistive technology เข้าใจได้; สีอย่างเดียวไม่ใช่การสื่อสารที่พอ
+- motion ที่มีความหมายหรือเล่นต่อเนื่องต้องเคารพ `prefers-reduced-motion`; ลดหรือปิดโดยไม่ซ่อนข้อมูล, state หรือทางสั่งงาน
 
 ตรวจอย่างน้อยด้วย keyboard: tab order, focus-visible, activate, dismiss และ focus return สำหรับ pattern ที่มีจริง
