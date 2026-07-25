@@ -52,13 +52,28 @@ case "$EVENT" in
         PARTS="$PARTS [docs] CLAUDE.md is $LINES lines (>200) - it is loaded in full every session. Promote oversized sections (>~15 lines) into docs/<topic>.md or memory/ and leave 1-3 line summaries + links."
       fi
     fi
-    # link check — เตือนเฉพาะเมื่อ "พิสูจน์ได้ว่าไม่ link" เท่านั้น (fail-safe:
-    # env แปลก เช่น bash ตัวอื่น/HOME ไม่ตรง → เงียบ ไม่ปล่อย false positive);
+    # memory link — harness dir ของ *cwd นี้* ต้องชี้มา memory/ ของ tree นี้; ใน worktree
+    # `--show-toplevel` คืน path ของ worktree ⇒ link ไปที่ memory/ ของ worktree เอง (ไม่ใช่ของ
+    # tree หลัก) fact ที่เขียนระหว่าง session จึงลง checkout ที่ commit ไปกับ branch นั้นได้
+    # ไม่ link = harness เขียนลงสำเนาของตัวเอง แล้ว fact หายทั้งก้อนแบบ autoload
     # เกณฑ์จริงคือ same-file (-ef) ไม่ใช่แค่ -L เพราะ junction detection ต่างกันตาม env
     MEM="$HOME/.claude/projects/$ID/memory"
-    if [ -d "$ROOT/memory" ] && [ -d "$HOME/.claude/projects" ] && [ -e "$MEM" ]; then
-      if ! [ "$MEM" -ef "$ROOT/memory" ] && ! [ -L "$MEM" ]; then
-        PARTS="$PARTS [docs] Harness memory dir exists but is NOT linked to this repo's memory/ (separate copies will drift). Re-run this repository's memory-link setup procedure (see CLAUDE.md 'Memory policy')."
+    if [ -d "$ROOT/memory" ] && [ -d "$HOME/.claude/projects" ]; then
+      if [ -L "$MEM" ] && [ ! -e "$MEM" ]; then
+        PARTS="$PARTS [docs] Harness memory link is broken (points nowhere) - memory written this session will not reach the repo. Recreate it pointing at this tree's memory/."
+      elif [ ! -e "$MEM" ]; then
+        # ยังไม่มี dir = ไม่มีข้อมูลให้เสีย → สร้าง link เองเลย (เคสนี้คือ worktree ใหม่/เครื่องใหม่
+        # ซึ่งเดิมเงียบ แล้วปล่อยให้ harness สร้างสำเนาแยกทีหลังโดยไม่มีใครรู้)
+        # ยืนยันด้วย -ef เสมอ เพราะ `ln -s` บน Git Bash อาจกลายเป็น "คัดลอก" เงียบ ๆ ตาม
+        # ค่า MSYS=winsymlinks ⇒ Windows ใช้ junction (ไม่ต้องสิทธิ์ admin) แทน
+        mkdir -p "$HOME/.claude/projects/$ID" 2>/dev/null
+        case "$(uname -s)" in
+          MINGW*|MSYS*|CYGWIN*) cmd //c mklink //J "$(cygpath -w "$MEM")" "$(cygpath -w "$ROOT/memory")" >/dev/null 2>&1 ;;
+          *) ln -s "$ROOT/memory" "$MEM" 2>/dev/null ;;
+        esac
+        [ "$MEM" -ef "$ROOT/memory" ] || PARTS="$PARTS [docs] Harness memory dir was missing and could not be auto-linked to this repo's memory/ - memory written this session will not reach the repo. Create the link manually (see CLAUDE.md 'Memory policy')."
+      elif ! [ "$MEM" -ef "$ROOT/memory" ] && ! [ -L "$MEM" ]; then
+        PARTS="$PARTS [docs] Harness memory dir exists but is NOT linked to this repo's memory/ (separate copies will drift). Merge its files into memory/ first, then replace it with a link (see CLAUDE.md 'Memory policy') - do not delete it."
       fi
     fi
     native_path() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) cygpath -w "$1" ;; *) printf '%s' "$1" ;; esac; }
@@ -81,9 +96,7 @@ case "$EVENT" in
         PARTS="[docs] Docs/memory changes are uncommitted: $DRIFT. If a piece of work just finished, update CLAUDE.md/docs to reflect it and commit docs together with the work (or propose the commit to the user)."
       fi
     fi
-    # verify reminder — เตือน ณ จุดปิด turn เมื่อมี source change ค้าง (แก้ salience gap:
-    # มาตรฐานตรวจรับถูกอ่านครั้งเดียวตอน session start แล้วจมใน context ยาว);
-    # generic โดยเจตนา — ชี้ไปที่มาตรฐานของ agent เอง ไม่ผูกกับกลไกตรวจตัวใดตัวหนึ่ง
+    # verify reminder — generic on purpose (not tied to one review mechanism); re-fires on every Stop so it survives a long context, not just SessionStart
     SRC="$(git -C "$ROOT" status --porcelain 2>/dev/null | grep -vE '^.. (CLAUDE\.md|docs/|memory/)' | head -1)"
     if [ -n "$SRC" ]; then
       VSTAMP="${TMPDIR:-/tmp}/verify-nudge-$ID.stamp"

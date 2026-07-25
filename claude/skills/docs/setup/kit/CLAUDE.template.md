@@ -135,20 +135,27 @@ ADR สำหรับ decision · Diátaxis + SSOT สำหรับแยก�
 
 ## Memory policy (สำหรับ Claude — อ่านทุก session)
 
-**`memory/` ใน repo คือ memory ตัวจริงชุดเดียว** — ฝั่ง harness
+**`memory/` ของ tree ที่ session เปิดอยู่ คือ memory ตัวจริง** — ฝั่ง harness
 (`~/.claude/projects/<project-id>/memory`) เป็น **link** ชี้มาที่นี่ (junction บน Windows /
-symlink บน unix) เขียน/อ่าน memory ตามปกติได้เลย ไฟล์ลง repo อัตโนมัติ:
+symlink บน unix) เขียน/อ่าน memory ตามปกติได้เลย ไฟล์ลง repo อัตโนมัติ
+**`docs-drift.sh` (SessionStart) สร้าง link ให้เองเมื่อยังไม่มี** — รวมถึงใน git worktree
+ซึ่ง link จะชี้ `memory/` ของ **worktree เอง** (ไม่ใช่ของ tree หลัก) เพื่อให้ fact ที่เขียน
+ระหว่างงานนั้น commit ไปกับ branch เดียวกับงานได้ ⇒ **ไม่ต้องรัน script อะไรก่อน**:
 
 - memory ใหม่ที่บันทึก = untracked file ใน repo → คัดกรองแล้ว commit พร้อมงาน:
   **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
 - **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — โน้ต ops sensitive (secret/IP/server path)
   → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/` (gitignored ทั้งคู่,
   อ้างด้วย pointer แทน; ห้าม index ของใน private ลง `memory/MEMORY.md` ที่ commit)
-- ถ้าพบว่า harness memory dir **ไม่ใช่ link** (เช่น repo ย้ายเครื่อง/เครื่องใหม่) → สร้างใหม่:
-  - Windows: `New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<id>\memory" -Target "<repo>\memory"`
-  - unix: `ln -s <repo>/memory ~/.claude/projects/<id>/memory`
-  - `<id>` = absolute path ของ repo โดยแทนอักขระที่ไม่ใช่ a-z/0-9 ด้วย `-`
-  - มี dir เดิมอยู่แล้ว → merge ไฟล์เข้า repo ก่อน แล้ว rename ของเดิมเป็น `.bak`
+- **hook เตือนเมื่อไหร่ = ตอนที่มันสร้าง link ให้เองไม่ได้** (ไม่เตือน = เรียบร้อยแล้ว) —
+  เจอข้อความ `[docs] Harness memory ...` ให้แก้ก่อนทำงาน ไม่งั้น fact ที่เขียน session นี้
+  ไม่ถึง repo เลย:
+  - **มี dir เดิมที่ไม่ใช่ link** (มี fact ค้างอยู่ข้างใน) → **ห้ามลบ** merge ไฟล์เข้า
+    `memory/` ของ repo ก่อน แล้ว rename ของเดิมเป็น `.bak` ค่อยสร้าง link
+  - สร้าง link เอง: unix `ln -s <tree>/memory ~/.claude/projects/<id>/memory` ·
+    Windows `New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<id>\memory" -Target "<tree>\memory"`
+  - `<id>` = absolute path ของ **tree ที่เปิด session อยู่** (worktree ก็ path ของ worktree)
+    โดยแทนอักขระที่ไม่ใช่ a-z/0-9 ด้วย `-`
 - fact ที่ผิด/หมดอายุ → ลบไฟล์ + ลบบรรทัดใน `memory/MEMORY.md`
 
 **Task-close checklist (ทำทุกครั้งที่ปิดงานหนึ่งชิ้น ไม่ต้องรอจบ session):**

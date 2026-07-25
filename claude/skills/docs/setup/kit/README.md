@@ -79,7 +79,7 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 
 | Event | หน้าที่ |
 |---|---|
-| `SessionStart` | sweep ของค้างจาก session ก่อน (uncommitted docs/memory) + ตรวจว่า link ยังดี + register watchPaths |
+| `SessionStart` | sweep ของค้างจาก session ก่อน (uncommitted docs/memory) + **สร้าง memory link ให้เองถ้ายังไม่มี** (worktree ชี้ `memory/` ของ worktree เอง) เตือนเมื่อสร้างไม่ได้ + register watchPaths |
 | `TaskCompleted` | checkpoint ณ จุดปิดงาน: เอกสารตามทันไหม / มี memory ควรจดไหม / commit พร้อมงาน |
 | `Stop` | โหมดนุ่ม: เตือนเมื่อมี docs/memory ค้างไม่ commit, source change ที่ยังไม่มี runtime evidence และ line-comment ใหม่ตั้งแต่ 2 บรรทัด (throttle — เตือนครั้งเดียวต่อสถานะ ไม่สแปมทุก turn) |
 | `PreCompact` | ก่อน context ถูกบีบ: จดของสำคัญลง memory/docs ก่อนหายไปกับ summary |
@@ -89,6 +89,10 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 > เผื่ออนาคต แต่ไม่ได้ wire ใน `settings.json` — งานที่มันควรทำ (เตือนไฟล์ถูกแก้นอก
 > session) ถูกครอบด้วย reminder ของ harness เองอยู่แล้ว (system-reminder "modified by
 > the user or a linter") จึงไม่มี gap จริง
+
+`Stop` verify-nudge จงใจ generic (ไม่ผูกกับกลไกตรวจตัวใดตัวหนึ่ง) และรีเฟรชทุกครั้งที่ source
+เปลี่ยน: มาตรฐานตรวจรับถูกอ่านครั้งเดียวตอน session start แล้วจมหายไปใน context ยาว ๆ —
+เตือนซ้ำที่จุดปิด turn จึงชดเชย salience gap นั้นได้โดยไม่ต้องรู้จักมาตรฐานของ agent ที่ใช้อยู่
 
 ทุกตัว **แจ้งผ่าน additionalContext ไม่ block** — Claude เห็นข้อความ `[docs]` แล้วจัดการเอง
 hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md`, `docs/` และ `memory/`; ห้ามอ้าง rule
