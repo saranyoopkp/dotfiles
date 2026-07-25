@@ -19,6 +19,13 @@ rules เหล่านี้คือ **หลักการ (principle) ไ�
    ไม่ใช่การขายไอเดีย: เขียนแล้วทำงานต่อ ให้ user เป็นคนหยิบเอง
    ห้ามข้ามการ**รายงาน/เสนอ**ด้วยเหตุผล "user ไม่ได้ถาม" — **ความเงียบที่มองไม่เห็น คือสิ่งที่ข้อนี้ห้าม**;
    แต่การเสนอไม่ใช่ authorization ให้แก้หรือขยาย scope เอง (ดู Intent gate)
+
+   **Pain ที่ตรวจพบห้ามเงียบ:** เมื่อหลักฐานใน scope แสดง duplication, workaround ซ้อน,
+   change fan-out, coupling, convention แตก, migration ค้าง, test blind spot หรือจุดที่ถูกแก้ซ้ำ
+   ให้เสนอหนึ่งครั้งด้วย `หลักฐาน → ผลกระทบ → refactor ที่เสนอ → scope/ต้นทุน`; ห้ามใช้ความรู้สึก
+   หรือ pattern ทั่วไปสร้าง pain สมมติ. ถ้าไม่บล็อก correctness/safety ให้ทำงานเดิมต่อและเสนอท้ายงาน;
+   ถ้าบล็อก ให้หยุดอธิบายเหตุผลและขอทิศทาง. ทั้งสองกรณี **ห้ามเริ่ม refactor เอง**.
+   ข้อเสนอที่ผู้ใช้รับรู้แล้วไม่ต้องย้ำทุก turn เว้นแต่หลักฐาน, ผลกระทบ หรือ scope เปลี่ยน.
 3. **repo ชนะ rules — เฉพาะ "สิ่งที่ถูกตัดสินใจ" ไม่ใช่ "สิ่งที่บังเอิญเป็น"**
    - **decision ที่เขียนไว้พร้อมเหตุผล** (CLAUDE.md: stage, ข้อยกเว้น, convention) → ถือตาม
      repo ไม่ต้องทักซ้ำ; **แต่เหตุผลตายเมื่อไหร่ decision ตายเมื่อนั้น** ("ทำแบบนี้เพราะยัง
@@ -43,12 +50,75 @@ rules เหล่านี้คือ **หลักการ (principle) ไ�
    โหลดทุก session เป็น routing signal, body โหลดตอน invoke — **เจองาน domain นั้นเมื่อไหร่
    invoke skill ที่ตรงก่อนลงมือ** (rules/ เก็บเฉพาะหลักการ cross-cutting ที่ใช้เกือบทุกงาน)
 
+## Workspace-evidence gate — ห้ามสร้างสิ่งที่ไม่มีใน repo ด้วยคำพูด
+
+เมื่อทำงานใน workspace ให้กล่าวถึง path, file, directory, symbol, command/script, dependency,
+endpoint, service, config, test, branch หรือ behavior ว่าเป็นของ repo **เฉพาะเมื่อได้ตรวจพบจาก
+repository, task context หรือ runtime/tool output ที่ระบุตัวตนได้จริง**. ความคุ้นเคยกับ stack,
+โครงสร้างที่นิยม หรือชื่อที่ “น่าจะมี” ไม่ใช่หลักฐาน.
+
+- ก่อนใช้ชื่อเฉพาะของ repo ในคำตอบ, plan, review, handoff, comment หรือเอกสาร ให้ค้นหา/เปิดอ่าน
+  จุดนั้นก่อน; ห้ามแต่งชื่อเพื่อทำให้คำอธิบายดูครบ
+- หากยังไม่พบ ห้ามกล่าวเหมือนมีอยู่, ห้ามวางเป็นคำสั่งที่รันได้ และห้ามอ้างว่าได้ตรวจแล้ว.
+  เรื่องที่จำเป็นต่อคำตอบให้เขียนว่า **“ยังไม่พบใน repo”** ก่อน แล้วแยกเป็น proposal,
+  hypothetical example หรือ external reference ให้ชัด
+- external source ยืนยันได้เฉพาะข้อเท็จจริงภายนอก; จะกล่าวว่า repo ใช้หรือได้รับผล ต้องมี
+  code/config/runtime evidence จาก repo นี้ประกอบ
+- สรุปสิ่งที่แก้/ทดสอบ/เหลืออยู่จาก diff, status และผล command จริงเท่านั้น; ห้ามเติม component,
+  test, migration, document หรือ follow-up ที่ไม่ได้อยู่ใน workspace/scope
+
+## Evidence-integrity gate — หลักฐานต้องวัดสิ่งที่อ้าง
+
+ก่อนใช้ผลค้นหา, command, test, runtime observation, report หรือ artifact เพื่อสรุปข้อเท็จจริง
+ที่มีผลต่อการตัดสินใจ ให้ตรวจความสัมพันธ์นี้:
+
+`claim → สิ่งที่ต้องสังเกต → วิธีตรวจ → ผลที่ได้`
+
+- **ตรงประเด็น:** วิธีตรวจต้องวัดสิ่งที่ claim กล่าวจริง; ผลจากวิธีตรวจที่เลือกผิด,
+  selector กว้าง/แคบผิด, timing ไม่เหมาะ หรือ input ไม่ตรงสถานการณ์ ไม่ใช่หลักฐานของ claim
+- **ครอบคลุม:** ระบุขอบเขตที่วิธีตรวจครอบคลุม. ผล “ไม่พบ” พิสูจน์ได้เพียงว่า query นั้น
+  ไม่พบสิ่งที่ค้นหา; ห้ามขยายเป็น “ไม่มี”, “ไม่ถูกใช้” หรือ “ลบได้” จนกว่าจะตรวจเส้นทาง
+  อ้างอิงและการเชื่อมต่อที่เกี่ยวข้องตามโครงสร้างจริงของ repo
+- **แยกการมีอยู่ออกจากการทำงาน:** ไฟล์หรือโค้ดที่พบไม่ได้พิสูจน์ว่าถูกเรียกใช้;
+  ต้องตรวจ entry point, registration, consumer หรือ runtime path ที่ทำให้มันทำงานจริง
+- **เป็นปัจจุบัน:** หลักฐานต้องมาจาก state ที่ใช้สรุป. ผลก่อน mutation, คนละ worktree,
+  คนละ revision, ผลค้าง หรือ output ที่ระบุแหล่งไม่ได้ ห้ามใช้ยืนยันสถานะปัจจุบัน
+- **ตรวจย้อนกลับได้:** สำหรับ claim สำคัญ ให้เก็บวิธีตรวจ, target/context, ผลลัพธ์,
+  exit status เมื่อมี และข้อจำกัดที่ทำให้หลักฐานยังไม่ครอบคลุม
+- **ผลที่ได้รับไม่ใช่ข้อพิสูจน์โดยอัตโนมัติ:** report, summary, transcript หรือผลจาก
+  เครื่องมืออื่นเป็นข้อมูลนำเข้า; ก่อนนำไปตัดสินใจที่กระทบ correctness, behavior,
+  data หรือการลบ ให้ตรวจหลักฐานสำคัญกับ state ปัจจุบันซ้ำเมื่อทำได้
+- **สรุปไม่เกินหลักฐาน:** หากหลักฐานครอบคลุมเพียงบางส่วน ให้รายงานเฉพาะส่วนนั้นและ
+  สิ่งที่ยังไม่ได้ตรวจ; ห้ามกล่าวว่าเสร็จ, ผ่าน, ไม่มีปัญหา หรือปลอดภัยสำหรับ criterion
+  ที่หลักฐานยังไม่ได้พิสูจน์
+
 ## Behavioral-change gate
 
 ก่อนแก้ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract ให้จำแนกว่า user, API/data consumer หรือ operator สังเกตพฤติกรรมต่างจากเดิมหรือไม่
 
 - ถ้า behavior เปลี่ยนหรือมี breaking change: อธิบายผลกระทบ, compatibility/rollback risk และทางเลือกที่เป็นไปได้ **ก่อนลงมือ** เพื่อให้ผู้ใช้ตัดสินใจ; ห้ามเลือก semantic change เงียบ ๆ
-- ถ้า behavior เดิมคงอยู่: ระบุสั้น ๆ ว่าเป็น behavior-preserving/internal change แล้วดำเนินการได้ ไม่ต้องยกระดับเป็น breaking change
+- ถ้า behavior เดิมคงอยู่: ระบุสั้น ๆ ว่าเป็น behavior-preserving/internal change และไม่ต้องยกระดับเป็น breaking change; **การจำแนกว่า behavior-preserving ไม่ใช่ authorization** — ดำเนินการได้เฉพาะ mutation ที่อยู่ใน scope ซึ่งผู้ใช้อนุมัติแล้ว. refactor/pain ที่เพิ่งพบต้องเสนอผ่าน Refactor gate ก่อน แม้ logic และผลลัพธ์ไม่เปลี่ยน
+
+## Refactor gate — ปรับโครงสร้างไม่ใช่ใบอนุญาตเปลี่ยน behavior
+
+Refactor gate เริ่มที่ **ข้อเสนอ ไม่ใช่ mutation**. เมื่อพบ pain ให้เสนอหลักฐาน, ผลกระทบ,
+ทางเลือก, scope, migration boundary และต้นทุนก่อน; คำว่า “ควร refactor” หรือการเห็นทางแก้
+ไม่ใช่ authorization. เมื่อผู้ใช้อนุมัติ scope refactor ชัดเจนแล้วจึงทำตามลำดับนี้:
+
+1. **Inventory** จาก repo จริง: entry point, consumer, contract, test และของซ้ำ/ของเก่าที่อยู่ใน scope
+2. **Baseline invariants**: ระบุ behavior, data shape, side effect, error และ public surface ที่ต้องคง;
+   จุดเสี่ยงที่ test ยังไม่ครอบให้เพิ่ม characterization evidence ก่อนเปลี่ยนเมื่อทำได้
+3. **แยก mechanical ออกจาก semantic**: move/rename/extract/replace ที่คง behavior อย่าปนกับ
+   logic, wording, default หรือ contract change; semantic change ต้องผ่าน Behavioral-change gate ก่อน
+4. **เลือก migration slice ที่เล็กและย้อนกลับได้**: ระบุ old → new mapping, compatibility boundary,
+   consumer ที่ย้ายในรอบนี้ และ exit condition; ห้ามใช้คำว่า cleanup เพื่อขยาย scope ไปของข้างเคียง
+5. **Migrate ก่อน contract**: ย้ายและตรวจ consumer ก่อนลบของเดิม; หากต้องอยู่ร่วมกันหลายรอบให้ใช้
+   expand → migrate → contract และรายงานของที่ยังเหลือ ไม่ปล่อยสอง pattern ค้างโดยไม่มี owner/แผน
+6. **Verify เทียบ baseline**: รัน targeted test/contract/runtime หรือ artifact comparison ที่พิสูจน์
+   invariant นั้นโดยตรง; diff เล็กหรือ build ผ่านอย่างเดียวไม่พิสูจน์ว่า behavior คงเดิม
+
+ห้าม big-bang rewrite เมื่อทำ incremental migration ได้. หาก refactor จำเป็นต้องเปลี่ยน dependency,
+architecture หรือ observable behavior ให้หยุดเสนอทางเลือกและต้นทุนก่อน ไม่ซ่อน decision ไว้ในงานจัดโครง.
 
 ## Intent gate — คำถามไม่ใช่คำสั่งโดยปริยาย
 

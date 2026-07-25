@@ -9,9 +9,13 @@ ui-ux-baseline	ui-visual-direction	ออกแบบ landing page ใหม่�
 ui-ux-baseline	ui-visual-polish	ปรับ spacing, typography และ visual hierarchy ของหน้า settings เดิมให้สแกนง่ายขึ้น โดยไม่เปลี่ยน flow หรือ brand
 ui-ux-baseline	ui-motion	เพิ่ม microinteraction ตอนบันทึกค่า และ transition ของ panel ที่เปิด/ปิด โดยต้องไม่รบกวน keyboard user
 ui-ux-baseline	ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมทั้ง product พร้อมตรวจ contrast
+ui-ux-baseline	ui-localization	เพิ่มคำแปลภาษาอาหรับให้ form พร้อม pluralization, locale formatting, ข้อความยาว และ RTL
+ui-ux-baseline	ui-icons	ปรับหน้า settings ที่ใช้ emoji ตกแต่งให้เสนอ icon จาก library เดิมโดยรักษา accessible label
 data-design	db-schema	ออกแบบ schema ตาราง orders + index ใน Postgres
 data-design	db-cache	เพิ่ม cache layer ให้ query ที่อ่านบ่อย พร้อม invalidation
 data-design	db-queue	ทำ message queue consumer ประมวลผล order แบบ idempotent
+data-design	db-transaction	โอนเครดิตระหว่างสองบัญชีให้ถูกต้องแม้มี request พร้อมกัน และส่ง event หลัง commit
+data-design	db-lifecycle	ออกแบบ retention และ deletion ของข้อมูลลูกค้า รวม cache, search index และ audit trail
 api-design	api-contract	ออกแบบ REST API contract สำหรับ resource users — method, status code, response envelope
 api-design	api-error	กำหนด error response shape ให้ทั้ง API consistent (machine + human readable)
 NONE	csv-parse	เขียนฟังก์ชัน parse CSV เป็น array of object ใน Node.js

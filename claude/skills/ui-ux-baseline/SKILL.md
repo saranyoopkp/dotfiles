@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline
-description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้เมื่อสร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component หรือไฟล์ .tsx/.jsx/.vue/.css. ก่อนลงมือให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้เมื่อสร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css. ก่อนลงมือให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline
@@ -13,6 +13,8 @@ description: Router สำหรับมาตรฐาน UI/UX/frontend ใ�
 | ปรับ Visual Design หรือ UI effect ของหน้าจอเดิม เช่น spacing, typography, shadow, blur, gradient, overlay โดยคง brand/flow เดิม | `ui-ux-baseline:visual-polish` |
 | เพิ่มหรือแก้ transition, animation, progress, reveal, scroll behavior หรือ microinteraction | `ui-ux-baseline:motion-microinteractions` |
 | สร้างหรือแก้ shared color/type/spacing/grid/theme/elevation/icon หรือ motion token | `ui-ux-baseline:design-foundations` |
+| เลือก icon/icon library, สร้าง icon language หรือพบ decorative emoji ใน UI | `ui-ux-baseline:design-foundations` |
+| i18n/localization, translation, locale formatting, text expansion หรือ RTL | `ui-ux-baseline:content-localization` |
 | render resource จาก server/client state | `ui-ux-baseline:resource-states` |
 | submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
