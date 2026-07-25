@@ -18,6 +18,9 @@
   copy/hardcode ซ้ำ (table count, migration count, response shape ที่แปะซ้ำ) จะ stale
   พร้อมกันทุกจุด → เอกสารชี้ไป source (โค้ด/type/คำสั่งนับ) แทนการ copy เนื้อมาแปะ
 - **point-in-time doc (design/spec/postmortem) = ยกเว้น drift** — ระบุวันที่กำกับเป็น snapshot ไม่ต้องไล่อัปเดต (อย่าปนไฟล์เดียวกับ living doc)
+- **finding ถาวรต้องผ่าน Durable-finding gate ก่อนเขียนเป็น fact** — รูปแบบขั้นต่ำคือ
+  `status (Verified/Unverified/Contradicted) + provenance (target และ probe/evidence) + checked date`;
+  ระบุ revision/worktree เมื่อ state อาจต่างกัน. รายการที่ยังไม่ตรวจห้ามใช้ถ้อยคำเหมือนยืนยันแล้ว
 - **แต่ละ fact มีบ้านเดียว — เลือกบ้านจาก*กลไกที่ถูกอ่าน* ไม่ใช่หัวข้อ**:
   CLAUDE.md = *push* (โหลดทุก session — เฉพาะของที่ไม่เห็นแล้วงานพัง), docs/<topic>.md =
   *pull* (เปิดเมื่อรู้ตัวว่าทำเรื่องนั้น — ยาวได้), memory/<fact>.md = *recall* (ต้องนึกออก

@@ -88,6 +88,19 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
      read-only inspection หรือแก้จุดเดียวจบใน turn เดียวไม่ต้องสร้าง checklist เพื่อพิธีกรรม. ไม่มี tool ให้สรุป
      แผน/สถานะแบบกระชับในคำตอบแทน; ห้ามอ้างว่าติดตามผ่าน tool ที่ไม่มี -->
 
+## Report integrity
+<!-- ก่อนรายงานผล/finding/handoff ให้แยก claim สำคัญเป็น Verified/Inferred/Assumption/Unverified/
+     Contradicted. Verified ต้องมาจาก primary evidence ปัจจุบันที่ผู้รายงานตรวจโดยตรง พร้อม target,
+     probe/result และ coverage; command/test claim ต้องมีวิธีตรวจและ exit status เมื่อมี. ห้ามรายงาน
+     ผลค้าง คำบอกต่อ หรือการตรวจตัวอย่างเหมือนเป็นหลักฐานปัจจุบันของทั้งชุด -->
+
+## Durable findings
+<!-- report/summary/transcript/finding เดิมเป็น lead ไม่ใช่ fact. ก่อนเขียน finding ลง debt, audit, TODO,
+     decision, runbook, postmortem หรือเอกสารถาวร ให้ตรวจ primary evidence ปัจจุบันโดยตรงครบทุก atomic
+     finding ที่จะเขียน; การยืนยันบางข้อไม่รับรองทั้งชุด. บันทึก status (Verified/Unverified/Contradicted),
+     provenance (target + probe/evidence), checked date และ revision/worktree เมื่อ state อาจต่างกัน.
+     ก่อนใช้ finding ตัดสินใจหลัง state เปลี่ยน ให้ตรวจส่วนที่อาจ stale ซ้ำ -->
+
 ## TODO ถัดไป
 - [ ] <งานถัดไปแบบ actionable>
 

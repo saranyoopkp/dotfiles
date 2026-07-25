@@ -37,10 +37,46 @@ repository, task context หรือ runtime/tool output ที่ระบุ�
   exit status เมื่อมี และข้อจำกัดที่ทำให้หลักฐานยังไม่ครอบคลุม
 - **ผลที่ได้รับไม่ใช่ข้อพิสูจน์โดยอัตโนมัติ:** report, summary, transcript หรือผลจาก
   เครื่องมืออื่นเป็นข้อมูลนำเข้า; ก่อนนำไปตัดสินใจที่กระทบ correctness, behavior,
-  data หรือการลบ ให้ตรวจหลักฐานสำคัญกับ state ปัจจุบันซ้ำเมื่อทำได้
+  data หรือการลบ ให้ตรวจหลักฐานที่ใช้ตัดสินใจกับ state ปัจจุบันโดยตรง
 - **สรุปไม่เกินหลักฐาน:** หากหลักฐานครอบคลุมเพียงบางส่วน ให้รายงานเฉพาะส่วนนั้นและ
   สิ่งที่ยังไม่ได้ตรวจ; ห้ามกล่าวว่าเสร็จ, ผ่าน, ไม่มีปัญหา หรือปลอดภัยสำหรับ criterion
   ที่หลักฐานยังไม่ได้พิสูจน์
+
+## Report-integrity gate — ส่ง claim พร้อมระดับและหลักฐานจริง
+
+ก่อนรายงานผล, finding หรือ handoff ที่มีข้อสรุปเกี่ยวกับ repository, runtime, behavior,
+การเปลี่ยนแปลงหรือผล verification ให้แยก claim สำคัญเป็น `Verified`, `Inferred`,
+`Assumption`, `Unverified` หรือ `Contradicted` ตามหลักฐานจริง:
+
+- `Verified` ใช้ได้เมื่อผู้รายงานตรวจ primary evidence ปัจจุบันโดยตรง; ระบุ target/context,
+  probe หรือวิธีตรวจ, ผลที่ได้ และขอบเขตที่ยังไม่ครอบคลุมให้ตรวจซ้ำได้
+- `Inferred` ต้องแสดง evidence และ reasoning ที่เชื่อมถึงข้อสรุป; `Assumption` ต้องระบุสิ่งที่
+  สมมติและผลหากผิด. ทั้งสองห้ามใช้ถ้อยคำหรือ placement ที่ทำให้ผู้อ่านเข้าใจว่า verified
+- ยังไม่ได้ตรวจให้ระบุ `Unverified`; หลักฐานหักล้างข้อมูลเดิมให้ระบุ `Contradicted`
+  พร้อมสิ่งที่ตรวจพบจริง ห้ามเลือกเงียบเฉพาะส่วนที่สนับสนุนข้อสรุปเดิม
+- claim ว่ารัน command, test, build หรือ runtime check ต้องมาจาก output ปัจจุบัน พร้อมคำสั่ง/
+  วิธีตรวจและ exit status เมื่อมี; ผลค้างหรือคำบอกต่อห้ามรายงานเหมือนผู้รายงานได้รันเอง
+- claim แบบครอบทั้งหมดหรือเชิง absence เช่น “ทุก caller”, “ไม่มี”, “ครบ” หรือ “ลบได้”
+  ต้องระบุ search/trace coverage; ตรวจตัวอย่างหรือบาง target ห้ามใช้รับรองทั้งชุด
+- report ต้องแยกสิ่งที่ทำจริง, สิ่งที่ยืนยันแล้ว และข้อจำกัด/สิ่งที่ยังไม่ได้ตรวจ; prose,
+  ความมั่นใจ หรือสถานะ `completed` ไม่แทนหลักฐาน
+
+## Durable-finding gate — report เป็น lead ไม่ใช่ fact ถาวร
+
+ก่อนเขียน finding ลง debt, audit, TODO, decision, runbook, postmortem หรือเอกสารถาวรอื่น
+ให้ผู้เขียนตรวจ **ทุก atomic finding ที่จะบันทึก** จาก primary evidence ของ repository หรือ
+runtime ปัจจุบันโดยตรง. ผู้ส่งข้อมูลเป็นใครหรือทำงานรูปแบบใดไม่เปลี่ยน gate นี้:
+
+- ตรวจ source/control flow/caller, registration/runtime path, config/schema, test/command output
+  หรือ runtime state ให้ตรงกับ claim; คำว่า “เปิดโค้ด” ไม่จำกัดว่าหลักฐานต้องเป็น source code
+- report, summary, transcript, finding เดิม หรือผลจาก agent/tool อื่นใช้เป็นเบาะแสได้ แต่ห้าม
+  ถ่ายทอดเป็น fact โดยไม่ตรวจเอง
+- การยืนยันบางข้อไม่ทำให้ finding อื่นในชุดหรือเอกสารเดียวกันได้รับการยืนยัน. ข้อที่ยังไม่ตรวจ
+  ต้องระบุ `Unverified`; ข้อที่หลักฐานหักล้างต้องระบุ `Contradicted` หรือเอาออกจาก living document
+- finding ที่บันทึกเป็น fact ต้องมีสถานะ `Verified`, provenance ที่ตรวจย้อนกลับได้
+  (target + probe/evidence) และวันที่ตรวจ; หาก revision/worktree มีผล ให้ระบุด้วย
+- ก่อนใช้ finding เพื่อกำหนด scope การแก้หรือตัดสินใจ หลัง repository/runtime state เปลี่ยน
+  ให้ตรวจหลักฐานส่วนที่อาจ stale ซ้ำ
 
 ## Failure-escalation gate — failure ไม่ใช่ช่องให้ข้ามเงียบ ๆ
 
