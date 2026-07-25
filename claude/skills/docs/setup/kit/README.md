@@ -6,7 +6,7 @@
 
 ## หลักการ
 
-**บ้านของหลักการเอกสารทั้งหมด = `claude/rules/documentation-discipline.md`** (repo เดียวกันนี้
+**บ้านของหลักการเอกสารทั้งหมด = `claude/rules/engineering/documentation-discipline.md`** (repo เดียวกันนี้
 — ถูกโหลดเข้าทุก session อยู่แล้ว) — ไฟล์นี้ว่าด้วย**กลไก**ล้วน ๆ: โครงสร้าง, init, hooks, junction
 
 **Invariant: artifact ที่ถูก copy เข้า repo ปลายทางต้อง self-contained** — ได้แก่
@@ -53,7 +53,7 @@ memory/private/    ← fact ส่วนตัว/เฉพาะเครื่
 ## การจัดระเบียบ docs/
 
 กติกา (ชื่อไฟล์ตามโดเมน, >~7 ไฟล์ → subfolder, index sync) อยู่ที่ rule
-`documentation-discipline` — ฝั่งกลไกของ kit: ทำ subfolder ตอน promote ไฟล์ที่ 8
+`engineering/documentation-discipline` — ฝั่งกลไกของ kit: ทำ subfolder ตอน promote ไฟล์ที่ 8
 เลย (อย่ารอถึง 20) และ index ใน CLAUDE.md ใช้ format เดียวกับ `memory/MEMORY.md`
 (หนึ่งบรรทัด/ไฟล์: ชื่อ + hook ว่าทำไมต้องเปิด)
 

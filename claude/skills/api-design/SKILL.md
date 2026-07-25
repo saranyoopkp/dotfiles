@@ -21,8 +21,16 @@ description: Router สำหรับมาตรฐาน HTTP/REST API ใช
 
 endpoint เดียวอ่านได้หลาย child ตาม flow จริง; ห้ามโหลดครบทุก child เพียงเพื่อ checklist และห้าม
 ข้าม child ที่ trigger ตรงเพียงเพราะ handler ดูเล็ก. `authz-multitenancy`, validation boundary,
-performance/N+1, webhook delivery และ CRUD completeness ยังเป็น owner เดิม — skill นี้ชี้ boundary
+performance/N+1 และ external integration safety ยังเป็น owner เดิม — skill นี้ชี้ boundary
 แต่ไม่ซ้ำ policy.
+
+## Resource operation inventory
+
+เมื่อ resource ถูกจัดการผ่าน API ให้ inventory `list/get/create/update/delete` และ operation เฉพาะโดเมน
+จาก contract/consumer จริงก่อนออกแบบ. operation ที่ไม่รองรับต้องเป็น decision ที่ระบุเหตุผล ไม่ใช่
+ของที่ลืม; **inventory เป็นการวิเคราะห์ ไม่ใช่ authorization ให้สร้าง operation นอก scope**.
+อ่าน `contract-core` สำหรับ representation/method, `collections` สำหรับ list และ `mutations`
+สำหรับ create/update/delete. lifecycle ของ deletion/retention อยู่ `data-design:lifecycle-governance`.
 
 ถ้า contract เปลี่ยน behavior ที่ client สังเกตได้ ให้ผ่าน behavioral-change gate ก่อน; API ที่ public
 แล้วเป็น compatibility surface ไม่ใช่ implementation detail.

@@ -4,7 +4,7 @@
 
 ## ทำงานกับ repository นี้
 
-- `claude/rules/` คือ default engineering principles ที่โหลดทุก session; อ่าน [00-how-to-read-these-rules.md](claude/rules/00-how-to-read-these-rules.md) ก่อนเพิ่มหรือย้าย rule
+- `claude/rules/` คือ default engineering principles ที่โหลดทุก session; อ่าน [operating-contract.md](claude/rules/core/operating-contract.md) ก่อนเพิ่มหรือย้าย rule
 - `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
 - `claude/agents/` คือ SCC (ทำงานหลัก) และ ACV (ตรวจรับอิสระ)
 - `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand

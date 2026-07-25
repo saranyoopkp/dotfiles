@@ -17,8 +17,8 @@
   ใช้ timezone ไหนตัดวัน และเขียน test คร่อมเส้นตัด (เที่ยงคืน, สิ้นเดือน)
 
 ## แสดงผล / กำหนดการ
-- แสดงผลตาม timezone ของ user หรือของธุรกิจ (ระบุใน CLAUDE.md ว่า project นี้ใช้อะไร
-  เช่น Asia/Bangkok) — อย่าปล่อยให้บางจอ UTC บางจอ local
+- แสดงผลตาม timezone ของ user หรือของธุรกิจ และบันทึก decision ใน operational context
+  ที่ตรวจพบใน repo (เช่น Asia/Bangkok) — อย่าปล่อยให้บางจอ UTC บางจอ local
 - **cron/schedule ระบุ timezone ชัดทุกตัว** — "14:00" ไม่พอ ต้อง "14:00 Asia/Bangkok"
 - range query ("ยอดเดือนนี้") แปลงขอบเขตจาก business timezone → UTC ก่อน query
   ไม่ใช่ตัดที่ UTC ตรง ๆ

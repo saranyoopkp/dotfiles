@@ -18,5 +18,8 @@ data-design	db-transaction	โอนเครดิตระหว่างส�
 data-design	db-lifecycle	ออกแบบ retention และ deletion ของข้อมูลลูกค้า รวม cache, search index และ audit trail
 api-design	api-contract	ออกแบบ REST API contract สำหรับ resource users — method, status code, response envelope
 api-design	api-error	กำหนด error response shape ให้ทั้ง API consistent (machine + human readable)
+greenfield-foundation	greenfield-stack	เริ่ม backend service ใหม่จากศูนย์ ช่วยเลือก runtime, framework และ database version ที่เหมาะสำหรับดูแลระยะยาว แล้ววาง minimum vertical slice
+greenfield-foundation	greenfield-scaffold	สร้าง repository ใหม่สำหรับ web application ที่ยังไม่มี stack หรือ architecture decision ช่วยวาง foundation ก่อน scaffold
+greenfield-foundation	greenfield-version-chain	เริ่ม service ใหม่โดยกำหนดให้ใช้ Node.js, Fastify และ PostgreSQL ช่วยตรวจ official LTS/support/EOL และเลือก version line ที่รองรับกันในปัจจุบันก่อนวางแผน
 NONE	csv-parse	เขียนฟังก์ชัน parse CSV เป็น array of object ใน Node.js
 NONE	util-date	แก้ฟังก์ชัน util formatDate ที่หลาย component เรียกไปแสดงผลวันที่

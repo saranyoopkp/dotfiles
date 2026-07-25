@@ -63,7 +63,8 @@ CSV (RFC 4180) · Schema Registry / schema evolution (backward/forward compat)
 
 ## Release & Deployment
 Blue-Green · Canary · Rolling update · Feature Flags / toggles ·
-Expand-Contract (parallel change) · Progressive delivery
+Expand-Contract (parallel change) · Progressive delivery · vendor support lifecycle
+(LTS/EOL/compatibility matrix — ไม่มีมาตรฐานกลาง ต้องตรวจ official policy ปัจจุบัน)
 
 ## Performance & Algorithms
 Big-O (complexity) · Amdahl's Law · Little's Law · percentile latency (p95/p99, tail) ·

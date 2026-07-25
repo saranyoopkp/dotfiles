@@ -19,6 +19,27 @@ make_link() {
   fi
 }
 
+rules_source="$REPO/claude/rules"
+rules_target="$HOME/.claude/rules"
+backup_legacy_rules_and_stop() {
+  [ -d "$rules_target" ] && [ ! -L "$rules_target" ] || return 0
+
+  local backup_path="$rules_target.bak-pre-dotfiles"
+  local backup_index=1
+  while [ -e "$backup_path" ] || [ -L "$backup_path" ]; do
+    backup_path="$rules_target.bak-pre-dotfiles-$backup_index"
+    backup_index=$((backup_index + 1))
+  done
+
+  mv "$rules_target" "$backup_path"
+  echo "rules: legacy directory backed up to $backup_path" >&2
+  echo "rules: stopped before linking; classify any rules to keep under claude/rules/{core,engineering,risk}/, then rerun install.sh" >&2
+  exit 1
+}
+
+# Preflight before linking skills: legacy flat rules require human classification into owner folders.
+backup_legacy_rules_and_stop
+
 # skills: link รายตัว claude/skills/<name> → ~/.claude/skills/<name>
 # (ตัว dir skills เป็นของ harness — ห้าม link ทั้งก้อน)
 # group skills (มี sub ที่มี SKILL.md ชั้นใน): harness ไม่ scan nested (ground-truth
@@ -50,23 +71,13 @@ for d in "$REPO"/claude/skills/*/; do
   fi
 done
 
-# rules: link ทั้ง dir → dotfiles
+# rules: link ทั้ง recursive tree → dotfiles
 # (agents จงใจไม่ทำที่นี่ — owner จัดการ link เองต่อเครื่อง, decision 2026-07-12)
-src="$REPO/claude/rules"
-link="$HOME/.claude/rules"
-if [ -L "$link" ]; then
+backup_legacy_rules_and_stop
+if [ -L "$rules_target" ]; then
   echo "rules: link exists - skipped"
 else
-  if [ -d "$link" ]; then
-    for f in "$link"/*; do
-      [ -f "$f" ] || continue
-      base="$(basename "$f")"
-      [ -f "$src/$base" ] || { cp "$f" "$src/"; echo "rules: merged into repo: $base"; }
-    done
-    mv "$link" "$link.bak-pre-dotfiles"
-    echo "rules: backed up old dir"
-  fi
-  make_link "$link" "$src"
+  make_link "$rules_target" "$rules_source"
   echo "rules: linked"
 fi
 

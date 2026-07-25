@@ -12,7 +12,7 @@ description: ออกแบบ transaction boundary, database invariant, lockin
 - worker claim ต้อง atomic และอยู่ใน transaction; `FOR UPDATE SKIP LOCKED` นอก transaction ไม่กันงานซ้ำ
 
 API retry/idempotency อ่าน `api-design:mutations`; delivery retry/DLQ และ webhook reliability อยู่
-`webhook-integration`. Skill นี้เป็น owner ของความถูกต้องของ state ใน database และ boundary ระหว่าง state
+`external-integration-safety`. Skill นี้เป็น owner ของความถูกต้องของ state ใน database และ boundary ระหว่าง state
 นั้นกับ event.
 
 ตรวจ happy path, rollback/failure กลางทาง และ race หรือ retry อย่างน้อยหนึ่ง flow ตาม invariant ที่เพิ่ม.

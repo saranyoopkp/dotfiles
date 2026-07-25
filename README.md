@@ -6,13 +6,13 @@ Personal cross-machine config for Claude Code.
 claude/skills/docs/setup/   ← /docs:setup skill + kit (ระบบเอกสารต่อ repo)
 claude/rules/               ← engineering standards — โหลดทุก session ทุก repo
 references/                 ← เปิดดูตามต้องการ (ไม่โหลดเข้า session) — ดูรายการจากโฟลเดอร์จริง
-install.ps1 / install.sh    ← link ~/.claude/{skills,rules} เข้า repo นี้ (junction/symlink)
+install.sh                  ← link ~/.claude/{skills,rules} เข้า repo นี้ (junction/symlink)
 ```
 
 ## Setup เครื่องใหม่
 
-```powershell
-git clone <this-repo> ; .\dotfiles\install.ps1     # Windows
+```bash
+git clone <this-repo> && cd dotfiles && bash install.sh   # Windows: Git Bash
 ```
 ```bash
 git clone <this-repo> && ./dotfiles/install.sh     # macOS/Linux

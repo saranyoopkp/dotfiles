@@ -111,7 +111,8 @@ CLAUDE.md ฉบับแรก
   หรือชี้ source แทน** ไม่ใช่พิมพ์เลข/ชื่อลงไป (fact ที่ copy = จะ stale แล้วถูกเชื่อ เพราะ
   CLAUDE.md โหลดทุก session = ดูเป็นความจริงแต่ไม่มีใคร re-verify). **ตอน setup/refactor/audit
   ทุกครั้ง**: ไล่หา number/filename ที่ hardcode ไว้ → แปลงเป็นคำสั่ง หรือถ้าจำเป็นต้องมีเลข
-  ให้เขียนคำสั่งที่คำนวณมันกำกับข้าง ๆ (นี่คือ single-source ตาม `rules/documentation-discipline.md`)
+  ให้เขียนคำสั่งที่คำนวณมันกำกับข้าง ๆ (นี่คือ single-source ตาม
+  `rules/engineering/documentation-discipline.md`)
 - ห้ามลบ section "Memory policy" ออกจาก CLAUDE.md — เป็นช่องทางเดียวที่ session อื่นรู้กติกา memory
 - memory ใหม่ที่บันทึกระหว่างทำงาน = untracked file ใน repo → คัดกรองก่อน commit:
   **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret

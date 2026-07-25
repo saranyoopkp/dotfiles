@@ -1,4 +1,4 @@
-# Webhook & External Integration Reliability
+# External Integration Safety
 
 integration ภายนอกพังเสมอ ไม่ใช่ "ถ้า" แต่ "เมื่อไหร่" — ออกแบบให้รับได้ตั้งแต่แรก:
 
@@ -22,8 +22,9 @@ integration ภายนอกพังเสมอ ไม่ใช่ "ถ้�
   permission คนละชุด
 - **precondition/uniqueness check ก่อน external side-effect เสมอ** — เช็ค DB ให้ผ่าน
   ก่อนค่อยเรียก provider (สลับลำดับ = fail กลางทางแล้ว orphan สถานะฝั่งโน้น)
-- **เชื่อ live API call มากกว่าเอกสาร** — โดยเฉพาะ provider ที่มีหลาย product
-  ชื่อ scope/endpoint คล้ายกัน — ยิงจริงแล้วดูผลคือ source of truth
+- **แยก contract จาก integration evidence** — official documentation/spec ยืนยัน contract ของ
+  provider; live API call ยืนยันว่า credential, scope, endpoint และ payload ของ repo นี้ทำงานจริง.
+  อย่างใดอย่างหนึ่งแทนกันไม่ได้ โดยเฉพาะ provider ที่มีหลาย product หรือชื่อ scope คล้ายกัน
 
 ## ความทนทาน
 - **retry with exponential backoff + max attempts** สำหรับ event ที่ fail —
@@ -32,7 +33,6 @@ integration ภายนอกพังเสมอ ไม่ใช่ "ถ้�
   external id ไม่ใช่ insert)
 - **safety-net poller** — webhook หายได้เสมอ → มี sync ตามรอบเป็นตาข่ายอีกชั้น;
   กำหนด path ที่ trigger notification ให้ชัด เพื่อไม่ให้ backfill flood แจ้งเตือน
-- ทุก outbound call: timeout + จัดการ failure ที่ตั้งใจ (ตาม performance/production rule)
 
 ## ก่อนปิดงาน
 - ทดสอบ: ส่ง event ซ้ำ (dedup ทำงาน), event พัง (เข้า retry/dead letter),

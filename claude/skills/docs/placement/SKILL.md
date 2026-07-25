@@ -95,4 +95,4 @@ description: เกณฑ์ตัดสินว่าความรู้แ�
 
 อิงหลักสากล: Clean Code / Ousterhout (comment=why) · PEP 257/JSDoc (docstring=contract) ·
 ADR (decision) · Diátaxis + SSOT (แยกเอกสารตามหน้าที่การอ่าน) — หลักการเต็ม:
-`~/.claude/rules/documentation-discipline.md`
+`~/.claude/rules/engineering/documentation-discipline.md`

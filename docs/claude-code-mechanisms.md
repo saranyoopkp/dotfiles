@@ -9,7 +9,7 @@
 | กลไก | โหลดเมื่อ | หมายเหตุ |
 |---|---|---|
 | `CLAUDE.md`, `~/.claude/CLAUDE.md` | ทุก session | always |
-| `~/.claude/rules/*.md` (ไม่มี `paths:`) | ทุก session | always — นี่คือ rules ปัจจุบัน |
+| `~/.claude/rules/**/*.md` (ไม่มี `paths:`) | ทุก session | always — นี่คือ rules ปัจจุบัน |
 | rule ที่มี `paths:` frontmatter (glob) | **เมื่อ Claude อ่านไฟล์ match glob** | ⚠️ **reload ทุก turn ที่แตะไฟล์** → แพงในโดเมน (verify จริง — user เจอเอง) |
 | **skill description** (frontmatter) | ทุก session (thin, ใน skill listing) | = routing signal |
 | **skill body** | **ตอน invoke (Skill tool)** | load-once, no pointer ← **กลไกที่เลือกใช้** |
@@ -52,8 +52,9 @@ colon ได้** (`name: docs:link`) → invoke `/docs:link` ทำงาน; �
 ## Taxonomy: rule ↔ skill (ตัดสิน 2026-07-16)
 
 rule ย้ายเป็น skill เมื่อครบ**ทั้งสาม**: (ก) work type ประกาศตัวชัด (ข) miss แล้วกู้ได้
-(ค) ลึก/จะลึกจริง — ย้ายแล้ว: `ui-ux-baseline`, `data-design`; ที่คง **always-on**:
-money/authz/time (ฝังในงานอื่น + miss เจ็บถาวร) · `webhook-integration` (**ทดลองย้ายแล้ว
+(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `ui-ux-baseline`, `data-design`, `api-design`, `ops`
+และ `greenfield-foundation`; ที่คง **always-on**:
+money/authz/time (ฝังในงานอื่น + miss เจ็บถาวร) · `external-integration-safety` (**ทดลองย้ายแล้ว
 revert** — เนื้อเป็นแนวทาง/bounded ไม่ลึกพอ) · cross-cutting rules (ใช้เกือบทุกงาน)
 **ห้ามย้ายเพราะเพดาน 400 อย่างเดียว — depth คือเหตุผลจริง**
 

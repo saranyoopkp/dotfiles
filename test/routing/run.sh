@@ -11,9 +11,13 @@
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # on-demand skills ที่มีอยู่ (เพิ่มเมื่อย้าย rule เป็น skill เพิ่ม)
-ONDEMAND_SKILLS="ui-ux-baseline data-design api-design ops"
+ONDEMAND_SKILLS="ui-ux-baseline data-design api-design ops greenfield-foundation"
 SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ops.tsv")
+routing_sandbox_from_env="${ROUTING_SANDBOX:-}"
 [ -f "$HERE/.local.sh" ] && . "$HERE/.local.sh"
+if [ -n "$routing_sandbox_from_env" ]; then
+  ROUTING_SANDBOX="$routing_sandbox_from_env"
+fi
 if [ -n "${ROUTING_SANDBOX:-}" ]; then
   SANDBOX="$ROUTING_SANDBOX"; mkdir -p "$SANDBOX"
 else
@@ -22,6 +26,16 @@ fi
 pass=0; fail=0
 RUN_DIR="$SANDBOX/runs/$(date +%Y%m%d-%H%M%S)"; mkdir -p "$RUN_DIR"
 echo "artifacts (raw stream-json ต่อ scenario): $RUN_DIR"
+
+run_with_timeout() {
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 180 "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then
+    gtimeout 180 "$@"
+  else
+    "$@"
+  fi
+}
 
 # stdin = stream-json; stdout = รายชื่อ on-demand skill ที่ถูก invoke จริง (space-sep, sorted)
 invoked_skills() {
@@ -49,11 +63,12 @@ sys.stdout.write(' '.join(sorted(got)))
 n=0
 while IFS=$'\t' read -r expect label task; do
   case "${expect:-}" in ''|'#'*) continue ;; esac
-  ( cd "$SANDBOX" && timeout 180 claude -p --output-format stream-json --verbose \
+  ( cd "$SANDBOX" && run_with_timeout claude -p --output-format stream-json --verbose \
       --agent SCC-v1.0.1 --dangerously-skip-permissions \
       "งาน: $task
 
-วางแผนจริง (ไม่ต้องเขียนโค้ด)" > "$RUN_DIR/$label.stream.jsonl" 2>/dev/null ) &
+วางแผนจริง (ไม่ต้องเขียนโค้ด)" > "$RUN_DIR/$label.stream.jsonl" \
+      2> "$RUN_DIR/$label.stderr.log" ) &
   n=$((n+1))
 done < <(cat "${SCENARIO_FILES[@]}")
 echo "ยิง $n scenario ขนานกัน — รอ..."

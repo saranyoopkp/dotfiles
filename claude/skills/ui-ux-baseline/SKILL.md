@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline
-description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้เมื่อสร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css. ก่อนลงมือให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้ทันทีเมื่อวางแผน, ออกแบบ, review, สร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css แม้ยังไม่มีไฟล์จริงหรือผู้ใช้ขอเพียงแผน. ให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline

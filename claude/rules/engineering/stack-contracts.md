@@ -11,7 +11,8 @@
   สำหรับ concern เดียวกัน (validation, date, http client, state, styling)
 - **คิดว่ามีตัวที่ดีกว่า?** → เสนอเปรียบเทียบ (ดีกว่ายังไง, ต้นทุน migrate, กระทบอะไร)
   ให้ user เลือก — ได้ไฟเขียวแล้วค่อย migrate ให้*ทั้ง workspace* ไม่ใช่ใช้ปนสองตัว
-- ตัดสินใจแล้วว่าต่าง/เปลี่ยน → บันทึก decision + เหตุผลใน CLAUDE.md
+- ตัดสินใจแล้วว่าต่าง/เปลี่ยน → บันทึก decision + เหตุผลใน decision/operational doc ที่ตรวจพบ
+  ใน repo; หากยังไม่มีบ้านของ decision ให้เสนอที่เก็บก่อนสร้าง ห้ามแต่ง path ขึ้นเอง
 
 ## Shared contracts (FE ↔ BE ↔ bot/worker)
 - **schema/validation เขียนครั้งเดียว แชร์ทุกฝั่ง** — เช่น zod schema อยู่ใน shared package

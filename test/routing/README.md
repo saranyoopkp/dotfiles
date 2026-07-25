@@ -13,7 +13,8 @@ webhook↔data-design เนื้อทับกัน (queue/retry) → co-fir
 bash test/routing/run.sh
 ```
 - แต่ละ scenario = fresh session (โหลด rules/skills สด — subagent ทำแทนไม่ได้ สืบทอด context ค้าง)
-- รันใน sandbox นอก repo เพื่อไม่ให้ `dotfiles/CLAUDE.md` ปนเปื้อน (ตั้งผ่าน ROUTING_SANDBOX / .local.sh)
+- รันใน sandbox นอก repo เพื่อไม่ให้ `dotfiles/CLAUDE.md` ปนเปื้อน
+  (ตั้งผ่าน `ROUTING_SANDBOX` หรือ `.local.sh`; environment ที่ระบุขณะรันมี precedence)
 - **กิน API tokens** — รันหลังแก้ skill description/scenarios ไม่ใช่ทุก commit
 - ⚠️ ผลเป็น **self-report** (SKILL_UIUX จากโมเดล) ไม่ได้ inspect raw tool-log — negative control
   ที่ทำงาน (backend→NO) เพิ่มความเชื่อถือว่าไม่ได้ตอบ YES มั่ว
@@ -24,8 +25,9 @@ skill ui-ux-baseline. เพิ่มงาน frontend ก้ำกึ่ง (�
 recognition อาจ miss. ย้าย domain rule อื่นเป็น skill → เพิ่ม scenario ชุดใหม่
 
 ## artifacts / trace back
-แต่ละ run เซฟ **raw stream-json ต่อ scenario** ลง `$ROUTING_SANDBOX/runs/<timestamp>/<label>.stream.jsonl`
-+ `summary.txt` — เปิดดู `tool_use` เต็มของเคสนั้นได้ (เคส FAIL → summary ชี้ไฟล์ให้)
+แต่ละ run เซฟ **raw stream-json + stderr ต่อ scenario** ลง
+`$ROUTING_SANDBOX/runs/<timestamp>/<label>.{stream.jsonl,stderr.log}` + `summary.txt` —
+เปิดดู `tool_use`/CLI failure ของเคสนั้นได้ (เคส FAIL → summary ชี้ไฟล์ให้)
 (harness เองก็เซฟ session ที่ `~/.claude/projects/<cwd-hash>/<session-id>.jsonl` แต่ไม่ label
 scenario + กองรวมกัน — ใช้ artifact ที่ label แล้วใน runs/ แทน). playground อยู่นอก repo =
 ไม่ track; ลบ `runs/` เก่าทิ้งได้

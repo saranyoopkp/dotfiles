@@ -11,7 +11,7 @@ description: ออกแบบ data lifecycle และ governance เช่น
 - audit/history ต้องตอบได้ว่าใครทำอะไรกับ target ใด เมื่อไร และผลคืออะไร โดยไม่ใส่ secret หรือ PII เกินจำเป็น; อย่าใช้ audit log แทน source of truth หรือเหตุผลรองรับการเก็บข้อมูลทุกอย่างตลอดไป
 - แยก access/retention ของ PII จากข้อมูลทั่วไป, ลดการเก็บและการคัดลอก, และตรวจ tenant scope ทุกทางที่ read/export/delete; authorization อยู่ `authz-multitenancy`
 
-backup/restore และ retention ของ telemetry อยู่ `operations-observability`; privileged-action audit อยู่
+backup/restore และ retention ของ telemetry อยู่ `production-recovery`; privileged-action audit อยู่
 `authz-multitenancy`/`money-handling` ตามโดเมน. Skill นี้เป็น owner ของ lifecycle semantics ของ data และ
 ผลของ deletion/retention ที่ consumer พึ่งพาได้.
 

@@ -26,7 +26,7 @@
 → **บทเรียน: ดู time trend ก่อนสรุปอะไรเป็น "สถานะปัจจุบัน" — ค่าเฉลี่ยย้อนหลังทำให้บั๊กที่ตายแล้ว
 ดูเหมือนยังมีชีวิต** (นี่คือ confound ตัวที่ 4 ของ audit นี้ — user จับได้อีกครั้ง)
 
-หลักการที่ทำนายผลนี้ไว้แล้ว — `rules/compatibility-and-rollout.md`:
+หลักการที่ทำนายผลนี้ไว้แล้ว — `rules/engineering/compatibility-rollout.md`:
 **"บังคับด้วยระบบ ไม่ใช่ความจำ — กฎที่พึ่งความจำ = กฎที่จะถูกละเมิด"**
 
 ## ACV — ทำงานดี อย่ารื้อ
@@ -120,7 +120,7 @@ creation site / ไม่มีที่อื่น / all X / no other Z") ถ�
 **skill = คำตอบ**: native · description บาง ๆ always-loaded (routing signal) · body โหลดครั้งเดียว
 ตอน invoke · ไม่มี pointer (harness โหลดให้ ไม่ fail-open) · รอด long session ที่ pointer hack ตาย.
 ตัดสินใจ: `ui-ux-baseline` → skill (`claude/skills/ui-ux-baseline`, + a11y/focus ที่เคยขาด);
-rules/ เก็บเฉพาะหลักการ cross-cutting; `00-how-to-read` ข้อ 6 = routing principle
+rules/ เก็บเฉพาะหลักการ cross-cutting; `rules/core/operating-contract.md` ข้อ 6 = routing principle
 (domain detail = skill, invoke ตาม work type). playbooks/paths ถอดทิ้ง.
 
 **บทเรียนการวัด (user จับ)**: เทสแรกวัดด้วย `grep "SKILL_INVOKED: YES"` = **self-report + filter

@@ -13,7 +13,7 @@ description: ออกแบบหรือแก้ DB schema, relation, enum, 
 
 ก่อน migration ให้ระบุ consumer และ schema/code ที่อยู่ร่วมกันได้. การ remove/rename, เปลี่ยน meaning,
 บังคับ required หรือ rewrite data ใช้ expand → migrate/backfill → switch consumer → contract ตาม
-`compatibility-and-rollout`; backfill ต้องทำเป็น batch ที่ monitor/หยุด/รันซ้ำได้ และ migration ต้องรู้ lock
+`compatibility-rollout`; backfill ต้องทำเป็น batch ที่ monitor/หยุด/รันซ้ำได้ และ migration ต้องรู้ lock
 กับผลต่อ deploy/rollback หรือ forward-fix ก่อน apply.
 
 ตรวจ migration กับ schema เดิมและข้อมูล representative รวมทั้ง constraint/index ที่เพิ่ม; ถ้าตรวจ lock
