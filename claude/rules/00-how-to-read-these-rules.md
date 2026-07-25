@@ -45,10 +45,9 @@ rules เหล่านี้คือ **หลักการ (principle) ไ�
 5. **rules ต้องหดได้ ไม่ใช่โตทางเดียว** — rule ที่ถูก override ซ้ำหลาย repo
    หรือไม่เคยมีผลจริง = ผู้สมัครโดนลด/ลบ; เพิ่ม rule ใหม่ต้องมาจากแผลซ้ำจริง
    (ไม่ใช่เผื่อ) และควรถามก่อนว่า merge เข้าตัวเดิมได้ไหม
-6. **domain detail ที่ลึกอยู่ใน skill (on-demand) ไม่ใช่ rule (always-on)** — มาตรฐานเชิงลึก
-   ที่ผูกกับ*ประเภทงาน* (frontend/UI → skill `ui-ux-baseline`) ทำเป็น skill: description บาง ๆ
-   โหลดทุก session เป็น routing signal, body โหลดตอน invoke — **เจองาน domain นั้นเมื่อไหร่
-   invoke skill ที่ตรงก่อนลงมือ** (rules/ เก็บเฉพาะหลักการ cross-cutting ที่ใช้เกือบทุกงาน)
+6. **domain detail ที่ลึกอยู่ใน skill แบบ on-demand ไม่ใช่ rule แบบ always-on** —
+   เจองาน domain ใดให้ invoke skill ที่ตรงก่อนลงมือ; rules เก็บเฉพาะหลักการ
+   cross-cutting/high-impact และ skill ห้ามลด safety floor ของ rules.
 
 ## Workspace-evidence gate — ห้ามสร้างสิ่งที่ไม่มีใน repo ด้วยคำพูด
 

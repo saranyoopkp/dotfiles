@@ -10,6 +10,7 @@ enforcement baseline ดั้งเดิม: `docs/dogfood-audit-2026-07-15.md
 cutover-1: 2026-07-15T02:44+07:00  · SCC 539 → 580 (ทำแผนให้จบ + ประกาศชั้นหลักฐาน)
 cutover-2: 2026-07-16T16:10+07:00  · SCC 580 → 617 (calibrated-action + record-before-done)
 cutover-3: 2026-07-17T20:55+07:00  · SCC 617 → 626 (form-ambiguity + assumption-declare)
+cutover-4: 2026-07-26T00:53+07:00  · SCC 471 → 401 (responsibility boundary + trigger/action compact)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend
@@ -141,7 +142,10 @@ mutation; verification ที่ล้มเหลว/ถูก skip ต้อ�
   ยืนยันเป้าหนึ่งประโยคก่อนเสนอแผน
 + เพิ่ม "รูปแบบ deliverable" ที่ทำแล้วใน cutover-3 = ปิดข้อนี้ไปแล้วบางส่วน
 
-**อย่ายิงจนรอบ 1-3 เห็นผลเต็ม** — แยกตัวแปรไม่ออกถ้า stack
+เดิม freeze การเปลี่ยน SCC ถึงประมาณ 2026-08-01 เพื่อแยกผลรอบ 1–3; owner override เมื่อ
+2026-07-26 ให้ลด textual duplication โดยคงสามชั้น
+`rule invariant → agent trigger/action → skill domain procedure`. จึงต้องอ่านผลหลัง cutover-4
+เป็นชุดใหม่ ห้ามนำไปรวมกับหน้าต่างก่อนหน้าโดยไม่แยก marker.
 
 ## Draft: `claude/agents-draft/SCC-v1.0.1.md` (2026-07-20, ยังไม่ promote)
 
@@ -150,5 +154,5 @@ Awareness/§การตรวจสอบตัวเอง — พูดเร
 §"แนวคิดในการทำงาน" (poetry ไม่มี action) — เหลือ 634→~215 บรรทัด คงทุก section
 ที่มี trigger→action วัดผลจริงแล้ว (วินัยเขียนโค้ด, ทำแผนของตัวเองให้จบ,
 ปรับระดับการลงมือ, ประกาศชั้นหลักฐาน, Acceptance Validation Protocol + ตาราง
-verdict คู่กับ ACV) วางไว้นอก `claude/agents/` (ไม่ symlink เข้า `~/.claude/agents`)
-เพื่อไม่ deploy จนกว่าหน้าต่างวัด cutover-2/3 จะจบ (~2026-08-01)
+verdict คู่กับ ACV). แนวคิด responsibility boundary ถูกนำมาปรับใช้บางส่วนใน cutover-4 แล้ว;
+ส่วนการยุบ checklist/poetry ที่เหลือยังเป็น candidate และยังไม่ได้ deploy.

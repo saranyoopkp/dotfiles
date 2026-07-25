@@ -14,9 +14,18 @@
 
 - rules และ agent specs ต้อง generic: ห้ามใส่ชื่อระบบจริงหรือรายละเอียดเฉพาะ repo งาน
 - rule ใหม่ต้องมาจากปัญหาซ้ำที่พิสูจน์ได้ และต้องรวมเข้ากฎเดิมก่อนสร้างไฟล์ใหม่
+- **Design invariant — สามชั้นมีหน้าที่ต่างกัน:**
+  - `agents/` = behavior ของผู้ปฏิบัติงาน: เมื่อพบ trigger ต้องตัดสินใจ ลงมือ ตรวจ และรายงานอย่างไร
+  - `rules/` = กฎกลางร่วมและ safety invariant: อะไรต้องจริงเสมอโดยไม่ขึ้นกับ agent หรือ domain
+  - `skills/` = มาตรฐานและ procedure เฉพาะงาน: งานชนิดนั้นทำอย่างไร ตรวจอะไร และมี edge case ใด
+- เรื่องเดียวกันอยู่ข้ามชั้นได้เฉพาะเมื่อเป็น `invariant → trigger/action → domain procedure`;
+  ห้ามคัด prose/checklist เดียวกันหลายชั้นโดยไม่มีหน้าที่เพิ่ม และห้ามลด safety floor เหลือ pointer
+  ที่อาจไม่ถูกอ่าน
 - detail ที่ผูกกับประเภทงานและกู้คืนได้ ให้เป็น skill; cross-cutting/high-impact ให้เป็น rule
 - จัดกลุ่ม skill เมื่อมี sub-concern ที่แยก routing ได้จริง ไม่ใช่เพื่อเผื่ออนาคต
 - `CLAUDE.md` นี้เก็บ operational context เท่านั้น; เหตุผลยาว ผลทดลอง และ snapshots อยู่ `docs/`
+- `docs-setup` และ artifact ใน kit เป็นข้อยกเว้น: ของที่ copy ไป repo ปลายทางต้อง self-contained
+  เพราะปลายทางอาจไม่มี agents/rules/skills ของ dotfiles
 
 ## การติดตั้งและความเข้ากันได้
 

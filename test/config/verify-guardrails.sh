@@ -11,7 +11,6 @@ check() {
   }
 }
 
-check claude/agents/SCC-v1.0.1.md "Anti-Guessing Protocol"
 check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md "ข้อความคำขอและ scope ที่ผู้ใช้อนุมัติ"
 check claude/agents/SCC-v1.0.1.md "comment ตั้งแต่ 2 บรรทัดขึ้นไป"
@@ -19,14 +18,23 @@ check claude/agents/SCC-v1.0.1.md "ห้ามวนอ่านโค้ดเ
 check claude/agents/SCC-v1.0.1.md "แยกคำถาม/ข้อสังเกตออกจากคำสั่งให้ดำเนินการ"
 check claude/agents/SCC-v1.0.1.md "ลอง alternative ที่สมเหตุสมผลหนึ่งทาง"
 check claude/agents/SCC-v1.0.1.md "สร้าง task list **ก่อน mutation**"
-check claude/agents/SCC-v1.0.1.md "Refactor Protocol"
 check claude/agents/SCC-v1.0.1.md "ห้าม big-bang rewrite"
-check claude/agents/SCC-v1.0.1.md "pain ที่ไม่บล็อก"
-check claude/agents/SCC-v1.0.1.md "Refactor Protocol เริ่มที่ข้อเสนอ ไม่ใช่ mutation"
 check claude/agents/SCC-v1.0.1.md "นี่ไม่ใช่ authorization"
-check claude/agents/SCC-v1.0.1.md "Evidence Integrity Protocol"
+check claude/agents/SCC-v1.0.1.md "Behavioral Gates (trigger → action)"
 check claude/agents/SCC-v1.0.1.md "claim → สิ่งที่ต้องสังเกต → วิธีตรวจ → ผลที่ได้"
-check claude/agents/SCC-v1.0.1.md "ผลที่ได้รับเป็นข้อมูลนำเข้า ไม่ใช่ข้อพิสูจน์โดยอัตโนมัติ"
+check claude/agents/SCC-v1.0.1.md "ห้ามขยายผล “ไม่พบ” เกิน query"
+check claude/agents/SCC-v1.0.1.md "การพบ artifact อย่างเดียวไม่พิสูจน์ว่า active"
+check claude/agents/SCC-v1.0.1.md "inventory entry point/consumer/contract/test"
+check claude/agents/SCC-v1.0.1.md "migrate และตรวจ consumer ก่อนลบของเดิม"
+check claude/agents/SCC-v1.0.1.md "ปิดงานทุกครั้งด้วยบรรทัดนี้"
+check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
+check claude/agents/ACV-v1.0.1.md "behavior ของ ACV"
+check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
+check CLAUDE.md "Design invariant — สามชั้นมีหน้าที่ต่างกัน"
+check CLAUDE.md '`agents/` = behavior ของผู้ปฏิบัติงาน'
+check CLAUDE.md '`rules/` = กฎกลางร่วมและ safety invariant'
+check CLAUDE.md '`skills/` = มาตรฐานและ procedure เฉพาะงาน'
+check CLAUDE.md "invariant → trigger/action → domain procedure"
 check claude/rules/00-how-to-read-these-rules.md "Execution-tracking gate"
 check claude/rules/00-how-to-read-these-rules.md "Workspace-evidence gate"
 check claude/rules/00-how-to-read-these-rules.md "ยังไม่พบใน repo"
@@ -38,6 +46,8 @@ check claude/rules/00-how-to-read-these-rules.md "expand → migrate → contrac
 check claude/rules/00-how-to-read-these-rules.md "Pain ที่ตรวจพบห้ามเงียบ"
 check claude/rules/00-how-to-read-these-rules.md "Refactor gate เริ่มที่ **ข้อเสนอ ไม่ใช่ mutation**"
 check claude/rules/00-how-to-read-these-rules.md "การจำแนกว่า behavior-preserving ไม่ใช่ authorization"
+check claude/rules/00-how-to-read-these-rules.md "domain detail ที่ลึกอยู่ใน skill แบบ on-demand"
+check claude/rules/00-how-to-read-these-rules.md "skill ห้ามลด safety floor ของ rules"
 check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
 check claude/agents/ACV-v1.0.1.md "ทุก Finding ต้องมี"
 check claude/agents/ACV-v1.0.1.md "Verification ที่จำเป็นล้มเหลว, ถูก skip หรือรันไม่ได้"
