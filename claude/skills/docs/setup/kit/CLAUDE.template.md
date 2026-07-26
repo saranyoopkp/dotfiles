@@ -46,6 +46,8 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 - **precondition ไม่ครบ ต้อง fail loud ไม่ใช่ข้ามเงียบ** — พังเงียบบน production แย่กว่าหยุด deploy เสมอ
 - **สร้างของใหม่แล้วทดสอบ "การใช้งานจริง" ของมัน** — สร้างสำเร็จ ≠ ใช้งานได้ (เช่น สร้าง role แล้ว
   ต้องลองเขียนจริงด้วย ไม่ใช่แค่เช็คว่ามี)
+- feature flag/dual-read/dual-write ต้องมี owner, default, telemetry และเงื่อนไข rollback/ลบ;
+  ใช้แทน compatibility ของ state/contract ไม่ได้
 
 ## Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo
 
@@ -135,6 +137,10 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 | `memory/MEMORY.md` | **recall router** — auto-load ทุก session | pointer + hook ของ shared fact | "session หน้าต้องรู้ว่ามี fact นี้ไหม" |
 | `memory/<fact>.md` | **selective pull** — harness ไม่เปิดตาม pointer เอง | fact เม็ดเดียว/ไฟล์ สั้น | "index/task ชี้แล้วควรเปิดรายละเอียดไหม" |
 
+- **shared memory index lifecycle:** create/move/rename/delete `memory/<fact>.md` ต้อง
+  เพิ่ม/แก้/ลบ pointer + recall hook ใน `memory/MEMORY.md` commit เดียวกัน; edit leaf ให้
+  ตรวจว่า hook ยังตรงและแก้เฉพาะเมื่อความหมาย/relevance เปลี่ยน. `MEMORY.md` เก็บ index
+  เท่านั้น ห้ามคัดเนื้อ fact มาใส่
 - เนื้อเรื่องเดียวกันแยกสองบ้านได้ตาม*หน้าที่*: ประวัติ/เหตุผลเต็ม → docs/, fact ที่ต้องนึกออกเอง
   (quirk, preference, กับดัก) → memory/, CLAUDE.md เหลือ 1-3 บรรทัด + pointer
 - ตัวเลข/ข้อมูลที่ reproduce ได้จาก script/คำสั่ง → ไม่จดที่ไหนเลย ชี้ไป source
@@ -145,6 +151,7 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 **สองชั้นในโค้ด (อยู่ใต้ตารางเดียวกัน — ถูกอ่านใกล้โค้ดที่สุด):**
 - **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → ใส่ได้เฉพาะ why/constraint ที่โค้ดแสดง
   เองไม่ได้; comment ตั้งแต่ **2 บรรทัดขึ้นไป** ต้องสร้าง `docs/` ปลายทางก่อน ย้ายรายละเอียดไป แล้วเหลือหนึ่งบรรทัด + pointer — รายละเอียด/ประวัติ/ผลทดลอง inline = ผิดบ้าน;
+  pointer ที่ commit ต้อง resolve จาก clone ของ repo ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง;
   ห้าม commented-out code (git จำให้) และห้ามเล่าว่าบรรทัดถัดไปทำอะไร;
   **ขาอ่าน: เจอ comment ที่มี pointer ตอนแก้จุดนั้น = เปิด doc ตามก่อนแก้** ไม่ใช่ข้าม
 - **docstring** = ถูกอ่านตอน*จะเรียกใช้/แก้* function-module นั้น → interface contract
@@ -193,7 +200,8 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
 1. CLAUDE.md/docs ยังตรงกับความจริงหลังงานนี้ไหม — ถ้าไม่ อัปเดตทันที:
    feature ใหม่ = +1–3 บรรทัดใน Inventory (มีอะไร/ไฟล์หลัก/quirk) + decision พร้อมเหตุผลถ้ามี
    — จดเฉพาะสิ่งที่**โค้ดเล่าเองไม่ได้** (ทำไม/ข้อจำกัด/กับดัก) ห้ามเล่า implementation ซ้ำ
-2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret)
+2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret);
+   ถ้า shared leaf เปลี่ยน lifecycle ให้ sync `memory/MEMORY.md` และตรวจ pointer/hook
 3. commit เอกสารไป**พร้อมกับงาน** (commit เดียวกัน) — รวมถึงลบ `TODO(scope)` ในโค้ด
    ที่งานนี้ปิดแล้ว (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
 4. **section ไหนใน CLAUDE.md โตเกิน ~15 บรรทัด → promote ทันที**: ย้ายเนื้อไป

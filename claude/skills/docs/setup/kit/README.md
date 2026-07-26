@@ -20,6 +20,8 @@ hooks และ junction; artifact ที่ copy ออกไปต้องถ
 ส่วนที่เป็นกลไกเฉพาะระบบนี้ (ไม่อยู่ใน rule):
 - **`*/private/` ไม่ sync ข้ามเครื่อง** (ไม่อยู่ใน git) และห้ามใส่บรรทัดของมันใน
   `memory/MEMORY.md` ที่ commit (index จะชี้ไฟล์ที่เครื่องอื่นไม่มี)
+- shared memory create/move/rename/delete ต้อง sync pointer + recall hook ใน `MEMORY.md`
+  commit เดียวกัน; edit leaf ให้ตรวจ hook และแก้เมื่อความหมาย/relevance เปลี่ยน
 - ก่อน commit memory ใหม่: ลบ metadata ส่วนบุคคล (`originSessionId` ฯลฯ) ออกจาก frontmatter
 
 ## จดอะไรเมื่อทำ feature เสร็จ (กติกากัน drift)

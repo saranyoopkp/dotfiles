@@ -66,4 +66,57 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 ห้ามทำก่อนถึง (โครงเผื่ออนาคต = over-engineering); วิธี group จริงดู §grouping ด้านบน
 (nested พัง → junction แบน + colon name)
 
+## Current ownership map
+
+ตารางนี้คือสถานะปัจจุบัน ไม่ใช่ changelog. `rules` เป็น safety floor ที่โหลดเสมอ,
+`SCC` แปลง trigger เป็น action, `ACV` ตรวจผลแบบอิสระ และ skill เป็น procedure แบบ on-demand.
+เรื่องเดียวกันข้ามชั้นได้เมื่อทำคนละหน้าที่เท่านั้น.
+
+### Always-on rules
+
+| Concern | Shared invariant owner | Agent behavior / on-demand procedure |
+|---|---|---|
+| หลักการทำงาน, pain/ข้อเสนอ, complexity, greenfield และ research floor | `claude/rules/core/operating-contract.md` | SCC เป็น behavior owner; procedure อยู่ใน `greenfield-foundation`, `research` และ `retro` |
+| ความถูกต้องของ claim/report/durable finding | `claude/rules/core/evidence-integrity.md` | SCC รายงานด้วยหลักฐาน; ACV ตรวจ acceptance evidence อิสระ |
+| intent, behavioral change, refactor, instruction-system change และ task tracking | `claude/rules/core/change-control.md` | SCC เป็น behavior owner; ACV ตรวจ authorization และ observable behavior |
+| compatibility และ rollout | `claude/rules/engineering/compatibility-rollout.md` | SCC route ไป `api-design:evolution`, `data-design:schema-migrations`, `ops:infra-change`; ACV ตรวจผลที่อนุมัติ |
+| docs/memory safety floor | `claude/rules/engineering/documentation-discipline.md` | SCC route ไป `docs`; child skill เป็น owner ของ placement/setup/link/stale/workspace |
+| performance safety floor | `claude/rules/engineering/performance-discipline.md` | SCC route ไป `performance` |
+| shared dependency/contract safety floor | `claude/rules/engineering/stack-contracts.md` | SCC route ไป `stack-contracts`; technology choice ใช้ `research:technology-vendor` ร่วม |
+| test-evidence safety floor | `claude/rules/engineering/testing-strategy.md` | SCC route ไป `testing-strategy`; ACV เป็น independent acceptance oracle |
+| authorization และ tenant isolation | `claude/rules/risk/authz-multitenancy.md` | rule เป็น owner ของ safety floor; procedure เฉพาะ domain อยู่ใน skill ที่งานนั้น route เข้า |
+| external integration safety | `claude/rules/risk/external-integration-safety.md` | rule เป็น owner ของ safety floor; API/data/ops skill เติม procedure ตาม surface |
+| money correctness | `claude/rules/risk/money-handling.md` | rule เป็น owner ของ safety floor; API/data skill เติม contract/transaction procedure |
+| production recovery | `claude/rules/risk/production-recovery.md` | rule เป็น owner ของ safety floor; `ops:incident-response`, `ops:observability`, `ops:infra-change` เติม procedure |
+| time/timezone correctness | `claude/rules/risk/time-timezone.md` | rule เป็น owner ของ safety floor; API/data/UI skill เติม procedure ตาม boundary |
+
+### On-demand skill entry points
+
+| Domain | Entry-point owner | Routing source |
+|---|---|---|
+| API contract และ evolution | `claude/skills/api-design/SKILL.md` | description ของ router + child routing ใน body; compatibility route จาก SCC |
+| Data model, lifecycle และ consistency | `claude/skills/data-design/SKILL.md` | description ของ router + child routing ใน body |
+| Documentation และ memory | `claude/skills/docs/SKILL.md` | description ของ router + child routing ใน body; SCC มี docs trigger |
+| Greenfield foundation | `claude/skills/greenfield-foundation/SKILL.md` | description + SCC greenfield trigger |
+| Operations และ infrastructure | `claude/skills/ops/SKILL.md` | description ของ router + child routing ใน body |
+| Performance | `claude/skills/performance/SKILL.md` | description + thin rule + SCC trigger |
+| Research | `claude/skills/research/SKILL.md` | description ของ router + child routing ใน body; SCC มี research triggers |
+| Session feedback | `claude/skills/retro/SKILL.md` | description; read-only by default |
+| Shared stack/contracts | `claude/skills/stack-contracts/SKILL.md` | description + thin rule + SCC trigger |
+| Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + thin rule + SCC trigger |
+| UI/UX/frontend | `claude/skills/ui-ux-baseline/SKILL.md` | description ของ router + child routing ใน body |
+
+### Map maintenance and change traceability
+
+- map นี้ต้องมี rule ทุกไฟล์และ top-level skill entry point ทุกตัว; child skill ทุกตัวต้องถูก route
+  จาก parent `SKILL.md` โดยชื่อจริง
+- ก่อนแก้หลาย owner หรือย้าย routing ให้แสดง impact map
+  `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`; หลังแก้ reconcile
+  กับ diff จริงและใส่สรุปเดียวกันใน commit/PR
+- structural move กับ semantic change แยกกันเมื่อทำได้. ของที่ย้ายต้องบอก destination และ
+  routing ต้นทาง→ปลายทาง; ของที่ถอดต้องบอกเหตุผลและ replacement
+- `test/config/verify-guardrails.sh` ตรวจ structural coverage และ key invariant เท่านั้น;
+  ไม่พิสูจน์ semantic equivalence. ผู้แก้ยังต้องเทียบ impact map, diff และ targeted behavior test
+- ประวัติใช้ Git; ห้ามเติม historical ledger ใน map นี้ เพราะจะสร้าง source of truth ซ้ำ
+
 Regression หลังแก้ skill/description: `test/routing/run.sh`

@@ -45,6 +45,9 @@
 
 ## การตรวจและการเปลี่ยนแปลง
 
+- current owner/routing map อยู่ใน `docs/claude-code-mechanisms.md`; การแก้ agents/rules/skills
+  ข้าม owner ต้องแสดง impact map ตาม `claude/rules/core/change-control.md` ก่อน mutation
+  และ reconcile กับ diff จริงหลังแก้
 - แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
 - อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
 - SCC ส่งงานที่เปลี่ยน behavior, public API หรือมี production/user risk ให้ ACV ตรวจ; งานเอกสารหรือการสำรวจไม่ต้องส่งเว้นแต่กำหนดไว้

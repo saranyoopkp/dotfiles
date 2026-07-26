@@ -50,6 +50,22 @@ Refactor gate เริ่มที่ **ข้อเสนอ ไม่ใช�
 ห้าม big-bang rewrite เมื่อทำ incremental migration ได้. หาก refactor จำเป็นต้องเปลี่ยน dependency,
 architecture หรือ observable behavior ให้หยุดเสนอทางเลือกและต้นทุนก่อน ไม่ซ่อน decision ไว้ในงานจัดโครง.
 
+## Instruction-system change gate
+
+เมื่อแก้ `agents/`, `rules/`, `skills/` หรือ routing/guardrail ของมัน ห้ามให้ผู้ใช้ต้องไล่ diff
+เพื่อค้นเองว่าสาระเดิมหาย ย้าย owner หรือเปลี่ยน behavior:
+
+1. ก่อน mutation ที่แตะหลายไฟล์/หลายชั้น หรือเปลี่ยน owner/routing ให้ตรวจ source ปัจจุบันแล้วแสดง
+   impact map: `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`; ทุกช่องต้อง
+   ระบุรายการหรือ `ไม่มี` และ semantic change ต้องผ่าน Behavioral-change gate
+2. structural move กับ semantic change ต้องแยก diff/commit เมื่อทำได้; หากแยกไม่ได้ให้แจกแจง
+   แต่ละรายการพร้อมเหตุผล ห้ามใช้คำว่า “cleanup/refactor” กลบ behavior หรือรายละเอียดที่หาย
+3. หลัง mutation ให้ reconcile impact map กับ diff จริงและรายงาน destination ของของที่ย้าย,
+   routing ต้นทาง→ปลายทาง, verification และ gap ที่ยังไม่ยืนยัน; ห้ามรายงาน
+   `behavior-preserving` จน invariant เดิมมี owner และหลักฐานรองรับครบ
+4. current ownership อยู่ในเอกสาร map เดียว ส่วนประวัติอยู่ใน commit/PR summary; ห้ามสร้าง
+   changelog ซ้ำที่ต้อง sync. งานข้าม owner ให้ commit/PR summary ใช้ impact map เดียวกัน
+
 ## Execution-tracking gate
 
 เมื่อ harness มี Task tools ให้สร้างและอัปเดต task list **ก่อน mutation** หากงานมีงานย่อยตั้งแต่

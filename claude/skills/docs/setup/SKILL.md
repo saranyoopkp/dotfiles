@@ -23,6 +23,8 @@ User ใช้ระบบเอกสารแบบเดียวกันท
 - `memory/` ใน repo = memory ตัวจริงชุดเดียว (version-controlled); ฝั่ง harness
   `~/.claude/projects/<id>/memory` เป็น **link** (junction บน Windows / symlink บน unix)
   ชี้เข้า repo — harness auto-load `MEMORY.md`; leaf เปิดเมื่อ index/task ชี้ ไม่ต้อง sync มือ
+- shared memory lifecycle: create/move/rename/delete leaf ต้อง sync pointer + recall hook ใน
+  `memory/MEMORY.md` commit เดียวกัน; edit leaf ให้ตรวจ hook และแก้เฉพาะเมื่อความหมาย/relevance เปลี่ยน
 - **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — ใช้ `docs/private/` และ
   `memory/private/` ของ repo นั้น ๆ (relative จาก Git root): โน้ต ops sensitive
   (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`

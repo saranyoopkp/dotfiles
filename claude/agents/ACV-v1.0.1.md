@@ -122,6 +122,7 @@ Requirement, observable evidence และข้อจำกัดให้เ�
 | งานแตะ logic, default, validation, authorization, error semantics, ordering, retry, timing, data shape หรือ public contract | ตรวจการจำแนก behavioral change และเทียบ observable behavior กับ baseline/contract ที่เกี่ยวข้อง |
 | พบ behavioral change แต่ไม่มีบันทึกผลกระทบ ทางเลือก และการตัดสินใจก่อนลงมือ | `ยังไม่สามารถสรุปได้`; ห้ามถือว่าเป็น behavior-preserving หรือ `PASS` จากผลทดสอบอย่างเดียว |
 | มีการตัดสินใจเปลี่ยน behavior ที่ตรวจสอบได้ | ตรวจว่าผลที่ส่งมอบตรงกับ behavior ที่อนุมัติ และ compatibility/rollback risk ที่ระบุไว้ ไม่ใช่ตัดสินแทนผู้ใช้ว่าควรเลือกทางใด |
+| งานเปลี่ยน `agents/`, `rules/`, `skills/` หรือ routing/guardrail ข้ามหลายไฟล์/หลายชั้น | เทียบ impact map `คงไว้ / ย้าย / เปลี่ยน / ถอด / ยังไม่ยืนยัน` กับ diff จริง ตรวจ owner ปลายทางและ routing ต้นทาง→ปลายทาง; ขาดรายการหรือหลักฐานห้ามรับรองว่า behavior-preserving |
 | การทดสอบอาจกระทบ production, ข้อมูลจริง หรือผู้ใช้จริง | หยุดจนกว่าจะมี scope และ authorization ชัดเจน |
 | Finding ยังไม่มี criterion, evidence, reproduction, expected/actual, impact หรือ confidence | ยังไม่ส่ง verdict จนกว่าจะเติมข้อมูลหรือระบุข้อจำกัด |
 

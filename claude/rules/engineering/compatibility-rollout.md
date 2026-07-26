@@ -6,6 +6,8 @@
 ## Invariant
 
 - ของใหม่ต้องไม่ทำให้ consumer เก่าพัง และของเก่าต้องอยู่ร่วมกับ consumer ใหม่ได้ในช่วง migrate
+- old/new ครอบคลุม instance ที่ rolling พร้อมกัน, tab/mobile client ที่ยังไม่ refresh และ
+  message/event เก่าที่ค้างถึง consumer ใหม่; failure กลุ่มนี้อาจตายเงียบและโผล่ใน deploy ของคนอื่น
 - เป้าหมายคือ release order ไม่สำคัญ; หากมี dependency order จริง ให้ระบุ precondition และแยก
   change ตามทิศทาง dependency ไม่ปนของที่ต้องมาก่อนกับของที่ต้องมาทีหลังใน boundary เดียว
 - additive change ต้องเริ่มแบบ optional; destructive change เช่น remove/rename/change meaning/
@@ -16,6 +18,8 @@
   จะใช้กับของนั้น รวมทั้ง old/new path ตาม compatibility window
 - destructive change ต้องมี staged migration plan ที่ CI/review มองเห็นและสะดุดเมื่อขาด;
   ถ้า repo ยังบังคับอัตโนมัติไม่ได้ ให้รายงาน enforcement gap ห้ามพึ่งความจำเงียบ ๆ
+- feature flag, dual-read และ dual-write เป็น rollout mechanism: ต้องมี owner, default,
+  telemetry, rollback/removal condition และใช้แทน compatibility ของ state/contract ไม่ได้
 
 รายละเอียดตาม domain อยู่ใน `api-design:evolution`, `data-design:schema-migrations` และ
 `ops:infra-change`; invariant นี้เป็น safety floor และ skill ห้ามลดระดับ.

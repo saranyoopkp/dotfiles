@@ -11,6 +11,14 @@ check() {
   }
 }
 
+check_map_entry() {
+  local path="$1"
+  rg -q --fixed-strings "$path" "$ROOT/docs/claude-code-mechanisms.md" || {
+    echo "missing ownership-map entry: $path" >&2
+    exit 1
+  }
+}
+
 check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md "ข้อความคำขอและ scope ที่ผู้ใช้อนุมัติ"
 check claude/agents/SCC-v1.0.1.md "comment ตั้งแต่ 2 บรรทัดขึ้นไป"
@@ -33,6 +41,10 @@ check claude/agents/SCC-v1.0.1.md "ถ้าทาง minimum ตอบ outcome/
 check claude/agents/SCC-v1.0.1.md "ห้ามเลือกแบบซับซ้อนเงียบ ๆ"
 check claude/agents/SCC-v1.0.1.md "inventory entry point/consumer/contract/test"
 check claude/agents/SCC-v1.0.1.md "migrate และตรวจ consumer ก่อนลบของเดิม"
+check claude/agents/SCC-v1.0.1.md 'impact map `คงไว้ / ย้าย old → new / เปลี่ยน behavior / ถอดออก / ยังไม่ยืนยัน`'
+check claude/agents/SCC-v1.0.1.md "routing ต้นทาง→ปลายทาง"
+check claude/agents/SCC-v1.0.1.md "จะเรียกใช้/แก้/ทำซ้ำ symbol เดิมที่มี docstring"
+check claude/agents/SCC-v1.0.1.md "ห้ามเปลี่ยน pointer เป็น path เฉพาะเครื่อง"
 check claude/agents/SCC-v1.0.1.md "ปิดงานทุกครั้งด้วยบรรทัดนี้"
 check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
 check claude/agents/SCC-v1.0.1.md 'invoke `greenfield-foundation` ก่อนเสนอ stack หรือ mutation'
@@ -76,6 +88,9 @@ check claude/rules/core/change-control.md "behavior-preserving/internal change"
 check claude/rules/core/change-control.md "Intent gate"
 check claude/rules/core/change-control.md "Execution-tracking gate"
 check claude/rules/core/change-control.md "ก่อน mutation"
+check claude/rules/core/change-control.md "Instruction-system change gate"
+check claude/rules/core/change-control.md '`คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`'
+check claude/rules/core/change-control.md "reconcile impact map กับ diff จริง"
 check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
 check claude/agents/ACV-v1.0.1.md "ทุก Finding ต้องมี"
 check claude/agents/ACV-v1.0.1.md "Verification ที่จำเป็นล้มเหลว, ถูก skip หรือรันไม่ได้"
@@ -83,6 +98,8 @@ check claude/agents/ACV-v1.0.1.md "ห้ามถือว่าการทำ
 check claude/agents/ACV-v1.0.1.md "อย่างใดอย่างหนึ่งแทนกันไม่ได้"
 check claude/agents/ACV-v1.0.1.md "ตรวจการจำแนก behavioral change"
 check claude/agents/ACV-v1.0.1.md "ไม่ใช่ตัดสินแทนผู้ใช้ว่าควรเลือกทางใด"
+check claude/agents/ACV-v1.0.1.md 'impact map `คงไว้ / ย้าย / เปลี่ยน / ถอด / ยังไม่ยืนยัน`'
+check claude/agents/ACV-v1.0.1.md "routing ต้นทาง→ปลายทาง"
 check claude/agents/ACV-v1.0.1.md "ห้ามใช้ absence จาก probe เดียวเป็น Verdict"
 check claude/agents/ACV-v1.0.1.md "ใช้ยืนยันสถานะปัจจุบันไม่ได้"
 check claude/agents/ACV-v1.0.1.md "Report, summary, transcript หรือผลที่ได้รับเป็นข้อมูลนำเข้า"
@@ -97,11 +114,19 @@ check claude/rules/engineering/documentation-discipline.md "เป็นคร�
 check claude/rules/engineering/documentation-discipline.md "docs กองแบนเกิน ~7 ไฟล์"
 check claude/rules/engineering/documentation-discipline.md "internal docs ใช้ภาษาที่ทำให้จดจริง"
 check claude/rules/engineering/documentation-discipline.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/rules/engineering/documentation-discipline.md "create/move/rename/delete shared"
+check claude/rules/engineering/documentation-discipline.md "แก้เนื้อหาให้ตรวจว่า hook ยังตรง"
+check claude/rules/engineering/documentation-discipline.md '`~/.claude/` หรือ path เฉพาะเครื่อง'
+check claude/rules/engineering/documentation-discipline.md "public interface ต้องมีตาม convention ของภาษา"
+check claude/rules/engineering/documentation-discipline.md "ก่อนเรียกใช้/แก้/ทำซ้ำ symbol เดิม"
 check claude/rules/engineering/compatibility-rollout.md "Expand → Migrate → Contract"
 check claude/rules/engineering/compatibility-rollout.md "release order ไม่สำคัญ"
 check claude/rules/engineering/compatibility-rollout.md "change ตามทิศทาง dependency"
 check claude/rules/engineering/compatibility-rollout.md "ตรวจ action จริงที่ consumer"
 check claude/rules/engineering/compatibility-rollout.md "CI/review มองเห็นและสะดุดเมื่อขาด"
+check claude/rules/engineering/compatibility-rollout.md "tab/mobile client ที่ยังไม่ refresh"
+check claude/rules/engineering/compatibility-rollout.md "message/event เก่าที่ค้างถึง consumer ใหม่"
+check claude/rules/engineering/compatibility-rollout.md "feature flag, dual-read และ dual-write"
 check claude/rules/engineering/performance-discipline.md 'invoke `performance`'
 check claude/rules/engineering/performance-discipline.md "ไม่ต้อง invoke"
 check claude/rules/engineering/stack-contracts.md 'invoke `stack-contracts`'
@@ -149,20 +174,25 @@ check claude/agents/SCC-v1.0.1.md 'invoke `testing-strategy`'
 check claude/agents/SCC-v1.0.1.md 'ใช้ `compatibility-rollout`'
 check claude/agents/SCC-v1.0.1.md 'quirk ใช้ `symptom → root cause → fix`'
 check claude/agents/SCC-v1.0.1.md 'invoke `docs:placement` หรือ `docs:setup`'
+check claude/agents/SCC-v1.0.1.md 'sync pointer + hook ใน `MEMORY.md`'
 if find "$ROOT/claude/rules" -maxdepth 1 -type f -name '*.md' | rg -q .; then
   echo "rules must be owned by core/, engineering/, or risk/" >&2
   exit 1
 fi
 check claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัดขึ้นไป"
+check claude/skills/docs/placement/SKILL.md "pointer ที่ commit ต้อง resolve จาก clone ของ repo"
 check claude/skills/docs/placement/SKILL.md "แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน"
 check claude/skills/docs/placement/SKILL.md '`docs/` กองแบนเกิน ~7 ไฟล์'
 check claude/skills/docs/placement/SKILL.md "index ใน CLAUDE.md ต้อง grouped"
+check claude/skills/docs/placement/SKILL.md "หนึ่งบรรทัดต่อไฟล์พร้อมชื่อ + hook"
+check claude/skills/docs/placement/SKILL.md "shared memory ที่ create/move/rename/delete"
 check claude/skills/docs/SKILL.md "/docs:workspace"
 check claude/skills/docs/workspace/SKILL.md "มีหลาย independent Git roots"
 check claude/skills/docs/workspace/SKILL.md "workspace-relative"
 check claude/skills/docs/workspace/SKILL.md "fact/topic | current home | evidence | proposed owner | reason | action"
 check claude/skills/docs/workspace/SKILL.md "report จาก agent/audit เป็น lead ไม่ใช่ proof"
 check claude/skills/docs/setup/SKILL.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/SKILL.md "shared memory lifecycle"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "New multi-line line-comment(s)"
 if rg -q 'docs:placement|docs-setup|/docs:' "$ROOT/claude/skills/docs/setup/kit/hooks/docs-drift.sh"; then
   echo "hook must not reference an optional skill" >&2
@@ -176,6 +206,7 @@ check claude/skills/api-design/mutations/SKILL.md "Idempotency-Key"
 check claude/skills/api-design/async-operations/SKILL.md "202 Accepted"
 check claude/skills/api-design/caching-concurrency/SKILL.md "If-Match"
 check claude/skills/api-design/evolution/SKILL.md "behavioral-change gate"
+check claude/skills/api-design/evolution/SKILL.md "feature flag/rollout mechanism"
 check claude/skills/data-design/SKILL.md "data-design:lifecycle-governance"
 check claude/skills/data-design/SKILL.md "ใช้ทันทีเมื่อวางแผน, ออกแบบ, review"
 check claude/skills/data-design/SKILL.md "แม้ยังไม่มี schema/repo จริงหรือผู้ใช้ขอเพียงแผน"
@@ -217,10 +248,18 @@ check claude/skills/docs/setup/kit/CLAUDE.template.md "## Report integrity"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Durable findings"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "harness ไม่เปิดตาม pointer เอง"
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/CLAUDE.template.md "shared memory index lifecycle"
+check claude/skills/docs/setup/kit/CLAUDE.template.md "feature flag/dual-read/dual-write ต้องมี owner"
+check claude/skills/docs/setup/kit/CLAUDE.template.md "pointer ที่ commit ต้อง resolve จาก clone ของ repo"
 check claude/skills/docs/setup/kit/memory/MEMORY.md "ไม่พบใน index ≠ ไม่มี private memory"
+check claude/skills/docs/setup/kit/memory/MEMORY.md "create/move/rename/delete shared leaf"
+check claude/skills/docs/setup/kit/memory/MEMORY.md "ห้ามคัดเนื้อ fact จาก leaf มาใส่ใน index"
 check claude/skills/docs/setup/kit/README.md 'กติกา self-contained ของ kit อยู่ใน `CLAUDE.template.md`'
 check claude/skills/docs/setup/kit/README.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/README.md "shared memory create/move/rename/delete"
 check claude/skills/docs/setup/kit/memory/README.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/memory/README.md "create/move/rename/delete shared leaf"
+check claude/skills/docs/setup/kit/memory/README.md '`MEMORY.md` เก็บเฉพาะ pointer + recall hook'
 check claude/skills/docs/setup/kit/init.sh 'git -C "$requested_target" rev-parse --show-toplevel'
 check claude/skills/docs/setup/kit/init.sh "printf '/docs/private/"
 check claude/skills/docs/setup/kit/init.sh "printf '/memory/private/"
@@ -233,5 +272,25 @@ check test/routing/run.sh "scenarios-compatibility.tsv"
 check test/routing/scenarios-docs.tsv "docs-placement"
 check test/routing/scenarios-docs.tsv "docs-setup"
 check test/routing/scenarios-compatibility.tsv "compat-local"
+check CLAUDE.md "current owner/routing map"
+check docs/claude-code-mechanisms.md "Current ownership map"
+check docs/claude-code-mechanisms.md "ไม่พิสูจน์ semantic equivalence"
+
+while IFS= read -r rule; do
+  check_map_entry "${rule#"$ROOT/"}"
+done < <(find "$ROOT/claude/rules" -type f -name '*.md' | sort)
+
+while IFS= read -r router; do
+  check_map_entry "${router#"$ROOT/"}"
+done < <(find "$ROOT/claude/skills" -mindepth 2 -maxdepth 2 -type f -name SKILL.md | sort)
+
+while IFS= read -r child; do
+  parent="$(dirname "$(dirname "$child")")/SKILL.md"
+  name="$(sed -n 's/^name:[[:space:]]*//p' "$child" | head -n 1 | tr -d '\r')"
+  if [[ ! -f "$parent" || -z "$name" ]] || ! rg -q --fixed-strings "$name" "$parent"; then
+    echo "child skill is not routed by parent: ${child#"$ROOT/"} :: $name" >&2
+    exit 1
+  fi
+done < <(find "$ROOT/claude/skills" -mindepth 3 -type f -name SKILL.md | sort)
 
 echo "guardrails verified"

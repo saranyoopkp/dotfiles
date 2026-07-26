@@ -8,6 +8,8 @@
 - อัปเดตเอกสารใน commit เดียวกับงาน และจดเฉพาะสิ่งที่โค้ดเล่าเองไม่ได้
 - fact มีบ้านเดียว: `CLAUDE.md` = push, `docs/` = pull, `MEMORY.md` = recall router,
   `memory/<fact>.md` = selective pull; ที่อื่นใช้ pointer ไม่คัดเนื้อซ้ำ
+- create/move/rename/delete shared `memory/<fact>.md` ต้องเพิ่ม/แก้/ลบ pointer + recall hook
+  ใน `memory/MEMORY.md` commit เดียวกัน; แก้เนื้อหาให้ตรวจว่า hook ยังตรงและแก้เมื่อความหมายเปลี่ยน
 - sensitive/private ห้ามอยู่ในไฟล์ที่ git track: operational docs ใช้ `docs/private/` และ
   fact ส่วนตัว/เฉพาะเครื่องใช้ `memory/private/` ของ repo นั้น ๆ (relative จาก Git root);
   gitignore ทั้งคู่และห้าม index private memory ลง shared `MEMORY.md`
@@ -29,9 +31,12 @@
 ## ในโค้ด
 
 - comment ใส่เฉพาะ why/constraint หนึ่งบรรทัดพร้อม pointer; **ตั้งแต่ 2 บรรทัด** ให้ย้าย
-  narrative/history/detail ไป docs ก่อน แล้วเหลือ pointer ที่มีปลายทางจริง
-- docstring คือ public interface contract; tutorial, postmortem และ changelog ไป docs
-- ก่อนแก้จุดที่มี docstring/comment-pointer ให้อ่าน contract/ปลายทางก่อน ไม่เดาจากชื่อ
+  narrative/history/detail ไป docs ก่อน แล้วเหลือ pointer ที่มีปลายทางจริงใน repo; ห้ามเขียน
+  pointer ที่ commit แล้วไปพึ่ง `~/.claude/` หรือ path เฉพาะเครื่องซึ่ง clone อื่นเปิดไม่ได้
+- docstring คือ public interface contract และ public interface ต้องมีตาม convention ของภาษา;
+  tutorial, postmortem และ changelog ไป docs
+- ก่อนเรียกใช้/แก้/ทำซ้ำ symbol เดิมให้อ่าน docstring ก่อน; ก่อนแก้จุดที่มี comment-pointer
+  ให้เปิดปลายทางก่อน ไม่เดาจากชื่อ. contract ขัด behavior จริงให้แก้พร้อมงาน
 
 รายละเอียดการเลือกบ้านและ remediation อยู่ `/docs:placement`; ห้ามทำ cleanup เกิน scope
 เพียงเพราะพบหนี้เอกสาร.

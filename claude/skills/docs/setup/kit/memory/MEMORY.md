@@ -2,6 +2,8 @@
 
 > หนึ่งบรรทัดต่อไฟล์ — format: `- [Title](<fact-file>.md) — hook สั้น ๆ ว่าทำไมต้องเปิด`
 > index นี้ auto-load และครอบเฉพาะ shared memory; ไม่รวม `memory/private/`
+> เก็บเฉพาะ pointer + recall hook — ห้ามคัดเนื้อ fact จาก leaf มาใส่ใน index
+> create/move/rename/delete shared leaf = sync entry ใน commit เดียวกัน; edit = ตรวจว่า hook ยังตรง
 > ไม่พบใน index ≠ ไม่มี private memory — ถ้าเรื่องอาจเฉพาะเครื่อง ให้ตรวจ private แยก
 
 - [<Title>](<fact>.md) — <hook>

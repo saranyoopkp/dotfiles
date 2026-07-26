@@ -31,6 +31,7 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
   ```
 - **สร้างปลายทางก่อนเขียน pointer — ทั้งไฟล์และหัวข้อ** (`docs/x.md#heading` = heading
   นั้นต้องมีจริงแล้ว); pointer ผี = แย่กว่าไม่มี pointer (`/docs:link` ตรวจทั้งสองระดับ)
+- pointer ที่ commit ต้อง resolve จาก clone ของ repo; ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง
 - ห้าม: เล่าว่าบรรทัดถัดไปทำอะไร · justify งานให้คนรีวิว · changelog ("เดิมเคยเป็น...") ·
   commented-out code (ลบ — git จำให้)
 - **ก่อนกดเขียน comment บรรทัดที่ 2 = สัญญาณว่ากำลังเขียน docs ผิดที่** — หยุด ย้าย
@@ -55,6 +56,8 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
 3. เกิดผลทดลอง/การวัด → docs/ (point-in-time ระบุวันที่); ตัวเลข reproduce ได้จาก
    script → ไม่จดเลย ชี้ไป source
 4. เผลอเขียนเนื้อเดียวกันสองที่ → เลือกบ้านเดียวตามตาราง อีกที่เหลือ pointer
+5. shared memory ที่ create/move/rename/delete → sync pointer + recall hook ใน
+   `memory/MEMORY.md`; edit → ตรวจ hook และแก้เมื่อความหมาย/relevance เปลี่ยน
 
 ## ระดับ workspace (monorepo / git submodule)
 
@@ -73,7 +76,8 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
 - ตั้งชื่อไฟล์ตามโดเมน/หน้าที่ ไม่ใช่ตามเวลาที่สร้าง
 - เมื่อ `docs/` กองแบนเกิน ~7 ไฟล์ ให้เสนอ subfolder ตามโดเมนและย้ายเมื่ออยู่ใน scope;
   threshold เป็นสัญญาณจัดระเบียบ ไม่ใช่เหตุผลให้ cleanup นอกงาน
-- index ใน CLAUDE.md ต้อง grouped และตรงกับไฟล์จริง; เพิ่ม/ย้าย/ลบไฟล์ให้แก้ index ใน commit เดียวกัน
+- index ใน CLAUDE.md ต้อง grouped, หนึ่งบรรทัดต่อไฟล์พร้อมชื่อ + hook ว่าทำไมต้องเปิด
+  และตรงกับไฟล์จริง; เพิ่ม/ย้าย/ลบไฟล์ให้แก้ index ใน commit เดียวกัน
 
 ## โหมดจัดระเบียบ (remediation — เก็บหนี้ comment/docstring เดิม)
 
