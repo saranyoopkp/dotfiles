@@ -38,8 +38,10 @@
 ## เอกสารและ memory
 
 - `/docs:setup` วางหรือปรับระบบเอกสารของ repo; kit ใน `claude/skills/docs/setup/kit/` คือ source of truth ของกลไก
+- `/docs:workspace` จัด owner ของ fact และเอกสาร cross-repo ใน workspace ที่มีหลาย independent Git roots; repo เดี่ยว/monorepo ยังใช้ setup/placement เดิม
 - template ถูก copy ตอน setup แรก ไม่ sync กลับอัตโนมัติ; re-apply ต้อง merge โดยรักษา customization ของ repo
-- memory ของ repo อยู่ใน repository และ harness link เข้ามา; ข้อมูล sensitive อยู่ใน path ที่ gitignore เท่านั้น
+- memory ของ repo อยู่ใน repository และ harness link เข้ามา; private data ใช้
+  `docs/private/` หรือ `memory/private/` ของ repo นั้น ๆ (relative จาก Git root) และต้อง gitignore
 
 ## การตรวจและการเปลี่ยนแปลง
 

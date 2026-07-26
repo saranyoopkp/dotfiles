@@ -27,6 +27,10 @@ check claude/agents/SCC-v1.0.1.md "การพบ artifact อย่างเ�
 check claude/agents/SCC-v1.0.1.md "ก่อนรายงานผล, finding หรือ handoff"
 check claude/agents/SCC-v1.0.1.md "ห้ามรายงานสิ่งที่ได้รับมาหรือผลค้างเหมือนตรวจเอง"
 check claude/agents/SCC-v1.0.1.md "ตรวจ primary evidence โดยตรงให้ครบทุก atomic finding ที่จะเขียน"
+check claude/agents/SCC-v1.0.1.md "return/coordination channel ที่ผู้รับเข้าถึงได้"
+check claude/agents/SCC-v1.0.1.md "สถานะ idle ไม่ใช่หลักฐานว่าส่งมอบแล้ว"
+check claude/agents/SCC-v1.0.1.md "ถ้าทาง minimum ตอบ outcome/correctness/safety/compatibility ครบ"
+check claude/agents/SCC-v1.0.1.md "ห้ามเลือกแบบซับซ้อนเงียบ ๆ"
 check claude/agents/SCC-v1.0.1.md "inventory entry point/consumer/contract/test"
 check claude/agents/SCC-v1.0.1.md "migrate และตรวจ consumer ก่อนลบของเดิม"
 check claude/agents/SCC-v1.0.1.md "ปิดงานทุกครั้งด้วยบรรทัดนี้"
@@ -44,9 +48,12 @@ check CLAUDE.md '`agents/` = behavior ของผู้ปฏิบัติง
 check CLAUDE.md '`rules/` = กฎกลางร่วมและ safety invariant'
 check CLAUDE.md '`skills/` = มาตรฐานและ procedure เฉพาะงาน'
 check CLAUDE.md "invariant → trigger/action → domain procedure"
+check CLAUDE.md 'ของ repo นั้น ๆ (relative จาก Git root)'
 check claude/rules/core/operating-contract.md "Pain ที่ตรวจพบห้ามเงียบ"
 check claude/rules/core/operating-contract.md "domain detail ที่ลึกอยู่ใน skill แบบ on-demand"
 check claude/rules/core/operating-contract.md "skill ห้ามลด safety floor ของ rules"
+check claude/rules/core/operating-contract.md "Complexity-proposal gate"
+check claude/rules/core/operating-contract.md "Driver ยังไม่ชัดให้ตรวจ task/repository/runtime/source ที่หาได้ก่อน"
 check claude/rules/core/operating-contract.md "Research escalation"
 check claude/rules/core/operating-contract.md "Research decision gate"
 check claude/rules/core/operating-contract.md 'invoke `research`'
@@ -85,7 +92,22 @@ check claude/agents/ACV-v1.0.1.md "scanner match หรือ severity label อ
 check claude/agents/ACV-v1.0.1.md "persona, anecdote, synthetic quote หรือ model inference ไม่ใช่ observable user evidence"
 check claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 check claude/rules/engineering/documentation-discipline.md "status (Verified/Unverified/Contradicted)"
+check claude/rules/engineering/documentation-discipline.md "symptom → root cause → fix"
+check claude/rules/engineering/documentation-discipline.md "เป็นครั้งที่สอง"
+check claude/rules/engineering/documentation-discipline.md "docs กองแบนเกิน ~7 ไฟล์"
+check claude/rules/engineering/documentation-discipline.md "internal docs ใช้ภาษาที่ทำให้จดจริง"
+check claude/rules/engineering/documentation-discipline.md 'ของ repo นั้น ๆ (relative จาก Git root)'
 check claude/rules/engineering/compatibility-rollout.md "Expand → Migrate → Contract"
+check claude/rules/engineering/compatibility-rollout.md "release order ไม่สำคัญ"
+check claude/rules/engineering/compatibility-rollout.md "change ตามทิศทาง dependency"
+check claude/rules/engineering/compatibility-rollout.md "ตรวจ action จริงที่ consumer"
+check claude/rules/engineering/compatibility-rollout.md "CI/review มองเห็นและสะดุดเมื่อขาด"
+check claude/rules/engineering/performance-discipline.md 'invoke `performance`'
+check claude/rules/engineering/performance-discipline.md "ไม่ต้อง invoke"
+check claude/rules/engineering/stack-contracts.md 'invoke `stack-contracts`'
+check claude/rules/engineering/stack-contracts.md "owner/consumer เดียวไม่ต้อง invoke"
+check claude/rules/engineering/testing-strategy.md 'invoke `testing-strategy`'
+check claude/rules/engineering/testing-strategy.md "ไม่ต้อง invoke"
 check claude/rules/risk/production-recovery.md "health signal มาจาก **สถานะ**"
 check claude/rules/risk/production-recovery.md "restore ต้องเคยซ้อมจริง"
 check claude/rules/risk/external-integration-safety.md "เก็บ raw event ก่อนประมวลผล"
@@ -102,11 +124,45 @@ check claude/skills/research/research-control/SKILL.md "timebox ห้ามแ�
 check claude/skills/research/security-advisories/SKILL.md "present → affected version → vulnerable configuration/precondition → reachable/exposed"
 check claude/skills/research/technology-vendor/SKILL.md "total cost ไม่ใช่ราคาเริ่มต้น"
 check claude/skills/research/product-market-user/SKILL.md "synthetic persona, fabricated quote, market size"
+check claude/skills/retro/SKILL.md "เป็น read-only โดย default"
+check claude/skills/retro/SKILL.md "ห้ามนับข้อความอ้างถึงเหตุการณ์เดิมเป็น occurrence ใหม่"
+check claude/skills/retro/SKILL.md "ตรวจของเดิมใน repository ก่อนเสนอเพิ่ม"
+check claude/skills/retro/SKILL.md "instruction gap"
+check claude/skills/retro/SKILL.md "Test/Harness"
+check claude/skills/retro/SKILL.md "ยังไม่ควรแก้ dotfiles"
+check claude/skills/retro/SKILL.md "ห้ามทำ mutation หลังรายงาน"
+check claude/skills/performance/SKILL.md "symptom และ metric ที่กระทบ"
+check claude/skills/performance/SKILL.md "จากความคุ้นเคยกับ pattern อย่างเดียว"
+check claude/skills/performance/SKILL.md "baseline → change → result → variance/coverage → trade-off"
+check claude/skills/stack-contracts/SKILL.md "duplication เป็น contract เดียวจริงหรือเพียงหน้าตาคล้ายกัน"
+check claude/skills/stack-contracts/SKILL.md "consumer เดียวหรือ contract ยังไม่นิ่งให้เก็บกับ owner ก่อน"
+check claude/skills/stack-contracts/SKILL.md "ห้ามปล่อยสองมาตรฐานโดยไม่มี owner/exit"
+check claude/skills/stack-contracts/SKILL.md "folder boundary"
+check claude/skills/testing-strategy/SKILL.md "claim → failure mode → observable result → cheapest reliable test"
+check claude/skills/testing-strategy/SKILL.md "ห้ามซ้ำเพื่อจำนวน"
+check claude/skills/testing-strategy/SKILL.md "test ที่ผ่านยืนยันเฉพาะ path/input/environment ที่รัน"
+check claude/skills/testing-strategy/SKILL.md "independent oracle"
+check claude/skills/testing-strategy/SKILL.md "smoke consumer flow จริงก่อนปล่อย"
+check claude/agents/SCC-v1.0.1.md 'invoke `performance`'
+check claude/agents/SCC-v1.0.1.md 'invoke `stack-contracts`'
+check claude/agents/SCC-v1.0.1.md 'invoke `testing-strategy`'
+check claude/agents/SCC-v1.0.1.md 'ใช้ `compatibility-rollout`'
+check claude/agents/SCC-v1.0.1.md 'quirk ใช้ `symptom → root cause → fix`'
+check claude/agents/SCC-v1.0.1.md 'invoke `docs:placement` หรือ `docs:setup`'
 if find "$ROOT/claude/rules" -maxdepth 1 -type f -name '*.md' | rg -q .; then
   echo "rules must be owned by core/, engineering/, or risk/" >&2
   exit 1
 fi
 check claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัดขึ้นไป"
+check claude/skills/docs/placement/SKILL.md "แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน"
+check claude/skills/docs/placement/SKILL.md '`docs/` กองแบนเกิน ~7 ไฟล์'
+check claude/skills/docs/placement/SKILL.md "index ใน CLAUDE.md ต้อง grouped"
+check claude/skills/docs/SKILL.md "/docs:workspace"
+check claude/skills/docs/workspace/SKILL.md "มีหลาย independent Git roots"
+check claude/skills/docs/workspace/SKILL.md "workspace-relative"
+check claude/skills/docs/workspace/SKILL.md "fact/topic | current home | evidence | proposed owner | reason | action"
+check claude/skills/docs/workspace/SKILL.md "report จาก agent/audit เป็น lead ไม่ใช่ proof"
+check claude/skills/docs/setup/SKILL.md 'ของ repo นั้น ๆ (relative จาก Git root)'
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "New multi-line line-comment(s)"
 if rg -q 'docs:placement|docs-setup|/docs:' "$ROOT/claude/skills/docs/setup/kit/hooks/docs-drift.sh"; then
   echo "hook must not reference an optional skill" >&2
@@ -155,8 +211,27 @@ check claude/skills/ops/observability/SKILL.md "event log เงียบอย�
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'เป็น **link**'
 check claude/skills/docs/setup/kit/CLAUDE.template.md "Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "research/recommendation ไม่ใช่ approval"
+check claude/skills/docs/setup/kit/CLAUDE.template.md "## Complexity proposal"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Execution tracking"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Report integrity"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Durable findings"
+check claude/skills/docs/setup/kit/CLAUDE.template.md "harness ไม่เปิดตาม pointer เอง"
+check claude/skills/docs/setup/kit/CLAUDE.template.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/memory/MEMORY.md "ไม่พบใน index ≠ ไม่มี private memory"
+check claude/skills/docs/setup/kit/README.md 'กติกา self-contained ของ kit อยู่ใน `CLAUDE.template.md`'
+check claude/skills/docs/setup/kit/README.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/memory/README.md 'ของ repo นั้น ๆ (relative จาก Git root)'
+check claude/skills/docs/setup/kit/init.sh 'git -C "$requested_target" rev-parse --show-toplevel'
+check claude/skills/docs/setup/kit/init.sh "printf '/docs/private/"
+check claude/skills/docs/setup/kit/init.sh "printf '/memory/private/"
+if rg -q 'กติกา .*อยู่ที่ rule' "$ROOT/claude/skills/docs/setup/kit/README.md"; then
+  echo "docs topology ownership in kit README is stale" >&2
+  exit 1
+fi
+check test/routing/run.sh "docs-workspace docs-placement docs-setup"
+check test/routing/run.sh "scenarios-compatibility.tsv"
+check test/routing/scenarios-docs.tsv "docs-placement"
+check test/routing/scenarios-docs.tsv "docs-setup"
+check test/routing/scenarios-compatibility.tsv "compat-local"
 
 echo "guardrails verified"

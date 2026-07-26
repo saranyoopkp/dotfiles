@@ -61,6 +61,13 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 - research/recommendation ไม่ใช่ approval ให้เปลี่ยน behavior, เพิ่ม dependency, เลือก vendor,
   upgrade, ติดต่อผู้ใช้ หรือเก็บข้อมูลใหม่
 
+## Complexity proposal
+
+- ก่อนเพิ่ม abstraction/dependency/infra/operational burden ให้หา driver จาก repo/runtime/source.
+  ถ้าทาง minimum ตอบ outcome/correctness/safety/compatibility ครบ ให้เสนอพร้อม defer trigger;
+  driver ยังไม่ชัดให้ถามเฉพาะเมื่อเปลี่ยน behavior/risk/cost หรือย้อนกลับแพง นอกนั้นเลือกทางขั้นต่ำ
+  ที่ปลอดภัยพร้อม assumption. ห้ามตัด safety/compatibility ที่มี risk รองรับเพื่อให้ดูเรียบง่าย
+
 ## Local dev
 <!-- คำสั่งรัน dev + quirks ของเครื่อง/toolchain ที่เคยเจ็บมาแล้ว (ระบุ symptom + fix) -->
 
@@ -125,7 +132,8 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 |---|---|---|---|
 | `CLAUDE.md` | **push** — โหลดเต็มทุก session (ทุกบรรทัด = ภาษีทุก session) | ภาพรวม + operational | "ถ้าไม่เห็นทุก session จะทำงานผิดไหม" |
 | `docs/<topic>.md` | **pull** — เปิดเมื่อ*รู้ตัว*ว่าทำเรื่องนั้น | เรื่องละไฟล์ ยาวได้ | "จะถูกเปิดอ่านเมื่อลงมือทำเรื่องนั้นไหม" |
-| `memory/<fact>.md` | **recall** — ถูก surface โดย*ไม่ต้องรู้ตัวว่าต้องหา* (จาก description) | fact เม็ดเดียว/ไฟล์ สั้น | "session หน้าต้องใช้สิ่งนี้ก่อนจะรู้ว่าต้องหามันไหม" |
+| `memory/MEMORY.md` | **recall router** — auto-load ทุก session | pointer + hook ของ shared fact | "session หน้าต้องรู้ว่ามี fact นี้ไหม" |
+| `memory/<fact>.md` | **selective pull** — harness ไม่เปิดตาม pointer เอง | fact เม็ดเดียว/ไฟล์ สั้น | "index/task ชี้แล้วควรเปิดรายละเอียดไหม" |
 
 - เนื้อเรื่องเดียวกันแยกสองบ้านได้ตาม*หน้าที่*: ประวัติ/เหตุผลเต็ม → docs/, fact ที่ต้องนึกออกเอง
   (quirk, preference, กับดัก) → memory/, CLAUDE.md เหลือ 1-3 บรรทัด + pointer
@@ -164,9 +172,12 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
 
 - memory ใหม่ที่บันทึก = untracked file ใน repo → คัดกรองแล้ว commit พร้อมงาน:
   **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
-- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — โน้ต ops sensitive (secret/IP/server path)
-  → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/` (gitignored ทั้งคู่,
-  อ้างด้วย pointer แทน; ห้าม index ของใน private ลง `memory/MEMORY.md` ที่ commit)
+- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — ใช้ `docs/private/` และ
+  `memory/private/` ของ repo นั้น ๆ (relative จาก Git root): โน้ต ops sensitive
+  (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`
+  (gitignored ทั้งคู่,
+  ห้าม index ลง `memory/MEMORY.md` ที่ commit). ไม่พบใน index ไม่ได้แปลว่าไม่มี private
+  memory; ถ้างานอาจพึ่งข้อมูลเฉพาะเครื่อง ให้ตรวจ `memory/private/` ก่อนสรุปหรือถาม
 - **hook เตือนเมื่อไหร่ = ตอนที่มันสร้าง link ให้เองไม่ได้** (ไม่เตือน = เรียบร้อยแล้ว) —
   เจอข้อความ `[docs] Harness memory ...` ให้แก้ก่อนทำงาน ไม่งั้น fact ที่เขียน session นี้
   ไม่ถึง repo เลย:

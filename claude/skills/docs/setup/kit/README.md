@@ -6,8 +6,9 @@
 
 ## หลักการ
 
-**บ้านของหลักการเอกสารทั้งหมด = `claude/rules/engineering/documentation-discipline.md`** (repo เดียวกันนี้
-— ถูกโหลดเข้าทุก session อยู่แล้ว) — ไฟล์นี้ว่าด้วย**กลไก**ล้วน ๆ: โครงสร้าง, init, hooks, junction
+**safety invariant อยู่ `claude/rules/engineering/documentation-discipline.md`; procedure อยู่
+`docs:setup`/`docs:placement`** ใน dotfiles นี้. README อธิบายกลไกของ kit: โครงสร้าง, init,
+hooks และ junction; artifact ที่ copy ออกไปต้องถือหลักการจำเป็นได้เองโดยไม่พึ่ง path เหล่านี้.
 
 **Invariant: artifact ที่ถูก copy เข้า repo ปลายทางต้อง self-contained** — ได้แก่
 `CLAUDE.md` (จาก `CLAUDE.template.md`), `memory/*`, `.claude/hooks/docs-drift.sh`,
@@ -47,15 +48,19 @@ memory/private/    ← fact ส่วนตัว/เฉพาะเครื่
   <fact>.md        ← ตาม _fact.template.md
 ```
 
+`docs/private/` และ `memory/private/` เป็นของ repo นั้น ๆ (relative จาก Git root);
+monorepo ใช้ Git root เดียว ส่วน workspace ที่มีหลาย independent Git roots ให้แต่ละ repo
+ถือ private directory ของตนเอง.
+
 ฝั่ง harness (`~/.claude/projects/<id>/memory`) เป็น **link** (junction/symlink) ชี้มาที่ `memory/` ใน repo
 — ไฟล์ชุดเดียวกันจริง ๆ (harness recall/auto-load ทำงานบนไฟล์ใน repo โดยตรง ไม่ต้อง sync)
 
 ## การจัดระเบียบ docs/
 
-กติกา (ชื่อไฟล์ตามโดเมน, >~7 ไฟล์ → subfolder, index sync) อยู่ที่ rule
-`engineering/documentation-discipline` — ฝั่งกลไกของ kit: ทำ subfolder ตอน promote ไฟล์ที่ 8
-เลย (อย่ารอถึง 20) และ index ใน CLAUDE.md ใช้ format เดียวกับ `memory/MEMORY.md`
-(หนึ่งบรรทัด/ไฟล์: ชื่อ + hook ว่าทำไมต้องเปิด)
+กติกา self-contained ของ kit อยู่ใน `CLAUDE.template.md` §Documentation index:
+ชื่อไฟล์ตามโดเมน, >~7 ไฟล์ → subfolder และ index ต้อง sync กับไฟล์จริง. ทำ subfolder
+ตอน promote ไฟล์ที่ 8 เลย (อย่ารอถึง 20); index ใน CLAUDE.md ใช้รูปแบบหนึ่งบรรทัด/ไฟล์
+(ชื่อ + hook ว่าทำไมต้องเปิด) เช่นเดียวกับ `memory/MEMORY.md`.
 
 ## วิธี adopt กับ repo ใหม่
 

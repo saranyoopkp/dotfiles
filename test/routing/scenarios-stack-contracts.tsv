@@ -1,0 +1,6 @@
+# require	forbid	label	task
+stack-contracts	-	stack-dependency	ช่วยวางมาตรฐาน generic สำหรับกรณีจะเพิ่ม date library ใหม่ใน workspace ที่มี library ทำ concern เดียวกันอยู่แล้ว ว่าควรประเมินใช้ของเดิมหรือ migrate อย่างไร โดยไม่ได้อ้างว่า sandbox นี้คือ repo จริง
+stack-contracts	-	stack-schema	Frontend และ backend มี request schema คนละชุดและเริ่ม drift ช่วยกำหนด source of truth และ migration boundary
+stack-contracts	-	stack-enum	สถานะเดียวกันถูกประกาศซ้ำใน API, web และ worker ช่วยวางแนว consolidate โดยไม่สร้าง abstraction เกินจำเป็น
+-	stack-contracts	stack-local-helper	helper นี้ใช้เฉพาะไฟล์เดียวและไม่มี consumer อื่น ช่วยวางแผนปรับชื่อให้เข้าใจง่าย
+data-design	stack-contracts	stack-local-schema	เพิ่ม column ภายใน service เดียว ไม่มี shared consumer หรือ contract ข้าม package

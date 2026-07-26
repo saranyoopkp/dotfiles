@@ -22,10 +22,12 @@ User ใช้ระบบเอกสารแบบเดียวกันท
   (setup ใหม่ ข้อ 2-3, re-apply ข้อ 3) ต้องตัดสินด้วยเกณฑ์นี้** ไม่ใช่ตามหัวข้อ/ความยาวอย่างเดียว
 - `memory/` ใน repo = memory ตัวจริงชุดเดียว (version-controlled); ฝั่ง harness
   `~/.claude/projects/<id>/memory` เป็น **link** (junction บน Windows / symlink บน unix)
-  ชี้เข้า repo — harness recall/auto-load ทำงานบนไฟล์ใน repo โดยตรง ไม่ต้อง sync มือ
-- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — โน้ต ops sensitive (secret/IP/server path)
-  → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/` (gitignored ทั้งคู่,
-  init สร้างให้; อ้างด้วย pointer และห้าม index ลง `memory/MEMORY.md` ที่ commit)
+  ชี้เข้า repo — harness auto-load `MEMORY.md`; leaf เปิดเมื่อ index/task ชี้ ไม่ต้อง sync มือ
+- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — ใช้ `docs/private/` และ
+  `memory/private/` ของ repo นั้น ๆ (relative จาก Git root): โน้ต ops sensitive
+  (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`
+  (gitignored ทั้งคู่,
+  init สร้างให้; ห้าม index ลง `MEMORY.md`). ไม่พบใน index ต้องยังไม่สรุปว่าไม่มี private
 - อัปเดตเอกสารใน **commit เดียวกับงาน** เสมอ; internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
 - **lifecycle hooks** (`.claude/hooks/` + `.claude/settings.json`, init ติดตั้งให้) เตือน docs drift
   ที่ SessionStart / TaskCompleted / Stop / PreCompact — ข้อความ `[docs]`
@@ -65,7 +67,8 @@ CLAUDE.md ฉบับแรก
 
 **Repo ใหม่:**
 1. รัน init: `bash ${CLAUDE_SKILL_DIR}/kit/init.sh <repo>` (ทุก OS — Windows ผ่าน Git Bash)
-   (idempotent — สร้าง CLAUDE.md, memory/, docs/, docs/private/ + .gitignore, link ฝั่ง harness;
+   (idempotent — สร้าง CLAUDE.md, memory/, docs/, docs/private/, memory/private/ ที่ Git root
+   + .gitignore, link ฝั่ง harness;
    ของเดิม backup เป็น `.bak-*`; **repo เดิมบนเครื่องใหม่ก็รันแบบเดียวกัน** เพื่อสร้าง link ของเครื่องนั้น)
 2. เติม CLAUDE.md ตาม placeholder จากสิ่งที่เห็นใน codebase
 3. เขียน fact แรก ๆ ลง `memory/` (mission, stack decision, quirks) + อัปเดต `memory/MEMORY.md`
@@ -76,7 +79,7 @@ CLAUDE.md ฉบับแรก
 3. refactor ตาม playbook ใน `kit/README.md`: แยกความรู้ถาวรออกจากประวัติ →
    ก้อนใหญ่ไป `docs/`, fact สั้นไป `memory/` → ย่อ Status เหลือ 1 บรรทัด/module + ลิงก์
 4. **กวาด sensitive data** (IP, server path, credential, procedure ที่แลกกับความปลอดภัย)
-   ออกจาก CLAUDE.md/docs → ย้ายไป `docs/private/` แล้วแทนที่ด้วย pointer
+   ออกจาก CLAUDE.md/docs → ย้ายไป `docs/private/` ของ repo นั้นแล้วแทนที่ด้วย pointer
 
 **Re-apply / upgrade (repo ที่ setup ไปแล้ว — รัน `/docs:setup` ซ้ำเพื่อรับของใหม่จาก kit):**
 

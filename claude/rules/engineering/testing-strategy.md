@@ -1,31 +1,14 @@
-# Testing Strategy
+# Testing Strategy Routing
 
-test ไม่ใช่เป้าหมาย — ความมั่นใจว่าระบบถูกต้องต่างหาก; เขียน test ตรงจุดที่ความมั่นใจ
-ราคาแพงสุด ไม่ใช่ไล่ coverage:
+## Safety floor
 
-## อะไรต้องมี test (เรียงตามลำดับความสำคัญ)
-1. **logic ที่ผิดแล้วเจ็บจริง** — เงิน/ส่วนแบ่ง/ภาษี (เทียบตัวเลขคำนวณมือ),
-   สิทธิ์/tenant isolation (matrix ตาม authz rule), การคำนวณเชิงธุรกิจที่มีเงื่อนไขซ้อน
-2. **boundary/edge ที่รู้ว่ามี** — เส้นตัดเวลา (เที่ยงคืน/สิ้นเดือน), ค่า 0/ติดลบ/ว่าง,
-   duplicate input (idempotency), เศษจากการ split
-3. **contract ระหว่างส่วน** — shape ของ API response, event payload — จุดที่สองฝั่ง
-   พัฒนาแยกกันแล้ว drift ได้
-4. **regression ของ bug ที่เคยเจอ** — bug ที่แก้แล้วทุกตัวได้ test กันกลับมา
-   (bug ซ้ำ = แพงกว่า bug ใหม่เสมอ)
+- verification ต้องพิสูจน์ claim และ failure mode ที่เกี่ยว; build/typecheck หรือ test ที่ผ่าน
+  ไม่พิสูจน์ runtime flow ที่ไม่ได้รัน
+- test ที่จำเป็นพังห้าม skip/comment เพื่อทำให้ suite เขียว และ high-risk logic เรื่องเงิน,
+  authorization, tenant, data loss หรือ irreversible side effect ต้องมีหลักฐานตรงความเสี่ยง
 
-## อะไรไม่ต้องเขียน test
-- glue code ตรง ๆ, CRUD บาง ๆ, UI layout — ให้ type system + smoke test จับ;
-  test ที่ล้อ implementation (เปลี่ยนโค้ดนิดเดียวก็แดง) = ภาระ ไม่ใช่ความมั่นใจ
+## Routing
 
-## วินัย
-- **test พัง = แก้ ไม่ใช่ skip/comment** — test ที่ถูก skip ค้างไว้คือ test ที่ตายแล้ว
-  (ลบทิ้งยังซื่อสัตย์กว่า)
-- **ก่อนปิดงาน: รัน test ที่เกี่ยว + ทดสอบ flow จริงหนึ่งรอบ** — build ผ่าน ≠ ใช้งานได้
-  (ตาม verify-before-done); ก่อน deploy: smoke test เส้นทางหลักบนของจริง
-- test data/fixture ครบทุกสถานะสำคัญ (ทุก role, หลาย tenant, หลายสกุลเงิน —
-  ตามโดเมนของระบบ) ไม่ใช่มีแต่ happy path ของ admin
-- test ต้องรันได้ด้วยคำสั่งเดียวที่จดไว้ใน operational doc ที่ตรวจพบใน repo; หากยังไม่มี
-  ให้รายงานและเสนอที่เก็บก่อนสร้าง — test ที่รันยากจะไม่ถูกรัน
-
-ระดับความเข้มปรับตาม stage (ตาม `production-recovery`) — แต่ข้อ 1 (เงิน/สิทธิ์)
-คือขั้นต่ำเสมอแม้เป็น MVP
+เมื่อจะเลือก test level/matrix/fixture, แก้ regression, เปลี่ยน logic หรือ boundary ที่มีความเสี่ยง,
+suite ผ่านแต่ flow ยังพัง หรือ coverage gap ยังไม่ชัด ให้ invoke `testing-strategy` ก่อนวาง test.
+การรันคำสั่ง verification ที่ repo และ criterion กำหนดชัดแล้วไม่ต้อง invoke.

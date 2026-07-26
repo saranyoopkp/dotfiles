@@ -52,10 +52,13 @@ colon ได้** (`name: docs:link`) → invoke `/docs:link` ทำงาน; �
 ## Taxonomy: rule ↔ skill (ตัดสิน 2026-07-16)
 
 rule ย้ายเป็น skill เมื่อครบ**ทั้งสาม**: (ก) work type ประกาศตัวชัด (ข) miss แล้วกู้ได้
-(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `ui-ux-baseline`, `data-design`, `api-design`, `ops`,
-`greenfield-foundation` และ `research`; ที่คง **always-on**:
+(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `docs`, `ui-ux-baseline`, `data-design`, `api-design`,
+`ops`, `greenfield-foundation`, `research`, `retro`, `performance`, `stack-contracts` และ
+`testing-strategy`; ที่คง **always-on**:
 money/authz/time (ฝังในงานอื่น + miss เจ็บถาวร) · `external-integration-safety` (**ทดลองย้ายแล้ว
-revert** — เนื้อเป็นแนวทาง/bounded ไม่ลึกพอ) · cross-cutting rules (ใช้เกือบทุกงาน)
+revert** — เนื้อเป็นแนวทาง/bounded ไม่ลึกพอ) · cross-cutting rules (ใช้เกือบทุกงาน) ·
+compatibility/documentation safety floor แบบสั้น · thin routing stub ของ domain ที่ miss แล้ว
+เสีย baseline (`performance`, `stack-contracts`, `testing-strategy`) โดย procedure เต็มอยู่ใน skill
 **ห้ามย้ายเพราะเพดาน 400 อย่างเดียว — depth คือเหตุผลจริง**
 
 Growth path ของ skill เดี่ยว: แตกเป็น group เมื่อ SKILL.md เกิน ~200 บรรทัด + มี

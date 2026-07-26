@@ -1,0 +1,5 @@
+# require	forbid	label	task
+api-design	-	compat-api	วางแผน rename response field ของ public REST API ที่ client เก่าและใหม่อาจรันพร้อมกัน โดยต้อง migrate แบบไม่ทำให้ client เก่าพัง
+data-design	-	compat-schema	วางแผนเพิ่ม required column ในฐานข้อมูลระหว่าง rolling deploy ที่ code เก่าและใหม่อยู่พร้อมกัน พร้อม backfill และ contract ภายหลัง
+ops	-	compat-infra	วางแผนเปลี่ยน infrastructure resource ที่ revision เก่าและใหม่ใช้ร่วมช่วง rollout พร้อม dependency, precondition และ consumer verification
+-	api-design data-design ops	compat-local	rename local variable ภายในฟังก์ชันเดียวโดยคง behavior และไม่มี public, data หรือ deployment contract

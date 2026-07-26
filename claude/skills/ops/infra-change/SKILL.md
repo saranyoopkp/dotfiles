@@ -15,4 +15,7 @@ description: วางแผน ตรวจ และดำเนินกา�
 6. หลัง apply ตรวจผลที่ผู้ใช้/consumer ใช้จริง ไม่ใช่แค่ tool exit 0: permission ใช้ได้, network เชื่อมได้, service health และ alert/monitor ที่เกี่ยวข้องยังทำงาน
 7. บันทึก source of truth, intentional exception และ runbook ที่จำเป็นใน repo docs; sensitive detail ไป private path ตาม policy
 
+rolling change ต้องตรวจของเก่า/ใหม่อยู่ร่วมกัน, dependency order และ rollback ที่ไม่สมมติว่า
+data/state ย้อนกลับได้; precondition ขาดต้อง fail loud ห้ามข้ามแล้วรายงานว่าสำเร็จ.
+
 หาก provider/framework behavior เป็นเหตุผลของ plan ให้ใช้ primary documentation ที่ตรง version/context และแยกออกจากหลักฐานว่า environment นี้ได้รับผลจริงอย่างไร.

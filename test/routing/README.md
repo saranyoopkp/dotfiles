@@ -13,20 +13,25 @@ webhook↔data-design เนื้อทับกัน (queue/retry) → co-fir
 bash test/routing/run.sh
 ```
 - แต่ละ scenario = fresh session (โหลด rules/skills สด — subagent ทำแทนไม่ได้ สืบทอด context ค้าง)
+- default รันพร้อมกันสูงสุด 4 session เพื่อลด CLI startup race; ปรับด้วย
+  `ROUTING_MAX_PARALLEL` และเลือกไฟล์ด้วย `ROUTING_SCENARIO_FILES` (คั่นด้วย `:`)
 - รันใน sandbox นอก repo เพื่อไม่ให้ `dotfiles/CLAUDE.md` ปนเปื้อน
   (ตั้งผ่าน `ROUTING_SANDBOX` หรือ `.local.sh`; environment ที่ระบุขณะรันมี precedence)
 - **กิน API tokens** — รันหลังแก้ skill description/scenarios ไม่ใช่ทุก commit
-- ⚠️ ผลเป็น **self-report** (SKILL_UIUX จากโมเดล) ไม่ได้ inspect raw tool-log — negative control
-  ที่ทำงาน (backend→NO) เพิ่มความเชื่อถือว่าไม่ได้ตอบ YES มั่ว
+- verdict อ่าน `Skill` tool use จาก raw stream-json และต้องมี CLI exit status `0`;
+  startup failure/timeout เป็น FAIL ของ harness แยกจากการสรุป routing
 
 ## เพิ่มเคส
-แก้ `scenarios.tsv`: `expect<TAB>label<TAB>task` — `expect=YES` ถ้างานควรทำให้ auto-invoke
-skill ui-ux-baseline. เพิ่มงาน frontend ก้ำกึ่ง (แก้ CSS ใน util, tweak เล็ก) เพื่อกันจุดที่
-recognition อาจ miss. ย้าย domain rule อื่นเป็น skill → เพิ่ม scenario ชุดใหม่
+
+รูปแบบใหม่: `require<TAB>forbid<TAB>label<TAB>task`
+
+- `require`/`forbid` ใส่ชื่อ skill คั่นด้วย space; `-` = ไม่กำหนด
+- ใช้ `forbid` ทดสอบ over-trigger โดยยังอนุญาตให้ skill อื่น fire
+- รูปแบบเดิม `expect<TAB>label<TAB>task` ยังรองรับ; `NONE` = ห้ามทุก on-demand skill
 
 ## artifacts / trace back
 แต่ละ run เซฟ **raw stream-json + stderr ต่อ scenario** ลง
-`$ROUTING_SANDBOX/runs/<timestamp>/<label>.{stream.jsonl,stderr.log}` + `summary.txt` —
+`$ROUTING_SANDBOX/runs/<timestamp>/<label>.{stream.jsonl,stderr.log,exit}` + `summary.txt` —
 เปิดดู `tool_use`/CLI failure ของเคสนั้นได้ (เคส FAIL → summary ชี้ไฟล์ให้)
 (harness เองก็เซฟ session ที่ `~/.claude/projects/<cwd-hash>/<session-id>.jsonl` แต่ไม่ label
 scenario + กองรวมกัน — ใช้ artifact ที่ label แล้วใน runs/ แทน). playground อยู่นอก repo =

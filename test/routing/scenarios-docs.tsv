@@ -1,0 +1,6 @@
+# require	forbid	label	task
+docs-workspace	-	workspace-docs	โฟลเดอร์นี้รวมหลาย Git repository ที่ clone แยกกันได้ ช่วยวาง CLAUDE.md และ docs ระดับ workspace พร้อมกำหนดว่า fact ไหนอยู่ root หรืออยู่แต่ละ repo
+docs-placement	docs-workspace	package-docstring	ใน monorepo Git root เดียว ช่วยเพิ่ม docstring ให้ public function ที่แก้อยู่และชี้รายละเอียดไป docs ของ package เดิม
+docs-placement	-	docs-flat	ใน repo มี docs กองแบน 9 ไฟล์และ CLAUDE.md index ไม่ตรง ช่วยวาง owner/subfolder/grouped index โดยยังไม่ cleanup นอก scope
+docs-setup	-	docs-system	ช่วย setup/refactor ระบบ CLAUDE.md, docs และ repository memory ของ repo เดิมให้ใช้ kit โดยรักษา customization
+-	docs-workspace docs-placement docs-setup	docs-negative	แก้ typo หนึ่งคำใน README โดยโครงเอกสารและคำสั่ง verification ชัดเจนอยู่แล้ว

@@ -7,8 +7,8 @@
 
 - input จาก user, API, file หรือระบบภายนอกต้อง validate ที่ server boundary ก่อนใช้;
   client validation เป็น UX เสริม ไม่ใช่ security boundary
-- external call/IO ต้องมี failure path ที่ตั้งใจ; user-facing error ห้าม leak internal detail
-  และห้ามกลืน error จน operator ตามเหตุไม่ได้. timeout/unbounded wait อยู่ `performance-discipline`
+- external call/IO ต้องมี timeout/deadline และ failure path ที่ตั้งใจ; user-facing error ห้าม
+  leak internal detail และห้ามกลืน error จน operator ตามเหตุไม่ได้
 - side effect ที่ retry/double-submit ได้ต้อง idempotent หรือมี deduplication ที่สอดคล้องกับ
   semantics; UI ป้องกัน duplicate intent แต่ server ยังต้องรับ retry ได้อย่างปลอดภัย
 - migration/public contract ต้อง compatible ระหว่าง deploy ตาม `compatibility-rollout`;

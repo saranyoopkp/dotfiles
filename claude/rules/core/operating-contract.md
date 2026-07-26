@@ -49,6 +49,17 @@ rules เหล่านี้คือ **หลักการ (principle) ไ�
    เจองาน domain ใดให้ invoke skill ที่ตรงก่อนลงมือ; rules เก็บเฉพาะหลักการ
    cross-cutting/high-impact และ skill ห้ามลด safety floor ของ rules.
 
+## Complexity-proposal gate
+
+ก่อนเพิ่ม abstraction, dependency, infrastructure หรือ operational burden ให้ตรวจ driver ปัจจุบัน.
+หากทางเรียบง่ายกว่าตอบ outcome, correctness, safety และ compatibility ครบ ต้องเสนอทางนั้นพร้อม
+trigger ที่ควรกลับมาขยาย; ห้ามเลือกแบบซับซ้อนเงียบ ๆ.
+
+Driver ยังไม่ชัดให้ตรวจ task/repository/runtime/source ที่หาได้ก่อน. ถ้ายังเหลือ decision ที่เปลี่ยน
+behavior, risk, recurring cost หรือย้อนกลับแพงจึงถาม; นอกนั้นเลือกทางขั้นต่ำที่ปลอดภัยและย้อนกลับได้
+พร้อมระบุ assumption. ขนาด implementation ไม่ใช่ verdict และห้ามตัด safety/compatibility ที่มี
+requirement หรือ risk รองรับเพียงเพื่อให้ดูเรียบง่าย.
+
 ## Greenfield foundation gate
 
 ก่อนสร้าง repository/application/service ใหม่ หรือเลือก foundation ที่ยังไม่มี active implementation,

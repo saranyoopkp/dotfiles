@@ -1,0 +1,7 @@
+# require	forbid	label	task
+testing-strategy	-	test-regression	แก้ bug ที่เคยเกิดซ้ำ ช่วยเลือก regression test ที่พิสูจน์ root cause และกันไม่ให้กลับมา
+testing-strategy	-	test-auth-matrix	วาง test matrix สำหรับ role, tenant, unauthenticated และ cross-tenant access
+testing-strategy	-	test-level	Queue worker มี retry และ side effect ช่วยเลือก unit integration หรือ e2e ให้ตรง failure mode
+testing-strategy	-	test-gap	Test suite ผ่านแต่ flow จริงยังพัง ช่วยตรวจว่าหลักฐานระดับไหนขาดและควรเพิ่ม test แบบใด
+-	testing-strategy	test-routine	วางแผนแก้ typo ใน README และใช้ verification ที่ repo กำหนดไว้เดิม
+-	testing-strategy	test-command	ผู้ใช้ให้คำสั่ง test และเกณฑ์ผ่านที่ต้องใช้ชัดเจนแล้ว ขอเพียงรันและรายงาน exit status

@@ -4,7 +4,13 @@
 set -euo pipefail
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
-TARGET="$(cd "$1" && pwd)"
+requested_target="$(cd "$1" && pwd)"
+git_root="$(git -C "$requested_target" rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -n "$git_root" ]; then
+  TARGET="$(cd "$git_root" && pwd)"
+else
+  TARGET="$requested_target"
+fi
 NAME="${2:-$(basename "$TARGET")}"
 
 is_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; *) return 1 ;; esac; }
@@ -41,8 +47,19 @@ else
   echo "memory/ exists - skipped"
 fi
 mkdir -p "$TARGET/docs/private" "$TARGET/memory/private"
-if ! grep -qs 'docs/private/' "$TARGET/.gitignore"; then
-  printf '\n# docs-setup: local-only private/sensitive files (never committed)\ndocs/private/\nmemory/private/\n' >> "$TARGET/.gitignore"
+private_ignore_added=0
+if ! grep -qs 'docs-setup: local-only private/sensitive files' "$TARGET/.gitignore"; then
+  printf '\n# docs-setup: local-only private/sensitive files at Git root (never committed)\n' >> "$TARGET/.gitignore"
+fi
+if ! grep -qsE '^/?docs/private/$' "$TARGET/.gitignore"; then
+  printf '/docs/private/\n' >> "$TARGET/.gitignore"
+  private_ignore_added=1
+fi
+if ! grep -qsE '^/?memory/private/$' "$TARGET/.gitignore"; then
+  printf '/memory/private/\n' >> "$TARGET/.gitignore"
+  private_ignore_added=1
+fi
+if [ "$private_ignore_added" -eq 1 ]; then
   echo "added docs/private/ + memory/private/ to .gitignore"
 fi
 
@@ -114,4 +131,4 @@ else
 fi
 
 echo
-echo "done. ถัดไป: เติม CLAUDE.md ตาม placeholder + เขียน fact แรกลง memory/ (commit memory ใหม่เป็นระยะ; sensitive ลง docs/private/)"
+echo "done. ถัดไป: เติม CLAUDE.md ตาม placeholder + เขียน fact แรกลง memory/ (commit memory ใหม่เป็นระยะ; sensitive ลง docs/private/ ของ Git root)"

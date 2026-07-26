@@ -1,0 +1,51 @@
+---
+name: testing-strategy
+description: วางแผน เขียน หรือ review tests, เลือก unit/integration/e2e/smoke, ออกแบบ regression/fixture/role-tenant matrix หรือพิจารณาว่าหลักฐานระดับใดพิสูจน์ behavior ได้ ใช้เมื่อ test design ไม่ชัด, logic/boundary มีความเสี่ยง, bug เคยเกิด, suite ผ่านแต่ flow ยังพัง หรือผู้ใช้ขอ test strategy/coverage review; ไม่ใช้กับการรัน verification command ปกติที่ repo กำหนดและ criterion ชัดแล้ว
+---
+
+# Testing Strategy — พิสูจน์ behavior ไม่ไล่ coverage
+
+## เลือกหลักฐาน
+
+เริ่มจาก `claim → failure mode → observable result → cheapest reliable test` แล้วเลือก:
+
+- **unit**: logic deterministic และ boundary ถูกแทนได้โดยไม่ซ่อนความเสี่ยง
+- **integration**: database, queue, filesystem, provider adapter หรือ component contract
+- **e2e/runtime flow**: wiring, browser/client behavior, auth/session และ deployment surface
+- **smoke**: ยืนยันเส้นทางหลักหลัง build/deploy ไม่ใช่แทน regression suite
+
+test level หลายชั้นใช้เมื่อแต่ละชั้นพิสูจน์คนละ failure mode; ห้ามซ้ำเพื่อจำนวน.
+
+## Priority
+
+1. logic ที่ผิดแล้วกระทบเงิน, สิทธิ์, tenant, data หรือ irreversible side effect
+   - การคำนวณเงิน/ส่วนแบ่ง/ภาษีต้องมี independent oracle เช่นคำนวณมือหรือ fixture ที่มีที่มา
+2. boundary/edge ที่เกิดได้จริง เช่น negative/zero/empty, duplicate, retry, remainder/split,
+   cutoff/time
+3. contract ระหว่างส่วนที่ release หรือพัฒนาแยกกัน
+4. regression ของ bug ที่พิสูจน์ root cause ได้
+
+glue ตรง ๆ, layout หรือ implementation detail ที่ type/smoke จับได้ไม่ต้องมี test เฉพาะ
+เว้นแต่มี regression evidence.
+
+## Fixture และ matrix
+
+- สร้าง fixture ตาม state/role/tenant/currency ที่ failure mode ต้องการ ไม่ใช่ happy path อย่างเดียว
+- authz ต้องมี allowed, denied, unauthenticated และ cross-tenant เมื่อเกี่ยวข้อง
+- retry/idempotency ต้องส่งซ้ำและตรวจ side effect ไม่ซ้ำ
+- time logic ต้องคร่อม business boundary ที่นิยามไว้
+
+## วินัยและ verdict
+
+- test ที่พังห้าม skip/comment เพื่อให้ suite เขียว; แก้, แยก flaky พร้อม owner หรือรายงาน blocker
+- test ที่ผ่านยืนยันเฉพาะ path/input/environment ที่รัน; build/typecheck ไม่แทน runtime behavior
+- bug fix ต้องมี regression test เมื่อทำให้ reproduce ได้อย่างเสถียร
+- รัน targeted test และ flow จริงตาม risk; รันไม่ได้ให้รายงาน criterion ที่ยังไม่พิสูจน์
+- test suite ต้องมีคำสั่ง canonical ที่รันซ้ำได้และจดใน operational home ที่ repo กำหนด;
+  ถ้ายังไม่พบบ้านให้รายงานและเสนอที่เก็บ ห้ามแต่ง path ขึ้นเอง
+- ปรับความลึกตาม stage/risk ที่พิสูจน์จาก repo; production path ใช้ `production-recovery`
+  ร่วมกำหนด smoke/health evidence แต่เงิน, authorization และ tenant isolation เป็นขั้นต่ำทุก stage
+- เมื่อ scope ครอบ deployment ให้ smoke consumer flow จริงก่อนปล่อยตาม risk และตรวจ flow/health
+  หลังปล่อย; การมี resource หรือ process อยู่ไม่แทนการใช้งานจริง
+
+สรุปด้วย requirement, test level, fixture/matrix, command/result และ coverage gap ที่เหลือ.

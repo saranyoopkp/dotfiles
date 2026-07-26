@@ -1,6 +1,6 @@
 ---
 name: docs:placement
-description: เกณฑ์ตัดสินว่าความรู้แต่ละชิ้นควรอยู่ที่ไหน — inline comment / docstring / docs/ / memory/ / CLAUDE.md — พร้อมวินัย comment (why+pointer) และ docstring (interface contract ห้ามเมิน) ใช้เมื่อกำลังเขียน comment/docstring, จะจดความรู้/decision/quirk, จัดหรือย้ายเนื้อหาเอกสาร, หรือถูกทักว่า comment เยอะ/เอกสารอยู่ผิดที่ โหลดก่อนเขียน comment ยาวหรือจดอะไรก็ตามลง repo
+description: ต้องใช้ทันทีเมื่อวางแผน ออกแบบ review หรือทำการจัดวางความรู้ระหว่าง inline comment, docstring, docs/, memory/ และ CLAUDE.md รวมถึงเมื่อจะเขียน comment/docstring, จด decision/quirk, จัด topology/index หรือถูกทักว่าเอกสารอยู่ผิดที่ แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน; invoke ก่อน inventory แล้วค่อยระบุ Unverified หากหลักฐานยังไม่พร้อม
 ---
 
 # Doc Placement — ความรู้ทุกชิ้นมีบ้านเดียว เลือกบ้านจาก "กลไกที่ถูกอ่าน"
@@ -64,6 +64,16 @@ description: เกณฑ์ตัดสินว่าความรู้แ�
   เมื่อไปอยู่ super-repo อื่น (โบนัส: nested CLAUDE.md ใน subdir ถูกโหลด on-demand เอง)
 - ของ **cross-cutting** (deploy ทั้ง workspace, contract ระหว่าง module) ยังอยู่ root —
   เส้นแบ่ง: "เรื่องของ module เดียว vs เรื่องระหว่าง module"
+- ถ้าเป็น workspace ที่มีหลาย **independent Git repos** ไม่ใช่ monorepo/submodule ให้ใช้
+  `/docs:workspace` เพื่อ map Git roots, กำหนด fact owner และตรวจ standalone-clone boundary
+  ก่อนย้ายเอกสาร
+
+## Docs topology
+
+- ตั้งชื่อไฟล์ตามโดเมน/หน้าที่ ไม่ใช่ตามเวลาที่สร้าง
+- เมื่อ `docs/` กองแบนเกิน ~7 ไฟล์ ให้เสนอ subfolder ตามโดเมนและย้ายเมื่ออยู่ใน scope;
+  threshold เป็นสัญญาณจัดระเบียบ ไม่ใช่เหตุผลให้ cleanup นอกงาน
+- index ใน CLAUDE.md ต้อง grouped และตรงกับไฟล์จริง; เพิ่ม/ย้าย/ลบไฟล์ให้แก้ index ใน commit เดียวกัน
 
 ## โหมดจัดระเบียบ (remediation — เก็บหนี้ comment/docstring เดิม)
 

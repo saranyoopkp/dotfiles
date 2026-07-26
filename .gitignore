@@ -2,6 +2,10 @@
 # macOS Finder metadata
 .DS_Store
 
+# Python generated artifacts
+__pycache__/
+*.py[cod]
+
 # per-machine routing-test sandbox override
 test/routing/.local.sh
 MY-NOTE
