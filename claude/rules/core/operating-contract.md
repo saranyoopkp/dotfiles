@@ -82,3 +82,20 @@ browser/OS, protocol/standard หรือ third-party dependency ให้จ�
   ห้ามแต่งข้อจำกัดขึ้นเพื่อปิดงาน
 - ไม่ต้อง research ภายนอกเมื่อข้อเท็จจริงพิสูจน์ได้ครบจาก contract/runtime ของ repo และไม่ได้
   อ้างข้อจำกัดของโลกภายนอก
+
+## Research decision gate
+
+เมื่อ research จะรองรับ decision ให้กำหนดคำถาม, context/version/segment, source hierarchy,
+freshness และ stopping condition ก่อนสรุป; invoke `research` แล้วใช้ child skill ที่ตรง:
+
+- security advisory/CVE/current vulnerability: ตรวจ source ปัจจุบันและ map exact component/version,
+  configuration, reachability และ deployment ของ repo ก่อนกล่าวว่า affected, fixed หรือ safe
+- dependency/technology/vendor/build-vs-buy: ตรวจ maintenance/support, security, license,
+  compatibility, total cost, lock-in และ exit path ก่อนเสนอหรือเลือก โดยเฉพาะ brownfield
+- product/market/user: ใช้ user/market evidence ที่มี provenance, segment และ methodology;
+  persona, anecdote หรือความเห็นของ model ไม่พิสูจน์ user need หรือ prevalence
+- research ที่กว้าง, ใช้หลาย source, risk สูงหรือหลักฐานขัดกัน: กำหนด appetite และ stopping
+  criteria; ถึงขอบเขตแล้วยังไม่พอให้รายงาน unknown/next probe ห้ามฝืนสร้างข้อสรุป
+
+Research และ recommendation ไม่ใช่ authorization ให้เปลี่ยน behavior, เพิ่ม dependency,
+เลือก/ซื้อ vendor, upgrade, ติดต่อผู้ใช้ หรือเก็บข้อมูลใหม่.

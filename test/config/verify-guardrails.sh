@@ -33,6 +33,10 @@ check claude/agents/SCC-v1.0.1.md "ปิดงานทุกครั้งด
 check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
 check claude/agents/SCC-v1.0.1.md 'invoke `greenfield-foundation` ก่อนเสนอ stack หรือ mutation'
 check claude/agents/SCC-v1.0.1.md "official LTS/support lifecycle, EOL และ compatibility ของ version chain ปัจจุบัน"
+check claude/agents/SCC-v1.0.1.md 'invoke `research:security-advisories`'
+check claude/agents/SCC-v1.0.1.md 'invoke `research:technology-vendor`'
+check claude/agents/SCC-v1.0.1.md 'invoke `research:product-market-user`'
+check claude/agents/SCC-v1.0.1.md 'invoke `research:research-control`'
 check claude/agents/ACV-v1.0.1.md "behavior ของ ACV"
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
 check CLAUDE.md "Design invariant — สามชั้นมีหน้าที่ต่างกัน"
@@ -44,6 +48,9 @@ check claude/rules/core/operating-contract.md "Pain ที่ตรวจพบ�
 check claude/rules/core/operating-contract.md "domain detail ที่ลึกอยู่ใน skill แบบ on-demand"
 check claude/rules/core/operating-contract.md "skill ห้ามลด safety floor ของ rules"
 check claude/rules/core/operating-contract.md "Research escalation"
+check claude/rules/core/operating-contract.md "Research decision gate"
+check claude/rules/core/operating-contract.md 'invoke `research`'
+check claude/rules/core/operating-contract.md "Research และ recommendation ไม่ใช่ authorization"
 check claude/rules/core/operating-contract.md "Greenfield foundation gate"
 check claude/rules/core/operating-contract.md "official LTS/support lifecycle"
 check claude/rules/core/operating-contract.md "ทุก greenfield"
@@ -74,6 +81,8 @@ check claude/agents/ACV-v1.0.1.md "ใช้ยืนยันสถานะป
 check claude/agents/ACV-v1.0.1.md "Report, summary, transcript หรือผลที่ได้รับเป็นข้อมูลนำเข้า"
 check claude/agents/ACV-v1.0.1.md "งาน greenfield เลือก runtime/framework/database/toolchain/SDK/platform หรือ version"
 check claude/agents/ACV-v1.0.1.md "clean install/build/runtime evidence"
+check claude/agents/ACV-v1.0.1.md "scanner match หรือ severity label อย่างเดียวไม่พิสูจน์ affected/safe"
+check claude/agents/ACV-v1.0.1.md "persona, anecdote, synthetic quote หรือ model inference ไม่ใช่ observable user evidence"
 check claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 check claude/rules/engineering/documentation-discipline.md "status (Verified/Unverified/Contradicted)"
 check claude/rules/engineering/compatibility-rollout.md "Expand → Migrate → Contract"
@@ -85,6 +94,14 @@ check claude/skills/api-design/SKILL.md "inventory เป็นการวิ�
 check claude/skills/greenfield-foundation/SKILL.md "LTS & Compatibility Gate — บังคับทุก greenfield"
 check claude/skills/greenfield-foundation/SKILL.md "ห้ามใช้ความจำของ model ยืนยัน “current LTS”"
 check claude/skills/greenfield-foundation/SKILL.md "clean install/build/runtime"
+check claude/skills/research/SKILL.md "research:security-advisories"
+check claude/skills/research/SKILL.md "research:technology-vendor"
+check claude/skills/research/SKILL.md "research:product-market-user"
+check claude/skills/research/SKILL.md "research:research-control"
+check claude/skills/research/research-control/SKILL.md "timebox ห้ามแปลงความไม่รู้เป็นคำตอบ"
+check claude/skills/research/security-advisories/SKILL.md "present → affected version → vulnerable configuration/precondition → reachable/exposed"
+check claude/skills/research/technology-vendor/SKILL.md "total cost ไม่ใช่ราคาเริ่มต้น"
+check claude/skills/research/product-market-user/SKILL.md "synthetic persona, fabricated quote, market size"
 if find "$ROOT/claude/rules" -maxdepth 1 -type f -name '*.md' | rg -q .; then
   echo "rules must be owned by core/, engineering/, or risk/" >&2
   exit 1
@@ -137,6 +154,7 @@ check claude/skills/ops/incident-response/SKILL.md "owner authorization ก่�
 check claude/skills/ops/observability/SKILL.md "event log เงียบอย่างเดียวไม่ใช่ health signal"
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'เป็น **link**'
 check claude/skills/docs/setup/kit/CLAUDE.template.md "Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo"
+check claude/skills/docs/setup/kit/CLAUDE.template.md "research/recommendation ไม่ใช่ approval"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Execution tracking"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Report integrity"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "## Durable findings"

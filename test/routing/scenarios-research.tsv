@@ -1,0 +1,5 @@
+# Research routing cases: current external evidence, comparison, product/user evidence, and research control.
+research	research-security	ตรวจว่า dependency versions ที่ resolve จริงใน repository นี้ได้รับผลจาก CVE หรือ security advisory ปัจจุบันหรือไม่ พร้อม affected/fixed range และ reachability
+research	research-vendor	เปรียบเทียบ managed message queue สอง vendor สำหรับระบบเดิม โดยดู compatibility, support, pricing, lock-in และ migration/exit cost ก่อนเสนอ
+research	research-user	หาหลักฐานว่าผู้ใช้กลุ่มร้านค้าขนาดเล็กต้องการ bulk editing จริงหรือไม่ โดยแยก usage, interview, support feedback และข้อจำกัดของ sample
+research	research-control	วางแผน research เรื่อง build-vs-buy ที่มีหลายแหล่งข้อมูลขัดกัน กำหนด scope, source hierarchy, budget และ stopping criteria ก่อนค้น

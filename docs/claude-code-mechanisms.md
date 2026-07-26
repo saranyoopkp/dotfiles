@@ -52,8 +52,8 @@ colon ได้** (`name: docs:link`) → invoke `/docs:link` ทำงาน; �
 ## Taxonomy: rule ↔ skill (ตัดสิน 2026-07-16)
 
 rule ย้ายเป็น skill เมื่อครบ**ทั้งสาม**: (ก) work type ประกาศตัวชัด (ข) miss แล้วกู้ได้
-(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `ui-ux-baseline`, `data-design`, `api-design`, `ops`
-และ `greenfield-foundation`; ที่คง **always-on**:
+(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `ui-ux-baseline`, `data-design`, `api-design`, `ops`,
+`greenfield-foundation` และ `research`; ที่คง **always-on**:
 money/authz/time (ฝังในงานอื่น + miss เจ็บถาวร) · `external-integration-safety` (**ทดลองย้ายแล้ว
 revert** — เนื้อเป็นแนวทาง/bounded ไม่ลึกพอ) · cross-cutting rules (ใช้เกือบทุกงาน)
 **ห้ามย้ายเพราะเพดาน 400 อย่างเดียว — depth คือเหตุผลจริง**

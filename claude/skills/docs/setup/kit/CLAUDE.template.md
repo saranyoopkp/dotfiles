@@ -53,6 +53,13 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 - อ่าน code/config/runtime เพื่อรู้ integration และ version ก่อน; หากข้อสรุปขึ้นกับข้อจำกัดภายนอก ขัดกับมาตรฐานที่คาดไว้ หรือ workaround มีนัยสำคัญ ให้ค้น official documentation/specification/release note ที่ตรง version/context ก่อนตัดสินใจ
 - source ภายนอกพิสูจน์ข้อจำกัดทั่วไปเท่านั้น; ต้องใช้ code/config/runtime ยืนยันแยกว่ากระทบ repo นี้อย่างไร
 - หา source ไม่ได้หรือหลักฐานขัดกัน = ระบุสิ่งที่ยังไม่ยืนยันและทางเลือก; ห้ามเดาข้อจำกัดเพื่อปิดงาน
+- research ที่มีผลต่อ decision ต้องกำหนด question, context/version/segment, source hierarchy,
+  freshness, appetite และ stopping criteria; ถึงขอบเขตแล้วยังไม่พอให้รายงาน unknown/next probe
+- advisory/CVE ต้อง map exact component/version/config/reachability; dependency/vendor ต้องตรวจ
+  maintenance, security, license, compatibility, total cost, lock-in/exit; user/market claim ต้องมี
+  provenance + segment + methodology — persona, anecdote หรือ model opinion ไม่ใช่ user evidence
+- research/recommendation ไม่ใช่ approval ให้เปลี่ยน behavior, เพิ่ม dependency, เลือก vendor,
+  upgrade, ติดต่อผู้ใช้ หรือเก็บข้อมูลใหม่
 
 ## Local dev
 <!-- คำสั่งรัน dev + quirks ของเครื่อง/toolchain ที่เคยเจ็บมาแล้ว (ระบุ symptom + fix) -->
