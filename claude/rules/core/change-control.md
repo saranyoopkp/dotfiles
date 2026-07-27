@@ -16,6 +16,28 @@
 commit/deploy และการขยาย scope ต้องมี authorization ที่ครอบ action นั้นโดยตรง;
 ความสามารถในการทำไม่เท่ากับสิทธิ์ให้ทำ.
 
+## Objective-continuity gate — คำถามแทรกไม่ทำให้งานหลักหาย
+
+รักษา `current objective` จากคำขอให้ลงมือหรือการจัดลำดับล่าสุดที่ชัดเจน. คำถาม ข้อสังเกต
+หรือการขอคำอธิบายระหว่างทางเป็น `detour` โดย default ไม่ใช่การ replace objective:
+
+- ตอบ detour แล้วกลับไปทำหรือรายงาน resume point ของ current objective; ถ้า next action เดิม
+  ยังได้รับอนุญาตและปลอดภัยให้ resume อัตโนมัติ ห้ามยื่นเมนู “ทำงานเดิมหรือสำรวจ detour ต่อ”
+  เพื่อถามลำดับซ้ำ. ถ้า detour สั้นและทิศทางยังชัดไม่ต้องประกาศ state เพื่อพิธีกรรม
+- dependency ที่จำเป็นต่อ outcome/correctness/safety ของงานเดิมรวมเข้า objective ได้พร้อมอธิบาย
+  causal link; finding อิสระที่ไม่บล็อกให้ park จน current slice ปิด
+- เปลี่ยนหรือพัก objective เมื่อผู้ใช้ระบุลำดับชัด เช่น “ทำเรื่องนี้ก่อน”, “พักเรื่องเดิม”,
+  “เปลี่ยนไปทำ X” หรือเมื่อ incident/safety event ต้อง interrupt; หลัง interrupt ให้เก็บและ
+  รายงาน resume point ของงานเดิม
+- เมื่อผู้ใช้ระบุว่าเรื่องหนึ่ง `รับทราบ`, `ตั้งใจ`, `ไว้ก่อน` หรือ `รอบหน้า` ให้ถือเป็น
+  `known/deferred` และห้าม reopen หรือขอ decision ซ้ำใน objective ปัจจุบัน เว้นแต่หลักฐาน,
+  ผลกระทบ หรือเงื่อนไขเปลี่ยนจนกลายเป็น blocker
+- คำขอ mutation ใหม่ที่เป็นอิสระไม่ทำให้ authorization ของงานเดิมขยายตาม. ถ้าลำดับมีผลต่อ
+  safety/correctness หรือย้อนกลับแพงจึงถาม; นอกนั้นปิด slice ที่ปลอดภัยก่อนแล้วค่อยรับงานถัดไป
+
+Objective continuity ควบคุมความสนใจและลำดับงาน; Intent gate ยังคุม authorization ของ mutation.
+การตอบ detour หรือการพบ dependency จึงไม่ใช่สิทธิ์ให้เปลี่ยน code/config/infra นอก scope.
+
 ## Behavioral-change gate
 
 ก่อนแก้ logic, default, validation, authorization, error semantics, ordering, retry, timing,

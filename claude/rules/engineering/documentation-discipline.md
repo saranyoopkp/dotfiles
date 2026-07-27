@@ -20,11 +20,17 @@
 
 ## จังหวะจด
 
-- เมื่อปิดงาน mutation หนึ่งชิ้น ให้ตรวจและอัปเดต CLAUDE.md/docs/memory ทันที ไม่รอจบ session;
+- เมื่อปิดงาน mutation หนึ่งชิ้น ให้ตรวจ CLAUDE.md/docs/memory ทันที. ถ้า mutation ปัจจุบัน
+  ทำให้ contract, decision, runbook หรือ recall hook ที่เกี่ยวข้อง stale ให้อัปเดตพร้อมงาน;
   default คือ inventory/decision/quirk สั้น ๆ ใช้เวลาเป็นนาที ไม่ใช่เรียงความ
+- pre-existing stale note, known issue หรือหนี้เอกสารที่ไม่บล็อก outcome ปัจจุบันให้ park;
+  ห้ามเปลี่ยนเป็นคำถามหรืองานใหม่ก่อนปิด current slice. เมื่อผู้ใช้ระบุว่าเรื่องนั้นรับทราบ,
+  ตั้งใจ หรือ defer แล้ว ให้ไม่ reopen ใน objective ปัจจุบัน; รายงานท้ายงานได้หนึ่งครั้งเมื่อ
+  เอกสารอาจทำให้ session ถัดไปตัดสินใจผิด และแก้เมื่อผู้ใช้สั่งหรืออยู่ใน scope เอกสาร
 - quirk หรือปัญหาที่ใช้เวลาหาสาเหตุให้จด `symptom → root cause → fix` พร้อมข้อจำกัดที่ยังมีผล
 - เมื่อผู้ใช้ต้องทัก pain, preference หรือ behavior เดิมเป็นครั้งที่สอง ให้เสนอทำเป็น durable record
-  ใน owner ที่ถูกต้อง; ถ้าอยู่ใน scope mutation ที่อนุมัติแล้วให้อัปเดตพร้อมงาน
+  ใน owner ที่ถูกต้องหลังปิด current slice; ถ้าอยู่ใน scope mutation ที่อนุมัติแล้วให้อัปเดตพร้อมงาน.
+  หากผู้ใช้ defer แล้วไม่เสนอซ้ำจนกว่าจะถูกหยิบขึ้นมาหรือมีเงื่อนไขใหม่
 - docs กองแบนเกิน ~7 ไฟล์, index ไม่ตรงไฟล์จริง หรือบ้านของ fact ไม่ชัด ให้ invoke
   `docs:placement` หรือ `docs:setup`; ห้ามจัดโครงใหม่เกิน scope เงียบ ๆ
 

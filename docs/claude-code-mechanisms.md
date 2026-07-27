@@ -76,9 +76,9 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 
 | Concern | Shared invariant owner | Agent behavior / on-demand procedure |
 |---|---|---|
-| หลักการทำงาน, pain/ข้อเสนอ, complexity, greenfield และ research floor | `claude/rules/core/operating-contract.md` | SCC เป็น behavior owner; procedure อยู่ใน `greenfield-foundation`, `research` และ `retro` |
+| หลักการทำงาน, material proposal/pain, complexity, greenfield และ research floor | `claude/rules/core/operating-contract.md` | SCC เป็น behavior owner; procedure อยู่ใน `greenfield-foundation`, `research` และ `retro` |
 | ความถูกต้องของ claim/report/durable finding | `claude/rules/core/evidence-integrity.md` | SCC รายงานด้วยหลักฐาน; ACV ตรวจ acceptance evidence อิสระ |
-| intent, behavioral change, refactor, instruction-system change และ task tracking | `claude/rules/core/change-control.md` | SCC เป็น behavior owner; ACV ตรวจ authorization และ observable behavior |
+| intent, objective continuity/detour, behavioral change, refactor, instruction-system change และ task tracking | `claude/rules/core/change-control.md` | SCC เป็น behavior owner; ACV ตรวจ authorization และ observable behavior |
 | compatibility และ rollout | `claude/rules/engineering/compatibility-rollout.md` | SCC route ไป `api-design:evolution`, `data-design:schema-migrations`, `ops:infra-change`; ACV ตรวจผลที่อนุมัติ |
 | docs/memory safety floor | `claude/rules/engineering/documentation-discipline.md` | SCC route ไป `docs`; child skill เป็น owner ของ placement/setup/link/stale/workspace |
 | performance safety floor | `claude/rules/engineering/performance-discipline.md` | SCC route ไป `performance` |
@@ -101,7 +101,7 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 | Operations และ infrastructure | `claude/skills/ops/SKILL.md` | description ของ router + child routing ใน body |
 | Performance | `claude/skills/performance/SKILL.md` | description + thin rule + SCC trigger |
 | Research | `claude/skills/research/SKILL.md` | description ของ router + child routing ใน body; SCC มี research triggers |
-| Session feedback | `claude/skills/retro/SKILL.md` | description; read-only by default |
+| Session feedback, objective loss และ attention drift | `claude/skills/retro/SKILL.md` | description; read-only by default; runtime continuity อยู่ใน `change-control` + SCC ไม่ใช่ skill |
 | Shared stack/contracts | `claude/skills/stack-contracts/SKILL.md` | description + thin rule + SCC trigger |
 | Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + thin rule + SCC trigger |
 | UI/UX/frontend | `claude/skills/ui-ux-baseline/SKILL.md` | description ของ router + child routing ใน body |

@@ -1,6 +1,6 @@
 ---
 name: retro
-description: สกัด feedback จาก session ปัจจุบันเพื่อหา improvement ของ dotfiles จากสิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ใช้เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา หรือขอหา recurring friction โดยต้องรายงานแบบมีหลักฐานและ read-only โดย default
+description: สกัด feedback จาก session/transcript เพื่อหา improvement ของ dotfiles จากสิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, objective/attention drift, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ต้อง invoke เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ให้เทียบ session เพื่อวิเคราะห์พฤติกรรม agent หรือถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา แม้ context ปัจจุบันยังไม่มีหลักฐานครบ; รายงานแบบมีหลักฐานและ read-only โดย default
 ---
 
 # Session Retro
@@ -26,6 +26,9 @@ description: สกัด feedback จาก session ปัจจุบันเ
    - ถ้ามี instruction ครอบคลุมแล้ว ให้พิจารณา execution miss, routing, enforcement หรือ test gap
    - ถ้ายังไม่มีหรือ wording ทำให้ตีความผิดซ้ำ จึงจัดเป็น instruction gap
 4. จำแนกสาเหตุเป็น `instruction gap`, `instruction overload`, `execution miss`, `tool/harness limitation`, `repository-specific`, `user preference` หรือ `unknown` ได้มากกว่าหนึ่งข้อเมื่อหลักฐานรองรับ
+   สำหรับบทสนทนาหลาย turn ให้จำแนกเพิ่มว่าเป็น `objective loss`, `attention drift`,
+   `reopened deferred issue` หรือ `beneficial scope deepening`: คำถามแทรกอย่างเดียวไม่พิสูจน์ว่า
+   ผู้ใช้เปลี่ยน objective และการขุดต่อไม่ใช่ drift หากจำเป็นต่อ outcome/correctness/safety เดิม
 5. เลือก candidate owner ตาม design invariant:
    - trigger → action ของผู้ปฏิบัติงาน: `Agent`
    - invariant กลาง: `Rule`
@@ -57,5 +60,9 @@ Risk/overlap:
 - `ควรพิจารณาปรับ` — มีหลักฐานและ owner ที่สมเหตุสมผล
 - `ยังไม่ควรแก้ dotfiles` — isolated event, ของเดิมครอบคลุม หรือหลักฐานยังไม่พอ
 - `ควรรักษาไว้` — behavior หรือ guardrail ที่ทำงานดีและไม่ควรถดถอย
+
+เมื่อ finding เกี่ยวกับ scope drift ให้ระบุ current objective, detour/interrupt, จุดที่ resume
+หรือหล่นหาย และข้อความที่ผู้ใช้ต้องใช้ดึงงานกลับ; ห้ามนับการถามตามของผู้ใช้เป็น authorization
+ย้อนหลังให้ข้อเสนอหรือ mutation ที่ agent เป็นฝ่ายเปิด.
 
 ห้ามทำ mutation หลังรายงาน แม้ข้อเสนอชัดเจน; รอให้ผู้ใช้เลือกข้อที่จะดำเนินการ

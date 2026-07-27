@@ -11,6 +11,7 @@ cutover-1: 2026-07-15T02:44+07:00  · SCC 539 → 580 (ทำแผนให้�
 cutover-2: 2026-07-16T16:10+07:00  · SCC 580 → 617 (calibrated-action + record-before-done)
 cutover-3: 2026-07-17T20:55+07:00  · SCC 617 → 626 (form-ambiguity + assumption-declare)
 cutover-4: 2026-07-26T00:53+07:00  · SCC 471 → 401 (responsibility boundary + trigger/action compact)
+cutover-5: 2026-07-27T22:29+07:00  · SCC 401 → 422 (objective continuity + detour resume + deferred suppression)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend
@@ -41,6 +42,32 @@ proof): corr_target 07-17 = 6.5/100t สูงสุดของเดือน 
 วันเดียวกัน + concession ขึ้น + เคส report-miss จริง. แก้: (ก) ตัวอย่างกำกวมรวม form
 ของ deliverable (ข) ไม่ถาม ≠ เดาเงียบ → ประกาศความเข้าใจหนึ่งบรรทัดแล้วทำต่อ.
 วัด: corr_target ลงโดย approve ไม่เด้งกลับขึ้น.
+
+**cutover-5** (owner สั่งหลัง retro Claude sessions 4 ตัว: `f1d10083`, `caf674d7`,
+`a3fffd4a`, `de808299`): พบวงจร agent เสนอ adjacent work ทุก turn → user ถามตาม →
+agent ถือว่า objective เปลี่ยน → งานเดิมต้องถูกดึงกลับ. แก้สามชั้น:
+
+- rule: คำถาม/ข้อสังเกตเป็น detour โดย default; explicit ordering จึง switch; known/deferred
+  ห้าม reopen; incident interrupt ได้แต่ต้องเก็บ resume point
+- SCC: trigger/action สำหรับ detour, resume, dependency classification และ current-slice-first
+- proposal/docs: ถอด footer บังคับ, adjacent park หลังส่งมอบ, pre-existing doc debt ไม่กลายเป็น
+ คำถามก่อนปิดงาน
+
+**ต้องรักษา:** การขุด root cause/dependency ที่จำเป็นต่อ outcome เดิม เช่น Cognito flow,
+MythicArmors offline CLI และ incident recovery ไม่ถูกนับเป็น drift.
+
+**สัญญาณวัดหลัง cutover-5:** แยก WORK session แล้วตรวจ (1) user ต้องพูด “กลับมาที่…”,
+“scope แค่…” หรือ “ไว้ก่อน/รอบหน้า” เพื่อดึงงานกลับกี่ครั้ง (2) agent reopen เรื่องเดิมหลัง
+explicit defer หรือไม่ (3) หลัง detour มี resume point/current objective ถูกส่งมอบหรือหาย
+(4) blocking dependency ยังถูก surface. Regex เป็น candidate finder เท่านั้น ต้องเปิด raw turn
+ตัดสิน เพราะข้อความเดียวกันอาจเป็น user-led switch ที่ถูกต้อง.
+
+**Immediate smoke 2026-07-27 (fresh process):**
+- targeted retro routing ผ่าน 3/3: session feedback, owner mapping และ objective-drift transcript
+- detour scenario ผ่านด้วย SCC default model (CLI exit 0): ตอบคำถามแทรก, คง current objective,
+  ระบุ resume point และไม่ยื่นเมนูให้ผู้ใช้เลือกลำดับซ้ำ
+- deferred scenario สร้างคำตอบที่ mark `known/deferred` และกลับ deploy objective ถูกต้อง แต่
+  CLI จบ `budget_exhausted` จาก test cap จึงเป็น behavioral observation ไม่ใช่ clean test pass
 
 ## ผลวัดสะสม
 

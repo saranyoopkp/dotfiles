@@ -45,7 +45,10 @@ check claude/agents/SCC-v1.0.1.md 'impact map `คงไว้ / ย้าย ol
 check claude/agents/SCC-v1.0.1.md "routing ต้นทาง→ปลายทาง"
 check claude/agents/SCC-v1.0.1.md "จะเรียกใช้/แก้/ทำซ้ำ symbol เดิมที่มี docstring"
 check claude/agents/SCC-v1.0.1.md "ห้ามเปลี่ยน pointer เป็น path เฉพาะเครื่อง"
-check claude/agents/SCC-v1.0.1.md "ปิดงานทุกครั้งด้วยบรรทัดนี้"
+check claude/agents/SCC-v1.0.1.md "ห้ามถือคำถามอย่างเดียวเป็นการ switch งาน"
+check claude/agents/SCC-v1.0.1.md "resume เองโดยไม่ถาม"
+check claude/agents/SCC-v1.0.1.md "mark เป็น known/deferred"
+check claude/agents/SCC-v1.0.1.md 'invoke `retro` ก่อนวิเคราะห์'
 check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
 check claude/agents/SCC-v1.0.1.md 'invoke `greenfield-foundation` ก่อนเสนอ stack หรือ mutation'
 check claude/agents/SCC-v1.0.1.md "official LTS/support lifecycle, EOL และ compatibility ของ version chain ปัจจุบัน"
@@ -61,7 +64,8 @@ check CLAUDE.md '`rules/` = กฎกลางร่วมและ safety invar
 check CLAUDE.md '`skills/` = มาตรฐานและ procedure เฉพาะงาน'
 check CLAUDE.md "invariant → trigger/action → domain procedure"
 check CLAUDE.md 'ของ repo นั้น ๆ (relative จาก Git root)'
-check claude/rules/core/operating-contract.md "Pain ที่ตรวจพบห้ามเงียบ"
+check claude/rules/core/operating-contract.md "Material-alternative gate"
+check claude/rules/core/operating-contract.md '`required/blocking`, `adjacent` หรือ `known/deferred`'
 check claude/rules/core/operating-contract.md "domain detail ที่ลึกอยู่ใน skill แบบ on-demand"
 check claude/rules/core/operating-contract.md "skill ห้ามลด safety floor ของ rules"
 check claude/rules/core/operating-contract.md "Complexity-proposal gate"
@@ -86,6 +90,10 @@ check claude/rules/core/evidence-integrity.md "Failure-escalation gate"
 check claude/rules/core/change-control.md "Refactor gate"
 check claude/rules/core/change-control.md "behavior-preserving/internal change"
 check claude/rules/core/change-control.md "Intent gate"
+check claude/rules/core/change-control.md "Objective-continuity gate"
+check claude/rules/core/change-control.md "คำถาม ข้อสังเกต"
+check claude/rules/core/change-control.md "ห้ามยื่นเมนู"
+check claude/rules/core/change-control.md "known/deferred"
 check claude/rules/core/change-control.md "Execution-tracking gate"
 check claude/rules/core/change-control.md "ก่อน mutation"
 check claude/rules/core/change-control.md "Instruction-system change gate"
@@ -110,6 +118,8 @@ check claude/agents/ACV-v1.0.1.md "persona, anecdote, synthetic quote หรื�
 check claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 check claude/rules/engineering/documentation-discipline.md "status (Verified/Unverified/Contradicted)"
 check claude/rules/engineering/documentation-discipline.md "symptom → root cause → fix"
+check claude/rules/engineering/documentation-discipline.md "pre-existing stale note"
+check claude/rules/engineering/documentation-discipline.md "ห้ามเปลี่ยนเป็นคำถามหรืองานใหม่ก่อนปิด current slice"
 check claude/rules/engineering/documentation-discipline.md "เป็นครั้งที่สอง"
 check claude/rules/engineering/documentation-discipline.md "docs กองแบนเกิน ~7 ไฟล์"
 check claude/rules/engineering/documentation-discipline.md "internal docs ใช้ภาษาที่ทำให้จดจริง"
@@ -153,6 +163,9 @@ check claude/skills/retro/SKILL.md "เป็น read-only โดย default"
 check claude/skills/retro/SKILL.md "ห้ามนับข้อความอ้างถึงเหตุการณ์เดิมเป็น occurrence ใหม่"
 check claude/skills/retro/SKILL.md "ตรวจของเดิมใน repository ก่อนเสนอเพิ่ม"
 check claude/skills/retro/SKILL.md "instruction gap"
+check claude/skills/retro/SKILL.md "objective loss"
+check claude/skills/retro/SKILL.md "reopened deferred issue"
+check claude/skills/retro/SKILL.md "ต้อง invoke"
 check claude/skills/retro/SKILL.md "Test/Harness"
 check claude/skills/retro/SKILL.md "ยังไม่ควรแก้ dotfiles"
 check claude/skills/retro/SKILL.md "ห้ามทำ mutation หลังรายงาน"
@@ -175,6 +188,11 @@ check claude/agents/SCC-v1.0.1.md 'ใช้ `compatibility-rollout`'
 check claude/agents/SCC-v1.0.1.md 'quirk ใช้ `symptom → root cause → fix`'
 check claude/agents/SCC-v1.0.1.md 'invoke `docs:placement` หรือ `docs:setup`'
 check claude/agents/SCC-v1.0.1.md 'sync pointer + hook ใน `MEMORY.md`'
+if rg -q 'ทางที่ดีกว่าที่เห็นแต่ไม่ได้ทำ|ปิดงานทุกครั้งด้วยบรรทัดนี้' \
+  "$ROOT/claude/rules/core/operating-contract.md" "$ROOT/claude/agents/SCC-v1.0.1.md"; then
+  echo "mandatory adjacent-proposal footer must stay removed" >&2
+  exit 1
+fi
 if find "$ROOT/claude/rules" -maxdepth 1 -type f -name '*.md' | rg -q .; then
   echo "rules must be owned by core/, engineering/, or risk/" >&2
   exit 1
