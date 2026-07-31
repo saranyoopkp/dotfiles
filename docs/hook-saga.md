@@ -53,6 +53,22 @@ loop 9 fixes / 4 ชม. ของวันนั้นจบ**ทันที�
     ต่างจากข้อ 6 ใน WSL bash subsystem (สมมติฐาน: การ evaluate `$(...)` ต่างกันตาม
     ตำแหน่งใน args) — deploy ได้เพราะยืนยันผลจริง; คำถามกลไกเปิดอยู่ (TODO ใน CLAUDE.md)
 
+## Stop continuation loop (แก้ 2026-07-30)
+
+Stop hook เดิมไม่อ่าน JSON stdin และ comment warning ไม่มี stamp ของตัวเอง. เมื่อ hook ส่ง
+feedback เดิม Claude Code จึง continue แล้วเรียก Stop ซ้ำ; script ไม่เห็น
+`stop_hook_active=true` และ block ต่อจน harness override หลัง 9 ครั้ง. แก้โดย:
+
+1. อ่าน stdin ทุก event และ `exit 0` ทันทีเมื่อ Stop มี `stop_hook_active=true`
+2. ใช้ `decision:block` + `reason` ตาม Stop contract แทนการอาศัย `additionalContext`
+3. dedup comment warning ต่อ location state และ reset stamp เมื่อ comment หาย
+4. เพิ่ม deterministic regression test: first Stop block, active Stop ผ่าน, state เดิมเงียบ,
+   comment หายแล้วกลับมาเตือนใหม่
+
+ห้ามแก้ด้วยการเพิ่ม `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`; นั่นเพิ่มจำนวนรอบของ loop แต่ไม่สร้าง
+เงื่อนไข convergence. Contract ตรวจวันที่ 2026-07-30 จาก Claude Code hooks reference/guide;
+ผลจริงยังต้องยืนยันใน session ที่ restart ตามกติกาหลักของเอกสารนี้.
+
 ## Deploy checklist (ยังบังคับ)
 
 - แก้ `docs-drift.sh` → deploy **คู่กับ** `settings.json` เสมอ (เคยพลาดรอบเดียว —

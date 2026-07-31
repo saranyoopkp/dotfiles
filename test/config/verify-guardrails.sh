@@ -212,6 +212,9 @@ check claude/skills/docs/workspace/SKILL.md "report จาก agent/audit เป
 check claude/skills/docs/setup/SKILL.md 'ของ repo นั้น ๆ (relative จาก Git root)'
 check claude/skills/docs/setup/SKILL.md "shared memory lifecycle"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "New multi-line line-comment(s)"
+check claude/skills/docs/setup/kit/hooks/docs-drift.sh "stop_hook_active"
+check claude/skills/docs/setup/kit/hooks/docs-drift.sh '"decision":"block"'
+check test/config/verify-docs-drift-stop.sh "Stop loop breaker and dedup verified"
 if rg -q 'docs:placement|docs-setup|/docs:' "$ROOT/claude/skills/docs/setup/kit/hooks/docs-drift.sh"; then
   echo "hook must not reference an optional skill" >&2
   exit 1
@@ -311,4 +314,5 @@ while IFS= read -r child; do
   fi
 done < <(find "$ROOT/claude/skills" -mindepth 3 -type f -name SKILL.md | sort)
 
+bash "$ROOT/test/config/verify-docs-drift-stop.sh"
 echo "guardrails verified"

@@ -88,7 +88,7 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 |---|---|
 | `SessionStart` | sweep ของค้างจาก session ก่อน (uncommitted docs/memory) + **สร้าง memory link ให้เองถ้ายังไม่มี** (worktree ชี้ `memory/` ของ worktree เอง) เตือนเมื่อสร้างไม่ได้ + register watchPaths |
 | `TaskCompleted` | checkpoint ณ จุดปิดงาน: เอกสารตามทันไหม / มี memory ควรจดไหม / commit พร้อมงาน |
-| `Stop` | โหมดนุ่ม: เตือนเมื่อมี docs/memory ค้างไม่ commit, source change ที่ยังไม่มี runtime evidence และ line-comment ใหม่ตั้งแต่ 2 บรรทัด (throttle — เตือนครั้งเดียวต่อสถานะ ไม่สแปมทุก turn) |
+| `Stop` | one-shot nudge เมื่อมี docs/memory ค้างไม่ commit, source change ที่ยังไม่มี runtime evidence หรือ line-comment ใหม่ตั้งแต่ 2 บรรทัด; block ครั้งแรกเพื่อให้ Claude รับ feedback แล้วอนุญาตให้หยุดทันทีเมื่อ `stop_hook_active=true` (throttle ต่อสถานะ ไม่สแปมทุก turn) |
 | `PreCompact` | ก่อน context ถูกบีบ: จดของสำคัญลง memory/docs ก่อนหายไปกับ summary |
 
 > `FileChanged` เคย wire ไว้แต่**ตัดออกแล้ว** (2026-07-12) — ทดสอบยิงจริงพบว่า harness
@@ -101,11 +101,13 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 เปลี่ยน: มาตรฐานตรวจรับถูกอ่านครั้งเดียวตอน session start แล้วจมหายไปใน context ยาว ๆ —
 เตือนซ้ำที่จุดปิด turn จึงชดเชย salience gap นั้นได้โดยไม่ต้องรู้จักมาตรฐานของ agent ที่ใช้อยู่
 
-ทุกตัว **แจ้งผ่าน additionalContext ไม่ block** — Claude เห็นข้อความ `[docs]` แล้วจัดการเอง
-hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md`, `docs/` และ `memory/`; ห้ามอ้าง rule
-หรือ skill ของ dotfiles เพราะ repo ปลายทางอาจไม่มีสิ่งเหล่านั้น. การตรวจ comment เป็นเพียง
-deterministic audit lead (line-comment ติดต่อกันตั้งแต่ 2 บรรทัดใน diff) ไม่ตัดสิน docstring หรือ
-แก้ไฟล์ให้อัตโนมัติ.
+`SessionStart`/`TaskCompleted` แจ้ง context ตาม event เดิม; `Stop` ใช้ `decision:block` หนึ่งครั้ง
+เพื่อให้ Claude รับ feedback ก่อนจบ แล้วอ่าน `stop_hook_active` จาก stdin และ `exit 0` ในรอบ
+continuation เพื่อกัน loop. แต่ละ finding มี stamp ตามสถานะ; comment ที่หายจะ reset stamp และ
+เตือนใหม่ได้เมื่อกลับมา. Hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md`, `docs/`
+และ `memory/`; ห้ามอ้าง rule หรือ skill ของ dotfiles เพราะ repo ปลายทางอาจไม่มีสิ่งเหล่านั้น.
+การตรวจ comment เป็นเพียง deterministic audit lead (line-comment ติดต่อกันตั้งแต่ 2 บรรทัดใน diff)
+ไม่ตัดสิน docstring หรือแก้ไฟล์ให้อัตโนมัติ.
 
 ## Inline work-notes (TODO ในโค้ด → ตารางสถานะ)
 

@@ -6,6 +6,12 @@
 # code ไว้เผื่อ harness รองรับอนาคต, ห้ามใส่กลับ settings.json จนกว่าจะพิสูจน์ว่าทำงาน)
 set -u
 EVENT="${1:-}"
+if [ -t 0 ]; then INPUT=""; else INPUT="$(cat 2>/dev/null || true)"; fi
+if [ "$EVENT" = "Stop" ]; then
+  STOP_HOOK_ACTIVE="$(printf '%s' "$INPUT" | tr -d '\r\n' |
+    sed -n 's/.*"stop_hook_active"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p')"
+  [ "$STOP_HOOK_ACTIVE" = "true" ] && exit 0
+fi
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
 [ -n "$ROOT" ] || exit 0
 case "$(uname -s)" in
@@ -40,6 +46,10 @@ new_multiline_comments() {
 emit() { # $1 = context text, $2 = extra json fields (optional, starts with ,)
   printf '{"hookSpecificOutput":{"hookEventName":"%s","additionalContext":"%s"%s}}\n' \
     "$EVENT" "$(json_escape "$1")" "${2:-}"
+}
+
+block_stop() { # $1 = reason; first Stop only — stop_hook_active invocation exits above
+  printf '{"decision":"block","reason":"%s"}\n' "$(json_escape "$1")"
 }
 
 case "$EVENT" in
@@ -109,10 +119,18 @@ case "$EVENT" in
     fi
     COMMENTS="$(new_multiline_comments)"
     if [ -n "$COMMENTS" ]; then
-      PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Keep only one-line why/constraint with a pointer to project docs; move narrative/history/detail into project documentation. Keep multi-line docstrings only for public interface contracts."
+      CSTAMP="${TMPDIR:-/tmp}/comment-nudge-$ID.stamp"
+      CHASH="$(printf '%s' "$COMMENTS" | cksum | cut -d' ' -f1)"
+      CLAST="$(cat "$CSTAMP" 2>/dev/null || true)"
+      if [ "$CHASH" != "$CLAST" ]; then
+        printf '%s' "$CHASH" > "$CSTAMP"
+        PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Keep only one-line why/constraint with a pointer to project docs; move narrative/history/detail into project documentation. Keep multi-line docstrings only for public interface contracts."
+      fi
+    else
+      : > "${TMPDIR:-/tmp}/comment-nudge-$ID.stamp"
     fi
     PARTS="${PARTS# }"
-    [ -n "$PARTS" ] && emit "$PARTS"
+    [ -n "$PARTS" ] && block_stop "$PARTS"
     ;;
   TaskCompleted)
     MSG="[docs] Task completed - checkpoint: (1) does CLAUDE.md/docs still reflect reality after this task? (2) any new memory worth saving? (3) commit doc changes together with the work. (4) verify the delivered behavior with runtime evidence and apply your acceptance/review standard before reporting done."
@@ -125,7 +143,6 @@ case "$EVENT" in
     printf '{"systemMessage":"[docs] Compacting - persist important decisions/learnings into memory/ or docs/ now; unwritten details may be lost in the summary."}\n'
     ;;
   FileChanged)
-    INPUT="$(cat)"
     FP="$(printf '%s' "$INPUT" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
     CT="$(printf '%s' "$INPUT" | sed -n 's/.*"change_type"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
     [ -n "$FP" ] && emit "[docs] Watched doc file changed on disk: $FP ($CT). It may have been edited outside this session - re-read it before relying on its previous content."
