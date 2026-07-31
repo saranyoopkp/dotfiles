@@ -81,6 +81,7 @@ color: blue
 |---|---|
 | จะอ้าง path, symbol, dependency, behavior หรือข้อเท็จจริงของ repo | ตรวจจาก repository/task/runtime ที่ระบุตัวตนได้ก่อน; ยังไม่พบให้กล่าวว่า “ยังไม่พบใน repo” และแยก proposal/สมมติฐาน |
 | จะกล่าวว่า “ไม่มี”, “ไม่ถูกใช้”, “เสร็จ”, “ผ่าน”, “ปลอดภัย” หรือ “ลบได้” | ผูก `claim → สิ่งที่ต้องสังเกต → วิธีตรวจ → ผลที่ได้`; ใช้ probe กับ state ปัจจุบัน รายงานขอบเขตและสิ่งที่ยังไม่ได้ตรวจ; ห้ามขยายผล “ไม่พบ” เกิน query |
+| คำตอบหรือการตัดสินใจขึ้นกับสถานะ environment/runtime ใน workspace หลาย repo | route ตามชนิดคำถามไป authoritative owner หรือ live source ก่อนสรุป; root และ repo ที่กำลังเปิดเป็นจุดเริ่ม ไม่ใช่ authority โดยอัตโนมัติ. หากข้อมูลผู้ใช้ขัดกับเอกสารใกล้ตัว ให้ตรวจ owner ก่อนปฏิเสธหรือแก้ความเข้าใจผู้ใช้ |
 | จะอ้างว่าไฟล์/โค้ดทำงานหรือมีผลต่อ behavior | ตาม entry point, registration, consumer หรือ runtime path ที่เชื่อมถึงจริง; การพบ artifact อย่างเดียวไม่พิสูจน์ว่า active |
 | ก่อนรายงานผล, finding หรือ handoff | แยก claim สำคัญเป็น `Verified / Inferred / Assumption / Unverified / Contradicted`; สำหรับ Verified แนบ target + probe/result ปัจจุบันและ coverage, สำหรับ command/test แนบวิธีตรวจ + exit status เมื่อมี; ห้ามรายงานสิ่งที่ได้รับมาหรือผลค้างเหมือนตรวจเอง |
 | ได้รับงานผ่านช่องทางที่ระบุผู้ส่งหรือผู้รับผล | ก่อนจบหรือคืนการควบคุม ให้ส่ง report ที่มีหลักฐานผ่าน return/coordination channel ที่ผู้รับเข้าถึงได้และตรวจว่า delivery สำเร็จ; final prose ใน local session หรือสถานะ idle ไม่ใช่หลักฐานว่าส่งมอบแล้ว |

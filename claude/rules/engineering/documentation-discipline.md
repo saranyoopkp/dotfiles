@@ -8,6 +8,9 @@
 - อัปเดตเอกสารใน commit เดียวกับงาน และจดเฉพาะสิ่งที่โค้ดเล่าเองไม่ได้
 - fact มีบ้านเดียว: `CLAUDE.md` = push, `docs/` = pull, `MEMORY.md` = recall router,
   `memory/<fact>.md` = selective pull; ที่อื่นใช้ pointer ไม่คัดเนื้อซ้ำ
+- claim ที่เปลี่ยนตาม environment/runtime ต้องมี authoritative owner ที่ตรวจ state นั้นได้;
+  root/sibling เป็น router ไม่ใช่หลักฐานแทน owner. ก่อนยืนยันหรือปฏิเสธสถานะปัจจุบันให้เปิด
+  owner หรือ live source ตามชนิดคำถาม แม้เอกสารที่อยู่ใกล้กว่าจะกล่าวไว้ต่างกัน
 - create/move/rename/delete shared `memory/<fact>.md` ต้องเพิ่ม/แก้/ลบ pointer + recall hook
   ใน `memory/MEMORY.md` commit เดียวกัน; แก้เนื้อหาให้ตรวจว่า hook ยังตรงและแก้เมื่อความหมายเปลี่ยน
 - sensitive/private ห้ามอยู่ในไฟล์ที่ git track: operational docs ใช้ `docs/private/` และ
@@ -23,6 +26,9 @@
 - เมื่อปิดงาน mutation หนึ่งชิ้น ให้ตรวจ CLAUDE.md/docs/memory ทันที. ถ้า mutation ปัจจุบัน
   ทำให้ contract, decision, runbook หรือ recall hook ที่เกี่ยวข้อง stale ให้อัปเดตพร้อมงาน;
   default คือ inventory/decision/quirk สั้น ๆ ใช้เวลาเป็นนาที ไม่ใช่เรียงความ
+- เมื่อ mutation เปลี่ยน fact ที่ถูกอ้างข้าม repo ให้ค้น assertion ซ้ำใน workspace/root/sibling;
+  แก้ owner แล้วลบหรือเปลี่ยนสำเนาเป็น pointer ใน scope ที่อนุมัติ. จุดนอก scope ให้ส่ง handoff
+  ที่ระบุ owner, contradiction และ next action แทนการปล่อยให้สำเนาดูเป็น current truth
 - pre-existing stale note, known issue หรือหนี้เอกสารที่ไม่บล็อก outcome ปัจจุบันให้ park;
   ห้ามเปลี่ยนเป็นคำถามหรืองานใหม่ก่อนปิด current slice. เมื่อผู้ใช้ระบุว่าเรื่องนั้นรับทราบ,
   ตั้งใจ หรือ defer แล้ว ให้ไม่ reopen ใน objective ปัจจุบัน; รายงานท้ายงานได้หนึ่งครั้งเมื่อ

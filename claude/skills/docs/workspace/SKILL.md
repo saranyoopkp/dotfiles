@@ -1,6 +1,6 @@
 ---
 name: docs:workspace
-description: จัด วาง หรือ audit ระบบเอกสารของ workspace ที่มีหลาย independent Git repositories โดยแยกเจ้าของ fact ระหว่าง workspace กับแต่ละ repo, ทำ inventory/pointer, shared convention, cross-repo contract/rollout/handoff และตรวจว่า repo ยัง clone เดี่ยวได้ ใช้เมื่อโฟลเดอร์เดียวรวมหลาย repo, เอกสารอ้างข้าม repo, ต้องวาง CLAUDE.md/docs ระดับ workspace, หรือกำลังย้ายความรู้ระหว่าง workspace root กับ sub-repo; ไม่ใช้กับ monorepo ที่มี Git root เดียว
+description: จัด วาง หรือ audit ระบบเอกสารของ workspace ที่มีหลาย independent Git repositories โดยแยก authoritative owner ของ fact, ทำ query routing/inventory/pointer, แก้เอกสารหรือสถานะ environment/runtime ที่ขัดกันข้าม repo, จัด shared convention/cross-repo contract/rollout/handoff และตรวจว่า repo ยัง clone เดี่ยวได้ ใช้เมื่อโฟลเดอร์เดียวรวมหลาย repo, root/app/infra docs drift หรือกล่าวไม่ตรงกัน, เอกสารอ้างข้าม repo, ต้องวาง CLAUDE.md/docs ระดับ workspace, หรือกำลังย้ายความรู้ระหว่าง workspace root กับ sub-repo; ไม่ใช้กับ monorepo ที่มี Git root เดียว
 ---
 
 # Docs Workspace — เอกสารหลาย repo โดยไม่สร้างบ้านซ้ำ
@@ -40,6 +40,24 @@ workspace ถือเฉพาะความจริงที่ต้อง�
 ชื่อระบบภายนอกที่เป็นส่วนหนึ่งของ interface ของ repo กล่าวได้ แต่ห้ามใช้ workspace-relative
 path, branch/commit, implementation detail หรือ decision ภายในของ sibling เป็น dependency
 ของเอกสารใน repo นั้น
+
+## Authority และ query routing
+
+owner ของ fact ไม่ได้มีไว้แค่วางเอกสาร แต่กำหนดว่าจะต้องอ่านที่ใดก่อนตอบหรือเปลี่ยน fact นั้น:
+
+| คำถาม/claim | เริ่มตรวจที่ |
+|---|---|
+| implementation, feature, build/release contract | repo ที่เป็นเจ้าของ code/contract |
+| current deploy, environment, host, database, backup, runtime health | infra/operations owner แล้วตรวจ live source เมื่อความสดมีผล |
+| rollout, dependency หรือ decision ที่ correctness อาศัยหลาย repo | workspace contract/plan/handoff แล้วตาม pointer ไป owner ที่เกี่ยวข้อง |
+| inventory/pointer ว่ามี repo หรือเอกสารใด | workspace root ก่อน แล้วเปิด owner source เพื่อยืนยันเนื้อหา |
+
+- cwd, root `CLAUDE.md` และเอกสารของ repo ที่กำลังเปิดเป็น routing context ไม่ใช่ authority
+  โดยอัตโนมัติ; ห้ามใช้ local absence หรือ stale assertion ปฏิเสธ state ที่ sibling/live owner ถือ
+- fact ที่เปลี่ยนตาม environment/runtime ห้าม mirror เป็น living claim ใน root หรือ sibling ที่
+  ตรวจมันเองไม่ได้; เหลือ pointer + วิธีหา owner. snapshot ทำได้เมื่อระบุวันที่/scope ชัด
+- เมื่อผู้ใช้ให้ข้อมูลที่ขัดกับเอกสารใกล้ตัว ให้ถือเป็น contradiction signal: ตรวจ authoritative
+  owner/current state ก่อนแก้ความเข้าใจผู้ใช้ แล้วรายงานเอกสารที่ stale แยกจากคำตอบหลัก
 
 ## บ้านของเอกสาร
 
@@ -87,7 +105,17 @@ docs; ใช้วันที่กับ snapshot/audit ได้
 - handoff ที่จบแล้ว → promote durable result ไป owner docs, ปิด pending item แล้วลบ log/noise
 - ห้าม big-bang rewrite; รักษา history ด้วย `git mv` ภายใน repo เดียวเมื่อเหมาะสม
 
-### 5. Validate ตาม boundary จริง
+### 5. ปิดวงจรเมื่อ owner fact เปลี่ยน
+
+- อัปเดต living doc ของ owner พร้อม mutation ที่ทำให้ fact เปลี่ยน
+- ค้น workspace root และ sibling docs หา assertion ของ fact เดียวกัน; ลบหรือเปลี่ยนเป็น pointer
+  ไม่ sync สำเนาให้พูดความจริงซ้ำ
+- ถ้า repo ที่ขัดกันอยู่นอก authorized scope ให้สร้าง/อัปเดต workspace handoff สั้น ๆ ระบุ
+  `owner | contradictory location | evidence | next action`; finding ไม่ขยาย authorization
+- ปิด handoff เมื่อ assertion ซ้ำถูกถอดและ owner/pointer ตรวจถึงกันได้; ห้ามเก็บ completed log
+  เป็น source of truth อีกชุด
+
+### 6. Validate ตาม boundary จริง
 
 รัน deterministic audit:
 
@@ -100,6 +128,8 @@ python "${CLAUDE_SKILL_DIR}/scripts/audit.py" <workspace>
 - รัน `/docs:link` แยกใน workspace docs repo และทุก sub-repo ที่แตะ
 - clone/inspect ในมุม repo เดี่ยว: link, command และ instruction ต้องไม่ต้องพึ่ง sibling checkout
 - เปิด source ที่เป็นเจ้าของทุก durable finding โดยตรง; report จาก agent/audit เป็น lead ไม่ใช่ proof
+- ทดลอง query สำคัญจาก workspace root และจาก sub-repo: เส้นทางต้องพาไป authoritative owner
+  และต้องไม่ตอบ current state จาก mirror ที่ stale
 - ตรวจ `git diff` แยกต่อ Git root และรายงาน repo ที่เปลี่ยนพร้อม validation ของ repo นั้น
 
 script ตรวจ link escape, missing target และ absolute user-home path ที่ผูกกับเครื่องใดเครื่องหนึ่ง
