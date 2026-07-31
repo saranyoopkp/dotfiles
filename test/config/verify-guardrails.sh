@@ -26,6 +26,8 @@ check claude/agents/SCC-v1.0.1.md "ห้ามวนอ่านโค้ดเ
 check claude/agents/SCC-v1.0.1.md "แยกคำถาม/ข้อสังเกตออกจากคำสั่งให้ดำเนินการ"
 check claude/agents/SCC-v1.0.1.md "ลอง alternative ที่สมเหตุสมผลหนึ่งทาง"
 check claude/agents/SCC-v1.0.1.md "สร้าง task list **ก่อน mutation**"
+check claude/agents/SCC-v1.0.1.md 'primary deliverable + acceptance evidence'
+check claude/agents/SCC-v1.0.1.md "การอนุมัติวิธีทำไม่ใช่การเปลี่ยนรูปแบบผลส่งมอบ"
 check claude/agents/SCC-v1.0.1.md "ห้าม big-bang rewrite"
 check claude/agents/SCC-v1.0.1.md "นี่ไม่ใช่ authorization"
 check claude/agents/SCC-v1.0.1.md "Behavioral Gates (trigger → action)"
@@ -185,6 +187,8 @@ check claude/skills/testing-strategy/SKILL.md "ห้ามซ้ำเพื่
 check claude/skills/testing-strategy/SKILL.md "test ที่ผ่านยืนยันเฉพาะ path/input/environment ที่รัน"
 check claude/skills/testing-strategy/SKILL.md "independent oracle"
 check claude/skills/testing-strategy/SKILL.md "smoke consumer flow จริงก่อนปล่อย"
+check claude/skills/testing-strategy/SKILL.md 'planned / runnable / measured'
+check claude/skills/testing-strategy/SKILL.md "ห้ามเปลี่ยนงานเป็นการเขียน coverage report"
 check claude/agents/SCC-v1.0.1.md 'invoke `performance`'
 check claude/agents/SCC-v1.0.1.md 'invoke `stack-contracts`'
 check claude/agents/SCC-v1.0.1.md 'invoke `testing-strategy`'

@@ -1,9 +1,9 @@
 ---
 name: testing-strategy
-description: วางแผน เขียน หรือ review tests, เลือก unit/integration/e2e/smoke, ออกแบบ regression/fixture/role-tenant matrix หรือพิจารณาว่าหลักฐานระดับใดพิสูจน์ behavior ได้ ใช้เมื่อ test design ไม่ชัด, logic/boundary มีความเสี่ยง, bug เคยเกิด, suite ผ่านแต่ flow ยังพัง หรือผู้ใช้ขอ test strategy/coverage review; ไม่ใช้กับการรัน verification command ปกติที่ repo กำหนดและ criterion ชัดแล้ว
+description: วางแผน เขียน หรือ review tests, เลือก unit/integration/e2e/smoke, ออกแบบ regression/fixture/role-tenant/load-test/capacity/benchmark matrix หรือสร้าง test harness/script ที่เก็บ metric ต่อ scenario ใช้เมื่อ test design ไม่ชัด, logic/boundary มีความเสี่ยง, bug เคยเกิด, suite ผ่านแต่ flow ยังพัง หรือผู้ใช้ขอ test strategy/coverage review; ไม่ใช้กับการรัน verification command ปกติที่ repo กำหนดและ criterion ชัดแล้ว
 ---
 
-# Testing Strategy — พิสูจน์ behavior ไม่ไล่ coverage
+# Testing Strategy — พิสูจน์ behavior ตาม coverage contract
 
 ## เลือกหลักฐาน
 
@@ -35,6 +35,20 @@ glue ตรง ๆ, layout หรือ implementation detail ที่ type/smo
 - retry/idempotency ต้องส่งซ้ำและตรวจ side effect ไม่ซ้ำ
 - time logic ต้องคร่อม business boundary ที่นิยามไว้
 
+## Load และ capacity tests
+
+แยกผลส่งมอบเป็น `harness/script`, `execution` และ `analysis/report`. ยึดรายการที่ผู้ใช้ขอเป็น
+primary deliverable; report เป็นหลักฐานประกอบ เว้นแต่ผู้ใช้ขอ report เป็นงานหลัก.
+
+- คำว่า `ทุก` หรือ `ครบ` ให้ enumerate executable matrix และ track `planned / runnable / measured`
+  แยกกัน. ห้ามลดเป็น screening/sample เงียบ ๆ; ถ้า cost หรือ safety บังคับให้ลด scope ให้ขออนุมัติ
+  semantic change ก่อน
+- harness ต้องมี scenario/dimension tags, target guard, metric schema และคำสั่งที่รันซ้ำได้
+- ถ้ายังไม่มี performance budget/NFR ให้เก็บ metric แบบ measurement-only และระบุว่าไม่มี pass/fail
+  threshold; ห้ามเปลี่ยนงานเป็นการเขียน coverage report
+- probe anomaly เท่าที่จำเป็นต่อความถูกต้องของการวัด. finding ที่ไม่บล็อก valid measurement ให้ park
+  แล้วทำ matrix ต่อ; ใช้ `performance` เพิ่มเมื่อจะตีความ metric, หา bottleneck หรือเลือก optimization
+
 ## วินัยและ verdict
 
 - test ที่พังห้าม skip/comment เพื่อให้ suite เขียว; แก้, แยก flaky พร้อม owner หรือรายงาน blocker
@@ -48,4 +62,5 @@ glue ตรง ๆ, layout หรือ implementation detail ที่ type/smo
 - เมื่อ scope ครอบ deployment ให้ smoke consumer flow จริงก่อนปล่อยตาม risk และตรวจ flow/health
   หลังปล่อย; การมี resource หรือ process อยู่ไม่แทนการใช้งานจริง
 
-สรุปด้วย requirement, test level, fixture/matrix, command/result และ coverage gap ที่เหลือ.
+สรุปด้วย primary deliverable, requirement, test level, fixture/matrix, command/result และ coverage gap
+ที่เหลือ โดยแยกสิ่งที่สร้างแล้ว, รันแล้ว และยังเป็นเพียง readiness.

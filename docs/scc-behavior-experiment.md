@@ -12,6 +12,7 @@ cutover-2: 2026-07-16T16:10+07:00  · SCC 580 → 617 (calibrated-action + recor
 cutover-3: 2026-07-17T20:55+07:00  · SCC 617 → 626 (form-ambiguity + assumption-declare)
 cutover-4: 2026-07-26T00:53+07:00  · SCC 471 → 401 (responsibility boundary + trigger/action compact)
 cutover-5: 2026-07-27T22:29+07:00  · SCC 401 → 422 (objective continuity + detour resume + deferred suppression)
+cutover-6: 2026-07-31T23:47+07:00  · SCC 423 → 425 (parent deliverable + child prerequisite + load-test routing)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend
@@ -68,6 +69,16 @@ explicit defer หรือไม่ (3) หลัง detour มี resume point
   ระบุ resume point และไม่ยื่นเมนูให้ผู้ใช้เลือกลำดับซ้ำ
 - deferred scenario สร้างคำตอบที่ mark `known/deferred` และกลับ deploy objective ถูกต้อง แต่
   CLI จบ `budget_exhausted` จาก test cap จึงเป็น behavioral observation ไม่ใช่ clean test pass
+
+**cutover-6** (จาก session `f40c4fd7`): objective คือ load-test script ที่ครอบ matrix และสร้าง
+metric แต่ prerequisite tracing ถูกยกเป็นงานหลัก, readiness ถูกนับเป็น coverage progress และ report
+เข้ามาแทน executable deliverable. แก้ parent/child objective ใน rule+SCC และให้
+`testing-strategy` เป็น owner ของ load-test harness; `performance` รับช่วงเมื่อวิเคราะห์ metric หรือ
+เลือก optimization. สัญญาณวัด: ผู้ใช้ต้องทัก “ทำ loadtest ให้ครบ/อยากได้ script” เพื่อดึงกลับหรือไม่,
+planned/runnable/measured ถูกแยกหรือไม่ และ report ยังเข้ามาแทน artifact ที่ขอหรือไม่.
+Immediate smoke (fresh process): คง script เป็น primary deliverable, รายงาน deliverable 0% แยกจาก
+tracing readiness ที่เสร็จ และ resume ไป enumerate matrix/สร้าง script; targeted routing ผ่าน 7/7
+รวม load-test harness ที่ invoke `testing-strategy` โดยไม่ invoke `performance`.
 
 ## ผลวัดสะสม
 

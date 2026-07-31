@@ -21,6 +21,10 @@ commit/deploy และการขยาย scope ต้องมี authorizat
 รักษา `current objective` จากคำขอให้ลงมือหรือการจัดลำดับล่าสุดที่ชัดเจน. คำถาม ข้อสังเกต
 หรือการขอคำอธิบายระหว่างทางเป็น `detour` โดย default ไม่ใช่การ replace objective:
 
+- รักษา `primary deliverable` และ acceptance ที่ผู้ใช้ขอไว้จนกว่าจะส่งมอบ, ยกเลิก, defer หรือ
+  replace อย่างชัดเจน. การเปลี่ยนวิธีทำหรืออนุมัติ prerequisite/diagnostic/subtask ที่รับใช้ outcome
+  เดิมให้ถือเป็น child objective; เมื่อ child จบต้อง resume parent โดยอัตโนมัติ และห้ามแทน deliverable
+  เดิมด้วย readiness, finding หรือ report ประกอบ
 - ตอบ detour แล้วกลับไปทำหรือรายงาน resume point ของ current objective; ถ้า next action เดิม
   ยังได้รับอนุญาตและปลอดภัยให้ resume อัตโนมัติ ห้ามยื่นเมนู “ทำงานเดิมหรือสำรวจ detour ต่อ”
   เพื่อถามลำดับซ้ำ. ถ้า detour สั้นและทิศทางยังชัดไม่ต้องประกาศ state เพื่อพิธีกรรม
@@ -97,4 +101,7 @@ Task list เป็น source of truth ของ execution state ไม่ใช
 - งานตอบคำถาม, read-only inspection หรือการเปลี่ยนจุดเดียวที่จบใน turn เดียวไม่ต้องสร้าง task
 - ทุก task ต้องมี outcome ที่ตรวจได้; update เป็น in-progress, blocked พร้อม blocker หรือ completed
   พร้อมหลักฐานที่ตรง
+- งานหลาย turn ต้อง anchor task แรกด้วย `primary deliverable + acceptance evidence`; map
+  prerequisite/diagnostic เป็น child ของ outcome นั้น และแยก progress ของ deliverable ออกจาก
+  readiness/enabling work. ห้าม claim ว่า parent ใกล้เสร็จจากจำนวน child ที่จบ
 - ไม่มี Task tools ให้ระบุแผน/สถานะอย่างกระชับในคำตอบแทน; ห้ามอ้างว่าได้ติดตาม task ผ่านเครื่องมือที่ไม่มี
