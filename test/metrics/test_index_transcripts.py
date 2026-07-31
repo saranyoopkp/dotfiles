@@ -175,6 +175,39 @@ class TranscriptIndexTest(unittest.TestCase):
         self.assertEqual(kinds["sdk_prompt"], 1)
         self.assertEqual(kinds["human_prompt"], 1)
 
+    def test_dotfiles_self_modification_is_explicitly_excluded(self):
+        mutator = self.root / "-Users-GSP-Work-App" / "mutator.jsonl"
+        self.write_jsonl(mutator, [
+            record("user", "ปรับ rule", uuid="u1", promptSource="typed"),
+            record("assistant", [{
+                "type": "tool_use", "id": "edit-1", "name": "Edit",
+                "input": {"file_path": str(INDEX.REPO_ROOT / "claude/rules/example.md")},
+            }], uuid="a1", parentUuid="u1"),
+        ])
+        reader = self.root / "-Users-GSP-Work-App" / "reader.jsonl"
+        self.write_jsonl(reader, [
+            record("user", "อ่าน rule", uuid="u2", promptSource="typed"),
+            record("assistant", [{
+                "type": "tool_use", "id": "read-1", "name": "Read",
+                "input": {"file_path": str(INDEX.REPO_ROOT / "CLAUDE.md")},
+            }], uuid="a2", parentUuid="u2"),
+        ])
+
+        INDEX.create_index(self.root, self.db, report=False)
+        status = INDEX.status_values(self.db)
+        self.assertEqual(status["files_indexed"], 1)
+        self.assertEqual(status["files_excluded"], 1)
+        self.assertEqual(status["auditable_inputs"], 1)
+        conn = sqlite3.connect(self.db)
+        try:
+            sources = dict(conn.execute(
+                "SELECT file_session_id, exclusion_reason FROM sources"
+            ))
+        finally:
+            conn.close()
+        self.assertEqual(sources["mutator"], "dotfiles_self_modification")
+        self.assertIsNone(sources["reader"])
+
     def test_export_keeps_every_auditable_input_inside_session_envelope(self):
         self.build_fixture()
         INDEX.create_index(self.root, self.db, report=False)

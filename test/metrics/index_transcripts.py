@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 HERE = Path(__file__).resolve().parent
+REPO_ROOT = HERE.parents[1]
 DEFAULT_ROOT = Path.home() / ".claude" / "projects"
 DEFAULT_DB = HERE / "data" / "retro-index.sqlite"
 SCHEMA_VERSION = "1"
@@ -153,6 +154,40 @@ def source_policy(root, path):
     return project, None
 
 
+def resolves_inside_repo(raw_path, cwd=None):
+    if not isinstance(raw_path, str) or not raw_path:
+        return False
+    candidate = Path(raw_path).expanduser()
+    if not candidate.is_absolute() and cwd:
+        candidate = Path(cwd).expanduser() / candidate
+    try:
+        resolved = candidate.resolve(strict=False)
+    except OSError:
+        return False
+    return resolved == REPO_ROOT or REPO_ROOT in resolved.parents
+
+
+def mutates_dotfiles(data):
+    content = (data.get("message") or {}).get("content")
+    if not isinstance(content, list):
+        return False
+    cwd = data.get("cwd")
+    for block in content:
+        if not isinstance(block, dict) or block.get("type") != "tool_use":
+            continue
+        if block.get("name") not in {"Edit", "Write", "NotebookEdit"}:
+            continue
+        tool_input = block.get("input") or {}
+        target = (
+            tool_input.get("file_path")
+            or tool_input.get("path")
+            or tool_input.get("notebook_path")
+        )
+        if resolves_inside_repo(target, cwd):
+            return True
+    return False
+
+
 def text_from_content(content):
     if isinstance(content, str):
         return content
@@ -265,6 +300,7 @@ def scan_source(conn, root, path):
     total = blank = parsed = malformed = 0
     sdk_cli_seen = False
     interactive_prompt_seen = False
+    dotfiles_mutation_seen = False
     error = None
     status = "excluded" if exclusion else "indexed"
     cur = conn.execute(
@@ -316,6 +352,8 @@ def scan_source(conn, root, path):
                 parsed += 1
                 if data.get("entrypoint") == "sdk-cli":
                     sdk_cli_seen = True
+                if mutates_dotfiles(data):
+                    dotfiles_mutation_seen = True
                 normalized = normalize_record(data)
                 if normalized["normalized_kind"] == "human_prompt":
                     interactive_prompt_seen = True
@@ -342,8 +380,12 @@ def scan_source(conn, root, path):
     except OSError as exc:
         status, error = "failed", str(exc)
 
-    if not exclusion and sdk_cli_seen and not interactive_prompt_seen:
+    if not exclusion and dotfiles_mutation_seen:
+        exclusion, status = "dotfiles_self_modification", "excluded"
+    elif not exclusion and sdk_cli_seen and not interactive_prompt_seen:
         exclusion, status = "sdk_or_print_session", "excluded"
+
+    if exclusion and status == "excluded" and parsed:
         conn.execute("DELETE FROM records WHERE source_id=?", (source_id,))
         conn.execute("DELETE FROM ingest_issues WHERE source_id=?", (source_id,))
         parsed = malformed = 0
