@@ -58,10 +58,10 @@ check claude/agents/SCC-v1.0.1.md 'invoke `research:product-market-user`'
 check claude/agents/SCC-v1.0.1.md 'invoke `research:research-control`'
 check claude/agents/ACV-v1.0.1.md "behavior ของ ACV"
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
-check CLAUDE.md "Design invariant — สามชั้นมีหน้าที่ต่างกัน"
-check CLAUDE.md '`agents/` = behavior ของผู้ปฏิบัติงาน'
-check CLAUDE.md '`rules/` = กฎกลางร่วมและ safety invariant'
-check CLAUDE.md '`skills/` = มาตรฐานและ procedure เฉพาะงาน'
+check CLAUDE.md "Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน"
+check CLAUDE.md '| `agents/` | trigger → judgment → action → verification/reporting'
+check CLAUDE.md '| `rules/` | shared/safety invariant'
+check CLAUDE.md '| `skills/` | domain procedure, decision criteria'
 check CLAUDE.md "invariant → trigger/action → domain procedure"
 check CLAUDE.md 'ของ repo นั้น ๆ (relative จาก Git root)'
 check claude/rules/core/operating-contract.md "Material-alternative gate"

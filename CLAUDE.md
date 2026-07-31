@@ -2,6 +2,9 @@
 
 สถานะ: active · repository: private · config นี้ใช้ข้ามเครื่องผ่าน link/junction
 
+Project vision และขอบเขตหลักมี canonical owner อยู่ที่ [`README.md`](README.md);
+ไฟล์นี้เก็บเฉพาะ operational context สำหรับทำงานกับ repository.
+
 ## ทำงานกับ repository นี้
 
 - `claude/rules/` คือ default engineering principles ที่โหลดทุก session; อ่าน [operating-contract.md](claude/rules/core/operating-contract.md) ก่อนเพิ่มหรือย้าย rule
@@ -14,10 +17,24 @@
 
 - rules และ agent specs ต้อง generic: ห้ามใส่ชื่อระบบจริงหรือรายละเอียดเฉพาะ repo งาน
 - rule ใหม่ต้องมาจากปัญหาซ้ำที่พิสูจน์ได้ และต้องรวมเข้ากฎเดิมก่อนสร้างไฟล์ใหม่
-- **Design invariant — สามชั้นมีหน้าที่ต่างกัน:**
-  - `agents/` = behavior ของผู้ปฏิบัติงาน: เมื่อพบ trigger ต้องตัดสินใจ ลงมือ ตรวจ และรายงานอย่างไร
-  - `rules/` = กฎกลางร่วมและ safety invariant: อะไรต้องจริงเสมอโดยไม่ขึ้นกับ agent หรือ domain
-  - `skills/` = มาตรฐานและ procedure เฉพาะงาน: งานชนิดนั้นทำอย่างไร ตรวจอะไร และมี edge case ใด
+- ทุก instruction ต้องเพิ่ม decision leverage: ช่วยให้ agent เข้าใจ ตัดสินใจ ลงมือ ตรวจ หรือ recover
+  ได้ดีขึ้นอย่างมีนัยสำคัญ. “มีเนื้อ” ไม่ได้แปลว่าสั้น แต่ทุก detail ต้องให้ context หรือเปลี่ยน
+  การทำงานจริง; ตัด prose, checklist, ceremony และ duplication ที่ไม่สร้างผลดังกล่าว
+- เขียน desired behavior หรือ decision path ก่อนข้อห้าม. ข้อห้ามใช้กับ boundary ที่มีความเสียหายจริง
+  และต้องบอก trigger, เหตุผล และ next action/alternative ที่ทำให้งานเดินต่อได้ ไม่จบที่ restriction
+- ก่อนคง instruction ให้ตอบว่า “ถ้าถอดข้อความนี้ออก การตัดสินใจ การลงมือ หรือการตรวจจะแย่ลงอย่างไร?”
+  ถ้าตอบไม่ได้ให้ลดหรือถอดออก
+- **Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน:**
+
+  | Surface | เนื้อที่ควรมี |
+  |---|---|
+  | `agents/` | trigger → judgment → action → verification/reporting ของผู้ปฏิบัติงาน |
+  | `rules/` | shared/safety invariant ที่ต้องจริงเสมอและคุ้มกับการโหลดทุก session |
+  | `skills/` | domain procedure, decision criteria และ edge case ที่ต้องรู้เมื่อทำงานชนิดนั้น |
+  | `docs/` | rationale, evidence และ operational context ที่ช่วยการตัดสินใจในอนาคต |
+  | `tests/` | หลักฐานของ observable behavior, routing หรือ invariant ที่เสี่ยงถดถอย |
+  | `memory/` | durable fact หรือ preference ที่ลดการค้นและการอธิบายซ้ำข้าม session |
+
 - เรื่องเดียวกันอยู่ข้ามชั้นได้เฉพาะเมื่อเป็น `invariant → trigger/action → domain procedure`;
   ห้ามคัด prose/checklist เดียวกันหลายชั้นโดยไม่มีหน้าที่เพิ่ม และห้ามลด safety floor เหลือ pointer
   ที่อาจไม่ถูกอ่าน

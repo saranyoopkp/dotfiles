@@ -2,6 +2,35 @@
 
 Personal cross-machine config for Claude Code.
 
+## Vision
+
+dotfiles นี้คือชุด configuration และกรอบการทำงานสำหรับ software agent
+ที่ช่วยเปลี่ยนเจตนาของผู้ใช้ให้เป็นซอฟต์แวร์ที่ถูกต้อง พร้อมใช้งาน
+อยู่ในขอบเขตที่ได้รับอนุญาต และตรวจสอบได้ โดยผสานวิจารณญาณของ agent,
+engineering invariants, domain procedures และวงจรเรียนรู้จากพฤติกรรม
+ที่เกิดขึ้นจริงข้ามทุกโปรเจกต์และทุกเครื่อง
+
+เป้าหมายไม่ใช่สร้าง agent ที่ทำงานมากที่สุดหรือแก้ทุกสิ่งที่พบ แต่สร้าง agent ที่:
+
+- รักษา objective และ authorization boundary ของผู้ใช้
+- ทำงานสอดคล้องกับเจตนา วิธีคิด และจังหวะของผู้ใช้ โดยไม่ทำให้ผู้ใช้ต้องคอยดึงกลับ
+  ย้ำ scope หรืออธิบายความหมายซ้ำโดยไม่จำเป็น
+- ขุด root cause และ dependency ที่จำเป็นต่อผลลัพธ์เดิม โดยไม่ขยาย scope เอง
+- เลือกหลักฐานที่พิสูจน์ claim และ behavior ที่กำลังส่งมอบจริง
+- ใช้ autonomy ให้ได้สัดส่วนกับความเสี่ยงและผลกระทบ
+- เรียนรู้จาก behavioral signals และ pattern ที่ตรวจสอบได้ ทั้งสิ่งที่ควรปรับและสิ่งที่ควรรักษา
+  โดยไม่สะสมกฎหรือความซับซ้อนเกินจำเป็น
+- ทำงานข้าม repository และเครื่องได้อย่างสม่ำเสมอ โดยเคารพบริบทของแต่ละระบบ
+
+โครงสร้างนำ vision นี้ไปใช้โดยแยกหน้าที่เป็น `rules` สำหรับ shared invariants,
+`agents` สำหรับ trigger และการตัดสินใจ, `skills` สำหรับ domain procedures
+และ `tests` สำหรับตรวจ routing กับ behavior ที่เกิดขึ้นจริง
+
+รายละเอียดเชิงปฏิบัติอยู่ใน [`CLAUDE.md`](CLAUDE.md) ส่วนเหตุผล การทดลอง
+และหลักฐานย้อนหลังอยู่ใน [`docs/`](docs/)
+
+## โครงสร้าง
+
 ```
 claude/skills/docs/setup/   ← /docs:setup skill + kit (ระบบเอกสารต่อ repo)
 claude/rules/               ← engineering standards — โหลดทุก session ทุก repo

@@ -1,4 +1,5 @@
-# Retro routing cases: explicit retrospective and recurring session friction.
+# Retro routing cases: explicit retrospective, behavioral surprise, and recurring session friction.
 retro	retro-session	ย้อนดู session นี้แล้วสกัดสิ่งที่ผมต้องบอกซ้ำ pain ที่คุณเจอ และ near miss ที่ควรนำไป improve dotfiles โดยยังไม่ต้องแก้ไฟล์
 retro	retro-owner	จาก feedback และคำท้วงในบทสนทนานี้ ช่วยทำ retrospective ว่าควรปรับ Agent Rule Skill Test หรือ Memory ตรงไหน พร้อมหลักฐาน
 retro	retro-objective-drift	เทียบหลาย session แล้วดูว่า agent ทำ objective เดิมหล่นหลังผมถามแทรก, reopen เรื่องที่บอกว่าไว้รอบหน้า หรือเป็นการขุด dependency ที่จำเป็นจริง จากนั้นเสนอ owner ใน agents/rules/skills โดยยังไม่แก้ไฟล์
+retro	retro-behavioral-surprise	พฤติกรรม agent ใน session นี้รู้สึกแปลกและขัด ๆ แต่ผมยังบอกไม่ได้ว่าเป็นปัญหาหรือควรแก้อะไร ช่วยดูเหตุการณ์กับหลักฐานแล้วอธิบายว่ามันเกิดจากอะไร

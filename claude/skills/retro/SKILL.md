@@ -1,22 +1,27 @@
 ---
 name: retro
-description: สกัด feedback จาก session/transcript เพื่อหา improvement ของ dotfiles จากสิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, objective/attention drift, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ต้อง invoke เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ให้เทียบ session เพื่อวิเคราะห์พฤติกรรม agent หรือถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา แม้ context ปัจจุบันยังไม่มีหลักฐานครบ; รายงานแบบมีหลักฐานและ read-only โดย default
+description: สกัด behavioral signals และ feedback จาก session/transcript เพื่อหา improvement ของ dotfiles จากความรู้สึกว่าพฤติกรรมแปลก ขัด ไม่เข้าที่ หรือน่าสนใจแม้ยังไม่สรุปว่าเป็นปัญหา, สิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, objective/attention drift, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ต้อง invoke เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ให้เทียบ session เพื่อวิเคราะห์พฤติกรรม agent, ชี้ observation ลักษณะข้างต้น หรือถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา แม้ context ปัจจุบันยังไม่มีหลักฐานครบ; รายงานแบบมีหลักฐานและ read-only โดย default
 ---
 
 # Session Retro
 
-เปลี่ยนเหตุการณ์ใน session ปัจจุบันเป็นข้อเสนอปรับ dotfiles ที่ตรวจย้อนกลับได้ โดยไม่ถือว่าทุก pain ต้องแก้ด้วย instruction เพิ่ม
+เปลี่ยนเหตุการณ์หรือ observation ใน session ปัจจุบันเป็นข้อเสนอปรับ dotfiles ที่ตรวจย้อนกลับได้
+โดยไม่ถือว่าทุก signal คือปัญหาหรือต้องแก้ด้วย instruction เพิ่ม
 
 ## Boundary
 
 - วิเคราะห์เฉพาะ session/context และ repository evidence ที่เข้าถึงได้ ห้ามแต่งเหตุการณ์หรือจำนวนครั้ง
 - เป็น read-only โดย default: ห้ามแก้ไฟล์, บันทึก memory หรือ promote finding จนกว่าผู้ใช้จะสั่ง
 - Retro ไม่ใช่การประเมินความผิดของผู้ใช้หรือ agent; หา system cause ที่แก้ได้
+- ความรู้สึกแปลก ขัด ไม่เข้าที่ หรือน่าสนใจเป็น signal ให้สำรวจ ไม่ใช่หลักฐานว่า behavior ผิด
+  หรือควรเปลี่ยน config
 - ถ้าหลักฐานไม่พอ ให้ระบุ `Unverified` และสิ่งที่ต้องตรวจเพิ่ม
 
 ## Workflow
 
 1. หาเหตุการณ์ที่มี signal:
+   - ผู้ใช้รู้สึกว่าพฤติกรรมแปลก ขัด ไม่เข้าที่ หรือน่าสนใจ แม้ยังอธิบาย expectation
+     ที่ไม่ตรงกันหรือผลกระทบไม่ได้
    - ผู้ใช้ต้องบอก, แก้ความเข้าใจ หรือท้วงเรื่องเดิมซ้ำ
    - agent ติดขัด, ตรวจซ้ำด้วยมือ, ใช้หลักฐานผิด หรือเสียเวลากับทางตัน
    - false claim, near miss, behavioral surprise หรือ verification ที่วัดผิดสิ่ง

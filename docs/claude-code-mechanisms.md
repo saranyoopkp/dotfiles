@@ -101,7 +101,7 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 | Operations และ infrastructure | `claude/skills/ops/SKILL.md` | description ของ router + child routing ใน body |
 | Performance | `claude/skills/performance/SKILL.md` | description + thin rule + SCC trigger |
 | Research | `claude/skills/research/SKILL.md` | description ของ router + child routing ใน body; SCC มี research triggers |
-| Session feedback, objective loss และ attention drift | `claude/skills/retro/SKILL.md` | description; read-only by default; runtime continuity อยู่ใน `change-control` + SCC ไม่ใช่ skill |
+| Behavioral signals/surprise, session feedback, objective loss และ attention drift | `claude/skills/retro/SKILL.md` | description; read-only by default; runtime continuity อยู่ใน `change-control` + SCC ไม่ใช่ skill |
 | Shared stack/contracts | `claude/skills/stack-contracts/SKILL.md` | description + thin rule + SCC trigger |
 | Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + thin rule + SCC trigger |
 | UI/UX/frontend | `claude/skills/ui-ux-baseline/SKILL.md` | description ของ router + child routing ใน body |
