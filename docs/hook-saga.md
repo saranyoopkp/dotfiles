@@ -38,8 +38,8 @@ loop 9 fixes / 4 ชม. ของวันนั้นจบ**ทันที�
    แทน exec ตรง (ไม่พึ่ง execute bit) — ✅ ยืนยันบน macOS 2026-07-12 ทั้ง 4 events
 8. `FileChanged` ถูกตัดออกจาก wiring — **documented แต่ harness ไม่เคย fire จริง**
    (ทดสอบ 3 ช่องทางบน macOS เงียบหมด) เหลือ 4 hooks verified: SessionStart/Stop/
-   TaskCompleted/PreCompact; logic เก่าเป็น dead code ใน docs-drift.sh (comment ชัด
-   ห้ามใส่กลับจนพิสูจน์ว่า fire)
+   TaskCompleted/PreCompact; logic เก่าเคยเก็บเป็น dead code ก่อนถอดออก 2026-08-02
+   (ห้ามใส่กลับจนพิสูจน์ว่า fire)
 9. `$CLAUDE_PROJECT_DIR` **ว่างเปล่าในบาง session** (user เจอเอง) → args string ที่คำนวณ
    path ของ docs-drift.sh ไม่มี fallback → เพิ่ม `${CLAUDE_PROJECT_DIR:-$(git rev-parse
    --show-toplevel)}`
@@ -75,3 +75,29 @@ feedback เดิม Claude Code จึง continue แล้วเรียก
   comment ค้างเวอร์ชันเก่าที่ repo อื่น, macOS session จับได้, แก้แล้ว 2026-07-12)
 - repo ที่ setup แล้วรับของใหม่ผ่าน `/docs:setup` re-apply เท่านั้น (junction มีผลเฉพาะ
   rules/skills — hooks เป็น copy ต่อ repo)
+
+## Scope-aware enforcement (แก้ใน template 2026-08-02)
+
+Transcript audit พบว่า reminder ที่ตั้งใจป้องกัน docs stale/forgot commit กลายเป็น source ของ
+objective drift: hook ใช้ dirty worktree ทั้งก้อนเป็น scope แล้วสั่งแก้ docs, runtime test และ
+commit โดยไม่รู้ว่า path ใดมีอยู่ก่อน session หรือ user authorize อะไร. รุ่นใหม่จึง:
+
+1. capture baseline ครั้งแรกต่อ repo + `session_id`; dirty path เดิมเป็น report-only และห้าม
+   hook สั่ง edit/stage/commit
+2. ตรวจ comment ทันทีที่ `PostToolUse(Edit|Write)` และ fallback ที่ Stop เฉพาะ path
+   clean-at-start; ไฟล์ dirty เดิมถือ provenance คลุมเครือ
+3. เปลี่ยน verify reminder เป็น `behavior claim / evidence / gap` และห้ามขยาย test matrix หรือ
+   mutate shared/runtime state โดยไม่มี authorization
+4. ให้ docs มี disposition (`updated`, `no durable docs impact`, `deferred`) แทนการบังคับสร้างไฟล์
+5. ให้ SessionStart ตรวจ memory link แบบ read-only; `/docs:setup` ยังเป็น owner ของ merge/repair
+6. คง Stop one-shot, state dedup และ `stop_hook_active` loop breaker; memory leaf/index mismatch
+   ที่ session สร้างยังเป็น deterministic violation
+
+Commit boundary ปรับตาม workflow ของ user วันที่ 2026-08-18: งาน mutation ที่ authorize แล้วและ
+ถึง cohesive verified checkpoint ให้ local commit โดย default เพื่อรักษา provenance ของแต่ละงาน;
+ยังห้ามรวม baseline dirty paths และการ push/deploy/history rewrite ต้อง explicit. ข้อนี้แทน wording
+ชั่วคราวที่กำหนดให้ commit ต้อง explicit ซึ่งทำให้งานหลาย project ค้างปนกันจนระบุที่มายาก.
+
+Regression shell test พิสูจน์ logic ระดับ script/settings เท่านั้น. ตามบทเรียนหลักด้านบน
+behavior ใน hook runner จริงยังต้องยืนยันด้วย Claude Code session ใหม่หลัง deploy/restart;
+ห้ามสรุปว่า live integration ผ่านจากการเรียก script ใน Bash tool.

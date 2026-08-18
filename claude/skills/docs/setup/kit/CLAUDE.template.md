@@ -173,9 +173,9 @@ ADR สำหรับ decision · Diátaxis + SSOT สำหรับแยก�
 **`memory/` ของ tree ที่ session เปิดอยู่ คือ memory ตัวจริง** — ฝั่ง harness
 (`~/.claude/projects/<project-id>/memory`) เป็น **link** ชี้มาที่นี่ (junction บน Windows /
 symlink บน unix) เขียน/อ่าน memory ตามปกติได้เลย ไฟล์ลง repo อัตโนมัติ
-**`docs-drift.sh` (SessionStart) สร้าง link ให้เองเมื่อยังไม่มี** — รวมถึงใน git worktree
-ซึ่ง link จะชี้ `memory/` ของ **worktree เอง** (ไม่ใช่ของ tree หลัก) เพื่อให้ fact ที่เขียน
-ระหว่างงานนั้น commit ไปกับ branch เดียวกับงานได้ ⇒ **ไม่ต้องรัน script อะไรก่อน**:
+`docs-drift.sh` ตรวจ link แบบ read-only; `/docs:setup` เป็น owner ของการ merge/สร้าง/ซ่อม link.
+ใน git worktree link ต้องชี้ `memory/` ของ **worktree เอง** (ไม่ใช่ tree หลัก) เพื่อให้ fact
+อยู่กับ branch ที่สร้างมัน:
 
 - memory ใหม่ที่บันทึก = untracked file ใน repo → คัดกรองแล้ว commit พร้อมงาน:
   **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
@@ -185,9 +185,8 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
   (gitignored ทั้งคู่,
   ห้าม index ลง `memory/MEMORY.md` ที่ commit). ไม่พบใน index ไม่ได้แปลว่าไม่มี private
   memory; ถ้างานอาจพึ่งข้อมูลเฉพาะเครื่อง ให้ตรวจ `memory/private/` ก่อนสรุปหรือถาม
-- **hook เตือนเมื่อไหร่ = ตอนที่มันสร้าง link ให้เองไม่ได้** (ไม่เตือน = เรียบร้อยแล้ว) —
-  เจอข้อความ `[docs] Harness memory ...` ให้แก้ก่อนทำงาน ไม่งั้น fact ที่เขียน session นี้
-  ไม่ถึง repo เลย:
+- เจอข้อความ `[docs] Harness memory ...` หมายถึง link missing/broken/misdirected; อย่าซ่อมเป็น
+  detour เองถ้าไม่อยู่ใน scope ให้รายงานและขอ/ใช้ `/docs:setup` เมื่อได้รับ authorization:
   - **มี dir เดิมที่ไม่ใช่ link** (มี fact ค้างอยู่ข้างใน) → **ห้ามลบ** merge ไฟล์เข้า
     `memory/` ของ repo ก่อน แล้ว rename ของเดิมเป็น `.bak` ค่อยสร้าง link
   - สร้าง link เอง: unix `ln -s <tree>/memory ~/.claude/projects/<id>/memory` ·
@@ -202,10 +201,13 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
    — จดเฉพาะสิ่งที่**โค้ดเล่าเองไม่ได้** (ทำไม/ข้อจำกัด/กับดัก) ห้ามเล่า implementation ซ้ำ
 2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret);
    ถ้า shared leaf เปลี่ยน lifecycle ให้ sync `memory/MEMORY.md` และตรวจ pointer/hook
-3. commit เอกสารไป**พร้อมกับงาน** (commit เดียวกัน) — รวมถึงลบ `TODO(scope)` ในโค้ด
-   ที่งานนี้ปิดแล้ว (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
+3. เมื่องาน mutation ที่ได้รับอนุญาตถึง cohesive checkpoint ให้สร้าง local commit โดย default และ
+   ให้เอกสารอยู่ commit เดียวกับงาน; stage เฉพาะ session-owned paths/hunks ห้ามรวม dirty work เดิม
+   และห้าม push หากผู้ใช้ไม่ได้สั่ง. รวมถึงลบ `TODO(scope)` ในโค้ดที่งานนี้ปิดแล้ว
+   (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
 4. **section ไหนใน CLAUDE.md โตเกิน ~15 บรรทัด → promote ทันที**: ย้ายเนื้อไป
    `docs/<topic>.md` (หรือ `memory/<fact>.md` ถ้าเป็น fact สั้น) แล้วเหลือสรุป 1–3 บรรทัด
    + ลิงก์ — ห้ามปล่อยให้ CLAUDE.md เป็นที่กองเนื้อหา (มันถูกโหลดเต็มทุก session)
-_(มี lifecycle hooks ใน `.claude/settings.json` คอยเตือนที่ SessionStart / TaskCompleted /
-Stop / PreCompact อยู่แล้ว — เจอข้อความ `[docs]` = ทำตามนั้นก่อนไปต่อ)_
+_(มี lifecycle hooks ใน `.claude/settings.json` คอยเตือนระหว่างงาน; ข้อความ hook เป็น signal
+ให้ disposition ตาม objective ปัจจุบันและ commit เฉพาะงานที่ได้รับอนุญาต ไม่ใช่สิทธิ์เปิดงานเพิ่ม
+หรือ push)_

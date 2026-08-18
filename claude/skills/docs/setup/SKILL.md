@@ -30,10 +30,12 @@ User ใช้ระบบเอกสารแบบเดียวกันท
   (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`
   (gitignored ทั้งคู่,
   init สร้างให้; ห้าม index ลง `MEMORY.md`). ไม่พบใน index ต้องยังไม่สรุปว่าไม่มี private
-- อัปเดตเอกสารใน **commit เดียวกับงาน** เสมอ; internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
+- เมื่อ user authorize งาน mutation ให้ commit เอกสารใน **local commit เดียวกับงาน** ที่ cohesive
+  checkpoint โดย default; stage เฉพาะ session-owned paths/hunks และห้าม push หากไม่ได้สั่ง;
+  internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
 - **lifecycle hooks** (`.claude/hooks/` + `.claude/settings.json`, init ติดตั้งให้) เตือน docs drift
-  ที่ SessionStart / TaskCompleted / Stop / PreCompact — ข้อความ `[docs]`
-  ใน context = ทำตามก่อนไปต่อ
+  ที่ SessionStart / PostToolUse / TaskCompleted / Stop / PreCompact — ข้อความ `[docs]` คือ
+  signal ให้ disposition ภายใน objective/authorization ปัจจุบัน ไม่ใช่สิทธิ์เปิดงานเพิ่ม
 
 ## Context gathering (ทำก่อนเติม/refactor CLAUDE.md เสมอ)
 

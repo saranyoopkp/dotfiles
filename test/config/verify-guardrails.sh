@@ -94,6 +94,8 @@ check claude/rules/core/evidence-integrity.md "Failure-escalation gate"
 check claude/rules/core/change-control.md "Refactor gate"
 check claude/rules/core/change-control.md "behavior-preserving/internal change"
 check claude/rules/core/change-control.md "Intent gate"
+check claude/rules/core/change-control.md "local commit ของ cohesive checkpoint ที่เสร็จและตรวจแล้วเป็นส่วนหนึ่งของงานโดย default"
+check claude/rules/core/change-control.md "การ push, deploy"
 check claude/rules/core/change-control.md "Objective-continuity gate"
 check claude/rules/core/change-control.md "คำถาม ข้อสังเกต"
 check claude/rules/core/change-control.md "ห้ามยื่นเมนู"
@@ -224,7 +226,7 @@ check claude/skills/docs/setup/SKILL.md "shared memory lifecycle"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "New multi-line line-comment(s)"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "stop_hook_active"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh '"decision":"block"'
-check test/config/verify-docs-drift-stop.sh "Stop loop breaker and dedup verified"
+check test/config/verify-docs-drift-stop.sh "docs-drift ownership, authorization, pointer, comment, and Stop convergence verified"
 if rg -q 'docs:placement|docs-setup|/docs:' "$ROOT/claude/skills/docs/setup/kit/hooks/docs-drift.sh"; then
   echo "hook must not reference an optional skill" >&2
   exit 1

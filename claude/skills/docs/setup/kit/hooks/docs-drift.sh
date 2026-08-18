@@ -1,89 +1,162 @@
 #!/usr/bin/env bash
-# docs-drift.sh — documentation/memory lifecycle hook (ทุก OS — Windows รันผ่าน Git Bash)
-# Called from .claude/settings.json with $1 = SessionStart|Stop|TaskCompleted|PreCompact
-# (FileChanged case ยังอยู่ด้านล่างแต่ "not wired" — harness ไม่เคย fire event นี้จริง
-# แม้ documented ไว้; ทดสอบยิงจริง 3 ช่องทางแล้วเงียบทุกครั้ง 2026-07-12 — เก็บ dead
-# code ไว้เผื่อ harness รองรับอนาคต, ห้ามใส่กลับ settings.json จนกว่าจะพิสูจน์ว่าทำงาน)
+# docs-drift.sh — scope-aware documentation/memory lifecycle hook (Git Bash on Windows)
 set -u
+
 EVENT="${1:-}"
 if [ -t 0 ]; then INPUT=""; else INPUT="$(cat 2>/dev/null || true)"; fi
-if [ "$EVENT" = "Stop" ]; then
-  STOP_HOOK_ACTIVE="$(printf '%s' "$INPUT" | tr -d '\r\n' |
-    sed -n 's/.*"stop_hook_active"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p')"
-  [ "$STOP_HOOK_ACTIVE" = "true" ] && exit 0
+json_value() {
+  printf '%s' "$INPUT" | tr -d '\r\n' |
+    sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*/\1/p"
+}
+json_bool() {
+  printf '%s' "$INPUT" | tr -d '\r\n' |
+    sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p"
+}
+
+if [ "$EVENT" = "Stop" ] && [ "$(json_bool stop_hook_active)" = "true" ]; then
+  exit 0
 fi
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 [ -n "$ROOT" ] || exit 0
 case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*)
-    NATIVE="$(cygpath -w "$ROOT")"   # id ต้องมาจาก path แบบ OS-native (ตรงกับที่ harness ใช้)
-    ROOT="$(cygpath -u "$ROOT")" ;;  # file ops ใน bash ใช้ unix style
+    NATIVE="$(cygpath -w "$ROOT")"
+    ROOT="$(cygpath -u "$ROOT")" ;;
   *) NATIVE="$ROOT" ;;
 esac
 ID="$(printf '%s' "$NATIVE" | sed 's/[^A-Za-z0-9]/-/g')"
-
-DRIFT="$(git -C "$ROOT" status --porcelain -- CLAUDE.md docs memory 2>/dev/null | sed 's/^ *//' | paste -sd ';' -)"
+SESSION_ID="$(json_value session_id)"
+[ -n "$SESSION_ID" ] || SESSION_ID="unknown-session"
+SESSION_KEY="$(printf '%s' "$SESSION_ID" | sed 's/[^A-Za-z0-9]/-/g')"
+STATE_DIR="${TMPDIR:-/tmp}/docs-drift-$ID-$SESSION_KEY"
+BASELINE_STATUS="$STATE_DIR/baseline-status"
+BASELINE_PATHS="$STATE_DIR/baseline-paths"
+STOP_STAMP="$STATE_DIR/stop-stamp"
+COMMENT_STAMP="$STATE_DIR/comment-stamp"
+mkdir -p "$STATE_DIR" 2>/dev/null || exit 0
 
 json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
-
-# Detect newly-added consecutive line comments; this is an audit lead, not a semantic verdict.
-new_multiline_comments() {
-  git -C "$ROOT" diff --no-ext-diff --unified=0 HEAD -- 2>/dev/null |
-    awk '
-      /^\+\+\+ b\// { file=substr($0, 7); next }
-      /^@@ / { h=$0; sub(/^.*\+/, "", h); sub(/,.*/, "", h); line=h-1; run=0; next }
-      /^\+/ && !/^\+\+\+/ {
-        line++; text=substr($0,2)
-        if (text ~ /^[[:space:]]*(#|\/\/)/) { run++; if (run == 2) print file ":" (line-1) }
-        else run=0
-        next
-      }
-      /^ / { line++; run=0; next }
-      /^-/ { run=0; next }
-    ' | sort -u | paste -sd ', ' -
-}
-
-emit() { # $1 = context text, $2 = extra json fields (optional, starts with ,)
+emit() {
   printf '{"hookSpecificOutput":{"hookEventName":"%s","additionalContext":"%s"%s}}\n' \
     "$EVENT" "$(json_escape "$1")" "${2:-}"
 }
+block_stop() { printf '{"decision":"block","reason":"%s"}\n' "$(json_escape "$1")"; }
 
-block_stop() { # $1 = reason; first Stop only — stop_hook_active invocation exits above
-  printf '{"decision":"block","reason":"%s"}\n' "$(json_escape "$1")"
+capture_status() {
+  git -C "$ROOT" status --porcelain --untracked-files=all 2>/dev/null
 }
+status_paths() { sed 's/^...//'; }
+ensure_baseline() {
+  [ -f "$BASELINE_STATUS" ] && return
+  capture_status > "$BASELINE_STATUS"
+  status_paths < "$BASELINE_STATUS" > "$BASELINE_PATHS"
+}
+is_baseline_path() { grep -Fqx -- "$1" "$BASELINE_PATHS" 2>/dev/null; }
+session_status() {
+  capture_status | while IFS= read -r line; do
+    path="${line#???}"
+    is_baseline_path "$path" || printf '%s\n' "$line"
+  done
+}
+join_status() { sed 's/^ *//' | paste -sd ';' -; }
+
+is_docs_path() {
+  case "$1" in CLAUDE.md|docs/*|memory/*) return 0 ;; *) return 1 ;; esac
+}
+
+diff_for_path() {
+  path="$1"
+  if git -C "$ROOT" ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
+    git -C "$ROOT" diff --no-ext-diff --unified=0 HEAD -- "$path" 2>/dev/null
+  elif [ -f "$ROOT/$path" ]; then
+    git -C "$ROOT" diff --no-ext-diff --unified=0 --no-index /dev/null "$ROOT/$path" 2>/dev/null || true
+  fi
+}
+
+# Consecutive added line comments are an audit lead; public contract docstrings need judgment.
+new_multiline_comments_for_path() {
+  path="$1"
+  diff_for_path "$path" | awk -v fallback="$path" '
+    /^\+\+\+ / { file=fallback; next }
+    /^@@ / { h=$0; sub(/^.*\+/, "", h); sub(/,.*/, "", h); line=h-1; run=0; next }
+    /^\+/ && !/^\+\+\+/ {
+      line++; text=substr($0,2)
+      if (text ~ /^[[:space:]]*(#|\/\/)/) { run++; if (run == 2) print file ":" (line-1) }
+      else run=0
+      next
+    }
+    /^ / { line++; run=0; next }
+    /^-/ { run=0; next }
+  '
+}
+
+session_comment_findings() {
+  session_status | status_paths | while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    case "$path" in *' -> '*) path="${path##* -> }" ;; esac
+    new_multiline_comments_for_path "$path"
+  done | sort -u | paste -sd ', ' -
+}
+
+memory_pointer_findings() {
+  status_file="$1"
+  [ -f "$ROOT/memory/MEMORY.md" ] || return
+  while IFS= read -r line; do
+    code="${line%${line#??}}"
+    path="${line#???}"
+    case "$path" in
+      *' -> '*)
+        old="${path%% -> *}"
+        new="${path##* -> }"
+        case "$old:$new" in
+          memory/MEMORY.md:*|memory/README.md:*|memory/private/*:*|*:memory/MEMORY.md|*:memory/README.md|*:memory/private/*) continue ;;
+          memory/*.md:memory/*.md) ;;
+          *) continue ;;
+        esac
+        old_base="${old##*/}"
+        new_base="${new##*/}"
+        grep -Fq -- "$old_base" "$ROOT/memory/MEMORY.md" && printf '%s (renamed but old pointer remains)\n' "$old"
+        grep -Fq -- "$new_base" "$ROOT/memory/MEMORY.md" || printf '%s (renamed but new pointer is missing)\n' "$new"
+        continue
+        ;;
+    esac
+    case "$path" in
+      memory/MEMORY.md|memory/README.md|memory/private/*) continue ;;
+      memory/*.md) ;;
+      *) continue ;;
+    esac
+    base="${path##*/}"
+    case "$code" in
+      *D*) grep -Fq -- "$base" "$ROOT/memory/MEMORY.md" && printf '%s (deleted but still indexed)\n' "$path" ;;
+      *) grep -Fq -- "$base" "$ROOT/memory/MEMORY.md" || printf '%s (missing from memory/MEMORY.md)\n' "$path" ;;
+    esac
+  done < "$status_file"
+}
+
+ensure_baseline
 
 case "$EVENT" in
   SessionStart)
     PARTS=""
-    [ -n "$DRIFT" ] && PARTS="[docs] Uncommitted docs/memory left over from a previous session: $DRIFT. Curate (strip personal metadata like originSessionId, verify no secrets) and commit before starting new work."
+    BASELINE="$(join_status < "$BASELINE_STATUS")"
+    if [ -n "$BASELINE" ]; then
+      PARTS="[scope] Pre-existing uncommitted paths at session start: $BASELINE. Treat them as user/previous-session work: report them if relevant, but do not edit, stage, commit, or use them to expand this task without explicit direction."
+    fi
+    POINTERS="$(memory_pointer_findings "$BASELINE_STATUS" | paste -sd ', ' -)"
+    [ -n "$POINTERS" ] && PARTS="$PARTS [docs] Pre-existing memory/index mismatch: $POINTERS. Advisory only; do not repair it unless the user puts it in scope."
     if [ -f "$ROOT/CLAUDE.md" ]; then
       LINES="$(wc -l < "$ROOT/CLAUDE.md" | tr -d ' ')"
-      if [ "$LINES" -gt 200 ]; then
-        PARTS="$PARTS [docs] CLAUDE.md is $LINES lines (>200) - it is loaded in full every session. Promote oversized sections (>~15 lines) into docs/<topic>.md or memory/ and leave 1-3 line summaries + links."
-      fi
+      [ "$LINES" -gt 200 ] && PARTS="$PARTS [docs] CLAUDE.md is $LINES lines (>200). Consider promoting a substantive oversized section into docs/ when that document is in scope."
     fi
-    # memory link — harness dir ของ *cwd นี้* ต้องชี้มา memory/ ของ tree นี้; ใน worktree
-    # `--show-toplevel` คืน path ของ worktree ⇒ link ไปที่ memory/ ของ worktree เอง (ไม่ใช่ของ
-    # tree หลัก) fact ที่เขียนระหว่าง session จึงลง checkout ที่ commit ไปกับ branch นั้นได้
-    # ไม่ link = harness เขียนลงสำเนาของตัวเอง แล้ว fact หายทั้งก้อนแบบ autoload
-    # เกณฑ์จริงคือ same-file (-ef) ไม่ใช่แค่ -L เพราะ junction detection ต่างกันตาม env
     MEM="$HOME/.claude/projects/$ID/memory"
     if [ -d "$ROOT/memory" ] && [ -d "$HOME/.claude/projects" ]; then
       if [ -L "$MEM" ] && [ ! -e "$MEM" ]; then
-        PARTS="$PARTS [docs] Harness memory link is broken (points nowhere) - memory written this session will not reach the repo. Recreate it pointing at this tree's memory/."
+        PARTS="$PARTS [docs] Harness memory link is broken. This hook is verify-only; run the repository's docs setup/repair workflow before relying on shared memory."
       elif [ ! -e "$MEM" ]; then
-        # ยังไม่มี dir = ไม่มีข้อมูลให้เสีย → สร้าง link เองเลย (เคสนี้คือ worktree ใหม่/เครื่องใหม่
-        # ซึ่งเดิมเงียบ แล้วปล่อยให้ harness สร้างสำเนาแยกทีหลังโดยไม่มีใครรู้)
-        # ยืนยันด้วย -ef เสมอ เพราะ `ln -s` บน Git Bash อาจกลายเป็น "คัดลอก" เงียบ ๆ ตาม
-        # ค่า MSYS=winsymlinks ⇒ Windows ใช้ junction (ไม่ต้องสิทธิ์ admin) แทน
-        mkdir -p "$HOME/.claude/projects/$ID" 2>/dev/null
-        case "$(uname -s)" in
-          MINGW*|MSYS*|CYGWIN*) cmd //c mklink //J "$(cygpath -w "$MEM")" "$(cygpath -w "$ROOT/memory")" >/dev/null 2>&1 ;;
-          *) ln -s "$ROOT/memory" "$MEM" 2>/dev/null ;;
-        esac
-        [ "$MEM" -ef "$ROOT/memory" ] || PARTS="$PARTS [docs] Harness memory dir was missing and could not be auto-linked to this repo's memory/ - memory written this session will not reach the repo. Create the link manually (see CLAUDE.md 'Memory policy')."
-      elif ! [ "$MEM" -ef "$ROOT/memory" ] && ! [ -L "$MEM" ]; then
-        PARTS="$PARTS [docs] Harness memory dir exists but is NOT linked to this repo's memory/ (separate copies will drift). Merge its files into memory/ first, then replace it with a link (see CLAUDE.md 'Memory policy') - do not delete it."
+        PARTS="$PARTS [docs] Harness memory link is missing. This hook is verify-only; run the repository's docs setup workflow to create it."
+      elif ! [ "$MEM" -ef "$ROOT/memory" ]; then
+        PARTS="$PARTS [docs] Harness memory path is not linked to this tree's memory/. Do not delete either copy; use the docs setup/repair workflow to merge and relink it."
       fi
     fi
     native_path() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) cygpath -w "$1" ;; *) printf '%s' "$1" ;; esac; }
@@ -93,59 +166,61 @@ case "$EVENT" in
       [ -n "$WATCH" ] && WATCH="$WATCH,"
       WATCH="$WATCH\"$(json_escape "$(native_path "$ROOT/memory/MEMORY.md")")\""
     fi
-    emit "$PARTS" ",\"watchPaths\":[$WATCH]"
+    emit "${PARTS# }" ",\"watchPaths\":[$WATCH]"
     ;;
+
+  PostToolUse)
+    FP="$(json_value file_path)"
+    case "$FP" in "$ROOT"/*) FP="${FP#"$ROOT"/}" ;; esac
+    [ -n "$FP" ] || exit 0
+    is_baseline_path "$FP" && exit 0
+    COMMENTS="$(new_multiline_comments_for_path "$FP" | sort -u | paste -sd ', ' -)"
+    [ -n "$COMMENTS" ] || { : > "$COMMENT_STAMP"; exit 0; }
+    CHASH="$(printf '%s' "$COMMENTS" | cksum | cut -d' ' -f1)"
+    [ "$CHASH" = "$(cat "$COMMENT_STAMP" 2>/dev/null || true)" ] && exit 0
+    printf '%s' "$CHASH" > "$COMMENT_STAMP"
+    emit "[docs] New multi-line line-comment(s) in the session-owned edit: $COMMENTS. Keep concise why/constraint near code and move narrative/history to project docs with a pointer; retain multi-line docstrings when they are genuine public interface contracts."
+    ;;
+
   Stop)
-    PARTS=""
-    if [ -n "$DRIFT" ]; then
-      STAMP="${TMPDIR:-/tmp}/docs-drift-$ID.stamp"
-      HASH="$(printf '%s' "$DRIFT" | cksum | cut -d' ' -f1)"
-      LAST="$(cat "$STAMP" 2>/dev/null || true)"
-      if [ "$HASH" != "$LAST" ]; then
-        printf '%s' "$HASH" > "$STAMP"
-        PARTS="[docs] Docs/memory changes are uncommitted: $DRIFT. If a piece of work just finished, update CLAUDE.md/docs to reflect it and commit docs together with the work (or propose the commit to the user)."
-      fi
+    OWNED_FILE="$STATE_DIR/session-status"
+    session_status > "$OWNED_FILE"
+    OWNED="$(join_status < "$OWNED_FILE")"
+    [ -n "$OWNED" ] || exit 0
+    PARTS="[scope] Session-owned uncommitted paths: $OWNED. If the authorized work reached a cohesive verified checkpoint, create a scoped local commit by default unless the user said not to commit. Never include pre-existing paths or push without explicit direction."
+
+    SOURCE_PATHS=""
+    DOC_PATHS=""
+    while IFS= read -r line; do
+      path="${line#???}"
+      if is_docs_path "$path"; then DOC_PATHS="$DOC_PATHS $path"; else SOURCE_PATHS="$SOURCE_PATHS $path"; fi
+    done < "$OWNED_FILE"
+    if [ -n "$SOURCE_PATHS" ]; then
+      PARTS="$PARTS [verify] Before claiming completion, state the behavior claim, evidence obtained, and any remaining verification gap for:$SOURCE_PATHS. Choose evidence proportional to this task's risk and requested acceptance level; do not expand the test matrix or mutate shared/runtime state without authorization. [docs] Give the documentation disposition: updated files, 'no durable docs impact' with a reason, or out-of-scope/deferred with owner/follow-up. Do not create docs solely to satisfy this hook."
     fi
-    # verify reminder — generic on purpose (not tied to one review mechanism); re-fires on every Stop so it survives a long context, not just SessionStart
-    SRC="$(git -C "$ROOT" status --porcelain 2>/dev/null | grep -vE '^.. (CLAUDE\.md|docs/|memory/)' | head -1)"
-    if [ -n "$SRC" ]; then
-      VSTAMP="${TMPDIR:-/tmp}/verify-nudge-$ID.stamp"
-      VHASH="$(git -C "$ROOT" status --porcelain 2>/dev/null | grep -vE '^.. (CLAUDE\.md|docs/|memory/)' | cksum | cut -d' ' -f1)"
-      VLAST="$(cat "$VSTAMP" 2>/dev/null || true)"
-      if [ "$VHASH" != "$VLAST" ]; then
-        printf '%s' "$VHASH" > "$VSTAMP"
-        PARTS="$PARTS [verify] Uncommitted source changes at turn end. Before reporting this work as done: exercise the affected flow for runtime evidence (build/tests passing is not the same as working), and apply your agent's acceptance/review standard at the level this change's risk calls for."
-      fi
-    fi
-    COMMENTS="$(new_multiline_comments)"
-    if [ -n "$COMMENTS" ]; then
-      CSTAMP="${TMPDIR:-/tmp}/comment-nudge-$ID.stamp"
-      CHASH="$(printf '%s' "$COMMENTS" | cksum | cut -d' ' -f1)"
-      CLAST="$(cat "$CSTAMP" 2>/dev/null || true)"
-      if [ "$CHASH" != "$CLAST" ]; then
-        printf '%s' "$CHASH" > "$CSTAMP"
-        PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Keep only one-line why/constraint with a pointer to project docs; move narrative/history/detail into project documentation. Keep multi-line docstrings only for public interface contracts."
-      fi
-    else
-      : > "${TMPDIR:-/tmp}/comment-nudge-$ID.stamp"
-    fi
-    PARTS="${PARTS# }"
-    [ -n "$PARTS" ] && block_stop "$PARTS"
+    [ -n "$DOC_PATHS" ] && PARTS="$PARTS [docs] Review session-owned docs/memory for accuracy, secrets, and personal metadata before any authorized commit."
+
+    COMMENTS="$(session_comment_findings)"
+    [ -n "$COMMENTS" ] && PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Resolve only in session-owned files; public interface contracts may remain as docstrings."
+
+    POINTERS="$(memory_pointer_findings "$OWNED_FILE" | paste -sd ', ' -)"
+    [ -n "$POINTERS" ] && PARTS="$PARTS [docs] Session-owned memory lifecycle violation: $POINTERS. Sync the shared leaf and its memory/MEMORY.md pointer before completion."
+
+    HASH="$(printf '%s' "$PARTS" | cksum | cut -d' ' -f1)"
+    [ "$HASH" = "$(cat "$STOP_STAMP" 2>/dev/null || true)" ] && exit 0
+    printf '%s' "$HASH" > "$STOP_STAMP"
+    block_stop "$PARTS"
     ;;
+
   TaskCompleted)
-    MSG="[docs] Task completed - checkpoint: (1) does CLAUDE.md/docs still reflect reality after this task? (2) any new memory worth saving? (3) commit doc changes together with the work. (4) verify the delivered behavior with runtime evidence and apply your acceptance/review standard before reporting done."
-    [ -n "$DRIFT" ] && MSG="$MSG Currently uncommitted: $DRIFT."
+    OWNED="$(session_status | join_status)"
+    MSG="[docs] Task checkpoint: state the documentation disposition and verification evidence/gap for the objective just completed. For authorized mutation work, create a scoped local commit by default at a cohesive verified checkpoint unless the user said not to; do not reopen deferred work, expand tests, mutate shared/runtime state, include pre-existing paths, or push without explicit direction."
+    [ -n "$OWNED" ] && MSG="$MSG Session-owned uncommitted paths: $OWNED; keep pre-existing paths out of any action."
     emit "$MSG"
     ;;
+
   PreCompact)
-    # NOTE: harness rejects hookSpecificOutput.additionalContext for PreCompact
-    # (docs say otherwise - live behavior wins). Use top-level systemMessage.
-    printf '{"systemMessage":"[docs] Compacting - persist important decisions/learnings into memory/ or docs/ now; unwritten details may be lost in the summary."}\n'
-    ;;
-  FileChanged)
-    FP="$(printf '%s' "$INPUT" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
-    CT="$(printf '%s' "$INPUT" | sed -n 's/.*"change_type"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
-    [ -n "$FP" ] && emit "[docs] Watched doc file changed on disk: $FP ($CT). It may have been edited outside this session - re-read it before relying on its previous content."
+    printf '{"systemMessage":"[session-state] Preserve the current objective, deferred/out-of-scope items, authorization boundaries, verification gaps, and session-owned paths in the compacted summary. Do not create or commit repository docs solely because compaction is occurring."}\n'
     ;;
 esac
 exit 0

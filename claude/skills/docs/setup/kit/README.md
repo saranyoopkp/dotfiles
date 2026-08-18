@@ -78,7 +78,8 @@ symlink บน unix — memory ตัวจริงชุดเดียวอ�
 
 ข้อแลกเปลี่ยนของ link: memory ใหม่ที่ harness บันทึกจะโผล่ใน repo เป็น untracked file
 → ต้องคัดกรอง+commit เป็นระยะ และถ้าย้าย repo ไปเครื่องอื่น ให้รัน init อีกครั้ง (idempotent)
-(section "Memory policy" ใน `CLAUDE.template.md` สอน Claude ให้ตรวจ+ซ่อมเองแล้ว — อย่าลบ section นั้น)
+(section "Memory policy" ใน `CLAUDE.template.md` สอน Claude ให้ตรวจและ route การซ่อมผ่าน
+`/docs:setup` แล้ว — อย่าลบ section นั้น)
 
 ## Lifecycle hooks (กัน docs drift — ต้น/กลาง/ปลาย session)
 
@@ -86,28 +87,29 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 
 | Event | หน้าที่ |
 |---|---|
-| `SessionStart` | sweep ของค้างจาก session ก่อน (uncommitted docs/memory) + **สร้าง memory link ให้เองถ้ายังไม่มี** (worktree ชี้ `memory/` ของ worktree เอง) เตือนเมื่อสร้างไม่ได้ + register watchPaths |
-| `TaskCompleted` | checkpoint ณ จุดปิดงาน: เอกสารตามทันไหม / มี memory ควรจดไหม / commit พร้อมงาน |
-| `Stop` | one-shot nudge เมื่อมี docs/memory ค้างไม่ commit, source change ที่ยังไม่มี runtime evidence หรือ line-comment ใหม่ตั้งแต่ 2 บรรทัด; block ครั้งแรกเพื่อให้ Claude รับ feedback แล้วอนุญาตให้หยุดทันทีเมื่อ `stop_hook_active=true` (throttle ต่อสถานะ ไม่สแปมทุก turn) |
-| `PreCompact` | ก่อน context ถูกบีบ: จดของสำคัญลง memory/docs ก่อนหายไปกับ summary |
+| `SessionStart` | บันทึก baseline ตาม `session_id`, แยก dirty path เดิมเป็นของ user/previous session, ตรวจ memory link แบบ read-only และ register watchPaths; การ merge/ซ่อม link อยู่ใน `/docs:setup` |
+| `PostToolUse` (`Edit|Write`) | เตือน line-comment ใหม่ตั้งแต่ 2 บรรทัดทันที โดยตรวจเฉพาะไฟล์ clean-at-start ที่ session เพิ่งแก้ |
+| `TaskCompleted` | checkpoint disposition ของ docs + หลักฐาน/gap; local commit งานที่ได้รับอนุญาตเป็น default แต่ไม่เปิด deferred work, ขยาย test หรือ push เอง |
+| `Stop` | one-shot nudge เฉพาะ session-owned paths: commit visibility, docs disposition, verification claim/evidence/gap, comment และ memory-index lifecycle; ไม่ prescribe test matrix/runtime mutation |
+| `PreCompact` | ส่ง objective, deferred scope, authorization และ verification gap เข้า summary; ไม่สร้าง repository work เพราะ compaction อย่างเดียว |
 
 > `FileChanged` เคย wire ไว้แต่**ตัดออกแล้ว** (2026-07-12) — ทดสอบยิงจริงพบว่า harness
-> ไม่ fire event นี้เลยแม้ documented ไว้ (dead config); logic ยังอยู่ใน `docs-drift.sh`
-> เผื่ออนาคต แต่ไม่ได้ wire ใน `settings.json` — งานที่มันควรทำ (เตือนไฟล์ถูกแก้นอก
-> session) ถูกครอบด้วย reminder ของ harness เองอยู่แล้ว (system-reminder "modified by
+> ไม่ fire event นี้เลยแม้ documented ไว้ จึงถอดทั้ง wiring และ dead branch ออกจาก
+> `docs-drift.sh` — งานที่มันควรทำ (เตือนไฟล์ถูกแก้นอก session) ถูกครอบด้วย reminder ของ harness
+> เองอยู่แล้ว (system-reminder "modified by
 > the user or a linter") จึงไม่มี gap จริง
 
-`Stop` verify-nudge จงใจ generic (ไม่ผูกกับกลไกตรวจตัวใดตัวหนึ่ง) และรีเฟรชทุกครั้งที่ source
-เปลี่ยน: มาตรฐานตรวจรับถูกอ่านครั้งเดียวตอน session start แล้วจมหายไปใน context ยาว ๆ —
-เตือนซ้ำที่จุดปิด turn จึงชดเชย salience gap นั้นได้โดยไม่ต้องรู้จักมาตรฐานของ agent ที่ใช้อยู่
+`Stop` ขอให้รายงาน behavior claim, evidence และ gap แต่ไม่เลือกวิธีตรวจแทน agent/user:
+ระดับหลักฐานต้องสัมพันธ์กับความเสี่ยงและ acceptance ที่ตกลงไว้ และห้ามขยาย test matrix หรือ
+แตะ shared/runtime state โดยไม่มี authorization. Docs disposition เลือกได้สามแบบ: updated,
+`no durable docs impact` พร้อมเหตุผล, หรือ out-of-scope/deferred พร้อม owner/follow-up.
 
-`SessionStart`/`TaskCompleted` แจ้ง context ตาม event เดิม; `Stop` ใช้ `decision:block` หนึ่งครั้ง
-เพื่อให้ Claude รับ feedback ก่อนจบ แล้วอ่าน `stop_hook_active` จาก stdin และ `exit 0` ในรอบ
-continuation เพื่อกัน loop. แต่ละ finding มี stamp ตามสถานะ; comment ที่หายจะ reset stamp และ
-เตือนใหม่ได้เมื่อกลับมา. Hook เป็น self-contained: ใช้เฉพาะ git, bash, `CLAUDE.md`, `docs/`
-และ `memory/`; ห้ามอ้าง rule หรือ skill ของ dotfiles เพราะ repo ปลายทางอาจไม่มีสิ่งเหล่านั้น.
-การตรวจ comment เป็นเพียง deterministic audit lead (line-comment ติดต่อกันตั้งแต่ 2 บรรทัดใน diff)
-ไม่ตัดสิน docstring หรือแก้ไฟล์ให้อัตโนมัติ.
+Baseline เก็บใน temp state แยกด้วย repo + `session_id`; path ที่ dirty ก่อน SessionStart เป็น
+report-only และ hook จะไม่สั่ง edit/stage/commit. Path ที่ clean ตอนเริ่มแล้ว dirty ภายหลังจึงเป็น
+session-owned. ถ้า session แก้ไฟล์ที่ dirty อยู่ก่อน provenance ยังคลุมเครือและคงเป็น advisory.
+`Stop` ใช้ `decision:block` หนึ่งครั้งเพื่อให้ Claude รับ feedback แล้วอ่าน
+`stop_hook_active=true` และออกทันทีใน continuation; state เดิมถูก dedup. Hook เป็น
+self-contained และ comment detector เป็น deterministic audit lead ไม่ใช่ semantic verdict.
 
 ## Inline work-notes (TODO ในโค้ด → ตารางสถานะ)
 

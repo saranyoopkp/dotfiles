@@ -12,9 +12,12 @@
 | อ่านได้ทั้งคำถามและคำสั่ง หรือ mutation จะเปลี่ยน scope/behavior | ตอบประเด็นก่อน แล้วขอ confirmation สั้น ๆ; ระหว่างรอทำได้เฉพาะ read-only inspection |
 
 “ครับ”, “เอาเลย”, “จัด” เป็น authorization ได้เฉพาะเมื่ออ้างถึงข้อเสนอ scope ชัดเจนใน turn
-ก่อนหน้า; ห้ามเดาจากข้อความเก่าว่าผู้ใช้อนุมัติแล้ว. destructive action, external side effect,
-commit/deploy และการขยาย scope ต้องมี authorization ที่ครอบ action นั้นโดยตรง;
-ความสามารถในการทำไม่เท่ากับสิทธิ์ให้ทำ.
+ก่อนหน้า; ห้ามเดาจากข้อความเก่าว่าผู้ใช้อนุมัติแล้ว. เมื่อผู้ใช้ authorize งาน mutation แล้ว
+**local commit ของ cohesive checkpoint ที่เสร็จและตรวจแล้วเป็นส่วนหนึ่งของงานโดย default**
+เว้นแต่ผู้ใช้สั่งไม่ให้ commit; stage/commit เฉพาะ session-owned paths/hunks และใช้ message ที่บอก
+objective. หากแยกจาก dirty work เดิมอย่างปลอดภัยไม่ได้ให้รายงานแทนการเดา. การ push, deploy,
+amend/rebase/history rewrite, destructive/external action และการขยาย scope ยังต้องมี authorization
+ที่ครอบ action นั้นโดยตรง; ความสามารถในการทำไม่เท่ากับสิทธิ์ให้ทำ.
 
 ## Objective-continuity gate — คำถามแทรกไม่ทำให้งานหลักหาย
 
