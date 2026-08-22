@@ -19,6 +19,21 @@ objective. หากแยกจาก dirty work เดิมอย่างป
 amend/rebase/history rewrite, destructive/external action และการขยาย scope ยังต้องมี authorization
 ที่ครอบ action นั้นโดยตรง; ความสามารถในการทำไม่เท่ากับสิทธิ์ให้ทำ.
 
+## Reversibility gate — กำหนดจังหวะการตัดสินใจจากต้นทุนการย้อนกลับ
+
+หลังยืนยันว่า mutation อยู่ใน objective/scope ที่ authorize แล้ว ให้จัดระดับ action ตามความสามารถ
+ในการกลับสู่สภาพเดิม ไม่ใช่ตามความมั่นใจของ agent:
+
+| ระดับ | ตัวอย่าง | การกระทำ |
+|---|---|---|
+| **ย้อนกลับได้ง่าย** | แก้ไฟล์ session-owned, เพิ่ม/แก้ test, local commit ที่ยังไม่ push และ revert ได้ | ทำต่อได้เลย; ระบุ assumption เฉพาะเมื่อมีผลต่อผลลัพธ์ |
+| **ย้อนยาก** | migration ที่มี consumer หลายจุด, เปลี่ยน config ที่ต้อง rollback หลายขั้น, recurring cost หรือ behavior ที่กระทบผู้ใช้แต่ย้อนกลับได้ | อธิบายเหตุผล, ผลกระทบ, rollback/mitigation และหลักฐานที่ใช้เลือกก่อนลงมือ; หาก user สั่งงานนี้ไว้ชัด ให้ทำต่อได้ |
+| **ย้อนกลับไม่ได้/เสียหายยากกู้** | ลบ/overwrite data โดยไม่มี backup, apply production, เปลี่ยน secret/permission, charge/refund เงิน, ส่งข้อมูลหรือ action ออกนอกระบบ, push/amend/rebase/history rewrite | หยุดและขอ authorization ที่ระบุ target/action ก่อนเสมอ |
+
+การมี rollback command อย่างเดียวไม่ทำให้ action เป็น “ย้อนกลับได้ง่าย”: ต้องตรวจว่า rollback
+ใช้ได้กับ target ปัจจุบัน, ไม่สูญเสีย data/เงิน/สิทธิ์ และไม่กระทบ consumer หรือผู้ใช้ที่อยู่นอก scope.
+เมื่อระดับยังไม่ชัด ให้ถือเป็นย้อนยากและอธิบายเหตุผลก่อน; ห้ามลดระดับเพียงเพื่อหลีกเลี่ยงการถาม.
+
 ## Objective-continuity gate — คำถามแทรกไม่ทำให้งานหลักหาย
 
 รักษา `current objective` จากคำขอให้ลงมือหรือการจัดลำดับล่าสุดที่ชัดเจน. คำถาม ข้อสังเกต
