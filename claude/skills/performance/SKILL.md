@@ -1,6 +1,6 @@
 ---
 name: performance
-description: ต้องใช้เมื่อวิเคราะห์ ออกแบบ review หรือแก้ performance ที่มี latency, throughput, query/list/pagination, N+1, batching, cache, timeout, async work, rendering หรือ resource concern ที่วัดได้หรือมี workload/constraint ชัด รวมถึงเมื่อต้องตัดสินว่าควร cache งานแพงที่ทำซ้ำหรือไม่แม้ data-design:caching จะเกี่ยวด้วย; ไม่ใช้กับ CRUD/list ขนาดคงที่หรืองานทั่วไปที่ยังไม่มี performance concern และห้ามเพิ่ม cache/queue/virtualization จาก scale สมมติ
+description: วิเคราะห์หรือแก้ performance เมื่อมี workload/constraint หรือ concern ที่วัดได้ เช่น latency, throughput, N+1, unbounded work, cache, async/render/resource pressure. ไม่ใช้กับงานทั่วไปที่ยังไม่มี performance signal และไม่ optimize จาก scale สมมติ
 ---
 
 # Performance — วัดก่อน เลือกทางเล็กสุดที่พอ

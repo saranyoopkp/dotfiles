@@ -1,6 +1,6 @@
 ---
 name: stack-contracts
-description: ต้องใช้ทันทีเมื่อผู้ใช้ขอเพิ่ม/เปลี่ยน dependency ทั้งที่ workspace อาจมีเครื่องมือ concern เดียวกัน, ขอ consolidate stack/config หรือออกแบบ/แก้ shared schema/type/enum/constant/contract ระหว่าง package/service/frontend/backend/worker แม้ยังต้อง inventory manifest/consumer เพื่อยืนยันภายหลัง; ไม่ใช้กับ helper ภายในจุดเดียวหรือ schema ที่มี owner/consumer เดียว และห้ามสร้าง shared package หรือ abstraction เผื่ออนาคต
+description: ใช้เมื่อเพิ่ม/เปลี่ยน dependency, consolidate stack/config หรือแก้ shared schema/type/enum/constant/contract ที่มีหลาย consumer. Inventory owner/consumer ก่อนรวม; ไม่ใช้กับ helper หรือ schema ภายใน owner เดียว และไม่สร้าง abstraction เผื่ออนาคต
 ---
 
 # Stack Contracts — owner เดียวก่อน shared abstraction

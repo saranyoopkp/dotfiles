@@ -1,6 +1,6 @@
 ---
 name: research:research-control
-description: ควบคุม research ที่มีผลต่อ decision ให้มีคำถาม, scope, source hierarchy, freshness, budget/appetite, stopping criteria และวิธีจัดการหลักฐานขัดกัน. ใช้กับ research ที่กว้าง, ใช้หลาย source, มีความไม่แน่นอนหรือความเสี่ยงสูง และใช้ร่วมกับ child research อื่นก่อนค้นหรือสรุป
+description: ควบคุม research ที่กว้าง, หลาย source, uncertainty/risk สูงหรือหลักฐานขัดกัน. กำหนด question, scope, source/freshness, appetite, stopping criteria และ conflict handling ก่อนค้นหรือสรุป
 ---
 
 # Research Control

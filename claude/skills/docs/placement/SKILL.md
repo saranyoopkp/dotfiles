@@ -1,6 +1,6 @@
 ---
 name: docs:placement
-description: ต้องใช้ทันทีเมื่อวางแผน ออกแบบ review หรือทำการจัดวางความรู้ระหว่าง inline comment, docstring, docs/, memory/ และ CLAUDE.md รวมถึงเมื่อจะเขียน comment/docstring, จด decision/quirk, จัด topology/index หรือถูกทักว่าเอกสารอยู่ผิดที่ แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน; invoke ก่อน inventory แล้วค่อยระบุ Unverified หากหลักฐานยังไม่พร้อม
+description: เลือกบ้านของความรู้ระหว่าง comment, docstring, docs, memory และ CLAUDE.md รวมถึง decision/quirk, topology และ index. ใช้ทันทีเมื่อวางแผน, review หรือเขียนเอกสาร แม้ยังไม่มีไฟล์จริง; inventory ก่อนสรุป placement
 ---
 
 # Doc Placement — ความรู้ทุกชิ้นมีบ้านเดียว เลือกบ้านจาก "กลไกที่ถูกอ่าน"

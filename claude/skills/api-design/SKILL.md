@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Router สำหรับมาตรฐาน HTTP/REST API ใช้เมื่อออกแบบหรือแก้ endpoint, request/response contract, error, list/query, mutation, async operation, cache/concurrency หรือ public API evolution. ก่อนออกแบบให้ map HTTP/data flow แล้วอ่าน child skill ที่ตรง; endpoint ใหม่หรือเปลี่ยน request/response ต้องอ่าน api-design:contract-core เสมอ
+description: Router HTTP/REST API สำหรับ endpoint, request/response contract, error, collection, mutation, async, cache/concurrency และ evolution. Map HTTP/data flow แล้วอ่าน child ที่ตรง; endpoint หรือ public shape ใหม่ใช้ contract-core เสมอ
 ---
 
 # API Design (HTTP / REST)

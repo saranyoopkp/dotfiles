@@ -1,6 +1,6 @@
 ---
 name: testing-strategy
-description: วางแผน เขียน หรือ review tests, เลือก unit/integration/e2e/smoke, ออกแบบ regression/fixture/role-tenant/load-test/capacity/benchmark matrix หรือสร้าง test harness/script ที่เก็บ metric ต่อ scenario ใช้เมื่อ test design ไม่ชัด, logic/boundary มีความเสี่ยง, bug เคยเกิด, suite ผ่านแต่ flow ยังพัง หรือผู้ใช้ขอ test strategy/coverage review; ไม่ใช้กับการรัน verification command ปกติที่ repo กำหนดและ criterion ชัดแล้ว
+description: วางแผนหรือ review test level, regression, fixture/matrix, load/capacity/benchmark และ test harness เมื่อ risk/coverage ไม่ชัด, bug เคยเกิด หรือ suite ผ่านแต่ flow ยังพัง. ไม่ใช้กับการรัน verification command ที่ criterion ชัดแล้ว
 ---
 
 # Testing Strategy — พิสูจน์ behavior ตาม coverage contract

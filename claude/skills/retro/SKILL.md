@@ -1,6 +1,6 @@
 ---
 name: retro
-description: สกัด behavioral signals และ feedback จาก session/transcript เพื่อหา improvement ของ dotfiles จากความรู้สึกว่าพฤติกรรมแปลก ขัด ไม่เข้าที่ หรือน่าสนใจแม้ยังไม่สรุปว่าเป็นปัญหา, สิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, objective/attention drift, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ต้อง invoke เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ให้เทียบ session เพื่อวิเคราะห์พฤติกรรม agent, ชี้ observation ลักษณะข้างต้น หรือถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา แม้ context ปัจจุบันยังไม่มีหลักฐานครบ; รายงานแบบมีหลักฐานและ read-only โดย default
+description: วิเคราะห์ session/transcript จาก behavioral surprise, friction ที่ต้องท้วงซ้ำ, objective drift, false claim, pain หรือสิ่งที่ควรรักษา แล้วเสนอปรับ agents/rules/skills จากหลักฐาน. ใช้เมื่อผู้ใช้ขอ retro/session feedback หรือบอกว่าพฤติกรรม agent แปลก/ขัด; read-only โดย default
 ---
 
 # Session Retro

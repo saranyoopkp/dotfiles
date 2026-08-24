@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:collections
-description: ออกแบบ UI สำหรับค้นหา อ่าน จัดลำดับ เลือก และจัดการข้อมูลหลายรายการ เช่น table, list, grid, search/filter/sort, pagination, bulk action และ virtualized collection ใช้เมื่อผู้ใช้จัดการ collection ที่ไม่ใช่ realtime conversation โดยตรง
+description: ออกแบบ UI สำหรับ collection เช่น table/list/grid, search/filter/sort, pagination, selection, bulk action และ virtualization. ไม่ใช้กับ chat/feed/realtime conversation
 ---
 
 # Collections

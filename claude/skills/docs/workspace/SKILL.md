@@ -1,6 +1,6 @@
 ---
 name: docs:workspace
-description: จัด วาง หรือ audit ระบบเอกสารของ workspace ที่มีหลาย independent Git repositories โดยแยก authoritative owner ของ fact, ทำ query routing/inventory/pointer, แก้เอกสารหรือสถานะ environment/runtime ที่ขัดกันข้าม repo, จัด shared convention/cross-repo contract/rollout/handoff และตรวจว่า repo ยัง clone เดี่ยวได้ ใช้เมื่อโฟลเดอร์เดียวรวมหลาย repo, root/app/infra docs drift หรือกล่าวไม่ตรงกัน, เอกสารอ้างข้าม repo, ต้องวาง CLAUDE.md/docs ระดับ workspace, หรือกำลังย้ายความรู้ระหว่าง workspace root กับ sub-repo; ไม่ใช้กับ monorepo ที่มี Git root เดียว
+description: จัดหรือ audit เอกสารใน workspace ที่มีหลาย independent Git repos โดยหา authoritative owner, routing และ pointer ของ fact ข้าม root/app/infra. ใช้เมื่อ docs/runtime ขัดกันหรือย้ายความรู้ข้าม repo; ไม่ใช้กับ monorepo Git root เดียว
 ---
 
 # Docs Workspace — เอกสารหลาย repo โดยไม่สร้างบ้านซ้ำ

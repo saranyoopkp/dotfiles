@@ -1,6 +1,6 @@
 ---
 name: research
-description: Router สำหรับ research ที่มีผลต่อการตัดสินใจด้าน software, security, dependency, technology/vendor, product, market หรือ user. ใช้เมื่อคำตอบต้องอาศัยข้อมูลปัจจุบันจากภายนอก, ตรวจ security advisory/CVE, เปรียบเทียบทางเลือกหรือ build-vs-buy, ตรวจ user/market evidence หรือควบคุม scope/budget/stopping criteria/source disagreement; ให้กำหนดคำถามวิจัยแล้วอ่าน child skill ที่ตรงก่อนสรุป
+description: Router research ที่มีผลต่อ decision และต้องใช้ข้อมูลภายนอกปัจจุบัน เช่น advisory/CVE, technology/vendor/build-vs-buy หรือ product/market/user evidence. กำหนดคำถามและอ่าน child ที่ตรง; ใช้ research-control เมื่องานกว้างหรือหลักฐานขัดกัน
 ---
 
 # Research

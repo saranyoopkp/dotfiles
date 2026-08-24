@@ -133,7 +133,7 @@ check claude/skills/retro/SKILL.md "ตรวจของเดิมใน repo
 check claude/skills/retro/SKILL.md "instruction gap"
 check claude/skills/retro/SKILL.md "objective loss"
 check claude/skills/retro/SKILL.md "reopened deferred issue"
-check claude/skills/retro/SKILL.md "ต้อง invoke"
+check claude/skills/retro/SKILL.md "ผู้ใช้ขอ retro/session feedback"
 check claude/skills/retro/SKILL.md "Test/Harness"
 check claude/skills/retro/SKILL.md "ยังไม่ควรแก้ dotfiles"
 check claude/skills/retro/SKILL.md "ห้ามทำ mutation หลังรายงาน"
@@ -162,7 +162,7 @@ if find "$ROOT/claude/rules" -maxdepth 1 -type f -name '*.md' | rg -q .; then
 fi
 check claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัดขึ้นไป"
 check claude/skills/docs/placement/SKILL.md "pointer ที่ commit ต้อง resolve จาก clone ของ repo"
-check claude/skills/docs/placement/SKILL.md "แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน"
+check claude/skills/docs/placement/SKILL.md "แม้ยังไม่มีไฟล์จริง"
 check claude/skills/docs/placement/SKILL.md '`docs/` กองแบนเกิน ~7 ไฟล์'
 check claude/skills/docs/placement/SKILL.md "index ใน CLAUDE.md ต้อง grouped"
 check claude/skills/docs/placement/SKILL.md "หนึ่งบรรทัดต่อไฟล์พร้อมชื่อ + hook"
@@ -216,7 +216,7 @@ check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "prefers-reduced-mo
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md "aesthetic thesis"
 check claude/skills/ui-ux-baseline/visual-polish/SKILL.md "shadow, blur, gradient, overlay"
 check claude/skills/ui-ux-baseline/motion-microinteractions/SKILL.md "prefers-reduced-motion"
-check claude/skills/ui-ux-baseline/design-foundations/SKILL.md "semantic color/contrast"
+check claude/skills/ui-ux-baseline/design-foundations/SKILL.md "color/contrast"
 check claude/skills/ui-ux-baseline/design-foundations/SKILL.md "ห้ามใช้ emoji ตกแต่ง UI โดย default"
 check claude/skills/ui-ux-baseline/design-foundations/SKILL.md "ให้เสนอ icon ที่มี semantic ตรงจาก library เดิมแทน"
 check claude/skills/ui-ux-baseline/design-foundations/SKILL.md "Refactor Icon & Emoji"

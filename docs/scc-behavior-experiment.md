@@ -17,6 +17,9 @@ cutover-7: 2026-08-24T16:22+07:00  · lean-beta-0.0.1 · SCC 427 → 87, ACV 342
   (ยุบ incident/domain prose เป็น behavioral + acceptance kernel; decision regression 12/12 ทั้งก่อนและหลัง)
 cutover-8: 2026-08-24T16:34+07:00  · always-on rules 613 → 254
   (คง core/risk invariant + thin routing; decision regression หลังลดผ่าน 12/12)
+cutover-9: 2026-08-24T17:15+07:00  · skill descriptions 23,946 → 16,805 bytes
+  (คง trigger/exclusion ของ 48 skills; routing decision 59/59, decision regression 12/12;
+  routing harness จำกัด tools เหลือ Skill เพื่อไม่วัด research/implementation หลัง route)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend

@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:design-foundations
-description: กำหนดหรือแก้ shared visual foundations เช่น semantic color/contrast, typography roles/scale, spacing/grid, radius/elevation, iconography, theme/density และ motion token รวมถึงเลือก icon library หรือแทน decorative emoji ใน UI ใช้เมื่อค่าพื้นฐานเปลี่ยนข้ามหลายหน้าหรือมีการตัดสินใจเรื่อง icon/emoji; ไม่ใช้ปรับเฉพาะหน้าจอทั่วไปหรือเปลี่ยน component API
+description: กำหนด shared visual foundations เช่น color/contrast, typography, spacing/grid, elevation, theme, motion และ icon language. ใช้เมื่อค่าเปลี่ยนข้ามหลายหน้าหรือเลือก icon/แทน decorative emoji; ไม่ใช้กับ polish เฉพาะหน้า
 ---
 
 # Design Foundations

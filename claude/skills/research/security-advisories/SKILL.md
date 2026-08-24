@@ -1,6 +1,6 @@
 ---
 name: research:security-advisories
-description: ตรวจ security advisory, CVE, vulnerability, affected/fixed version, exploit precondition, transitive dependency และ remediation ที่เป็นปัจจุบัน. ใช้เมื่อ audit dependency/runtime/image/OS, มี vulnerability alert, จะเพิ่มหรือ upgrade package หรือ claim ว่า repo ได้รับผลหรือปลอดภัย; ต้อง map advisory กลับ exact version และ reachable deployment ของ repo
+description: ตรวจ advisory/CVE/vulnerability, affected/fixed version, precondition, transitive path และ remediation ปัจจุบัน. ใช้กับ alert/audit/upgrade หรือ claim ว่า repo affected/safe; map กลับ exact version และ reachable deployment
 ---
 
 # Security Advisories

@@ -1,6 +1,6 @@
 ---
 name: ops:incident-response
-description: Triage และจัดการ incident หรือ production degradation อย่างเป็นระบบ ใช้เมื่อระบบล่ม ช้า ผิดปกติ มี data/security concern, alert สำคัญ หรือผู้ใช้ได้รับผลกระทบ ต้องรวบรวมหลักฐาน ประเมิน blast radius เสนอ mitigation และตรวจ recovery โดยไม่ทำ external mutation เอง
+description: Triage incident/production degradation เมื่อระบบล่ม ช้า ผิดปกติ มี data/security alert หรือผู้ใช้ได้รับผลกระทบ. รวบรวมหลักฐาน ประเมิน blast radius เสนอ mitigation และตรวจ recovery; external mutation ต้องมี authorization
 ---
 
 # Incident Response

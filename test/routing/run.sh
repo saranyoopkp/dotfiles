@@ -4,6 +4,7 @@
 # วัดจาก tool_use จริงใน stream-json (Skill tool ถูกเรียก skill ไหน) — ไม่ใช่ self-report ของ
 # โมเดลแล้ว grep (นั่น = confirmation bias: filter เหลือ string ที่อยากเห็น + เชื่อคำโมเดล).
 # ให้งาน → สังเกตว่าโมเดล *ทำ* อะไร ไม่ใช่ถามว่ามัน *คิดว่า* ทำอะไร.
+# จำกัด tools เหลือ Skill เพราะ suite นี้วัด routing ไม่ได้วัด research/implementation หลัง route.
 #
 # ทำไม claude -p: subagent สืบทอด context ค้าง โหลด rules/skills ตอนเริ่ม session ไม่ใช่สด.
 # ทำไม sandbox นอก dotfiles: รันใน dotfiles จะโหลด dotfiles/CLAUDE.md ปน (ตั้งผ่าน ROUTING_SANDBOX).
@@ -90,7 +91,7 @@ while IFS=$'\t' read -r require forbid label task; do
   (
     status=0
     cd "$SANDBOX" && run_with_timeout claude -p --output-format stream-json --verbose \
-      --agent SCC-v1.0.1 --dangerously-skip-permissions \
+      --tools Skill --agent SCC-v1.0.1 --dangerously-skip-permissions \
       "งาน: $task
 
 วางแผนจริง (ไม่ต้องเขียนโค้ด)" > "$RUN_DIR/$label.stream.jsonl" \

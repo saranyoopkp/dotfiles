@@ -1,6 +1,6 @@
 ---
 name: ops
-description: Router สำหรับงาน operations, infrastructure และ production reliability ใช้เมื่อวางแผนหรือแก้ IaC, cloud/network/IAM/secret, incident/production outage, logging/metrics/traces/alerts, health check หรือ SLI/SLO. เลือก sub-skill ตามชนิดงานก่อนทำการวิเคราะห์หรือเปลี่ยนแปลง
+description: Router operations/infrastructure/reliability สำหรับ IaC, cloud/network/IAM/secret, incident, observability, health และ SLI/SLO. เลือก incident-response, infra-change หรือ observability ตามงานก่อนวิเคราะห์หรือเปลี่ยนแปลง
 ---
 
 # Operations

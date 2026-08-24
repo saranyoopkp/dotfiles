@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:visual-direction
-description: กำหนด visual direction สำหรับหน้าใหม่, landing page, marketing surface หรือ redesign ที่เปลี่ยนภาพลักษณ์ ใช้เมื่อโจทย์ต้องการ aesthetic direction, brand expression, typography, palette, layout concept หรือ UI ที่ไม่ควรออกมาเป็น generic template; ไม่ใช้กับการแก้ feature UI เล็ก ๆ ที่ต้องคง design system เดิม
+description: กำหนด visual direction สำหรับหน้าใหม่, landing/marketing surface หรือ redesign ที่เปลี่ยนภาพลักษณ์และ brand expression. ไม่ใช้กับ feature UI เล็กหรือ polish ที่ต้องคง design system เดิม
 ---
 
 # Visual Direction

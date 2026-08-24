@@ -1,6 +1,6 @@
 ---
 name: data-design
-description: Router สำหรับมาตรฐาน data layer ใช้ทันทีเมื่อวางแผน, ออกแบบ, review หรือแก้ DB schema, migration, index, transaction/concurrency/invariant, cache, queue/worker/dataflow, data retention, soft/hard delete, audit หรือ PII lifecycle แม้ยังไม่มี schema/repo จริงหรือผู้ใช้ขอเพียงแผน. ก่อนตัดสินใจให้ map source of truth, writer, reader และ lifecycle แล้วอ่าน child ที่ตรง; งาน schema หรือ migration ต้องอ่าน data-design:schema-migrations เสมอ
+description: Router data layer ใช้ทันทีเมื่อวางแผน, ออกแบบ, review หรือแก้ schema/migration, transaction, cache, async dataflow หรือ lifecycle/PII แม้ยังไม่มี schema/repo จริงหรือผู้ใช้ขอเพียงแผน. Map source/writer/reader/lifecycle แล้วอ่าน child ที่ตรง
 ---
 
 # Data Design

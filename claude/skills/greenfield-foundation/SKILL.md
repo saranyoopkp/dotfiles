@@ -1,6 +1,6 @@
 ---
 name: greenfield-foundation
-description: วาง foundation สำหรับ greenfield software project, application, service, package หรือ repository ใหม่ ใช้เมื่อเริ่มระบบจากศูนย์, scaffold โครงการ, เลือก architecture/stack/runtime/framework/database หรือกำหนด baseline แรกที่ยังไม่มี active implementation/contract ให้ยึด ต้องตรวจ official LTS/support lifecycle และ compatibility ของ version chain ปัจจุบันก่อนเลือกหรือสร้างเสมอ
+description: วาง foundation เมื่อเริ่ม project/app/service/package/repo จากศูนย์หรือยังไม่มี active implementation/contract ให้ยึด รวม scaffold และเลือก architecture/stack/runtime/database. ตรวจ official lifecycle และ compatibility ปัจจุบันก่อนเลือก
 ---
 
 # Greenfield Foundation

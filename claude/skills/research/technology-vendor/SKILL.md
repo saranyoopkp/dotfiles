@@ -1,6 +1,6 @@
 ---
 name: research:technology-vendor
-description: เปรียบเทียบ dependency, framework, database, infrastructure technology, SaaS/vendor หรือ build-vs-buy ด้วยหลักฐานปัจจุบัน. ใช้ก่อนเพิ่ม dependency ใน brownfield, เลือกหรือเปลี่ยน vendor, ประเมิน maintenance/security/license/pricing/support/compatibility/lock-in หรือทำ recommendation ที่มีต้นทุนและ migration impact
+description: เปรียบเทียบ dependency, framework, database, infrastructure, SaaS/vendor หรือ build-vs-buy จากหลักฐานปัจจุบัน. ใช้ก่อนเลือก/เปลี่ยนของที่มี cost, compatibility, lock-in หรือ migration impact
 ---
 
 # Technology & Vendor

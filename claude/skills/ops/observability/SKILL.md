@@ -1,6 +1,6 @@
 ---
 name: ops:observability
-description: ออกแบบหรือปรับ observability สำหรับระบบจริง เช่น health/heartbeat, structured logs, metrics, traces, alerts, dashboards และ SLI/SLO ใช้เมื่อเพิ่ม service/job/queue/webhook/integration, แก้ blind spot, ตั้ง alert หรือพิสูจน์ว่า system failure จะถูกตรวจพบและวินิจฉัยได้
+description: ออกแบบ observability เช่น health/heartbeat, logs, metrics, traces, alerts และ SLI/SLO. ใช้เมื่อเพิ่ม service/job/queue/integration, แก้ blind spot หรือต้องพิสูจน์ว่า failure ถูกตรวจพบและวินิจฉัยได้
 ---
 
 # Observability

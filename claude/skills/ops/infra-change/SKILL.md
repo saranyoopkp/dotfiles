@@ -1,6 +1,6 @@
 ---
 name: ops:infra-change
-description: วางแผน ตรวจ และดำเนินการเปลี่ยน infrastructure เช่น IaC, cloud resource, network, IAM, secret reference, provisioning, state และ drift ใช้เมื่อแก้ Terraform/Pulumi/CloudFormation/Kubernetes config หรือเปลี่ยน resource/permission/configuration ที่กระทบ environment จริง
+description: วางแผน ตรวจ หรือเปลี่ยน infrastructure/IaC, cloud resource, network, IAM, secret reference, provisioning, state และ drift ที่อาจกระทบ environment จริง
 ---
 
 # Infrastructure Change

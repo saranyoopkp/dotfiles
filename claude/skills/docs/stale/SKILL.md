@@ -1,6 +1,6 @@
 ---
 name: docs:stale
-description: ตรวจว่าเนื้อหาเอกสาร (CLAUDE.md/docs/memory/docstring) ยังตรงกับโค้ดที่ live จริงไหม — claim ที่ขัดกับโค้ด = เอกสาร stale ต้องแก้ (live code priority สูงกว่าเสมอ) ใช้เมื่อ สงสัยว่าเอกสารล้าสมัย, หลัง refactor/แก้พฤติกรรมโค้ดครั้งใหญ่, ก่อน onboard/ส่งมอบ, หรือถูกขอให้ตรวจ docs stale/drift — คนละเรื่องกับ /docs:link (นั่นตรวจว่า reference ชี้ถึงไฟล์ที่มีอยู่ ไม่ตรวจเนื้อหา)
+description: ตรวจ claim ใน CLAUDE.md/docs/memory/docstring เทียบ live code/behavior. ใช้เมื่อสงสัย docs stale/drift, หลัง behavioral refactor หรือก่อนส่งมอบ; `/docs:link` ตรวจเพียง reference ไม่ตรวจความถูกต้องของเนื้อหา
 ---
 
 # Doc Stale Check — เอกสารต้องเล่าความจริงของโค้ดที่ live อยู่

@@ -1,6 +1,6 @@
 ---
 name: research:product-market-user
-description: วิจัย product opportunity, market/competitor และ user need/behavior ด้วยหลักฐานที่มี provenance. ใช้เมื่อจะอ้างว่าผู้ใช้ต้องการอะไร, เลือก feature/segment, วิเคราะห์ interview/survey/support/usage data, เปรียบเทียบ competitor/pricing/positioning หรือ recommendation จะเปลี่ยน product behavior; ห้ามใช้ persona หรือความเห็นของ model แทน user evidence
+description: วิจัย product/market/competitor และ user need/behavior จากหลักฐานที่มี provenance. ใช้เมื่อเลือก feature/segment, วิเคราะห์ user data หรือ recommendation จะเปลี่ยน product behavior; persona/model opinion ไม่ใช่ user evidence
 ---
 
 # Product, Market & User
