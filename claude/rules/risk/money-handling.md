@@ -1,25 +1,8 @@
 # Money Handling
 
-เงินผิดหนึ่งสตางค์ = ความเชื่อถือหาย — baseline สำหรับทุกระบบที่แตะเงิน:
-
-## ชนิดข้อมูล
-- **ห้าม float เด็ดขาด** — ใช้ Decimal หรือ integer หน่วยย่อย (สตางค์/cent);
-  `0.1 + 0.2 !== 0.3` คือเหตุผลทั้งหมดที่ต้องการ
-- **จำนวนเงินต้องมี currency กำกับเสมอ** — เก็บคู่กัน (amount + currency) หรือ
-  ประกาศชัดว่าทั้งตาราง/ระบบเป็นสกุลเดียว; ระบบที่มีหลายสกุลปนกัน (เช่น order
-  จากหลาย platform) ต้อง label ชัดว่าค่าไหนสกุลอะไร ห้าม sum ข้ามสกุลเงียบ ๆ
-- อัตราแลกเปลี่ยน: บันทึก rate + เวลาแปลงไว้กับ transaction — ห้ามแปลงย้อนหลังด้วย rate ปัจจุบัน
-
-## การคำนวณ
-- **rounding policy กำหนดชัดและที่เดียว** — ปัดเมื่อไหร่ (ท้ายสุด ไม่ใช่ระหว่างทาง),
-  ปัดแบบไหน (half-up? banker's?), เศษไปไหน
-- **split/allocation ต้อง reconcile** — แบ่งเงิน n ส่วนแล้ว sum ของส่วนต้องเท่าต้นฉบับ
-  เป๊ะ (เศษสตางค์ให้ส่วนใดส่วนหนึ่งรับไป อย่าปล่อยหาย/เกิน); มี test ยืนยัน
-- สูตรภาษี/ส่วนแบ่ง/ค่าธรรมเนียม → เขียน test เทียบตัวเลขที่คำนวณมือแล้ว
-  อย่างน้อยเคสปกติ + เคสขอบ (0, จำนวนน้อยสุด, gross-up)
-
-## ปฏิบัติการ
-- transaction เงินทุกตัว idempotent (มี external ref/key กัน import ซ้ำ)
-- ตัวเลขเงินที่แสดงต่อ user ต้อง trace กลับได้ว่ามาจากรายการไหน (breakdown ได้
-  ไม่ใช่ตัวเลขลอย ๆ)
-- privileged action ทางการเงิน → audit log (ใคร ทำอะไร เท่าไหร่ เมื่อไหร่)
+- เก็บและคำนวณเงินด้วย Decimal หรือ integer หน่วยย่อย ไม่ใช้ binary float; amount ต้องมี currency.
+- FX conversion บันทึก rate/source/time กับ transaction; ห้ามคำนวณอดีตด้วย rate ปัจจุบัน.
+- กำหนด rounding policy และจุดปัดที่ owner เดียว. Split/allocation ต้อง reconcile กลับยอดต้นฉบับเป๊ะ.
+- สูตรเงิน ภาษี fee และ allocation มี independent oracle/ตัวเลขคำนวณมือ ครอบ zero, minimum และ boundary.
+- Money mutation ต้อง idempotent, trace กลับรายการต้นทางได้ และ privileged adjustment มี actor/action/
+  amount/time audit โดยไม่เปิดเผยข้อมูลเกินจำเป็น.
