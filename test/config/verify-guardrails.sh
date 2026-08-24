@@ -40,6 +40,8 @@ check claude/agents/SCC-v1.0.1.md "ก่อนรายงานผล, finding
 check claude/agents/SCC-v1.0.1.md "ห้ามรายงานสิ่งที่ได้รับมาหรือผลค้างเหมือนตรวจเอง"
 check claude/agents/SCC-v1.0.1.md "ตรวจ primary evidence โดยตรงให้ครบทุก atomic finding ที่จะเขียน"
 check claude/agents/SCC-v1.0.1.md "return/coordination channel ที่ผู้รับเข้าถึงได้"
+check claude/agents/SCC-v1.0.1.md 'ใน teammate/subagent session ให้ใช้ `SendMessage` เสมอ'
+check claude/agents/SCC-v1.0.1.md 'ได้รับ `idle_notification` จาก teammate/subagent'
 check claude/agents/SCC-v1.0.1.md "สถานะ idle ไม่ใช่หลักฐานว่าส่งมอบแล้ว"
 check claude/agents/SCC-v1.0.1.md "ถ้าทาง minimum ตอบ outcome/correctness/safety/compatibility ครบ"
 check claude/agents/SCC-v1.0.1.md "ห้ามเลือกแบบซับซ้อนเงียบ ๆ"
@@ -53,6 +55,8 @@ check claude/agents/SCC-v1.0.1.md "ห้ามถือคำถามอย่
 check claude/agents/SCC-v1.0.1.md "resume เองโดยไม่ถาม"
 check claude/agents/SCC-v1.0.1.md "mark เป็น known/deferred"
 check claude/agents/SCC-v1.0.1.md 'invoke `retro` ก่อนวิเคราะห์'
+check claude/agents/SCC-v1.0.1.md 'invoke `ui-ux-baseline` และ child ที่ตรงก่อนออกแบบหรือเขียนโค้ด'
+check claude/agents/SCC-v1.0.1.md 'prompt ที่ส่งต่อไม่ทดแทน skill routing'
 check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
 check claude/agents/SCC-v1.0.1.md 'invoke `greenfield-foundation` ก่อนเสนอ stack หรือ mutation'
 check claude/agents/SCC-v1.0.1.md "official LTS/support lifecycle, EOL และ compatibility ของ version chain ปัจจุบัน"
@@ -62,6 +66,8 @@ check claude/agents/SCC-v1.0.1.md 'invoke `research:product-market-user`'
 check claude/agents/SCC-v1.0.1.md 'invoke `research:research-control`'
 check claude/agents/ACV-v1.0.1.md "behavior ของ ACV"
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
+check claude/agents/ACV-v1.0.1.md "diagnostic/test concern หลุดเข้า product surface"
+check claude/agents/ACV-v1.0.1.md "หลักฐานต้องสังเกต product behavior ไม่ใช่เปลี่ยน product เพื่ออธิบายหลักฐาน"
 check CLAUDE.md "Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน"
 check CLAUDE.md '| `agents/` | trigger → judgment → action → verification/reporting'
 check CLAUDE.md '| `rules/` | shared/safety invariant'
@@ -259,6 +265,8 @@ check claude/skills/ui-ux-baseline/SKILL.md "ui-ux-baseline:motion-microinteract
 check claude/skills/ui-ux-baseline/SKILL.md "ui-ux-baseline:design-foundations"
 check claude/skills/ui-ux-baseline/SKILL.md "ui-ux-baseline:content-localization"
 check claude/skills/ui-ux-baseline/SKILL.md "decorative emoji ใน UI"
+check claude/skills/ui-ux-baseline/SKILL.md "สิ่งที่ผู้ใช้สังเกตได้ ผลกระทบ และสิ่งที่ทำต่อได้"
+check claude/skills/ui-ux-baseline/SKILL.md "ห้ามเปลี่ยน product copy หรือ surface เพียงเพื่อให้ screenshot หรือ test artifact อธิบายตัวเองได้"
 check claude/skills/ui-ux-baseline/resource-states/SKILL.md "เกิดได้จริงจาก data flow"
 check claude/skills/ui-ux-baseline/realtime-conversation/SKILL.md "scroll ขึ้น = ปลด sticky"
 check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "focus-visible"

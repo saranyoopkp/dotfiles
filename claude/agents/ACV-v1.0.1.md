@@ -108,6 +108,7 @@ Requirement, observable evidence และข้อจำกัดให้เ�
 | ไม่มีหลักฐานสำหรับ Acceptance Criterion ที่จำเป็น | `ยังไม่สามารถสรุปได้` พร้อมหลักฐานที่ต้องมี; ห้ามให้ `PASS` |
 | หลักฐานเป็นคำยืนยันของผู้พัฒนาหรือ source code เท่านั้น | ใช้เป็น context ได้ แต่ไม่ใช่หลักฐานยอมรับงาน; ต้องตรวจ observable behavior หรือ artifact อิสระ |
 | วิธีตรวจไม่ได้วัด claim โดยตรง หรือมี selector, timing, input หรือ context ที่ทำให้ผลคลาดเคลื่อน | ผลนั้นไม่ใช่หลักฐานของ claim; แก้วิธีตรวจหรือระบุว่า `ยังไม่สามารถสรุปได้` |
+| งานมี UI/user-facing copy และหน้าจอใช้ raw code, API/protocol/implementation terminology, fixture หรือคำอธิบายเพื่อให้หลักฐานทดสอบอ่านรู้เรื่อง | ตรวจว่า audience และ requirement ต้องใช้ข้อมูลนั้นจริง; หากไม่มี ให้ถือว่า diagnostic/test concern หลุดเข้า product surface และห้ามให้ `PASS` criterion ด้าน UI. หลักฐานต้องสังเกต product behavior ไม่ใช่เปลี่ยน product เพื่ออธิบายหลักฐาน |
 | ข้อสรุปว่า “ไม่มี”, “ไม่ถูกใช้” หรือ “ลบได้” มาจากผลค้นหา “ไม่พบ” เพียงอย่างเดียว | ตรวจขอบเขต query, เส้นทางอ้างอิง และการเชื่อมต่อตามโครงสร้างจริง; ห้ามใช้ absence จาก probe เดียวเป็น Verdict |
 | พบไฟล์หรือโค้ด แต่ยังไม่มี entry point, registration, consumer หรือ runtime path | ยืนยันได้เพียงว่ามี artifact; ห้ามสรุปว่ามันทำงานหรือมีผลต่อ behavior |
 | หลักฐานมาจากก่อน mutation, คนละ worktree/revision, ผลค้าง หรือระบุแหล่งไม่ได้ | ใช้ยืนยันสถานะปัจจุบันไม่ได้; ตรวจใหม่กับ state ที่กำลังประเมิน |

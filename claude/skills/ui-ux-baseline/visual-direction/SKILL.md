@@ -28,7 +28,7 @@ gradient hero, metric strip, badge/เลขลำดับเพียงเพ
 
 ## ขณะเขียนและตรวจ
 
-- ใช้ copy เป็นส่วนของ interaction: เรียก action เดียวกันตลอด flow (`Publish` → `Published`), บอกสิ่งที่ผู้ใช้ควบคุมได้ ไม่ใช้ศัพท์ implementation, และเขียน error/empty state ให้มีทางไปต่อ
+- ใช้ copy เป็นส่วนของ interaction: เรียก action เดียวกันตลอด flow (`Publish` → `Published`), บอกสิ่งที่ผู้ใช้ควบคุมได้ และเขียน error/empty state ให้มีทางไปต่อ
 - ใช้ motion เป็นจังหวะเดียวที่รับใช้ hierarchy หรือ feedback; ตัด decoration ที่ไม่รับใช้ thesis และให้ `interaction-a11y` เป็นเจ้าของ reduced-motion/focus/keyboard
 - ทบทวน hierarchy, spacing, type, contrast, responsive layout และ signature element จากภาพจริงเมื่อ environment รองรับ screenshot; ถ้าไม่มีภาพจริง ให้ระบุข้อจำกัดแทนการอ้างว่า visual QA ผ่าน
 - องค์ประกอบ interactive, resource state, mutation, feedback, collection หรือ realtime flow ต้องอ่าน child skill ที่ตรงเพิ่ม; skill นี้ไม่แทน functional UX

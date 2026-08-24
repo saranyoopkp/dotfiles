@@ -7,6 +7,11 @@ description: Router สำหรับมาตรฐาน UI/UX/frontend ใ�
 
 ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วอ่าน child skill ที่ตรง **ก่อน** ออกแบบหรือเขียนโค้ด
 
+## Product surface boundary
+
+- User-facing UI สื่อสิ่งที่ผู้ใช้สังเกตได้ ผลกระทบ และสิ่งที่ทำต่อได้. เก็บรายละเอียด implementation, raw code, protocol และ diagnostic evidence ไว้ใน log, test artifact หรือ technical details ที่ผู้ใช้เลือกเปิด เว้นแต่ audience และงานนั้นต้องใช้ข้อมูลดังกล่าวจริง
+- หลักฐานทดสอบต้องสังเกต product behavior; ห้ามเปลี่ยน product copy หรือ surface เพียงเพื่อให้ screenshot หรือ test artifact อธิบายตัวเองได้
+
 | ลักษณะงาน | ต้องอ่าน |
 |---|---|
 | สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอ direction ด้านภาพลักษณ์ | `ui-ux-baseline:visual-direction` |
