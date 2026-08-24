@@ -13,6 +13,8 @@ cutover-3: 2026-07-17T20:55+07:00  · SCC 617 → 626 (form-ambiguity + assumpti
 cutover-4: 2026-07-26T00:53+07:00  · SCC 471 → 401 (responsibility boundary + trigger/action compact)
 cutover-5: 2026-07-27T22:29+07:00  · SCC 401 → 422 (objective continuity + detour resume + deferred suppression)
 cutover-6: 2026-07-31T23:47+07:00  · SCC 423 → 425 (parent deliverable + child prerequisite + load-test routing)
+cutover-7: 2026-08-24T16:22+07:00  · lean-beta-0.0.1 · SCC 427 → 87, ACV 342 → 83
+  (ยุบ incident/domain prose เป็น behavioral + acceptance kernel; decision regression 12/12 ทั้งก่อนและหลัง)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend

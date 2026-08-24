@@ -19,55 +19,28 @@ check_map_entry() {
   }
 }
 
-check claude/agents/SCC-v1.0.1.md "Validation Package"
-check claude/agents/SCC-v1.0.1.md "ข้อความคำขอและ scope ที่ผู้ใช้อนุมัติ"
-check claude/agents/SCC-v1.0.1.md "comment ตั้งแต่ 2 บรรทัดขึ้นไป"
-check claude/agents/SCC-v1.0.1.md "ห้ามวนอ่านโค้ดเพื่อเดาข้อจำกัดภายนอก"
-check claude/agents/SCC-v1.0.1.md "แยกคำถาม/ข้อสังเกตออกจากคำสั่งให้ดำเนินการ"
-check claude/agents/SCC-v1.0.1.md "ลอง alternative ที่สมเหตุสมผลหนึ่งทาง"
-check claude/agents/SCC-v1.0.1.md "สร้าง task list **ก่อน mutation**"
-check claude/agents/SCC-v1.0.1.md 'primary deliverable + acceptance evidence'
-check claude/agents/SCC-v1.0.1.md "การอนุมัติวิธีทำไม่ใช่การเปลี่ยนรูปแบบผลส่งมอบ"
-check claude/agents/SCC-v1.0.1.md "ห้าม big-bang rewrite"
-check claude/agents/SCC-v1.0.1.md "นี่ไม่ใช่ authorization"
-check claude/agents/SCC-v1.0.1.md "Behavioral Gates (trigger → action)"
-check claude/agents/SCC-v1.0.1.md "claim → สิ่งที่ต้องสังเกต → วิธีตรวจ → ผลที่ได้"
-check claude/agents/SCC-v1.0.1.md "ห้ามขยายผล “ไม่พบ” เกิน query"
-check claude/agents/SCC-v1.0.1.md "route ตามชนิดคำถามไป authoritative owner หรือ live source ก่อนสรุป"
-check claude/agents/SCC-v1.0.1.md "ให้ตรวจ owner ก่อนปฏิเสธหรือแก้ความเข้าใจผู้ใช้"
-check claude/agents/SCC-v1.0.1.md "การพบ artifact อย่างเดียวไม่พิสูจน์ว่า active"
-check claude/agents/SCC-v1.0.1.md "ก่อนรายงานผล, finding หรือ handoff"
-check claude/agents/SCC-v1.0.1.md "ห้ามรายงานสิ่งที่ได้รับมาหรือผลค้างเหมือนตรวจเอง"
-check claude/agents/SCC-v1.0.1.md "ตรวจ primary evidence โดยตรงให้ครบทุก atomic finding ที่จะเขียน"
-check claude/agents/SCC-v1.0.1.md "return/coordination channel ที่ผู้รับเข้าถึงได้"
-check claude/agents/SCC-v1.0.1.md 'ใน teammate/subagent session ให้ใช้ `SendMessage` เสมอ'
-check claude/agents/SCC-v1.0.1.md 'ได้รับ `idle_notification` จาก teammate/subagent'
-check claude/agents/SCC-v1.0.1.md "สถานะ idle ไม่ใช่หลักฐานว่าส่งมอบแล้ว"
-check claude/agents/SCC-v1.0.1.md "ถ้าทาง minimum ตอบ outcome/correctness/safety/compatibility ครบ"
-check claude/agents/SCC-v1.0.1.md "ห้ามเลือกแบบซับซ้อนเงียบ ๆ"
-check claude/agents/SCC-v1.0.1.md "inventory entry point/consumer/contract/test"
-check claude/agents/SCC-v1.0.1.md "migrate และตรวจ consumer ก่อนลบของเดิม"
-check claude/agents/SCC-v1.0.1.md 'impact map `คงไว้ / ย้าย old → new / เปลี่ยน behavior / ถอดออก / ยังไม่ยืนยัน`'
-check claude/agents/SCC-v1.0.1.md "routing ต้นทาง→ปลายทาง"
-check claude/agents/SCC-v1.0.1.md "จะเรียกใช้/แก้/ทำซ้ำ symbol เดิมที่มี docstring"
-check claude/agents/SCC-v1.0.1.md "ห้ามเปลี่ยน pointer เป็น path เฉพาะเครื่อง"
-check claude/agents/SCC-v1.0.1.md "ห้ามถือคำถามอย่างเดียวเป็นการ switch งาน"
-check claude/agents/SCC-v1.0.1.md "resume เองโดยไม่ถาม"
-check claude/agents/SCC-v1.0.1.md "mark เป็น known/deferred"
-check claude/agents/SCC-v1.0.1.md 'invoke `retro` ก่อนวิเคราะห์'
-check claude/agents/SCC-v1.0.1.md 'invoke `ui-ux-baseline` และ child ที่ตรงก่อนออกแบบหรือเขียนโค้ด'
-check claude/agents/SCC-v1.0.1.md 'prompt ที่ส่งต่อไม่ทดแทน skill routing'
-check claude/agents/SCC-v1.0.1.md "เข้าใจ → ค้นคว้า → ออกแบบ → ลงมือ → ตรวจสอบ → บันทึกสิ่งที่โค้ดเล่าเองไม่ได้"
-check claude/agents/SCC-v1.0.1.md 'invoke `greenfield-foundation` ก่อนเสนอ stack หรือ mutation'
-check claude/agents/SCC-v1.0.1.md "official LTS/support lifecycle, EOL และ compatibility ของ version chain ปัจจุบัน"
-check claude/agents/SCC-v1.0.1.md 'invoke `research:security-advisories`'
-check claude/agents/SCC-v1.0.1.md 'invoke `research:technology-vendor`'
-check claude/agents/SCC-v1.0.1.md 'invoke `research:product-market-user`'
-check claude/agents/SCC-v1.0.1.md 'invoke `research:research-control`'
-check claude/agents/ACV-v1.0.1.md "behavior ของ ACV"
-check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
-check claude/agents/ACV-v1.0.1.md "diagnostic/test concern หลุดเข้า product surface"
-check claude/agents/ACV-v1.0.1.md "หลักฐานต้องสังเกต product behavior ไม่ใช่เปลี่ยน product เพื่ออธิบายหลักฐาน"
+check claude/agents/SCC-v1.0.1.md 'current objective + primary deliverable + acceptance evidence'
+check claude/agents/SCC-v1.0.1.md "คำถามไม่ใช่ authorization"
+check claude/agents/SCC-v1.0.1.md "ย้อนกลับง่าย"
+check claude/agents/SCC-v1.0.1.md "ย้อนยาก"
+check claude/agents/SCC-v1.0.1.md "ย้อนกลับไม่ได้/กระทบภายนอกอย่างมีนัยสำคัญ"
+check claude/agents/SCC-v1.0.1.md "resume objective เดิมเอง"
+check claude/agents/SCC-v1.0.1.md '`required/blocking`, `adjacent` หรือ `known/deferred`'
+check claude/agents/SCC-v1.0.1.md "invoke skill และ child ที่ตรง"
+check claude/agents/SCC-v1.0.1.md 'claim → observable result → probe → result'
+check claude/agents/SCC-v1.0.1.md '`SendMessage`'
+check claude/agents/SCC-v1.0.1.md '`idle_notification`'
+check claude/agents/SCC-v1.0.1.md "สร้าง local commit จาก task-owned paths/hunks"
+check claude/agents/SCC-v1.0.1.md "Test fixture, injected state และ diagnostic evidence ต้องสังเกต deliverable"
+check claude/agents/SCC-v1.0.1.md "อธิบายเชิงการทำงานก่อน technical detail"
+check claude/agents/SCC-v1.0.1.md "ส่ง Acceptance Validator ตรวจ"
+check claude/agents/ACV-v1.0.1.md "ACV เป็น read-only"
+check claude/agents/ACV-v1.0.1.md "Implementation, developer report และ test summary เป็น context"
+check claude/agents/ACV-v1.0.1.md 'requirement → observable result → probe → actual'
+check claude/agents/ACV-v1.0.1.md "หลักฐานต้องสังเกต deliverable ไม่ใช่เปลี่ยน deliverable"
+check claude/agents/ACV-v1.0.1.md "PASS with known limitations"
+check claude/agents/ACV-v1.0.1.md "ยังไม่สามารถสรุปได้"
+check claude/agents/ACV-v1.0.1.md 'impact map `คงไว้ / ย้าย / เปลี่ยน / ถอด / ยังไม่ยืนยัน`'
 check CLAUDE.md "Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน"
 check CLAUDE.md '| `agents/` | trigger → judgment → action → verification/reporting'
 check CLAUDE.md '| `rules/` | shared/safety invariant'
@@ -116,22 +89,6 @@ check claude/rules/core/change-control.md "ก่อน mutation"
 check claude/rules/core/change-control.md "Instruction-system change gate"
 check claude/rules/core/change-control.md '`คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`'
 check claude/rules/core/change-control.md "reconcile impact map กับ diff จริง"
-check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
-check claude/agents/ACV-v1.0.1.md "ทุก Finding ต้องมี"
-check claude/agents/ACV-v1.0.1.md "Verification ที่จำเป็นล้มเหลว, ถูก skip หรือรันไม่ได้"
-check claude/agents/ACV-v1.0.1.md "ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ"
-check claude/agents/ACV-v1.0.1.md "อย่างใดอย่างหนึ่งแทนกันไม่ได้"
-check claude/agents/ACV-v1.0.1.md "ตรวจการจำแนก behavioral change"
-check claude/agents/ACV-v1.0.1.md "ไม่ใช่ตัดสินแทนผู้ใช้ว่าควรเลือกทางใด"
-check claude/agents/ACV-v1.0.1.md 'impact map `คงไว้ / ย้าย / เปลี่ยน / ถอด / ยังไม่ยืนยัน`'
-check claude/agents/ACV-v1.0.1.md "routing ต้นทาง→ปลายทาง"
-check claude/agents/ACV-v1.0.1.md "ห้ามใช้ absence จาก probe เดียวเป็น Verdict"
-check claude/agents/ACV-v1.0.1.md "ใช้ยืนยันสถานะปัจจุบันไม่ได้"
-check claude/agents/ACV-v1.0.1.md "Report, summary, transcript หรือผลที่ได้รับเป็นข้อมูลนำเข้า"
-check claude/agents/ACV-v1.0.1.md "งาน greenfield เลือก runtime/framework/database/toolchain/SDK/platform หรือ version"
-check claude/agents/ACV-v1.0.1.md "clean install/build/runtime evidence"
-check claude/agents/ACV-v1.0.1.md "scanner match หรือ severity label อย่างเดียวไม่พิสูจน์ affected/safe"
-check claude/agents/ACV-v1.0.1.md "persona, anecdote, synthetic quote หรือ model inference ไม่ใช่ observable user evidence"
 check claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 check claude/rules/engineering/documentation-discipline.md "status (Verified/Unverified/Contradicted)"
 check claude/rules/engineering/documentation-discipline.md "root/sibling เป็น router ไม่ใช่หลักฐานแทน owner"
@@ -202,13 +159,6 @@ check claude/skills/testing-strategy/SKILL.md "independent oracle"
 check claude/skills/testing-strategy/SKILL.md "smoke consumer flow จริงก่อนปล่อย"
 check claude/skills/testing-strategy/SKILL.md 'planned / runnable / measured'
 check claude/skills/testing-strategy/SKILL.md "ห้ามเปลี่ยนงานเป็นการเขียน coverage report"
-check claude/agents/SCC-v1.0.1.md 'invoke `performance`'
-check claude/agents/SCC-v1.0.1.md 'invoke `stack-contracts`'
-check claude/agents/SCC-v1.0.1.md 'invoke `testing-strategy`'
-check claude/agents/SCC-v1.0.1.md 'ใช้ `compatibility-rollout`'
-check claude/agents/SCC-v1.0.1.md 'quirk ใช้ `symptom → root cause → fix`'
-check claude/agents/SCC-v1.0.1.md 'invoke `docs:placement` หรือ `docs:setup`'
-check claude/agents/SCC-v1.0.1.md 'sync pointer + hook ใน `MEMORY.md`'
 if rg -q 'ทางที่ดีกว่าที่เห็นแต่ไม่ได้ทำ|ปิดงานทุกครั้งด้วยบรรทัดนี้' \
   "$ROOT/claude/rules/core/operating-contract.md" "$ROOT/claude/agents/SCC-v1.0.1.md"; then
   echo "mandatory adjacent-proposal footer must stay removed" >&2
