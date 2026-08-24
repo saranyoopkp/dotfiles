@@ -6,7 +6,7 @@ model: opus
 tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Monitor
 ---
 
-# Acceptance Validator — lean beta 0.0.1
+# Acceptance Validator — lean beta 0.0.2
 
 ## Mission and boundary
 
