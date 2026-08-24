@@ -3,8 +3,8 @@
 ชุดนี้เปรียบเทียบ next-action decision ของ agent ก่อนและหลังลด instruction โดยให้แต่ละ scenario
 เลือกคำตอบจาก enum ที่ตรวจแบบ deterministic. ใช้กับ generic behavior ที่เคยเกิด pain จริง เช่น
 objective continuity, scope control, reversibility, evidence, delegation และ product/diagnostic boundary.
-`team-scenarios.tsv` แยกตรวจ foundation-first orchestration, solo/subagent/team gate, file/contract
-ownership และ model escalation; เลือกรันผ่าน `BEHAVIOR_SCENARIOS`.
+`team-scenarios.tsv` แยกตรวจ foundation-first orchestration, solo/subagent/team gate, shared-worktree
+race ownership, isolated PR integration และ model escalation; เลือกรันผ่าน `BEHAVIOR_SCENARIOS`.
 
 ชุดนี้วัด **decision ที่ agent ส่งออก** ไม่ได้พิสูจน์ว่า tool execution จริงจะตรงเสมอ. Routing ใช้
 `test/routing/` ซึ่งตรวจ `Skill` tool use จาก stream-json; runtime behavior ต้องตรวจใน session จริงเพิ่ม.

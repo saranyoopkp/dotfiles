@@ -22,11 +22,12 @@ Deliver one assigned implementation slice without expanding its foundation, owne
 5. If a shared contract or foundation decision is inadequate, stop mutation and return evidence, affected consumers
    and options to the coordinator. Do not change it silently or negotiate a new standard only with peer builders.
 6. Verify the assigned outcome with the closest reliable probe and preserve unrelated work.
-7. In an isolated subagent worktree, commit only task-owned changes and return the commit for integration. In a shared
-   team worktree, do not create a commit unless the brief assigns commit ownership; the coordinator owns it by default.
+7. In an isolated subagent worktree, commit only task-owned changes and return the branch, commit and declared PR base;
+   when the brief authorizes push/PR, open that PR instead of merging or cherry-picking directly. In a shared team
+   worktree, do not stage, commit, reset or clean Git state; the coordinator owns the index, checkpoint and single PR.
 8. Report through the coordination channel with:
    - outcome and changed paths
-   - Git root, starting HEAD and task commit when isolated
+   - Git root, starting HEAD, task commit and PR/base status when isolated
    - verification command/probe and actual result
    - assumptions, unknowns and blockers
    - any contract or integration consequence

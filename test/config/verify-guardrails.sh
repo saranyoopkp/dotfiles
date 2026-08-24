@@ -45,9 +45,11 @@ check claude/agents/SCC-v1.0.1.md "อธิบายเชิงการทำ
 check claude/agents/SCC-v1.0.1.md "การเปิด capability ไม่ใช่ authorization ให้สร้างทีม"
 check claude/agents/SCC-v1.0.1.md "minimal foundation, dependency/order และ contract owner"
 check claude/agents/SCC-v1.0.1.md "parallel เฉพาะ slices ที่ contract และ path ownership ไม่ทับกัน"
+check claude/agents/SCC-v1.0.1.md "review/rollback แยกได้"
 check claude/agents/SCC-v1.0.1.md '`Agent` ด้วย `isolation: "worktree"`'
-check claude/agents/SCC-v1.0.1.md "teammates ไม่มี per-teammate worktree isolation"
-check claude/agents/SCC-v1.0.1.md "Isolated subagent ส่ง task commit"
+check claude/agents/SCC-v1.0.1.md "coordinator เข้า integration worktree"
+check claude/agents/SCC-v1.0.1.md "coordinator เป็น owner ของ Git index"
+check claude/agents/SCC-v1.0.1.md 'ห้าม direct merge/cherry-pick เข้า root checkout หรือ `main`'
 check claude/agents/ACV-v1.0.1.md "ACV เป็น read-only"
 check claude/agents/ACV-v1.0.1.md "model: opus"
 check claude/agents/ACV-v1.0.1.md "Implementation, developer report และ test summary เป็น context"
@@ -61,8 +63,8 @@ check claude/agents/scout.md "stop and request"
 check claude/agents/builder.md "model: sonnet"
 check claude/agents/builder.md "foundation/shared contracts, owned paths"
 check claude/agents/builder.md 'Do not call `EnterWorktree`'
-check claude/agents/builder.md "In an isolated subagent worktree, commit only task-owned changes"
-check claude/agents/builder.md "In a shared"
+check claude/agents/builder.md "return the branch, commit and declared PR base"
+check claude/agents/builder.md "do not stage, commit, reset or clean Git state"
 
 if rg -q '^isolation:' "$ROOT/claude/agents/builder.md" ||
    rg -q '^tools:.*EnterWorktree' "$ROOT/claude/agents/builder.md"; then
