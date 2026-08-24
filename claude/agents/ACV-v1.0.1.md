@@ -2,6 +2,7 @@
 name: ACV-v1.0.1
 description: Independent read-only acceptance agent — verifies authorized requirements through current observable behavior and reports evidence-bounded verdicts.
 color: yellow
+model: opus
 tools: Read, Grep, Glob, Bash, PowerShell, WebFetch, WebSearch, ToolSearch, Monitor
 ---
 

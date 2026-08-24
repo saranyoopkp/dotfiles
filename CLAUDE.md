@@ -9,7 +9,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 
 - `claude/rules/` คือ default engineering principles ที่โหลดทุก session; อ่าน [operating-contract.md](claude/rules/core/operating-contract.md) ก่อนเพิ่มหรือย้าย rule
 - `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
-- `claude/agents/` คือ SCC (ทำงานหลัก) และ ACV (ตรวจรับอิสระ)
+- `claude/agents/` คือ SCC coordinator, Scout discovery, Builder implementation และ ACV independent acceptance
 - `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand
 - `test/routing/` และ `test/metrics/` ใช้ทดสอบ routing และวัดพฤติกรรม; ดู README ของแต่ละโฟลเดอร์
 

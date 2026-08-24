@@ -69,8 +69,21 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 ## Current ownership map
 
 ตารางนี้คือสถานะปัจจุบัน ไม่ใช่ changelog. `rules` เป็น safety floor ที่โหลดเสมอ,
-`SCC` แปลง trigger เป็น action, `ACV` ตรวจผลแบบอิสระ และ skill เป็น procedure แบบ on-demand.
+`SCC` ถือ objective/foundation/integration, `Scout` หา evidence, `Builder` ลงมือใน bounded slice,
+`ACV` ตรวจผลแบบอิสระ และ skill เป็น procedure แบบ on-demand.
 เรื่องเดียวกันข้ามชั้นได้เมื่อทำคนละหน้าที่เท่านั้น.
+
+### Agent roles
+
+| Agent | Default model | Ownership |
+|---|---|---|
+| `SCC-v1.0.1` | inherit main session | objective, minimal foundation, dependency/order, team shape, shared-contract decision และ integration |
+| `scout` | Haiku | read-only evidence question; ห้ามเลือก foundation หรือ mutate |
+| `builder` | Sonnet | authorized slice หลัง foundation/contract/path ownership ชัด; contract gap ส่งกลับ SCC |
+| `ACV-v1.0.1` | Opus | independent read-only acceptance ของ integrated deliverable |
+
+Model ใน agent definition เป็น default; environment/per-invocation override อาจมี precedence สูงกว่า.
+Agent Team runtime state ใน `~/.claude/teams/` สร้างโดย Claude Code และไม่ใช่ config ที่ repo นี้เป็น owner.
 
 ### Always-on rules
 
