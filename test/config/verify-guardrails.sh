@@ -45,6 +45,9 @@ check claude/agents/SCC-v1.0.1.md "อธิบายเชิงการทำ
 check claude/agents/SCC-v1.0.1.md "การเปิด capability ไม่ใช่ authorization ให้สร้างทีม"
 check claude/agents/SCC-v1.0.1.md "minimal foundation, dependency/order และ contract owner"
 check claude/agents/SCC-v1.0.1.md "parallel เฉพาะ slices ที่ contract และ path ownership ไม่ทับกัน"
+check claude/agents/SCC-v1.0.1.md '`Agent` ด้วย `isolation: "worktree"`'
+check claude/agents/SCC-v1.0.1.md "teammates ไม่มี per-teammate worktree isolation"
+check claude/agents/SCC-v1.0.1.md "Isolated subagent ส่ง task commit"
 check claude/agents/ACV-v1.0.1.md "ACV เป็น read-only"
 check claude/agents/ACV-v1.0.1.md "model: opus"
 check claude/agents/ACV-v1.0.1.md "Implementation, developer report และ test summary เป็น context"
@@ -57,7 +60,15 @@ check claude/agents/scout.md "without changing code, config, docs, data, Git sta
 check claude/agents/scout.md "stop and request"
 check claude/agents/builder.md "model: sonnet"
 check claude/agents/builder.md "foundation/shared contracts, owned paths"
-check claude/agents/builder.md "do not create a commit unless the brief assigns commit ownership"
+check claude/agents/builder.md 'Do not call `EnterWorktree`'
+check claude/agents/builder.md "In an isolated subagent worktree, commit only task-owned changes"
+check claude/agents/builder.md "In a shared"
+
+if rg -q '^isolation:' "$ROOT/claude/agents/builder.md" ||
+   rg -q '^tools:.*EnterWorktree' "$ROOT/claude/agents/builder.md"; then
+  echo "coordinator/runtime must own Builder worktree assignment" >&2
+  exit 1
+fi
 
 # Always-on rules: retain shared judgment and safety floors, not every example.
 check claude/rules/core/operating-contract.md '`required/blocking`, `adjacent`'
