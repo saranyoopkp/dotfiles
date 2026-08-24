@@ -11,7 +11,8 @@ Project vision และขอบเขตหลักมี canonical owner อ
 - `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
 - `claude/agents/` คือ SCC coordinator, Scout discovery, Builder implementation และ ACV independent acceptance
 - `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand
-- `test/routing/` และ `test/metrics/` ใช้ทดสอบ routing และวัดพฤติกรรม; ดู README ของแต่ละโฟลเดอร์
+- `test/behavior/`, `test/agents/`, `test/routing/` และ `test/metrics/` ใช้ตรวจ decision, model profile,
+  skill routing และวัดพฤติกรรม; ดู README ของแต่ละโฟลเดอร์
 
 ## กติกาการออกแบบ config
 

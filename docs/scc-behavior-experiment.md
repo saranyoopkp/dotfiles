@@ -22,6 +22,10 @@ cutover-9: 2026-08-24T17:15+07:00  · skill descriptions 23,946 → 16,805 bytes
   routing harness จำกัด tools เหลือ Skill เพื่อไม่วัด research/implementation หลัง route)
 cutover-10: 2026-08-24T17:25+07:00  · exact-phrase guardrails 227 → 89
   (คง behavior/safety kernel; เพิ่ม structural frontmatter, ownership, parent-routing และ shell syntax checks)
+cutover-11: 2026-08-25T01:49+07:00  · lean-beta-0.0.2 · model-weighted Agent Team roles
+  (SCC 87 → 90 + Scout/Haiku 27 + Builder/Sonnet 30 + ACV/Opus 84;
+  team decision 12/12 ทั้ง baseline/after, behavior เดิม 12/12, live model smoke 3/3)
+  limitation: ยังไม่ได้สร้าง TeamCreate runtime จริง; หลักฐาน live รอบนี้ยืนยัน agent discovery/model selection เท่านั้น
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend

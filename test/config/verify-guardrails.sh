@@ -42,12 +42,22 @@ check claude/agents/SCC-v1.0.1.md '`SendMessage`'
 check claude/agents/SCC-v1.0.1.md "สร้าง local commit จาก task-owned paths/hunks"
 check claude/agents/SCC-v1.0.1.md "Test fixture, injected state และ diagnostic evidence ต้องสังเกต deliverable"
 check claude/agents/SCC-v1.0.1.md "อธิบายเชิงการทำงานก่อน technical detail"
+check claude/agents/SCC-v1.0.1.md "การเปิด capability ไม่ใช่ authorization ให้สร้างทีม"
+check claude/agents/SCC-v1.0.1.md "minimal foundation, dependency/order และ contract owner"
+check claude/agents/SCC-v1.0.1.md "parallel เฉพาะ slices ที่ contract และ path ownership ไม่ทับกัน"
 check claude/agents/ACV-v1.0.1.md "ACV เป็น read-only"
+check claude/agents/ACV-v1.0.1.md "model: opus"
 check claude/agents/ACV-v1.0.1.md "Implementation, developer report และ test summary เป็น context"
 check claude/agents/ACV-v1.0.1.md 'requirement → observable result → probe → actual'
 check claude/agents/ACV-v1.0.1.md "หลักฐานต้องสังเกต deliverable ไม่ใช่เปลี่ยน deliverable"
 check claude/agents/ACV-v1.0.1.md "PASS with known limitations"
 check claude/agents/ACV-v1.0.1.md "ยังไม่สามารถสรุปได้"
+check claude/agents/scout.md "model: haiku"
+check claude/agents/scout.md "without changing code, config, docs, data, Git state or external systems"
+check claude/agents/scout.md "stop and request"
+check claude/agents/builder.md "model: sonnet"
+check claude/agents/builder.md "foundation/shared contracts, owned paths"
+check claude/agents/builder.md "do not create a commit unless the brief assigns commit ownership"
 
 # Always-on rules: retain shared judgment and safety floors, not every example.
 check claude/rules/core/operating-contract.md '`required/blocking`, `adjacent`'
@@ -139,6 +149,17 @@ while IFS= read -r skill; do
     exit 1
   fi
 done < <(find "$ROOT/claude/skills" -type f -name SKILL.md | sort)
+
+# Every agent must expose discoverable one-line routing metadata.
+while IFS= read -r agent; do
+  rel="${agent#"$ROOT/"}"
+  if [[ "$(sed -n '1p' "$agent" | tr -d '\r')" != "---" ]] ||
+     [[ "$(rg -c '^name:[[:space:]]*[^[:space:]]+' "$agent")" != "1" ]] ||
+     [[ "$(rg -c '^description:[[:space:]]*[^[:space:]].*' "$agent")" != "1" ]]; then
+    echo "invalid agent frontmatter: $rel" >&2
+    exit 1
+  fi
+done < <(find "$ROOT/claude/agents" -type f -name '*.md' | sort)
 
 # Ownership map and parent routers must cover every rule/router/child.
 while IFS= read -r rule; do
