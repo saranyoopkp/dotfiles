@@ -120,6 +120,10 @@ check claude/skills/data-design/transactions-invariants/SKILL.md "transactional 
 check claude/skills/data-design/lifecycle-governance/SKILL.md "soft delete ไม่ใช่ privacy erasure"
 check claude/skills/ui-ux-baseline/SKILL.md "interactive element ทุกชนิด"
 check claude/skills/ui-ux-baseline/SKILL.md "ห้ามเปลี่ยน product copy หรือ surface เพียงเพื่อให้ screenshot หรือ test artifact อธิบายตัวเองได้"
+check claude/skills/ui-ux-baseline/SKILL.md '`ui-ux-baseline:surface-audit`'
+check claude/skills/ui-ux-baseline/surface-audit/SKILL.md "keyword match หรือ no-match เป็น coverage"
+check claude/skills/ui-ux-baseline/surface-audit/SKILL.md "copy บน UI ไม่ใช่ตัวควบคุม rollout"
+check claude/skills/ui-ux-baseline/surface-audit/SKILL.md "entry path ของผู้ใช้"
 check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "focus-visible"
 check claude/skills/ui-ux-baseline/interaction-a11y/SKILL.md "prefers-reduced-motion"
 check claude/skills/ops/infra-change/SKILL.md "ก่อน apply อธิบาย target, plan, risk, rollback/mitigation และขอ authorization"

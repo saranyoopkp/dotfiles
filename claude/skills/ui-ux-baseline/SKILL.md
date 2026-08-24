@@ -23,6 +23,7 @@ description: Router UI/UX/frontend ใช้ทันทีเมื่อวา
 | render resource จาก server/client state | `ui-ux-baseline:resource-states` |
 | submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
+| audit/review หรือแก้ product surface ที่อาจเผย implementation, diagnostic, deployment/version detail หรือ action ที่ audience ทำไม่ได้ | `ui-ux-baseline:surface-audit` |
 | search, filter, sort, table/list, pagination, selection หรือ bulk action | `ui-ux-baseline:collections` |
 | chat, feed, event stream, presence หรือข้อมูลที่เข้าตามเวลา | `ui-ux-baseline:realtime-conversation` |
 | page layout, navigation, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
