@@ -76,6 +76,7 @@ fi
 check claude/rules/core/operating-contract.md '`required/blocking`, `adjacent`'
 check claude/rules/core/operating-contract.md '`known/deferred`'
 check claude/rules/core/operating-contract.md "Domain procedure อยู่ใน skill แบบ on-demand"
+check claude/rules/core/operating-contract.md "version/protocol mismatch และ operator remediation"
 check claude/rules/core/evidence-integrity.md 'claim → observable result → probe → result'
 check claude/rules/core/evidence-integrity.md "artifact ไม่พิสูจน์ว่า active"
 check claude/rules/core/evidence-integrity.md "Failure escalation"
@@ -88,6 +89,7 @@ check claude/rules/engineering/documentation-discipline.md "ตั้งแต�
 check claude/rules/engineering/documentation-discipline.md "Fact มี canonical owner เดียว"
 check claude/rules/engineering/documentation-discipline.md '`docs/private/` หรือ `memory/private/`'
 check claude/rules/engineering/compatibility-rollout.md "Expand → Migrate → Contract"
+check claude/rules/engineering/compatibility-rollout.md "product copy ไม่ใช่ integration control plane"
 check claude/rules/engineering/performance-discipline.md 'invoke `performance`'
 check claude/rules/engineering/stack-contracts.md 'invoke `stack-contracts`'
 check claude/rules/engineering/testing-strategy.md 'invoke `testing-strategy`'
@@ -128,11 +130,14 @@ check claude/skills/ops/observability/SKILL.md "event log เงียบอย�
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "New multi-line line-comment(s)"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh "stop_hook_active"
 check claude/skills/docs/setup/kit/hooks/docs-drift.sh '"decision":"block"'
+check claude/skills/docs/setup/kit/hooks/settings.json '"PostToolUse"'
+check claude/skills/docs/setup/kit/hooks/settings.json '"matcher": "Edit|Write"'
 check claude/skills/docs/setup/kit/CLAUDE.template.md "research/recommendation ไม่ใช่ approval"
 check claude/skills/docs/setup/kit/CLAUDE.template.md "pointer ที่ commit ต้อง resolve จาก clone ของ repo"
 check claude/skills/docs/setup/kit/memory/MEMORY.md "ไม่พบใน index ≠ ไม่มี private memory"
 check claude/skills/docs/setup/kit/memory/MEMORY.md "ห้ามคัดเนื้อ fact จาก leaf มาใส่ใน index"
 check claude/skills/docs/setup/kit/init.sh 'git -C "$requested_target" rev-parse --show-toplevel'
+check claude/skills/docs/setup/kit/init.sh "ขาด PostToolUse(Edit|Write)"
 check claude/skills/docs/setup/kit/init.sh "printf '/docs/private/"
 check claude/skills/docs/setup/kit/init.sh "printf '/memory/private/"
 

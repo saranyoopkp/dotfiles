@@ -89,6 +89,10 @@ elif ! grep -q "show-toplevel" "$TARGET/.claude/settings.json"; then
   # จริง (kit สลับ tr -> sed แต่ check ยังหา tr = MIGRATION NEEDED ผิดทุก repo) 2026-07-13
   echo "MIGRATION NEEDED: .claude/settings.json ยังเป็น hook path resolution รุ่นเก่า"
   echo "  -> แทนที่ args ของทุก hook event ด้วยรูปแบบใน kit/hooks/settings.json ปัจจุบัน"
+elif ! grep -q '"PostToolUse"' "$TARGET/.claude/settings.json" ||
+     ! grep -q '"matcher"[[:space:]]*:[[:space:]]*"Edit|Write"' "$TARGET/.claude/settings.json"; then
+  echo "MIGRATION NEEDED: .claude/settings.json ขาด PostToolUse(Edit|Write) สำหรับเตือน comment หลังแก้ไฟล์"
+  echo "  -> merge PostToolUse จาก kit/hooks/settings.json แล้ว restart session เพื่อโหลด hook wiring ใหม่"
 else
   echo ".claude/settings.json exists - skipped (merge hooks from kit/hooks/settings.json เอง)"
 fi

@@ -11,6 +11,7 @@ ui-ux-baseline	ui-motion	เพิ่ม microinteraction ตอนบันท�
 ui-ux-baseline	ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมทั้ง product พร้อมตรวจ contrast
 ui-ux-baseline	ui-localization	เพิ่มคำแปลภาษาอาหรับให้ form พร้อม pluralization, locale formatting, ข้อความยาว และ RTL
 ui-ux-baseline	ui-icons	ปรับหน้า settings ที่ใช้ emoji ตกแต่งให้เสนอ icon จาก library เดิมโดยรักษา accessible label
+ui-ux-baseline	ui-mixed-version	Frontend React ใหม่เจอ response จาก backend รุ่นเก่าที่ยังไม่มี permissions field ระหว่าง rollout ช่วยออกแบบ fallback โดยผู้ใช้หน้านี้ไม่ใช่ deploy operator
 data-design	db-schema	ออกแบบ schema ตาราง orders + index ใน Postgres
 data-design	db-cache	เพิ่ม cache layer ให้ query ที่อ่านบ่อย พร้อม invalidation
 data-design	db-queue	ทำ message queue consumer ประมวลผล order แบบ idempotent

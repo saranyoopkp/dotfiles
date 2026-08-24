@@ -80,6 +80,14 @@ SAME="$(run_stop comment-session false)"
   exit 1
 }
 
+# Existing installs with current path resolution but missing PostToolUse must fail loud during re-apply.
+new_repo settings_migration
+mkdir -p "$REPO/.claude"
+printf '%s\n' '{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"bash","args":["-c","bash $(git rev-parse --show-toplevel)/.claude/hooks/docs-drift.sh Stop"]}]}]}}' > "$REPO/.claude/settings.json"
+MIGRATION="$(bash "$ROOT/claude/skills/docs/setup/kit/init.sh" "$REPO" HookMigration)"
+printf '%s' "$MIGRATION" | grep -q 'ขาด PostToolUse(Edit|Write)'
+printf '%s' "$MIGRATION" | grep -q 'restart session'
+
 # A session-created shared memory leaf must be indexed in the same change.
 new_repo memory_pointer
 run_event SessionStart memory-session >/dev/null

@@ -14,6 +14,8 @@
   required ใช้ **Expand → Migrate → Contract** คนละ boundary และตรวจ consumer ก่อน contract
 - rollback code ไม่ได้ย้อน data/state; ออกแบบ forward compatibility หรือ mitigation ก่อน deploy
 - precondition ที่ขาดต้อง fail loud ห้าม skip แล้วรายงานเหมือน rollout สำเร็จ
+- mixed-version mismatch จัดการด้วย compatible fallback, version/feature gate, deploy precondition หรือ
+  operator signal; product copy ไม่ใช่ integration control plane และห้ามสั่ง audience ที่ deploy ไม่ได้ให้แก้ระบบ
 - resource/schema/config “ถูกสร้างแล้ว” ไม่พิสูจน์ rollout; ต้องตรวจ action จริงที่ consumer
   จะใช้กับของนั้น รวมทั้ง old/new path ตาม compatibility window
 - destructive change ต้องมี staged migration plan ที่ CI/review มองเห็นและสะดุดเมื่อขาด;

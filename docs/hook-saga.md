@@ -75,6 +75,8 @@ feedback เดิม Claude Code จึง continue แล้วเรียก
   comment ค้างเวอร์ชันเก่าที่ repo อื่น, macOS session จับได้, แก้แล้ว 2026-07-12)
 - repo ที่ setup แล้วรับของใหม่ผ่าน `/docs:setup` re-apply เท่านั้น (junction มีผลเฉพาะ
   rules/skills — hooks เป็น copy ต่อ repo)
+- re-apply ต้องเตือน `MIGRATION NEEDED` เมื่อ settings เดิมขาด `PostToolUse(Edit|Write)`;
+  การมีไฟล์ settings อยู่ไม่พิสูจน์ว่า event wiring ปัจจุบันครบ
 
 ## Scope-aware enforcement (แก้ใน template 2026-08-02)
 

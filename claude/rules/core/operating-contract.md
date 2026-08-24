@@ -28,3 +28,9 @@
   context แล้ว map applicability กลับ repo; ห้ามวนอ่านโค้ดเพื่อเดาข้อจำกัดภายนอก.
 - Research และ recommendation ให้ decision evidence ไม่ใช่ authorization ให้ mutate, ซื้อ, deploy,
   ติดต่อบุคคล หรือเก็บข้อมูลใหม่.
+
+## Audience boundary
+
+- User-facing surface บอกสถานะ ผลกระทบ และ action ที่ audience นั้นทำได้. Deployment,
+  version/protocol mismatch และ operator remediation อยู่ใน compatibility handling หรือ operator evidence
+  เว้นแต่ audience เป็น owner ของ action นั้นจริง.
