@@ -20,6 +20,8 @@ cutover-8: 2026-08-24T16:34+07:00  · always-on rules 613 → 254
 cutover-9: 2026-08-24T17:15+07:00  · skill descriptions 23,946 → 16,805 bytes
   (คง trigger/exclusion ของ 48 skills; routing decision 59/59, decision regression 12/12;
   routing harness จำกัด tools เหลือ Skill เพื่อไม่วัด research/implementation หลัง route)
+cutover-10: 2026-08-24T17:25+07:00  · exact-phrase guardrails 227 → 89
+  (คง behavior/safety kernel; เพิ่ม structural frontmatter, ownership, parent-routing และ shell syntax checks)
 ```
 กติกาวัด: session ปิดก่อนเส้น = before, หลัง = after, คร่อมเส้น = ตัดทิ้ง (SCC โหลดตอน
 session start เท่านั้น) · main session เท่านั้น (กรอง subagents/Temp/`-p`) · ดู time trend
