@@ -174,9 +174,9 @@ mutation; verification ที่ล้มเหลว/ถูก skip ต้อ�
 ## ร่าง SCC รอบสาม (candidate — ยิงหลังหน้าต่าง cutover-2/3 จบ ~2026-08-01)
 
 **testable-claim discipline** — แผลซ้ำครบแล้ว 3:
-- แผล 1: tenant-type enum — "ครบทุก/ครอบแล้ว" ไม่มี search เบื้องหลัง (dogfood-audit)
-- แผล 2: client backend env-vs-code (session ace13c86 07-17) — ประกาศ "ต่อแล้วพังทันที/ต้องแก้โค้ด"
-  ทั้งที่ curl 5 วิหักล้าง (SC-0000); root cause: เชื่อชื่อ (`a Guid-suffixed field`) มากกว่า
+- แผล 1: enum field ของ client — "ครบทุก/ครอบแล้ว" ไม่มี search เบื้องหลัง (dogfood-audit)
+- แผล 2: env-vs-code ของ client backend (session ace13c86 07-17) — ประกาศ "ต่อแล้วพังทันที/ต้องแก้โค้ด"
+  ทั้งที่ curl 5 วิหักล้าง (SC-0000); root cause: เชื่อชื่อ field (ชื่อลงท้าย Guid แต่ไม่ใช่ GUID) มากกว่า
   ชนิด+การใช้จริง · เชื่อ docs ตัวเองเป็น fact · ไม่ถาม "config พอไหม" ก่อนออกแบบโค้ด
 - แผล 3: ctx-sweep 07-17 — เล่า causal story จาก aggregate โดยไม่เปิด raw case จนถูกทัก
 

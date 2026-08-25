@@ -9,3 +9,7 @@ __pycache__/
 # per-machine routing-test sandbox override
 test/routing/.local.sh
 MY-NOTE
+
+# Private/sensitive notes — never committed
+docs/private/
+memory/private/
