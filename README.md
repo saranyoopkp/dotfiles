@@ -1,59 +1,162 @@
-# dotfiles
+# dotfiles — an instruction architecture for coding agents
 
-Personal cross-machine config for Claude Code.
+A working configuration for [Claude Code](https://claude.com/claude-code) that treats agent
+behaviour as something you design, verify and measure — not something you prompt and hope for.
 
-## Vision
+It has been in daily use across every repository I work in, on more than one machine, since
+early 2026.
 
-dotfiles นี้คือชุด configuration และกรอบการทำงานสำหรับ software agent
-ที่ช่วยเปลี่ยนเจตนาของผู้ใช้ให้เป็นซอฟต์แวร์ที่ถูกต้อง พร้อมใช้งาน
-อยู่ในขอบเขตที่ได้รับอนุญาต และตรวจสอบได้ โดยผสานวิจารณญาณของ agent,
-engineering invariants, domain procedures และวงจรเรียนรู้จากพฤติกรรม
-ที่เกิดขึ้นจริงข้ามทุกโปรเจกต์และทุกเครื่อง
+> Thai version of this document: [`README.th.md`](README.th.md)
 
-เป้าหมายไม่ใช่สร้าง agent ที่ทำงานมากที่สุดหรือแก้ทุกสิ่งที่พบ แต่สร้าง agent ที่:
+## The problem this solves
 
-- รักษา objective และ authorization boundary ของผู้ใช้
-- ทำงานสอดคล้องกับเจตนา วิธีคิด และจังหวะของผู้ใช้ โดยไม่ทำให้ผู้ใช้ต้องคอยดึงกลับ
-  ย้ำ scope หรืออธิบายความหมายซ้ำโดยไม่จำเป็น
-- ขุด root cause และ dependency ที่จำเป็นต่อผลลัพธ์เดิม โดยไม่ขยาย scope เอง
-- เลือกหลักฐานที่พิสูจน์ claim และ behavior ที่กำลังส่งมอบจริง
-- ใช้ autonomy ให้ได้สัดส่วนกับความเสี่ยงและผลกระทบ
-- เรียนรู้จาก behavioral signals และ pattern ที่ตรวจสอบได้ ทั้งสิ่งที่ควรปรับและสิ่งที่ควรรักษา
-  โดยไม่สะสมกฎหรือความซับซ้อนเกินจำเป็น
-- ทำงานข้าม repository และเครื่องได้อย่างสม่ำเสมอ โดยเคารพบริบทของแต่ละระบบ
+An agent that can edit files is easy to get. An agent you can trust with a production
+repository is not. The failures that matter are not "wrong syntax" — they are:
 
-โครงสร้างนำ vision นี้ไปใช้โดยแยกหน้าที่เป็น `rules` สำหรับ shared invariants,
-`agents` สำหรับ trigger และการตัดสินใจ, `skills` สำหรับ domain procedures
-และ `tests` สำหรับตรวจ routing กับ behavior ที่เกิดขึ้นจริง
+- widening the scope of a task nobody asked to widen
+- taking an irreversible action that was never authorised
+- reporting a claim as verified when nothing was actually run
+- losing the original objective somewhere inside a detour
+- accumulating so many instructions that none of them are read
 
-รายละเอียดเชิงปฏิบัติอยู่ใน [`CLAUDE.md`](CLAUDE.md) ส่วนเหตุผล การทดลอง
-และหลักฐานย้อนหลังอยู่ใน [`docs/`](docs/)
+Prompting harder does not fix these. They are structural, so the fix is structural: separate
+what must always hold from what applies to a kind of work, give each surface one job, and then
+**test that the routing between them still works.**
 
-## โครงสร้าง
+## Design
+
+Four surfaces, each earning its place differently:
+
+| Surface | Loading | Holds |
+|---|---|---|
+| `claude/rules/` | every session, always | safety and correctness invariants that must hold regardless of task |
+| `claude/agents/` | on selection | trigger → judgment → action → verification for a role |
+| `claude/skills/` | on invocation | domain procedure, decision criteria, edge cases for one kind of work |
+| `test/` | on demand | evidence that the above still behave as claimed |
+
+The constraint that keeps this from bloating is a single question, applied to every line:
+
+> *If this instruction were removed, how would the agent's decision, action or verification get
+> worse?*
+
+If there is no answer, the line goes. Rules are only created from a failure that has recurred
+and can be pointed at; a new rule must first be merged into an existing one before it is allowed
+its own file.
+
+**13 rules** cover change control, evidence integrity, compatibility, and the risk domains where
+mistakes are expensive — authorization and tenancy, money, time zones, production recovery,
+external integrations.
+
+**49 skills** cover the procedures — API contract design, schema migrations, observability,
+incident response, performance, testing strategy, documentation placement.
+
+**4 agents** separate the work from the review: a coordinator, a read-only scout for bounded
+discovery, a builder for authorised slices, and an independent acceptance validator that never
+edits code.
+
+## Verification
+
+This is the part most agent configurations skip, and it is the part I care about most.
+
+### Routing regression (`test/routing/`)
+
+On-demand skills only help if the model actually invokes them at the right moment. That is a
+behaviour, and behaviours regress silently.
+
+Each scenario runs in a **fresh `claude -p` session** — a subagent cannot substitute, because it
+inherits context the real case would not have — inside a sandbox outside this repository so the
+repo's own instructions cannot contaminate the result. The verdict reads actual `Skill` tool-use
+events out of the raw stream-json and requires a clean CLI exit; a harness timeout is recorded as
+a harness failure, kept separate from a routing conclusion.
+
+Cases are declared as `require / forbid / label / task`, so the suite catches **over**-invocation
+as well as misses. Skills with genuinely overlapping domains are allowed to co-fire rather than
+being forced into a false expectation.
+
+Every run keeps per-scenario raw stream-json, stderr and exit status, so a failure can be opened
+and read rather than guessed at.
+
+### Behaviour and guardrail checks (`test/behavior/`, `test/config/`)
+
+Scenario tables for decision behaviour, plus scripts that verify the guardrails and the
+documentation-drift stop actually fire — including the case where a hook runs in a different
+environment than the agent's own shell, which is where "it works" is most often wrong.
+
+### Evidence-grade session index (`test/metrics/`)
+
+A Python pipeline that turns real session transcripts into an auditable corpus.
+
+It indexes every transcript into SQLite with `source file + line + UUID + raw hash` as
+provenance, and keeps the raw JSONL as the authoritative record rather than copying it in. The
+audit unit is the **human turn**, not the session, and each turn is classified against a fixed
+taxonomy — `CONTINUE, REFINE, QUESTION, PREREQUISITE, NEW, REPLACE, DEFER, RESUME, CANCEL,
+CORRECT, AMBIGUOUS`.
+
+Three properties I would point at specifically:
+
+**Coverage is reconciled, not asserted.** Status must balance on three separate identities:
+
+```text
+discovered files  = indexed + explicitly excluded + failed
+indexed lines     = parsed  + malformed          + blank
+auditable inputs  = pending + classified + ambiguous + failed + input-only
+```
+
+Anything excluded is excluded *by name and reason*. Nothing disappears quietly.
+
+**The evaluator excludes evidence about itself.** Any session that edited this repository — including
+through the symlinked config paths — is dropped as `dotfiles_self_modification`. Measuring an
+agent using sessions in which the agent was rewriting its own instructions is not independent
+evidence.
+
+**Ambiguity is not resolved by convenience.** Records that cannot be classified deterministically
+stay in an `ambiguous` bucket and block a completeness claim. The rule is explicit: you may add a
+deterministic rule with a fixture and re-index, but you may not force individual records to make
+the totals look complete.
+
+Import of reviewed results is rejected on stale input hashes, missing turns, relations outside the
+taxonomy, or findings without cited evidence — so coverage can only move forward with something
+behind it.
+
+Each analysis script ships with its own regression test (`test_index_transcripts.py`,
+`test_prepare_audit.py`, `test_discover_events.py`) covering schema, branch lineage, sampling and
+budget edges.
+
+## Layout
 
 ```
-claude/skills/docs/setup/   ← /docs:setup skill + kit (ระบบเอกสารต่อ repo)
-claude/rules/               ← engineering standards — โหลดทุก session ทุก repo
-references/                 ← เปิดดูตามต้องการ (ไม่โหลดเข้า session) — ดูรายการจากโฟลเดอร์จริง
-install.sh                  ← link ~/.claude/{skills,rules} เข้า repo นี้ (junction/symlink)
+claude/rules/      13 always-loaded invariants (core, engineering, risk)
+claude/skills/     49 on-demand domain procedures
+claude/agents/     4 role definitions, versioned
+test/routing/      skill auto-invocation regression, real sessions
+test/behavior/     decision-behaviour scenarios
+test/config/       guardrail and install verification
+test/metrics/      session-corpus indexing and evaluation pipeline
+docs/              rationale, experiments and measured cutovers
+references/        on-demand reference material
+install.sh         links ~/.claude/{skills,rules,agents} into this repo
 ```
 
-## Setup เครื่องใหม่
+## Install
 
 ```bash
-git clone <this-repo> && cd dotfiles && bash install.sh   # Windows: Git Bash
-```
-```bash
-git clone <this-repo> && ./dotfiles/install.sh     # macOS/Linux
+git clone <this-repo> && cd dotfiles && bash install.sh
 ```
 
-แล้วใน repo ไหนก็พิมพ์ `/docs:setup` ใน Claude Code ได้เลย (รวมถึง repo เดิมที่ clone
-มาเครื่องใหม่ — ต้องเรียกครั้งหนึ่งเพื่อสร้าง memory link ของเครื่องนั้น)
+Skills are linked individually rather than as a directory, because `~/.claude/skills` belongs to
+the harness. Edit here, commit, push; other machines pull and the links keep pointing at the repo.
 
-แก้ skill/rules → แก้ในนี้ + commit + push; เครื่องอื่น pull (link ชี้มาที่ repo นี้ ไม่ต้อง install ซ้ำ)
+One deliberate exception: `claude/skills/docs/setup/kit/CLAUDE.template.md` is **copied** into a
+target repository, not linked, because the target may not have this configuration installed at
+all. That copy does not sync back, and re-applying it is a documented merge rather than an
+overwrite.
 
-**ข้อยกเว้น: `claude/skills/docs/setup/kit/CLAUDE.template.md`** — ไฟล์นี้ถูก **copy** เป็น `CLAUDE.md` ของแต่ละ repo
-ตอน setup ครั้งแรก ไม่ใช่ link แก้ template แล้ว**ไม่ sync อัตโนมัติ**ไปยัง repo ที่เคย
-`/docs:setup` ไปแล้ว — ต้องไป re-apply เองทีละ repo (ดู `claude/skills/docs/setup/SKILL.md` section
-"Re-apply / upgrade": diff เนื้อหา Memory policy/checklist กับ template ปัจจุบันแล้ว merge
-โดยรักษา customization ของ repo นั้นไว้)
+## Honest scope
+
+This is a personal system, shaped by the kinds of work I do — multi-tenant backends, production
+infrastructure, and repositories that outlive the person who wrote them. It is opinionated by
+design and is not trying to be a framework for everyone.
+
+The measurements in `docs/` are from my own sessions, which makes them evidence about this
+configuration rather than a general benchmark. Where a result rests on simulation instead of a
+real run, the documents say so.
