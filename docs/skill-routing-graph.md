@@ -1,12 +1,26 @@
-# Skill Routing Graph
+# Agent and Skill Routing Graph
 
 Skill routing เป็น graph ไม่ใช่ strict tree: งานหนึ่งอาจ invoke หลาย family พร้อมกันเมื่อมี
-work surface หรือ decision ข้าม domain. เส้นทึบคือ parent → child routing; เส้นประคือ
-cross-domain trigger ที่อาจโหลดร่วมกัน.
+work surface หรือ decision ข้าม domain. Acceptance lane แสดงจังหวะส่งงานจาก SCC ไป ACV.
+เส้นทึบคือ primary/parent routing; เส้นประคือ cross-domain trigger ที่อาจโหลดร่วมกัน.
 
 ```mermaid
 flowchart LR
     REQ["User request / current task"]
+
+    subgraph ACCEPTANCE_FLOW["Post-change acceptance"]
+        SCC["SCC-v1.0.1"]
+        ACV["ACV-v1.0.1"]
+        DELIVERY["Delivery"]
+        REWORK["Return to implementation"]
+        SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV
+        SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY
+        ACV -->|PASS or accepted PASS WITH RISKS| DELIVERY
+        ACV -->|FAIL or evidence gap| REWORK
+        REWORK -->|Fix and self-verify again| SCC
+    end
+
+    REQ -->|Primary implementation agent| SCC
 
     REQ -->|Frontend, page, component, table| UI
     REQ -->|HTTP endpoint or public contract| API
@@ -121,6 +135,8 @@ flowchart LR
 1. **Surface trigger** — งานกำลังแตะ UI, API, data, operations หรือ documentation surface ใด
 2. **Decision trigger** — มี decision เฉพาะด้าน เช่น pagination, mutation, migration หรือ permission หรือไม่
 3. **Risk trigger** — งานข้าม auth/tenant, money, production, external หรือ irreversible boundary หรือไม่
+4. **Acceptance trigger** — หลัง SCC self-verify งานที่เปลี่ยน behavior/contract หรือมี user/production risk
+   ต้องส่ง ACV ก่อน delivery; งานถาม สำรวจ docs-only และ internal behavior-preserving edit ส่งมอบได้ตรง
 
 Skill family ไม่ได้ถูก invoke จาก keyword อย่างเดียว. ตัวอย่าง `RBAC` ใน prose ที่แก้ typo ไม่ควร
 invoke `risk-review`; แต่การออกแบบหรือเปลี่ยน role/permission behavior ต้อง invoke authorization reference.
@@ -133,6 +149,6 @@ python3 test/config/verify-skill-routing-graph.py --self-test
 
 Validator ตรวจว่า skill ทุกตัวมี node เดียว, top-level skill reachable จาก `REQ`, nested skill มี
 parent-child edge และถูกกล่าวถึงใน parent router, graph edge ทุกเส้นชี้ node ที่ประกาศแล้ว และ relative
-reference ใน `SKILL.md` มีปลายทางจริง. `--self-test` จะตัด edge ชั่วคราวและยืนยันว่า validator fail
-ตามที่คาด. Cross-domain semantics และ trigger recognition ยังต้องพิสูจน์ด้วย
+reference ใน `SKILL.md` มีปลายทางจริง. `--self-test` จะตัด skill edge และ `SCC → ACV` ชั่วคราว
+แล้วยืนยันว่า validator fail ตามที่คาด. Cross-domain semantics และ trigger recognition ยังต้องพิสูจน์ด้วย
 `test/routing/run.sh` แยกต่างหาก.

@@ -18,6 +18,10 @@ EDGE_RE = re.compile(
 LINK_RE = re.compile(r'\[[^\]]*\]\(([^)#\s]+)(?:#[^)]*)?\)')
 NON_SKILL_NODE_IDS = {
     "REQ",
+    "SCC",
+    "ACV",
+    "DELIVERY",
+    "REWORK",
     "RISK_AUTH",
     "RISK_MONEY",
     "RISK_EXTERNAL",
@@ -171,6 +175,19 @@ def validate(root: Path, graph_path: Path) -> tuple[list[str], dict[str, int]]:
         if not trigger:
             findings.append(f"graph line {line_number}: edge has no trigger label")
 
+    reachable = {"REQ"}
+    while True:
+        discovered = {
+            target
+            for source, target, _trigger, _line in graph_edges
+            if source in reachable and target not in reachable
+        }
+        if not discovered:
+            break
+        reachable.update(discovered)
+    for node_id in sorted(set(nodes) - subgraphs - reachable):
+        findings.append(f"graph node is not reachable from REQ: {node_id}")
+
     child_names = {child for _parent, child in parent_edges}
     for parent_name, child_name in parent_edges:
         parent_id = label_ids.get(parent_name, [None])[0]
@@ -199,7 +216,7 @@ def validate(root: Path, graph_path: Path) -> tuple[list[str], dict[str, int]]:
 
 
 def self_test(root: Path, graph_path: Path) -> None:
-    """Prove that removing one inferred parent-child edge produces a finding."""
+    """Prove that unlinking skill and acceptance routes produces findings."""
     skills, parent_edges = discover_skills(root / "claude" / "skills")
     nodes, _subgraphs, _edges = parse_graph(graph_path)
     node_by_label = {label: node_id for node_id, label in nodes.items()}
@@ -224,6 +241,22 @@ def self_test(root: Path, graph_path: Path) -> None:
     expected = f"missing parent-child graph edge: {parent_name!r} -> {child_name!r}"
     if expected not in findings:
         raise ValueError("self-test removed an edge but the validator did not report it")
+
+    acceptance_lines = graph_path.read_text(encoding="utf-8").splitlines()
+    for index, line in enumerate(acceptance_lines):
+        edge = EDGE_RE.match(line)
+        if edge and edge.group(1) == "SCC" and edge.group(4) == "ACV":
+            del acceptance_lines[index]
+            break
+    else:
+        raise ValueError("self-test could not find acceptance edge SCC -> ACV")
+
+    with tempfile.TemporaryDirectory(prefix="acceptance-routing-graph-") as temp_dir:
+        broken_graph = Path(temp_dir) / "skill-routing-graph.md"
+        broken_graph.write_text("\n".join(acceptance_lines) + "\n", encoding="utf-8")
+        findings, _stats = validate(root, broken_graph)
+    if "graph node is not reachable from REQ: ACV" not in findings:
+        raise ValueError("self-test unlinked ACV but the validator did not report it")
 
 
 def main() -> int:
