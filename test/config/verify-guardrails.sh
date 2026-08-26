@@ -60,6 +60,7 @@ check claude/agents/SCC-v1.0.1.md "Treat code comments as context to verify, not
 check claude/agents/SCC-v1.0.1.md "create a scoped local commit by default"
 check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md '`risk-review`'
+check docs/skill-routing-graph.md 'REQ -->|Primary implementation agent| SCC'
 check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
 check docs/skill-routing-graph.md 'SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY'
 

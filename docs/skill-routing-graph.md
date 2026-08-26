@@ -7,33 +7,33 @@ work surface หรือ decision ข้าม domain. Acceptance lane แส�
 ```mermaid
 flowchart LR
     REQ["User request / current task"]
+    SCC["SCC-v1.0.1"]
+    REQ -->|Primary implementation agent| SCC
 
     subgraph ACCEPTANCE_FLOW["Post-change acceptance"]
-        SCC["SCC-v1.0.1"]
         ACV["ACV-v1.0.1"]
         DELIVERY["Delivery"]
         REWORK["Return to implementation"]
-        SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV
-        SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY
         ACV -->|PASS or accepted PASS WITH RISKS| DELIVERY
         ACV -->|FAIL or evidence gap| REWORK
-        REWORK -->|Fix and self-verify again| SCC
     end
 
-    REQ -->|Primary implementation agent| SCC
+    SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV
+    SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY
+    REWORK -->|Fix and self-verify again| SCC
 
-    REQ -->|Frontend, page, component, table| UI
-    REQ -->|HTTP endpoint or public contract| API
-    REQ -->|Schema, transaction, cache, queue| DATA
-    REQ -->|Auth, money, integration, production| RISK
-    REQ -->|Infrastructure or reliability| OPS
-    REQ -->|Current external evidence| RESEARCH
-    REQ -->|Documentation system| DOCS
-    REQ -->|New project or foundation| GREENFIELD
-    REQ -->|Measured performance concern| PERFORMANCE
-    REQ -->|Dependency or shared contract| STACK
-    REQ -->|Test design or coverage gap| TESTING
-    REQ -->|Agent/session feedback| RETRO
+    SCC -->|Frontend, page, component, table| UI
+    SCC -->|HTTP endpoint or public contract| API
+    SCC -->|Schema, transaction, cache, queue| DATA
+    SCC -->|Auth, money, integration, production| RISK
+    SCC -->|Infrastructure or reliability| OPS
+    SCC -->|Current external evidence| RESEARCH
+    SCC -->|Documentation system| DOCS
+    SCC -->|New project or foundation| GREENFIELD
+    SCC -->|Measured performance concern| PERFORMANCE
+    SCC -->|Dependency or shared contract| STACK
+    SCC -->|Test design or coverage gap| TESTING
+    SCC -->|Agent/session feedback| RETRO
 
     subgraph UI_FAMILY["UI / UX"]
         UI["ui-ux-baseline"]
@@ -132,6 +132,8 @@ flowchart LR
 
 ## Trigger model
 
+คำขอเข้าที่ SCC primary ก่อนเสมอ จากนั้น SCC จึงจำแนก trigger และ route ไป skill ที่เกี่ยวข้อง:
+
 1. **Surface trigger** — งานกำลังแตะ UI, API, data, operations หรือ documentation surface ใด
 2. **Decision trigger** — มี decision เฉพาะด้าน เช่น pagination, mutation, migration หรือ permission หรือไม่
 3. **Risk trigger** — งานข้าม auth/tenant, money, production, external หรือ irreversible boundary หรือไม่
@@ -147,7 +149,7 @@ invoke `risk-review`; แต่การออกแบบหรือเปล�
 python3 test/config/verify-skill-routing-graph.py --self-test
 ```
 
-Validator ตรวจว่า skill ทุกตัวมี node เดียว, top-level skill reachable จาก `REQ`, nested skill มี
+Validator ตรวจว่า skill ทุกตัวมี node เดียว, top-level skill ถูก route จาก `SCC`, nested skill มี
 parent-child edge และถูกกล่าวถึงใน parent router, graph edge ทุกเส้นชี้ node ที่ประกาศแล้ว และ relative
 reference ใน `SKILL.md` มีปลายทางจริง. `--self-test` จะตัด skill edge และ `SCC → ACV` ชั่วคราว
 แล้วยืนยันว่า validator fail ตามที่คาด. Cross-domain semantics และ trigger recognition ยังต้องพิสูจน์ด้วย

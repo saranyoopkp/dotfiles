@@ -200,8 +200,8 @@ def validate(root: Path, graph_path: Path) -> tuple[list[str], dict[str, int]]:
 
     for name in sorted(set(skills) - child_names):
         node_id = label_ids.get(name, [None])[0]
-        if node_id and ("REQ", node_id) not in edge_pairs:
-            findings.append(f"top-level skill is not reachable from REQ: {name!r}")
+        if node_id and ("SCC", node_id) not in edge_pairs:
+            findings.append(f"top-level skill is not routed by SCC: {name!r}")
 
     reference_findings, references_checked = validate_references(skills)
     findings.extend(reference_findings)
