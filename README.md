@@ -50,9 +50,19 @@ external integrations.
 **49 skills** cover the procedures — API contract design, schema migrations, observability,
 incident response, performance, testing strategy, documentation placement.
 
-**4 agents** separate the work from the review: a coordinator, a read-only scout for bounded
-discovery, a builder for authorised slices, and an independent acceptance validator that never
-edits code.
+**3 agents** separate primary work, bounded discovery and acceptance: SCC owns implementation,
+a read-only Scout isolates broad searches or independent hypothesis checks, and ACV independently
+validates qualifying deliverables without editing code. SCC handles routine discovery itself; there
+is no separate Builder or worktree orchestration.
+
+### Using the agents
+
+Start with SCC and describe the outcome, scope and constraints; users do not need to select skills or
+delegate ordinary work. SCC may send one bounded read-only question to Scout when doing so protects the
+primary context or provides useful independence. Scout returns evidence to SCC and never implements.
+After SCC implements and self-verifies, qualifying features, fixes, contract changes or risky work go to
+ACV; a failure returns to SCC for correction. Questions, exploration, documentation-only work and internal
+behaviour-preserving edits can be delivered directly unless the project or user requires ACV.
 
 ## Verification
 
@@ -76,11 +86,14 @@ being forced into a false expectation.
 Every run keeps per-scenario raw stream-json, stderr and exit status, so a failure can be opened
 and read rather than guessed at.
 
-### Behaviour and guardrail checks (`test/behavior/`, `test/config/`)
+`test/agent-routing/` applies the same ground-truth approach to optional Scout delegation, including
+a routine-search negative case.
 
-Scenario tables for decision behaviour, plus scripts that verify the guardrails and the
-documentation-drift stop actually fire — including the case where a hook runs in a different
-environment than the agent's own shell, which is where "it works" is most often wrong.
+### Friction and guardrail checks (`test/friction/`, `test/config/`)
+
+Simple-task scenarios catch unnecessary tool use and ceremony, while config scripts verify the
+guardrails and documentation-drift stop actually fire — including the case where a hook runs in a
+different environment than the agent's own shell, which is where "it works" is most often wrong.
 
 ### Evidence-grade session index (`test/metrics/`)
 
@@ -127,14 +140,15 @@ budget edges.
 ```
 claude/rules/      13 always-loaded invariants (core, engineering, risk)
 claude/skills/     49 on-demand domain procedures
-claude/agents/     4 role definitions, versioned
+claude/agents/     3 role definitions: SCC, Scout, ACV
 test/routing/      skill auto-invocation regression, real sessions
-test/behavior/     decision-behaviour scenarios
+test/agent-routing/ optional Scout delegation regression, real sessions
+test/friction/     simple-task ceremony regression
 test/config/       guardrail and install verification
 test/metrics/      session-corpus indexing and evaluation pipeline
 docs/              rationale, experiments and measured cutovers
 references/        on-demand reference material
-install.sh         links ~/.claude/{skills,rules,agents} into this repo
+install.sh         links ~/.claude/{skills,rules}; agent directory remains a per-machine link
 ```
 
 ## Install

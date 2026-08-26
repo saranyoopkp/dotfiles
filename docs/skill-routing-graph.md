@@ -8,7 +8,10 @@ work surface หรือ decision ข้าม domain. Acceptance lane แส�
 flowchart LR
     REQ["User request / current task"]
     SCC["SCC-v1.0.1"]
+    SCOUT["scout"]
     REQ -->|Primary implementation agent| SCC
+    SCC -->|Bounded discovery with broad output or independent hypothesis| SCOUT
+    SCOUT -->|Evidence package; SCC verifies and decides| SCC
 
     subgraph ACCEPTANCE_FLOW["Post-change acceptance"]
         ACV["ACV-v1.0.1"]

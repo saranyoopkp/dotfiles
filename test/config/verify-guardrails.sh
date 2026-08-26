@@ -61,7 +61,18 @@ check claude/agents/SCC-v1.0.1.md "create a scoped local commit by default"
 check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md '`risk-review`'
 check claude/agents/SCC-v1.0.1.md 'API contract change with an affected frontend consumer'
+check claude/agents/SCC-v1.0.1.md 'Delegate one bounded read-only question to `scout`'
+check claude/agents/scout.md 'do not create, switch or manage worktrees'
+check claude/agents/scout.md 'Scout output is a lead for SCC to verify against primary evidence'
+check README.md '**3 agents**'
+check README.th.md 'SCC ทำงานหลัก, Scout สำรวจแบบ read-only, ACV ตรวจรับ'
+[ ! -e "$ROOT/claude/agents/builder.md" ] || {
+  echo "builder must remain absent; SCC owns implementation" >&2
+  exit 1
+}
 check docs/skill-routing-graph.md 'REQ -->|Primary implementation agent| SCC'
+check docs/skill-routing-graph.md 'SCC -->|Bounded discovery with broad output or independent hypothesis| SCOUT'
+check docs/skill-routing-graph.md 'SCOUT -->|Evidence package; SCC verifies and decides| SCC'
 check docs/skill-routing-graph.md 'API_EVOLUTION -.->|Affected frontend consumer| UI'
 check claude/skills/api-design/evolution/SKILL.md 'Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI'
 check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
@@ -90,6 +101,7 @@ rule_lines="$(find "$ROOT/claude/rules" -name '*.md' -type f -exec cat {} + | wc
   exit 1
 }
 max_lines "SCC primary agent" 160 "$ROOT/claude/agents/SCC-v1.0.1.md"
+max_lines "Scout agent" 60 "$ROOT/claude/agents/scout.md"
 
 # Ownership map covers every current always-on rule and top-level skill entry point.
 while IFS= read -r file; do

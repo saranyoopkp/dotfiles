@@ -36,14 +36,23 @@ engineering invariants, domain procedures และวงจรเรียน�
 ```
 claude/rules/               ← engineering standards — โหลดทุก session ทุก repo
 claude/skills/              ← domain procedures แบบ on-demand
-claude/agents/              ← SCC coordinator, Scout, Builder, ACV
+claude/agents/              ← SCC ทำงานหลัก, Scout สำรวจแบบ read-only, ACV ตรวจรับ
 test/routing/               ← regression ของ skill auto-invocation
-test/behavior/              ← scenario ของ decision behavior
+test/agent-routing/         ← regression ของ optional Scout delegation
+test/friction/              ← regression กัน ceremony ในงานง่าย
 test/config/                ← ตรวจ guardrail และการติดตั้ง
 test/metrics/               ← pipeline วัดพฤติกรรมจาก session corpus
 references/                 ← เปิดดูตามต้องการ (ไม่โหลดเข้า session)
-install.sh                  ← link ~/.claude/{skills,rules,agents} เข้า repo นี้
+install.sh                  ← link ~/.claude/{skills,rules}; agents เป็น link ที่จัดการต่อเครื่อง
 ```
+
+## การใช้งาน agents
+
+เริ่มงานกับ SCC โดยบอกผลลัพธ์ ขอบเขต และข้อจำกัดตามปกติ ผู้ใช้ไม่ต้องเลือก skill หรือ delegate
+งานทั่วไปเอง. SCC สำรวจและ implement เองเป็น default; ใช้ Scout เฉพาะคำถาม read-only ที่มีขอบเขตชัด
+เมื่อผลค้นหากว้างจนรบกวน context หลักหรือการตรวจ hypothesis อย่างอิสระเพิ่มความมั่นใจได้จริง.
+Scout ส่ง evidence กลับ SCC และไม่แก้ไฟล์. หลัง SCC self-verify งานที่เข้า acceptance trigger จึงส่ง
+ACV; ถ้าไม่ผ่านให้กลับ SCC แก้. ระบบนี้ไม่มี Builder หรือ worktree orchestration.
 
 ## Setup เครื่องใหม่
 

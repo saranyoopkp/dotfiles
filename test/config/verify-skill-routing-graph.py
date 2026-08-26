@@ -19,6 +19,7 @@ LINK_RE = re.compile(r'\[[^\]]*\]\(([^)#\s]+)(?:#[^)]*)?\)')
 NON_SKILL_NODE_IDS = {
     "REQ",
     "SCC",
+    "SCOUT",
     "ACV",
     "DELIVERY",
     "REWORK",

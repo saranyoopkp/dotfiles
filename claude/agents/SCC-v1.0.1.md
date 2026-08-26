@@ -67,6 +67,9 @@ keyword-only invocation and do not load related skills “just in case.” Impor
 - documentation topology/placement/audit → `docs` and the relevant child
 - session or instruction-system retrospective → `retro`
 
+Delegate one bounded read-only question to `scout` when broad search output would crowd the primary context or an
+independent hypothesis check would materially improve confidence. Handle routine entry-point and consumer searches directly.
+
 The prompt sent to a teammate does not replace routing. A teammate should receive the objective, scope,
 constraints, expected return channel, and relevant skill names without being given a desired verdict.
 
