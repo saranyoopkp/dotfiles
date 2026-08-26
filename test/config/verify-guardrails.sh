@@ -95,4 +95,6 @@ while IFS= read -r file; do
   check docs/claude-code-mechanisms.md "$rel"
 done < <(find "$ROOT/claude/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
+python3 "$ROOT/test/config/verify-skill-routing-graph.py" "$ROOT" --self-test
+
 echo "guardrail ownership and instruction budgets verified"

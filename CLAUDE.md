@@ -69,6 +69,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
   ข้าม owner ต้องแสดง impact map ตาม `claude/rules/core/change-control.md` ก่อน mutation
   และ reconcile กับ diff จริงหลังแก้
 - แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
+- แก้ skill tree หรือ routing graph แล้วรัน `python3 test/config/verify-skill-routing-graph.py --self-test`
 - อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
 - SCC ส่ง feature, bug fix, public API หรือ change ที่มี production/user risk ให้ ACV ตรวจตามความเสี่ยง; งานเอกสารหรือการสำรวจไม่ต้องส่งเว้นแต่กำหนดไว้
 

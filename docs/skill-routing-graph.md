@@ -124,3 +124,15 @@ flowchart LR
 
 Skill family ไม่ได้ถูก invoke จาก keyword อย่างเดียว. ตัวอย่าง `RBAC` ใน prose ที่แก้ typo ไม่ควร
 invoke `risk-review`; แต่การออกแบบหรือเปลี่ยน role/permission behavior ต้อง invoke authorization reference.
+
+## Verification
+
+```bash
+python3 test/config/verify-skill-routing-graph.py --self-test
+```
+
+Validator ตรวจว่า skill ทุกตัวมี node เดียว, top-level skill reachable จาก `REQ`, nested skill มี
+parent-child edge และถูกกล่าวถึงใน parent router, graph edge ทุกเส้นชี้ node ที่ประกาศแล้ว และ relative
+reference ใน `SKILL.md` มีปลายทางจริง. `--self-test` จะตัด edge ชั่วคราวและยืนยันว่า validator fail
+ตามที่คาด. Cross-domain semantics และ trigger recognition ยังต้องพิสูจน์ด้วย
+`test/routing/run.sh` แยกต่างหาก.
