@@ -106,6 +106,12 @@ comment length แล้ว และ Stop คงเฉพาะ shared-memory l
 track/revert ได้. Enforcement อยู่ใน core/SCC โดยตรง; hook ยังคง low-ceremony และไม่ block source edit
 เพื่อบังคับ commit.
 
+Balanced restore 2026-08-26: คืน `PostToolUse(Edit|Write)` เป็น early warning สำหรับ changed
+line-comment block มากกว่า 2 บรรทัดในไฟล์ที่ session เป็นเจ้าของ และคืน `TaskCompleted` เป็น
+acceptance/evidence/commit checkpoint เฉพาะเมื่อมี session-owned mutation. ทั้งสอง event เป็น
+advisory + dedup เท่านั้น: comment เป็น audit candidate ไม่ใช่ authority หรือคำสั่งให้ย้าย docs,
+และ TaskCompleted ไม่ infer ACV จาก path. `Stop` ยังคง block เฉพาะ shared-memory index mismatch.
+
 Regression shell test พิสูจน์ logic ระดับ script/settings เท่านั้น. ตามบทเรียนหลักด้านบน
 behavior ใน hook runner จริงยังต้องยืนยันด้วย Claude Code session ใหม่หลัง deploy/restart;
 ห้ามสรุปว่า live integration ผ่านจากการเรียก script ใน Bash tool.

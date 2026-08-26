@@ -35,8 +35,9 @@ User ใช้ระบบเอกสารแบบเดียวกันท
   และห้าม push หากไม่ได้สั่ง;
   internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
 - **lifecycle hooks** (`.claude/hooks/` + `.claude/settings.json`, init ติดตั้งให้) ตรวจ baseline/link
-  ที่ SessionStart, shared-memory index ที่ Stop และ continuity ที่ PreCompact โดยไม่บังคับ
-  comment placement, docs disposition หรือ local commit ของ source edit ปกติ
+  ที่ SessionStart, แจ้ง comment audit lead หลัง Edit/Write, เตือน acceptance/commit checkpoint ที่
+  TaskCompleted, ตรวจ shared-memory index ที่ Stop และรักษา continuity ที่ PreCompact. Reminder
+  เป็น advisory; ไม่ตัดสิน comment placement หรือ block source edit ปกติ
 
 ## Context gathering (ทำก่อนเติม/refactor CLAUDE.md เสมอ)
 

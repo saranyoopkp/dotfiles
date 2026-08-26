@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 HOOK="$ROOT/claude/skills/docs/setup/kit/hooks/docs-drift.sh"
+SETTINGS="$ROOT/claude/skills/docs/setup/kit/hooks/settings.json"
 TEST_TMP="$(mktemp -d "${TMPDIR:-/tmp}/docs-drift-stop.XXXXXX")"
 trap 'rm -rf "$TEST_TMP"' EXIT
 export HOME="$TEST_TMP/home"
@@ -38,6 +39,18 @@ run_stop() {
   run_event Stop "$session" "{\"hook_event_name\":\"Stop\",\"session_id\":\"$session\",\"stop_hook_active\":$active}"
 }
 
+python3 - "$SETTINGS" <<'PY'
+import json
+import sys
+
+hooks = json.load(open(sys.argv[1], encoding="utf-8"))["hooks"]
+assert set(hooks) == {"SessionStart", "PostToolUse", "TaskCompleted", "Stop", "PreCompact"}
+assert hooks["PostToolUse"][0]["matcher"] == "Edit|Write"
+for event in hooks:
+    command = hooks[event][0]["hooks"][0]["args"][1]
+    assert command.endswith(f"docs-drift.sh {event}"), (event, command)
+PY
+
 # A dirty path present at SessionStart belongs to the user/previous session, not this task.
 new_repo ownership
 printf '%s\n' 'const value = 2;' > "$REPO/app.js"
@@ -49,6 +62,12 @@ BASELINE_ONLY="$(run_stop ownership-session false)"
   echo "pre-existing dirty paths must not block Stop" >&2
   exit 1
 }
+printf '%s\n' '// baseline one' '// baseline two' '// baseline three' 'const value = 2;' > "$REPO/app.js"
+BASELINE_COMMENT="$(run_event PostToolUse ownership-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"ownership-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+[ -z "$BASELINE_COMMENT" ] || {
+  echo "pre-existing dirty paths must not trigger comment audit advice" >&2
+  exit 1
+}
 printf '%s\n' 'const other = 2;' > "$REPO/other.js"
 OWNED="$(run_stop ownership-session false)"
 [ -z "$OWNED" ] || {
@@ -56,20 +75,92 @@ OWNED="$(run_stop ownership-session false)"
   exit 1
 }
 
-# Comment length alone is not a documentation violation.
+# Long changed comments are advisory audit leads, never Stop violations.
 new_repo comments
 run_event SessionStart comment-session >/dev/null
 printf '%s\n' '// why one' '// why two' 'const value = 1;' > "$REPO/app.js"
-POST="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
-[ -z "$POST" ] || {
-  echo "comment length must not trigger PostToolUse output" >&2
+SHORT="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+[ -z "$SHORT" ] || {
+  echo "one or two line comments must not trigger automatic advice" >&2
   exit 1
 }
+printf '%s\n' '// why one' '// why two' '// why three' 'const value = 1;' > "$REPO/app.js"
+POST="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+printf '%s' "$POST" | grep -q '\[comment-audit\]'
+printf '%s' "$POST" | grep -q 'app.js:1'
+printf '%s' "$POST" | grep -q 'audit candidate, not authority'
+! printf '%s' "$POST" | grep -q '"decision":"block"'
+REPEAT="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+[ -z "$REPEAT" ] || {
+  echo "unchanged comment finding must be deduplicated" >&2
+  exit 1
+}
+printf '%s\n' 'const value = 1;' > "$REPO/app.js"
+run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}" >/dev/null
+printf '%s\n' '// why one' '// why two' '// why three' 'const value = 1;' > "$REPO/app.js"
+RETURNED="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+printf '%s' "$RETURNED" | grep -q '\[comment-audit\]'
 FIRST="$(run_stop comment-session false)"
 [ -z "$FIRST" ] || {
   echo "comment length must not block Stop" >&2
   exit 1
 }
+
+# Untracked files created by this session are eligible for exact-path comment advice.
+printf '%s\n' '# one' '# two' '# three' 'value = 1' > "$REPO/new.py"
+UNTRACKED="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/new.py\"}}")"
+printf '%s' "$UNTRACKED" | grep -q 'new.py:1'
+
+# Editing one line inside an existing long block is still a changed long comment.
+new_repo existing_comment
+printf '%s\n' '// existing one' '// existing two' '// existing three' 'const value = 1;' > "$REPO/app.js"
+git -C "$REPO" add app.js
+git -C "$REPO" commit -qm 'add existing comment'
+run_event SessionStart existing-comment-session >/dev/null
+printf '%s\n' '// existing one' '// revised two' '// existing three' 'const value = 1;' > "$REPO/app.js"
+EXISTING="$(run_event PostToolUse existing-comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"existing-comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+printf '%s' "$EXISTING" | grep -q 'app.js:1'
+printf '%s' "$EXISTING" | grep -q 'audit candidate, not authority'
+
+# Deleting adjacent code does not make an unchanged long comment a changed block.
+new_repo adjacent_code
+printf '%s\n' 'const removed = 0;' '// unchanged one' '// unchanged two' '// unchanged three' 'const value = 1;' > "$REPO/app.js"
+git -C "$REPO" add app.js
+git -C "$REPO" commit -qm 'add adjacent comment'
+run_event SessionStart adjacent-code-session >/dev/null
+printf '%s\n' '// unchanged one' '// unchanged two' '// unchanged three' 'const value = 1;' > "$REPO/app.js"
+ADJACENT="$(run_event PostToolUse adjacent-code-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"adjacent-code-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
+[ -z "$ADJACENT" ] || {
+  echo "deleting adjacent code must not mark an unchanged comment block as changed" >&2
+  exit 1
+}
+
+# TaskCompleted is a deduplicated checkpoint for session-owned mutation, not a blocker.
+new_repo checkpoint
+run_event SessionStart checkpoint-session >/dev/null
+EMPTY_CHECKPOINT="$(run_event TaskCompleted checkpoint-session)"
+[ -z "$EMPTY_CHECKPOINT" ] || {
+  echo "TaskCompleted must stay silent without session-owned changes" >&2
+  exit 1
+}
+printf '%s\n' 'const value = 4;' > "$REPO/app.js"
+CHECKPOINT="$(run_event TaskCompleted checkpoint-session)"
+printf '%s' "$CHECKPOINT" | grep -q '\[checkpoint\]'
+printf '%s' "$CHECKPOINT" | grep -q 'required acceptance evidence'
+printf '%s' "$CHECKPOINT" | grep -q 'independent acceptance'
+printf '%s' "$CHECKPOINT" | grep -q 'scoped local commit'
+! printf '%s' "$CHECKPOINT" | grep -q '"decision":"block"'
+CHECKPOINT_REPEAT="$(run_event TaskCompleted checkpoint-session)"
+[ -z "$CHECKPOINT_REPEAT" ] || {
+  echo "unchanged TaskCompleted state must be deduplicated" >&2
+  exit 1
+}
+git -C "$REPO" add app.js
+git -C "$REPO" commit -qm checkpoint
+run_event TaskCompleted checkpoint-session >/dev/null
+printf '%s\n' 'const value = 5;' > "$REPO/app.js"
+CHECKPOINT_RETURNED="$(run_event TaskCompleted checkpoint-session)"
+printf '%s' "$CHECKPOINT_RETURNED" | grep -q '\[checkpoint\]'
 
 # A session-created shared memory leaf must be indexed in the same change.
 new_repo memory_pointer
@@ -106,4 +197,4 @@ PRECOMPACT="$(run_event PreCompact disposition-session)"
 printf '%s' "$PRECOMPACT" | grep -q 'Preserve the current objective'
 printf '%s' "$PRECOMPACT" | grep -q 'Do not create or commit repository docs solely because compaction is occurring'
 
-echo "docs-drift ownership, memory pointer, and low-ceremony Stop behavior verified"
+echo "docs-drift ownership, advisory checkpoints, memory pointer, and low-ceremony Stop behavior verified"
