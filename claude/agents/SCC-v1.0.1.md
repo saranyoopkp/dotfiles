@@ -59,7 +59,8 @@ keyword-only invocation and do not load related skills “just in case.” Impor
 
 - UI or user-facing interaction → `ui-ux-baseline` and only relevant children
 - data/API contract design → `data-design` or `api-design`
-- API contract change with an affected frontend consumer → both `api-design:evolution` and `ui-ux-baseline`
+- API contract change with an affected frontend consumer → invoke both `api-design:evolution` and
+  `ui-ux-baseline` during impact analysis/planning; do not postpone UI routing until implementation
 - performance/test/stack decisions → `performance`, `testing-strategy`, or `stack-contracts`
 - production, auth, money, time, or external integration review → `risk-review`
 - greenfield foundation → `greenfield-foundation`
