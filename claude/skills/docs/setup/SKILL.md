@@ -1,6 +1,6 @@
 ---
 name: docs:setup
-description: Set up or refactor a repo's documentation system (CLAUDE.md + docs/ + memory/ linked into the harness) using the user's docs-setup kit. Use when asked to setup/refactor project docs, CLAUDE.md, or project memory.
+description: Set up, adopt, or re-apply the repo documentation system (CLAUDE.md + docs/ + linked repository memory) using the docs-setup kit. Use for kit installation/upgrade or refactoring those surfaces as one system; not for reorganizing an established docs tree or index alone.
 ---
 
 # Docs Setup — ระบบเอกสารมาตรฐานของ user
@@ -107,8 +107,8 @@ CLAUDE.md ฉบับแรก
 1. รัน init ซ้ำ (จัดการชั้น mechanical ให้)
 2. Context gathering ตามหัวข้อด้านบน แล้ว merge เนื้อหาที่ template มีใหม่เข้า CLAUDE.md
    ของ repo (รักษา customization ไว้ อย่าทับทั้ง section)
-3. ไล่ convention ใหม่ใน `kit/README.md` ที่ repo ยังไม่ conform (เช่น docs/ กองแบน
-   → จัด subfolder + grouped index) → เสนอ/ลงมือจัดตามนั้น
+3. ไล่ convention ใหม่ใน `kit/README.md` ที่ repo ยังไม่ conform. งานจัด topology/subfolder/index
+   ของ docs tree เดิมให้ invoke `/docs:placement`; setup ยังคงเป็น owner ของ kit adoption/upgrade
 3.5 ปิดท้ายด้วยรอบตรวจ: `/docs:link` (reference) แล้วถ้าเอกสารเก่ามีอายุ/สงสัย drift
    → `/docs:stale` (เนื้อหา vs โค้ด live — scope ตามที่ตกลงกับ user)
 4. สรุปให้ user ว่า upgrade อะไรไปบ้าง

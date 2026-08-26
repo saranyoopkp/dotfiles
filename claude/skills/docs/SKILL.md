@@ -9,12 +9,11 @@ description: Route documentation-system work: repository setup, cross-repo owner
 
 | sub | ใช้เมื่อ |
 |---|---|
-| **/docs:setup** | วางระบบเอกสารให้ repo (CLAUDE.md + docs/ + memory/ + hooks) หรือ re-apply/refactor ของเดิม |
+| **/docs:setup** | install/adopt/re-apply kit หรือ refactor CLAUDE.md + docs + linked memory + hooks เป็นระบบเดียว |
 | **/docs:workspace** | จัดเอกสารระดับ workspace ที่มีหลาย independent Git repos: owner ของ fact, inventory/pointer, cross-repo convention/contract/rollout/handoff และ standalone-clone boundary |
-| **/docs:placement** | ตัดสินว่าความรู้ชิ้นหนึ่งอยู่ไหน (comment/docstring/codetag/docs/memory/CLAUDE.md) + วินัย comment/docstring |
+| **/docs:placement** | ตัดสินบ้านของความรู้/วินัย comment-docstring หรือจัด topology, subfolder และ index ของ docs tree เดิม |
 | **/docs:link** | ตรวจ broken reference (md↔md, md→code, code→docs) — script deterministic |
 | **/docs:stale** | ตรวจ*เนื้อหา*เอกสารขัดกับโค้ด live จริงไหม — live code ชนะเสมอ; LLM-judgment ยึดหลักฐาน |
 
-งานเดียวแตะหลายด้าน = ระบุ scope ก่อนว่า repo เดียวหรือ workspace → setup (ต่อ repo) →
-workspace (เฉพาะหลาย independent repos) → placement (จัดเนื้อหา) → link (reference) →
-stale (เนื้อหา — รอบตรวจ ไม่ใช่ทุก commit)
+งานเดียวแตะหลายด้านให้ invoke เฉพาะ child ที่ concern นั้นต้องใช้; ลำดับ setup → workspace →
+placement → link → stale เป็น dependency ที่อาจเกิด ไม่ใช่ checklist บังคับทุกงาน.

@@ -1,6 +1,6 @@
 ---
 name: docs:placement
-description: Decide where substantial repository knowledge belongs among comments, docstrings, docs, memory, and CLAUDE.md, or audit comment/docstring debt and staleness. Use when documentation placement, topology, or comment audit is the actual task; not for ordinary comments or incidental documentation updates with an obvious owner.
+description: Decide where repository knowledge belongs among comments, docstrings, docs, memory, and CLAUDE.md; organize an established docs tree/index; or audit comment/docstring debt. Use when placement, topology, or comment audit is the task; not for kit setup, ordinary comments, or incidental documentation updates with an obvious owner.
 ---
 
 # Doc Placement — ความรู้ทุกชิ้นมีบ้านเดียว เลือกบ้านจาก "กลไกที่ถูกอ่าน"
