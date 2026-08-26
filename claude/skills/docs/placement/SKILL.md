@@ -1,6 +1,6 @@
 ---
 name: docs:placement
-description: Decide where substantial repository knowledge belongs among comments, docstrings, docs, memory, and CLAUDE.md. Use when documentation placement or topology is the actual decision; not for ordinary comments or incidental documentation updates with an obvious owner.
+description: Decide where substantial repository knowledge belongs among comments, docstrings, docs, memory, and CLAUDE.md, or audit comment/docstring debt and staleness. Use when documentation placement, topology, or comment audit is the actual task; not for ordinary comments or incidental documentation updates with an obvious owner.
 ---
 
 # Doc Placement — ความรู้ทุกชิ้นมีบ้านเดียว เลือกบ้านจาก "กลไกที่ถูกอ่าน"
@@ -90,6 +90,25 @@ description: Decide where substantial repository knowledge belongs among comment
 นับ block เกินเกณฑ์ + จับ duplicate verbatim ข้ามไฟล์ (ตัวเลข reproducible ใช้เทียบ
 ก่อน/หลังได้); ผลคือ *lead ให้ judge* ไม่ใช่รายการ auto-fix ([head] = docstring หัวไฟล์
 มักเป็น contract ที่ถูกต้อง · triple-quoted data string ก็ติดมาด้วย)
+
+### Comment audit mode (read-only ก่อน remediation)
+
+ใช้เมื่อผู้ใช้ขอ audit/review comment หรือ docstring โดยยังไม่ได้ขอแก้. กำหนด scope เป็น diff,
+directory หรือทั้ง repo ก่อน; repo-wide audit ที่ผลกว้างอาจส่ง bounded batches ให้ Scout สำรวจได้
+แต่ SCC ต้องตรวจ primary evidence และเป็น owner ของข้อสรุป.
+
+```bash
+python <skill-dir>/scripts/scan.py <repo> --diff HEAD --format json
+python <skill-dir>/scripts/scan.py <repo> --max 2
+```
+
+Scanner ให้ candidate จาก block length, duplicate และ changed-line intersection เท่านั้น ไม่พิสูจน์ว่า
+comment ผิด. Diff mode ตรวจทุก block ที่เปลี่ยนโดย default; full scan ใช้ threshold `>2` บรรทัด
+เพื่อลด noise (`--max` override ได้). อ่าน code/test/requirement รอบจุดนั้นแล้วรายงาน
+`file:line | severity | category |
+evidence | recommendation` โดยใช้ category เท่าที่ตรงจริง: `KEEP`, `STALE`, `NARRATION`, `MOVE`,
+`DUPLICATE`, `CODETAG`, `DOCSTRING`, `AUTHORITY-RISK`. ห้าม auto-fix จากความยาวหรือ category;
+แก้เฉพาะเมื่อผู้ใช้อนุญาต remediation ต่อ.
 
 ไล่ต่อไฟล์:
 1. **comment ที่มี scope เกิน local code context** — จำแนกเนื้อทีละก้อน:

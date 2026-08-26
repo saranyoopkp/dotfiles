@@ -75,6 +75,8 @@ check docs/skill-routing-graph.md 'SCC -->|Bounded discovery with broad output o
 check docs/skill-routing-graph.md 'SCOUT -->|Evidence package; SCC verifies and decides| SCC'
 check docs/skill-routing-graph.md 'API_EVOLUTION -.->|Affected frontend consumer| UI'
 check claude/skills/api-design/evolution/SKILL.md 'Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI'
+check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก่อน remediation)'
+check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
 check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
 check docs/skill-routing-graph.md 'SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY'
 
@@ -114,5 +116,6 @@ while IFS= read -r file; do
 done < <(find "$ROOT/claude/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
 python3 "$ROOT/test/config/verify-skill-routing-graph.py" "$ROOT" --self-test
+python3 "$ROOT/test/config/test-comment-audit.py"
 
 echo "guardrail ownership and instruction budgets verified"

@@ -102,7 +102,7 @@ flowchart LR
         DOCS["docs"]
         DOCS -->|Initialize documentation system| DOCS_SETUP["docs:setup"]
         DOCS -->|Multiple independent repos| DOCS_WORKSPACE["docs:workspace"]
-        DOCS -->|Choose knowledge owner| DOCS_PLACEMENT["docs:placement"]
+        DOCS -->|Choose knowledge owner or audit comments| DOCS_PLACEMENT["docs:placement"]
         DOCS -->|Broken reference| DOCS_LINK["docs:link"]
         DOCS -->|Content contradicts live code| DOCS_STALE["docs:stale"]
     end
