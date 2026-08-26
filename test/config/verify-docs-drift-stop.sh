@@ -51,32 +51,23 @@ BASELINE_ONLY="$(run_stop ownership-session false)"
 }
 printf '%s\n' 'const other = 2;' > "$REPO/other.js"
 OWNED="$(run_stop ownership-session false)"
-printf '%s' "$OWNED" | grep -q 'Session-owned uncommitted paths: M other.js'
-printf '%s' "$OWNED" | grep -q 'create a scoped local commit by default'
-printf '%s' "$OWNED" | grep -q 'Never include pre-existing paths'
-printf '%s' "$OWNED" | grep -q 'push without explicit direction'
-if printf '%s' "$OWNED" | grep -q 'M app.js'; then
-  echo "pre-existing app.js leaked into session-owned scope" >&2
+[ -z "$OWNED" ] || {
+  echo "ordinary source edits must not create Stop ceremony" >&2
   exit 1
-fi
+}
 
-# A comment introduced in a clean-at-start file is caught immediately and again at Stop.
+# Comment length alone is not a documentation violation.
 new_repo comments
 run_event SessionStart comment-session >/dev/null
 printf '%s\n' '// why one' '// why two' 'const value = 1;' > "$REPO/app.js"
 POST="$(run_event PostToolUse comment-session "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"comment-session\",\"tool_input\":{\"file_path\":\"$REPO/app.js\"}}")"
-printf '%s' "$POST" | grep -q 'New multi-line line-comment'
-FIRST="$(run_stop comment-session false)"
-printf '%s' "$FIRST" | grep -q '"decision":"block"'
-printf '%s' "$FIRST" | grep -q 'New multi-line line-comment'
-ACTIVE="$(run_stop comment-session true)"
-[ -z "$ACTIVE" ] || {
-  echo "Stop continuation must be allowed when stop_hook_active=true" >&2
+[ -z "$POST" ] || {
+  echo "comment length must not trigger PostToolUse output" >&2
   exit 1
 }
-SAME="$(run_stop comment-session false)"
-[ -z "$SAME" ] || {
-  echo "unchanged Stop findings must be deduplicated" >&2
+FIRST="$(run_stop comment-session false)"
+[ -z "$FIRST" ] || {
+  echo "comment length must not block Stop" >&2
   exit 1
 }
 
@@ -100,18 +91,13 @@ RENAMED="$(run_stop memory-rename-session false)"
 printf '%s' "$RENAMED" | grep -q 'old-fact.md (renamed but old pointer remains)'
 printf '%s' "$RENAMED" | grep -q 'new-fact.md (renamed but new pointer is missing)'
 
-# Source work gets one scope-safe disposition/evidence nudge, not a prescribed test matrix.
+# Ordinary source work does not get a mandatory disposition, commit, or verification ceremony from this docs hook.
 new_repo disposition
 run_event SessionStart disposition-session >/dev/null
 printf '%s\n' 'const value = 3;' > "$REPO/app.js"
 DISPOSITION="$(run_stop disposition-session false)"
-printf '%s' "$DISPOSITION" | grep -q "'no durable docs impact' with a reason"
-printf '%s' "$DISPOSITION" | grep -q 'do not expand the test matrix or mutate shared/runtime state without authorization'
-printf '%s' "$DISPOSITION" | grep -q 'create a scoped local commit by default'
-printf '%s' "$DISPOSITION" | grep -q 'Never include pre-existing paths or push without explicit direction'
-DISPOSITION_SAME="$(run_stop disposition-session false)"
-[ -z "$DISPOSITION_SAME" ] || {
-  echo "a source-only disposition nudge must be one-shot for unchanged state" >&2
+[ -z "$DISPOSITION" ] || {
+  echo "source-only work must not be blocked by docs lifecycle" >&2
   exit 1
 }
 
@@ -120,4 +106,4 @@ PRECOMPACT="$(run_event PreCompact disposition-session)"
 printf '%s' "$PRECOMPACT" | grep -q 'Preserve the current objective'
 printf '%s' "$PRECOMPACT" | grep -q 'Do not create or commit repository docs solely because compaction is occurring'
 
-echo "docs-drift ownership, authorization, pointer, comment, and Stop convergence verified"
+echo "docs-drift ownership, memory pointer, and low-ceremony Stop behavior verified"

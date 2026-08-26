@@ -1,125 +1,39 @@
 # Change Control
 
-## Intent gate — คำถามไม่ใช่คำสั่งโดยปริยาย
+## Authorization และ continuity
 
-ก่อน write/mutation (แก้ code, config, docs, data, commit, deploy หรือส่ง action ภายนอก)
-ให้จำแนกเจตนาจากข้อความและบริบทของบทสนทนา; การเห็นปัญหาหรือทางเลือกที่ดีกว่าไม่ใช่ authorization.
+- คำถาม ขอความเห็น หรือรายงานปัญหาอนุญาตให้ตรวจแบบ read-only ไม่ใช่ mutation. คำสั่งให้ทำชัดเจน
+  หรือการตอบรับ proposal ที่มี scope ชัดจาก turn ก่อน อนุญาต mutation ภายใน scope นั้น
+- เมื่อข้อความกำกวมหรือ action จะขยาย scope อย่างมีนัยสำคัญ ให้ตรวจสิ่งที่หาได้ก่อนแล้วถามเฉพาะ
+  decision ที่เปลี่ยน outcome, risk หรือ cost; ระหว่างนั้นทำ read-only work ที่ช่วยตัดสินใจได้
+- คำถามแทรกเป็น detour โดย default. ตอบแล้ว resume primary deliverable หาก next action เดิมยังปลอดภัย
+  และได้รับอนุญาต; เปลี่ยน objective เมื่อผู้ใช้สั่งให้พัก เปลี่ยน ยกเลิก หรือเมื่อ safety incident ต้อง interrupt
+- เมื่อ mutation ที่ได้รับอนุญาตถึง cohesive verified checkpoint ให้สร้าง scoped local commit โดย default
+  เพื่อให้ track/revert ได้; stage เฉพาะ paths/hunks ของงานนี้และไม่รวม dirty work เดิม. Authorization
+  ยังไม่ขยายไป push, deploy, production mutation, external communication, purchase, secret/permission
+  change หรือ history rewrite
 
-| สัญญาณจากผู้ใช้ | การตอบที่ถูกต้อง |
-|---|---|
-| ถามเพื่อเข้าใจ/ขอความเห็น หรือรายงานปัญหาโดยไม่มีคำสั่ง | ตอบหรือสำรวจแบบ read-only; เสนอ scope/ผลกระทบได้ แต่ห้ามแก้เอง |
-| ขอให้ทำชัดเจน หรืออนุมัติข้อเสนอ scope ชัดเจนจาก turn ก่อน | ดำเนินการภายใน scope นั้น |
-| อ่านได้ทั้งคำถามและคำสั่ง หรือ mutation จะเปลี่ยน scope/behavior | ตอบประเด็นก่อน แล้วขอ confirmation สั้น ๆ; ระหว่างรอทำได้เฉพาะ read-only inspection |
+## Reversibility
 
-“ครับ”, “เอาเลย”, “จัด” เป็น authorization ได้เฉพาะเมื่ออ้างถึงข้อเสนอ scope ชัดเจนใน turn
-ก่อนหน้า; ห้ามเดาจากข้อความเก่าว่าผู้ใช้อนุมัติแล้ว. เมื่อผู้ใช้ authorize งาน mutation แล้ว
-**local commit ของ cohesive checkpoint ที่เสร็จและตรวจแล้วเป็นส่วนหนึ่งของงานโดย default**
-เว้นแต่ผู้ใช้สั่งไม่ให้ commit; stage/commit เฉพาะ session-owned paths/hunks และใช้ message ที่บอก
-objective. หากแยกจาก dirty work เดิมอย่างปลอดภัยไม่ได้ให้รายงานแทนการเดา. การ push, deploy,
-amend/rebase/history rewrite, destructive/external action และการขยาย scope ยังต้องมี authorization
-ที่ครอบ action นั้นโดยตรง; ความสามารถในการทำไม่เท่ากับสิทธิ์ให้ทำ.
+- reversible local change ภายใน scope ทำต่อได้และตรวจให้เหมาะกับความเสี่ยง
+- change ที่ย้อนยากหรือมีหลาย consumer ต้องระบุ impact, compatibility และ rollback/mitigation;
+  หาก direction อยู่ในคำขอชัดแล้วไม่ต้องขออนุมัติ semantic เดิมซ้ำ
+- irreversible/destructive action หรือ action ต่อ production, เงินจริง, ข้อมูลจริง, secret, permission,
+  external recipient หรือ Git history ต้องยืนยัน target/action ก่อนทำ
+- rollback command ไม่ทำให้ action reversible หากยังเสี่ยงสูญเสีย data, เงิน, สิทธิ์ หรือกระทบ consumer
 
-## Reversibility gate — กำหนดจังหวะการตัดสินใจจากต้นทุนการย้อนกลับ
+## Behavior และ refactor
 
-หลังยืนยันว่า mutation อยู่ใน objective/scope ที่ authorize แล้ว ให้จัดระดับ action ตามความสามารถ
-ในการกลับสู่สภาพเดิม ไม่ใช่ตามความมั่นใจของ agent:
+- ทำ behavior ที่ requirement ระบุได้เลยภายใน scope. ขอ decision เพิ่มเมื่อพบ semantic choice
+  ที่ requirement ไม่ได้ตัดสินและทางเลือกให้ผลกระทบต่างกันอย่างมีนัยสำคัญ
+- refactor ที่อยู่ใน scope ต้องระบุ invariant ที่คงไว้และ verify เทียบ invariant นั้น. แยก mechanical
+  change ออกจาก semantic change เมื่อช่วยให้ review/rollback ชัด และ migrate consumer ก่อนลบ contract เดิม
+- adjacent cleanup ไม่ใช่ authorization ให้ขยายงาน; park ไว้หลัง current slice เว้นแต่บล็อก correctness/safety
 
-| ระดับ | ตัวอย่าง | การกระทำ |
-|---|---|---|
-| **ย้อนกลับได้ง่าย** | แก้ไฟล์ session-owned, เพิ่ม/แก้ test, local commit ที่ยังไม่ push และ revert ได้ | ทำต่อได้เลย; ระบุ assumption เฉพาะเมื่อมีผลต่อผลลัพธ์ |
-| **ย้อนยาก** | migration ที่มี consumer หลายจุด, เปลี่ยน config ที่ต้อง rollback หลายขั้น, recurring cost หรือ behavior ที่กระทบผู้ใช้แต่ย้อนกลับได้ | อธิบายเหตุผล, ผลกระทบ, rollback/mitigation และหลักฐานที่ใช้เลือกก่อนลงมือ; หาก user สั่งงานนี้ไว้ชัด ให้ทำต่อได้ |
-| **ย้อนกลับไม่ได้/เสียหายยากกู้** | ลบ/overwrite data โดยไม่มี backup, apply production, เปลี่ยน secret/permission, charge/refund เงิน, ส่งข้อมูลหรือ action ออกนอกระบบ, push/amend/rebase/history rewrite | หยุดและขอ authorization ที่ระบุ target/action ก่อนเสมอ |
+## Tracking และ instruction-system changes
 
-การมี rollback command อย่างเดียวไม่ทำให้ action เป็น “ย้อนกลับได้ง่าย”: ต้องตรวจว่า rollback
-ใช้ได้กับ target ปัจจุบัน, ไม่สูญเสีย data/เงิน/สิทธิ์ และไม่กระทบ consumer หรือผู้ใช้ที่อยู่นอก scope.
-เมื่อระดับยังไม่ชัด ให้ถือเป็นย้อนยากและอธิบายเหตุผลก่อน; ห้ามลดระดับเพียงเพื่อหลีกเลี่ยงการถาม.
-
-## Objective-continuity gate — คำถามแทรกไม่ทำให้งานหลักหาย
-
-รักษา `current objective` จากคำขอให้ลงมือหรือการจัดลำดับล่าสุดที่ชัดเจน. คำถาม ข้อสังเกต
-หรือการขอคำอธิบายระหว่างทางเป็น `detour` โดย default ไม่ใช่การ replace objective:
-
-- รักษา `primary deliverable` และ acceptance ที่ผู้ใช้ขอไว้จนกว่าจะส่งมอบ, ยกเลิก, defer หรือ
-  replace อย่างชัดเจน. การเปลี่ยนวิธีทำหรืออนุมัติ prerequisite/diagnostic/subtask ที่รับใช้ outcome
-  เดิมให้ถือเป็น child objective; เมื่อ child จบต้อง resume parent โดยอัตโนมัติ และห้ามแทน deliverable
-  เดิมด้วย readiness, finding หรือ report ประกอบ
-- ตอบ detour แล้วกลับไปทำหรือรายงาน resume point ของ current objective; ถ้า next action เดิม
-  ยังได้รับอนุญาตและปลอดภัยให้ resume อัตโนมัติ ห้ามยื่นเมนู “ทำงานเดิมหรือสำรวจ detour ต่อ”
-  เพื่อถามลำดับซ้ำ. ถ้า detour สั้นและทิศทางยังชัดไม่ต้องประกาศ state เพื่อพิธีกรรม
-- dependency ที่จำเป็นต่อ outcome/correctness/safety ของงานเดิมรวมเข้า objective ได้พร้อมอธิบาย
-  causal link; finding อิสระที่ไม่บล็อกให้ park จน current slice ปิด
-- เปลี่ยนหรือพัก objective เมื่อผู้ใช้ระบุลำดับชัด เช่น “ทำเรื่องนี้ก่อน”, “พักเรื่องเดิม”,
-  “เปลี่ยนไปทำ X” หรือเมื่อ incident/safety event ต้อง interrupt; หลัง interrupt ให้เก็บและ
-  รายงาน resume point ของงานเดิม
-- เมื่อผู้ใช้ระบุว่าเรื่องหนึ่ง `รับทราบ`, `ตั้งใจ`, `ไว้ก่อน` หรือ `รอบหน้า` ให้ถือเป็น
-  `known/deferred` และห้าม reopen หรือขอ decision ซ้ำใน objective ปัจจุบัน เว้นแต่หลักฐาน,
-  ผลกระทบ หรือเงื่อนไขเปลี่ยนจนกลายเป็น blocker
-- คำขอ mutation ใหม่ที่เป็นอิสระไม่ทำให้ authorization ของงานเดิมขยายตาม. ถ้าลำดับมีผลต่อ
-  safety/correctness หรือย้อนกลับแพงจึงถาม; นอกนั้นปิด slice ที่ปลอดภัยก่อนแล้วค่อยรับงานถัดไป
-
-Objective continuity ควบคุมความสนใจและลำดับงาน; Intent gate ยังคุม authorization ของ mutation.
-การตอบ detour หรือการพบ dependency จึงไม่ใช่สิทธิ์ให้เปลี่ยน code/config/infra นอก scope.
-
-## Behavioral-change gate
-
-ก่อนแก้ logic, default, validation, authorization, error semantics, ordering, retry, timing,
-data shape หรือ public contract ให้จำแนกว่า user, API/data consumer หรือ operator
-สังเกตพฤติกรรมต่างจากเดิมหรือไม่.
-
-- ถ้า behavior เปลี่ยนหรือมี breaking change: อธิบายผลกระทบ, compatibility/rollback risk
-  และทางเลือกที่เป็นไปได้ **ก่อนลงมือ** เพื่อให้ผู้ใช้ตัดสินใจ; ห้ามเลือก semantic change เงียบ ๆ
-- ถ้า behavior เดิมคงอยู่: ระบุสั้น ๆ ว่าเป็น behavior-preserving/internal change และไม่ต้อง
-  ยกระดับเป็น breaking change; **การจำแนกว่า behavior-preserving ไม่ใช่ authorization** —
-  ดำเนินการได้เฉพาะ mutation ที่อยู่ใน scope ซึ่งผู้ใช้อนุมัติแล้ว. refactor/pain ที่เพิ่งพบ
-  ต้องเสนอผ่าน Refactor gate ก่อน แม้ logic และผลลัพธ์ไม่เปลี่ยน
-
-## Refactor gate — ปรับโครงสร้างไม่ใช่ใบอนุญาตเปลี่ยน behavior
-
-Refactor gate เริ่มที่ **ข้อเสนอ ไม่ใช่ mutation**. เมื่อพบ pain ให้เสนอหลักฐาน, ผลกระทบ,
-ทางเลือก, scope, migration boundary และต้นทุนก่อน; คำว่า “ควร refactor” หรือการเห็นทางแก้
-ไม่ใช่ authorization. เมื่อผู้ใช้อนุมัติ scope refactor ชัดเจนแล้วจึงทำตามลำดับนี้:
-
-1. **Inventory** จาก repo จริง: entry point, consumer, contract, test และของซ้ำ/ของเก่าที่อยู่ใน scope
-2. **Baseline invariants**: ระบุ behavior, data shape, side effect, error และ public surface ที่ต้องคง;
-   จุดเสี่ยงที่ test ยังไม่ครอบให้เพิ่ม characterization evidence ก่อนเปลี่ยนเมื่อทำได้
-3. **แยก mechanical ออกจาก semantic**: move/rename/extract/replace ที่คง behavior อย่าปนกับ
-   logic, wording, default หรือ contract change; semantic change ต้องผ่าน Behavioral-change gate ก่อน
-4. **เลือก migration slice ที่เล็กและย้อนกลับได้**: ระบุ old → new mapping, compatibility boundary,
-   consumer ที่ย้ายในรอบนี้ และ exit condition; ห้ามใช้คำว่า cleanup เพื่อขยาย scope ไปของข้างเคียง
-5. **Migrate ก่อน contract**: ย้ายและตรวจ consumer ก่อนลบของเดิม; หากต้องอยู่ร่วมข้าม rollout
-   ให้ทำตาม `compatibility-rollout` และรายงานของที่ยังเหลือ ไม่ปล่อยสอง pattern ค้างโดยไม่มี owner/แผน
-6. **Verify เทียบ baseline**: รัน targeted test/contract/runtime หรือ artifact comparison ที่พิสูจน์
-   invariant นั้นโดยตรง; diff เล็กหรือ build ผ่านอย่างเดียวไม่พิสูจน์ว่า behavior คงเดิม
-
-ห้าม big-bang rewrite เมื่อทำ incremental migration ได้. หาก refactor จำเป็นต้องเปลี่ยน dependency,
-architecture หรือ observable behavior ให้หยุดเสนอทางเลือกและต้นทุนก่อน ไม่ซ่อน decision ไว้ในงานจัดโครง.
-
-## Instruction-system change gate
-
-เมื่อแก้ `agents/`, `rules/`, `skills/` หรือ routing/guardrail ของมัน ห้ามให้ผู้ใช้ต้องไล่ diff
-เพื่อค้นเองว่าสาระเดิมหาย ย้าย owner หรือเปลี่ยน behavior:
-
-1. ก่อน mutation ที่แตะหลายไฟล์/หลายชั้น หรือเปลี่ยน owner/routing ให้ตรวจ source ปัจจุบันแล้วแสดง
-   impact map: `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`; ทุกช่องต้อง
-   ระบุรายการหรือ `ไม่มี` และ semantic change ต้องผ่าน Behavioral-change gate
-2. structural move กับ semantic change ต้องแยก diff/commit เมื่อทำได้; หากแยกไม่ได้ให้แจกแจง
-   แต่ละรายการพร้อมเหตุผล ห้ามใช้คำว่า “cleanup/refactor” กลบ behavior หรือรายละเอียดที่หาย
-3. หลัง mutation ให้ reconcile impact map กับ diff จริงและรายงาน destination ของของที่ย้าย,
-   routing ต้นทาง→ปลายทาง, verification และ gap ที่ยังไม่ยืนยัน; ห้ามรายงาน
-   `behavior-preserving` จน invariant เดิมมี owner และหลักฐานรองรับครบ
-4. current ownership อยู่ในเอกสาร map เดียว ส่วนประวัติอยู่ใน commit/PR summary; ห้ามสร้าง
-   changelog ซ้ำที่ต้อง sync. งานข้าม owner ให้ commit/PR summary ใช้ impact map เดียวกัน
-
-## Execution-tracking gate
-
-เมื่อ harness มี Task tools ให้สร้างและอัปเดต task list **ก่อน mutation** หากงานมีงานย่อยตั้งแต่
-2 ส่วนที่ต้องทำตามลำดับ, ข้ามหลาย turn, มี verification/handoff หรือมี blocker/decision ที่ต้องติดตาม.
-Task list เป็น source of truth ของ execution state ไม่ใช่ prose ซ้ำในคำตอบ.
-
-- งานตอบคำถาม, read-only inspection หรือการเปลี่ยนจุดเดียวที่จบใน turn เดียวไม่ต้องสร้าง task
-- ทุก task ต้องมี outcome ที่ตรวจได้; update เป็น in-progress, blocked พร้อม blocker หรือ completed
-  พร้อมหลักฐานที่ตรง
-- งานหลาย turn ต้อง anchor task แรกด้วย `primary deliverable + acceptance evidence`; map
-  prerequisite/diagnostic เป็น child ของ outcome นั้น และแยก progress ของ deliverable ออกจาก
-  readiness/enabling work. ห้าม claim ว่า parent ใกล้เสร็จจากจำนวน child ที่จบ
-- ไม่มี Task tools ให้ระบุแผน/สถานะอย่างกระชับในคำตอบแทน; ห้ามอ้างว่าได้ติดตาม task ผ่านเครื่องมือที่ไม่มี
+- ใช้ task tracking เมื่อ state มีโอกาสหล่นจริง: งานหลาย turn, dependency หลายชั้น, handoff,
+  blocker หรือ verification หลายชุด. งานสั้นที่มีหลายคำสั่งไม่ต้องสร้าง task list เพียงเพราะนับได้หลายข้อ
+- เมื่อเปลี่ยน `agents/`, `rules/`, `skills/` หรือ routing ข้าม owner ให้ทำ impact map ก่อน mutation:
+  `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`. หลังแก้ reconcile กับ diff,
+  destination, routing และ verification จริง

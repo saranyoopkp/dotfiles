@@ -33,7 +33,6 @@ STATE_DIR="${TMPDIR:-/tmp}/docs-drift-$ID-$SESSION_KEY"
 BASELINE_STATUS="$STATE_DIR/baseline-status"
 BASELINE_PATHS="$STATE_DIR/baseline-paths"
 STOP_STAMP="$STATE_DIR/stop-stamp"
-COMMENT_STAMP="$STATE_DIR/comment-stamp"
 mkdir -p "$STATE_DIR" 2>/dev/null || exit 0
 
 json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
@@ -60,44 +59,6 @@ session_status() {
   done
 }
 join_status() { sed 's/^ *//' | paste -sd ';' -; }
-
-is_docs_path() {
-  case "$1" in CLAUDE.md|docs/*|memory/*) return 0 ;; *) return 1 ;; esac
-}
-
-diff_for_path() {
-  path="$1"
-  if git -C "$ROOT" ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
-    git -C "$ROOT" diff --no-ext-diff --unified=0 HEAD -- "$path" 2>/dev/null
-  elif [ -f "$ROOT/$path" ]; then
-    git -C "$ROOT" diff --no-ext-diff --unified=0 --no-index /dev/null "$ROOT/$path" 2>/dev/null || true
-  fi
-}
-
-# Consecutive added line comments are an audit lead; public contract docstrings need judgment.
-new_multiline_comments_for_path() {
-  path="$1"
-  diff_for_path "$path" | awk -v fallback="$path" '
-    /^\+\+\+ / { file=fallback; next }
-    /^@@ / { h=$0; sub(/^.*\+/, "", h); sub(/,.*/, "", h); line=h-1; run=0; next }
-    /^\+/ && !/^\+\+\+/ {
-      line++; text=substr($0,2)
-      if (text ~ /^[[:space:]]*(#|\/\/)/) { run++; if (run == 2) print file ":" (line-1) }
-      else run=0
-      next
-    }
-    /^ / { line++; run=0; next }
-    /^-/ { run=0; next }
-  '
-}
-
-session_comment_findings() {
-  session_status | status_paths | while IFS= read -r path; do
-    [ -n "$path" ] || continue
-    case "$path" in *' -> '*) path="${path##* -> }" ;; esac
-    new_multiline_comments_for_path "$path"
-  done | sort -u | paste -sd ', ' -
-}
 
 memory_pointer_findings() {
   status_file="$1"
@@ -169,54 +130,19 @@ case "$EVENT" in
     emit "${PARTS# }" ",\"watchPaths\":[$WATCH]"
     ;;
 
-  PostToolUse)
-    FP="$(json_value file_path)"
-    case "$FP" in "$ROOT"/*) FP="${FP#"$ROOT"/}" ;; esac
-    [ -n "$FP" ] || exit 0
-    is_baseline_path "$FP" && exit 0
-    COMMENTS="$(new_multiline_comments_for_path "$FP" | sort -u | paste -sd ', ' -)"
-    [ -n "$COMMENTS" ] || { : > "$COMMENT_STAMP"; exit 0; }
-    CHASH="$(printf '%s' "$COMMENTS" | cksum | cut -d' ' -f1)"
-    [ "$CHASH" = "$(cat "$COMMENT_STAMP" 2>/dev/null || true)" ] && exit 0
-    printf '%s' "$CHASH" > "$COMMENT_STAMP"
-    emit "[docs] New multi-line line-comment(s) in the session-owned edit: $COMMENTS. Keep concise why/constraint near code and move narrative/history to project docs with a pointer; retain multi-line docstrings when they are genuine public interface contracts."
-    ;;
-
   Stop)
     OWNED_FILE="$STATE_DIR/session-status"
     session_status > "$OWNED_FILE"
     OWNED="$(join_status < "$OWNED_FILE")"
     [ -n "$OWNED" ] || exit 0
-    PARTS="[scope] Session-owned uncommitted paths: $OWNED. If the authorized work reached a cohesive verified checkpoint, create a scoped local commit by default unless the user said not to commit. Never include pre-existing paths or push without explicit direction."
-
-    SOURCE_PATHS=""
-    DOC_PATHS=""
-    while IFS= read -r line; do
-      path="${line#???}"
-      if is_docs_path "$path"; then DOC_PATHS="$DOC_PATHS $path"; else SOURCE_PATHS="$SOURCE_PATHS $path"; fi
-    done < "$OWNED_FILE"
-    if [ -n "$SOURCE_PATHS" ]; then
-      PARTS="$PARTS [verify] Before claiming completion, state the behavior claim, evidence obtained, and any remaining verification gap for:$SOURCE_PATHS. Choose evidence proportional to this task's risk and requested acceptance level; do not expand the test matrix or mutate shared/runtime state without authorization. [docs] Give the documentation disposition: updated files, 'no durable docs impact' with a reason, or out-of-scope/deferred with owner/follow-up. Do not create docs solely to satisfy this hook."
-    fi
-    [ -n "$DOC_PATHS" ] && PARTS="$PARTS [docs] Review session-owned docs/memory for accuracy, secrets, and personal metadata before any authorized commit."
-
-    COMMENTS="$(session_comment_findings)"
-    [ -n "$COMMENTS" ] && PARTS="$PARTS [docs] New multi-line line-comment(s): $COMMENTS. Resolve only in session-owned files; public interface contracts may remain as docstrings."
-
     POINTERS="$(memory_pointer_findings "$OWNED_FILE" | paste -sd ', ' -)"
-    [ -n "$POINTERS" ] && PARTS="$PARTS [docs] Session-owned memory lifecycle violation: $POINTERS. Sync the shared leaf and its memory/MEMORY.md pointer before completion."
+    [ -n "$POINTERS" ] || exit 0
+    PARTS="[docs] Session-owned memory lifecycle violation: $POINTERS. Sync the shared leaf and its memory/MEMORY.md pointer before completion."
 
     HASH="$(printf '%s' "$PARTS" | cksum | cut -d' ' -f1)"
     [ "$HASH" = "$(cat "$STOP_STAMP" 2>/dev/null || true)" ] && exit 0
     printf '%s' "$HASH" > "$STOP_STAMP"
     block_stop "$PARTS"
-    ;;
-
-  TaskCompleted)
-    OWNED="$(session_status | join_status)"
-    MSG="[docs] Task checkpoint: state the documentation disposition and verification evidence/gap for the objective just completed. For authorized mutation work, create a scoped local commit by default at a cohesive verified checkpoint unless the user said not to; do not reopen deferred work, expand tests, mutate shared/runtime state, include pre-existing paths, or push without explicit direction."
-    [ -n "$OWNED" ] && MSG="$MSG Session-owned uncommitted paths: $OWNED; keep pre-existing paths out of any action."
-    emit "$MSG"
     ;;
 
   PreCompact)

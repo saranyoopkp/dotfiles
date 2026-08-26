@@ -88,9 +88,7 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 | Event | หน้าที่ |
 |---|---|
 | `SessionStart` | บันทึก baseline ตาม `session_id`, แยก dirty path เดิมเป็นของ user/previous session, ตรวจ memory link แบบ read-only และ register watchPaths; การ merge/ซ่อม link อยู่ใน `/docs:setup` |
-| `PostToolUse` (`Edit|Write`) | เตือน line-comment ใหม่ตั้งแต่ 2 บรรทัดทันที โดยตรวจเฉพาะไฟล์ clean-at-start ที่ session เพิ่งแก้ |
-| `TaskCompleted` | checkpoint disposition ของ docs + หลักฐาน/gap; local commit งานที่ได้รับอนุญาตเป็น default แต่ไม่เปิด deferred work, ขยาย test หรือ push เอง |
-| `Stop` | one-shot nudge เฉพาะ session-owned paths: commit visibility, docs disposition, verification claim/evidence/gap, comment และ memory-index lifecycle; ไม่ prescribe test matrix/runtime mutation |
+| `Stop` | บล็อกเฉพาะ shared-memory lifecycle ที่ session นี้ทำให้ pointer/index ไม่ตรง; source/docs edit ปกติไม่สร้าง ceremony เพิ่ม |
 | `PreCompact` | ส่ง objective, deferred scope, authorization และ verification gap เข้า summary; ไม่สร้าง repository work เพราะ compaction อย่างเดียว |
 
 > `FileChanged` เคย wire ไว้แต่**ตัดออกแล้ว** (2026-07-12) — ทดสอบยิงจริงพบว่า harness
@@ -99,17 +97,12 @@ init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.jso
 > เองอยู่แล้ว (system-reminder "modified by
 > the user or a linter") จึงไม่มี gap จริง
 
-`Stop` ขอให้รายงาน behavior claim, evidence และ gap แต่ไม่เลือกวิธีตรวจแทน agent/user:
-ระดับหลักฐานต้องสัมพันธ์กับความเสี่ยงและ acceptance ที่ตกลงไว้ และห้ามขยาย test matrix หรือ
-แตะ shared/runtime state โดยไม่มี authorization. Docs disposition เลือกได้สามแบบ: updated,
-`no durable docs impact` พร้อมเหตุผล, หรือ out-of-scope/deferred พร้อม owner/follow-up.
-
 Baseline เก็บใน temp state แยกด้วย repo + `session_id`; path ที่ dirty ก่อน SessionStart เป็น
 report-only และ hook จะไม่สั่ง edit/stage/commit. Path ที่ clean ตอนเริ่มแล้ว dirty ภายหลังจึงเป็น
 session-owned. ถ้า session แก้ไฟล์ที่ dirty อยู่ก่อน provenance ยังคลุมเครือและคงเป็น advisory.
 `Stop` ใช้ `decision:block` หนึ่งครั้งเพื่อให้ Claude รับ feedback แล้วอ่าน
 `stop_hook_active=true` และออกทันทีใน continuation; state เดิมถูก dedup. Hook เป็น
-self-contained และ comment detector เป็น deterministic audit lead ไม่ใช่ semantic verdict.
+self-contained และตรวจเฉพาะ invariant ของ shared-memory index ที่พิสูจน์แบบ deterministic ได้.
 
 ## Inline work-notes (TODO ในโค้ด → ตารางสถานะ)
 

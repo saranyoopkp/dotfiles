@@ -1,6 +1,6 @@
 ---
 name: docs
-description: "ตระกูล skill งานเอกสารทั้งหมด — setup (วางระบบเอกสาร repo), workspace (แยกเจ้าของความรู้ใน workspace หลาย independent repos), placement (เกณฑ์ว่าความรู้อยู่บ้านไหน comment/docstring/docs/memory/CLAUDE.md), link (ตรวจ broken reference), stale (ตรวจเนื้อหาเอกสารขัดกับโค้ด live) ใช้เมื่องานเกี่ยวกับเอกสาร/ความรู้แต่ยังไม่ชัดว่าเป็นด้านไหน — ถ้าชัดแล้วเรียก sub ตรง: /docs:setup /docs:workspace /docs:placement /docs:link /docs:stale"
+description: Route documentation-system work: repository setup, cross-repo ownership, knowledge placement, broken links, or stale-content audits. Use when documentation is the task and the relevant child is unclear; invoke a specific docs:* child directly when clear.
 ---
 
 # Docs — ตระกูลงานเอกสาร

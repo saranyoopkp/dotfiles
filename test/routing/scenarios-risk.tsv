@@ -1,0 +1,7 @@
+# require	forbid	label	task
+risk-review	-	risk-auth	ออกแบบ endpoint เปลี่ยน role ในระบบ multi-tenant ให้ป้องกัน cross-tenant access และวาง test ที่ตรง boundary
+risk-review	-	risk-money	แก้การแบ่งยอดชำระหลายรายการให้ผลรวมตรงต้นฉบับทุกสตางค์ พร้อมกำหนด rounding และ retry semantics
+risk-review	-	risk-webhook	ออกแบบ webhook receiver ที่ตรวจ signature รับ duplicate และต้อง replay event ที่ประมวลผลพลาดได้
+risk-review	-	risk-production	วางแผน deploy migration ที่แตะข้อมูล production พร้อม rollback หรือ forward recovery และ health verification
+-	risk-review	risk-date-format	เปลี่ยนรูปแบบวันที่บน label จาก DD/MM/YYYY เป็น YYYY-MM-DD โดยใช้ formatter เดิมและไม่เปลี่ยน timezone semantics
+-	risk-review	risk-provider-copy	แก้ typo ในข้อความ docs ที่เอ่ยชื่อ payment provider โดยไม่เปลี่ยน integration หรือ behavior

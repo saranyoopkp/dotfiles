@@ -20,7 +20,7 @@ description: Router สำหรับมาตรฐาน HTTP/REST API ใช
 | public contract change, version, deprecation หรือ migration | `api-design:evolution` |
 
 endpoint เดียวอ่านได้หลาย child ตาม flow จริง; ห้ามโหลดครบทุก child เพียงเพื่อ checklist และห้าม
-ข้าม child ที่ trigger ตรงเพียงเพราะ handler ดูเล็ก. `authz-multitenancy`, validation boundary,
+ข้าม child ที่ trigger ตรงเพียงเพราะ handler ดูเล็ก. `risk-review`, validation boundary,
 performance/N+1 และ external integration safety ยังเป็น owner เดิม — skill นี้ชี้ boundary
 แต่ไม่ซ้ำ policy.
 

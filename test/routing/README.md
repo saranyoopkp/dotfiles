@@ -1,9 +1,9 @@
 # test/routing — skill auto-invocation regression
 
-domain rule ที่ลึก (`ui-ux-baseline`, `data-design`, ...) ทำเป็น **skill** (on-demand):
+domain rule ที่ลึก (`ui-ux-baseline`, `data-design`, `risk-review`, ...) ทำเป็น **skill** (on-demand):
 description บาง ๆ always-loaded เป็น routing signal, body โหลด**ครั้งเดียวตอน invoke**
 (ไม่มี pointer, ไม่โหลดทุก turn แบบ path-scoped). ความเสี่ยงคือ **โมเดลไม่ auto-invoke เมื่อควร**
-หรือ **invoke ตอนไม่เกี่ยว** suite นี้ยิงงานหลาย domain ผ่าน fresh `claude -p` แล้วเช็คว่า
+หรือ **invoke ตอนไม่เกี่ยว** suite นี้ยิงงานหลาย domain พร้อม simple-task negative-routing cases ผ่าน fresh `claude -p` แล้วเช็คว่า
 skill *หลัก* fire (miss=FAIL), NONE ไม่ fire อะไร. **related skill co-fire เพิ่มได้** —
 webhook↔data-design เนื้อทับกัน (queue/retry) → co-fire แบบ non-deterministic เป็นเรื่องปกติ
 ไม่นับ over-invoke. on-demand skills ตั้งใน `ONDEMAND_SKILLS` ของ run.sh

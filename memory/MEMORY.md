@@ -3,7 +3,7 @@
 ## Feedback (preference/วิธีทำงานกับ user)
 - [Deliverable form: data first](deliverable-form-data-first.md) — รายงาน/ผลวัด = ตัวเลข+กราฟเป็นหลัก ไม่ใช่ความเรียง
 - [Audit questions = check evidence](audit-questions-mean-check-evidence.md) — คำถามสั้น "จริงหรอ/แม่นหรอ" = เปิดหลักฐานดิบ ไม่ใช่อธิบายเพิ่ม
-- [Code comments: why + pointer](code-comments-why-plus-pointer.md) — comment ≤2 บรรทัด + pointer ห้ามยัดรายละเอียด inline
+- [Code comments: local why, broader rationale in docs](code-comments-why-plus-pointer.md) — ใช้ scope/reader เป็นเกณฑ์; ความยาวอย่างเดียวไม่บังคับย้าย
 - [Validate whole file after edit](validate-whole-file-after-edit.md) — append/sed แล้วอ่านเต็มไฟล์ตรวจโครงก่อน commit
 
 ## Project quirks/กับดัก

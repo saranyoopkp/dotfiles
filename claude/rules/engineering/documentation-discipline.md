@@ -1,54 +1,14 @@
-# Documentation Discipline
+# Documentation Safety
 
-ใช้กับทุก repo; งาน setup, placement, workspace, link และ stale audit ใช้ `/docs:*`.
+- Update an owned contract, decision, runbook, or recall hook when the current change makes it stale; do not perform
+  a general documentation audit on every mutation.
+- Keep one authoritative owner for a fact and use pointers where another surface needs discovery. Runtime-sensitive
+  claims must be checked against the owner or live source before being treated as current.
+- Never commit secrets or private operational data to shared documentation. A durable audit finding needs evidence
+  and a status that does not overstate what was verified.
+- Put explanation where its future reader will encounter it: local constraints near code, interface contracts in
+  the language's normal API documentation, and broader rationale/runbooks in repository docs. Length alone does not
+  determine placement.
 
-## Invariant
-
-- `CLAUDE.md` คือสถานะปัจจุบัน ไม่ใช่ changelog; decision จดเหตุผล ทางที่ไม่เลือก และวันที่
-- อัปเดตเอกสารใน commit เดียวกับงาน และจดเฉพาะสิ่งที่โค้ดเล่าเองไม่ได้
-- fact มีบ้านเดียว: `CLAUDE.md` = push, `docs/` = pull, `MEMORY.md` = recall router,
-  `memory/<fact>.md` = selective pull; ที่อื่นใช้ pointer ไม่คัดเนื้อซ้ำ
-- claim ที่เปลี่ยนตาม environment/runtime ต้องมี authoritative owner ที่ตรวจ state นั้นได้;
-  root/sibling เป็น router ไม่ใช่หลักฐานแทน owner. ก่อนยืนยันหรือปฏิเสธสถานะปัจจุบันให้เปิด
-  owner หรือ live source ตามชนิดคำถาม แม้เอกสารที่อยู่ใกล้กว่าจะกล่าวไว้ต่างกัน
-- create/move/rename/delete shared `memory/<fact>.md` ต้องเพิ่ม/แก้/ลบ pointer + recall hook
-  ใน `memory/MEMORY.md` commit เดียวกัน; แก้เนื้อหาให้ตรวจว่า hook ยังตรงและแก้เมื่อความหมายเปลี่ยน
-- sensitive/private ห้ามอยู่ในไฟล์ที่ git track: operational docs ใช้ `docs/private/` และ
-  fact ส่วนตัว/เฉพาะเครื่องใช้ `memory/private/` ของ repo นั้น ๆ (relative จาก Git root);
-  gitignore ทั้งคู่และห้าม index private memory ลง shared `MEMORY.md`
-- fact ที่สร้างซ้ำได้จาก code/schema/command ให้ชี้ source ไม่ hardcode สำเนา
-- point-in-time doc ระบุวันที่/scope; living doc ต้องตรงกับ state ปัจจุบัน
-- finding ถาวรต้องมี `status (Verified/Unverified/Contradicted)`, provenance และ checked date
-- internal docs ใช้ภาษาที่ทำให้จดจริง (ไทยได้); code, identifier และ commit ใช้อังกฤษ
-
-## จังหวะจด
-
-- เมื่อปิดงาน mutation หนึ่งชิ้น ให้ตรวจ CLAUDE.md/docs/memory ทันที. ถ้า mutation ปัจจุบัน
-  ทำให้ contract, decision, runbook หรือ recall hook ที่เกี่ยวข้อง stale ให้อัปเดตพร้อมงาน;
-  default คือ inventory/decision/quirk สั้น ๆ ใช้เวลาเป็นนาที ไม่ใช่เรียงความ
-- เมื่อ mutation เปลี่ยน fact ที่ถูกอ้างข้าม repo ให้ค้น assertion ซ้ำใน workspace/root/sibling;
-  แก้ owner แล้วลบหรือเปลี่ยนสำเนาเป็น pointer ใน scope ที่อนุมัติ. จุดนอก scope ให้ส่ง handoff
-  ที่ระบุ owner, contradiction และ next action แทนการปล่อยให้สำเนาดูเป็น current truth
-- pre-existing stale note, known issue หรือหนี้เอกสารที่ไม่บล็อก outcome ปัจจุบันให้ park;
-  ห้ามเปลี่ยนเป็นคำถามหรืองานใหม่ก่อนปิด current slice. เมื่อผู้ใช้ระบุว่าเรื่องนั้นรับทราบ,
-  ตั้งใจ หรือ defer แล้ว ให้ไม่ reopen ใน objective ปัจจุบัน; รายงานท้ายงานได้หนึ่งครั้งเมื่อ
-  เอกสารอาจทำให้ session ถัดไปตัดสินใจผิด และแก้เมื่อผู้ใช้สั่งหรืออยู่ใน scope เอกสาร
-- quirk หรือปัญหาที่ใช้เวลาหาสาเหตุให้จด `symptom → root cause → fix` พร้อมข้อจำกัดที่ยังมีผล
-- เมื่อผู้ใช้ต้องทัก pain, preference หรือ behavior เดิมเป็นครั้งที่สอง ให้เสนอทำเป็น durable record
-  ใน owner ที่ถูกต้องหลังปิด current slice; ถ้าอยู่ใน scope mutation ที่อนุมัติแล้วให้อัปเดตพร้อมงาน.
-  หากผู้ใช้ defer แล้วไม่เสนอซ้ำจนกว่าจะถูกหยิบขึ้นมาหรือมีเงื่อนไขใหม่
-- docs กองแบนเกิน ~7 ไฟล์, index ไม่ตรงไฟล์จริง หรือบ้านของ fact ไม่ชัด ให้ invoke
-  `docs:placement` หรือ `docs:setup`; ห้ามจัดโครงใหม่เกิน scope เงียบ ๆ
-
-## ในโค้ด
-
-- comment ใส่เฉพาะ why/constraint หนึ่งบรรทัดพร้อม pointer; **ตั้งแต่ 2 บรรทัด** ให้ย้าย
-  narrative/history/detail ไป docs ก่อน แล้วเหลือ pointer ที่มีปลายทางจริงใน repo; ห้ามเขียน
-  pointer ที่ commit แล้วไปพึ่ง `~/.claude/` หรือ path เฉพาะเครื่องซึ่ง clone อื่นเปิดไม่ได้
-- docstring คือ public interface contract และ public interface ต้องมีตาม convention ของภาษา;
-  tutorial, postmortem และ changelog ไป docs
-- ก่อนเรียกใช้/แก้/ทำซ้ำ symbol เดิมให้อ่าน docstring ก่อน; ก่อนแก้จุดที่มี comment-pointer
-  ให้เปิดปลายทางก่อน ไม่เดาจากชื่อ. contract ขัด behavior จริงให้แก้พร้อมงาน
-
-รายละเอียดการเลือกบ้านและ remediation อยู่ `/docs:placement`; ห้ามทำ cleanup เกิน scope
-เพียงเพราะพบหนี้เอกสาร.
+Invoke `docs` or a relevant `docs:*` child when documentation itself is the task, placement is genuinely ambiguous,
+or topology/link/staleness requires a procedure. Incidental code comments do not require a docs skill.

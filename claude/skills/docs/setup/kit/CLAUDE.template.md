@@ -149,8 +149,9 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
   ระหว่าง module) อยู่ root
 
 **สองชั้นในโค้ด (อยู่ใต้ตารางเดียวกัน — ถูกอ่านใกล้โค้ดที่สุด):**
-- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → ใส่ได้เฉพาะ why/constraint ที่โค้ดแสดง
-  เองไม่ได้; comment ตั้งแต่ **2 บรรทัดขึ้นไป** ต้องสร้าง `docs/` ปลายทางก่อน ย้ายรายละเอียดไป แล้วเหลือหนึ่งบรรทัด + pointer — รายละเอียด/ประวัติ/ผลทดลอง inline = ผิดบ้าน;
+- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → เก็บ why/constraint ที่จำเป็นต่อ local context;
+  rationale, history, experiment หรือ procedure ที่กว้างกว่าจุดนั้นให้ย้ายไป `docs/` พร้อม pointer
+  เมื่อช่วยให้ค้นและดูแลได้ดีขึ้น — จำนวนบรรทัดอย่างเดียวไม่ใช่เกณฑ์;
   pointer ที่ commit ต้อง resolve จาก clone ของ repo ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง;
   ห้าม commented-out code (git จำให้) และห้ามเล่าว่าบรรทัดถัดไปทำอะไร;
   **ขาอ่าน: เจอ comment ที่มี pointer ตอนแก้จุดนั้น = เปิด doc ตามก่อนแก้** ไม่ใช่ข้าม
@@ -201,13 +202,13 @@ symlink บน unix) เขียน/อ่าน memory ตามปกติ�
    — จดเฉพาะสิ่งที่**โค้ดเล่าเองไม่ได้** (ทำไม/ข้อจำกัด/กับดัก) ห้ามเล่า implementation ซ้ำ
 2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret);
    ถ้า shared leaf เปลี่ยน lifecycle ให้ sync `memory/MEMORY.md` และตรวจ pointer/hook
-3. เมื่องาน mutation ที่ได้รับอนุญาตถึง cohesive checkpoint ให้สร้าง local commit โดย default และ
-   ให้เอกสารอยู่ commit เดียวกับงาน; stage เฉพาะ session-owned paths/hunks ห้ามรวม dirty work เดิม
-   และห้าม push หากผู้ใช้ไม่ได้สั่ง. รวมถึงลบ `TODO(scope)` ในโค้ดที่งานนี้ปิดแล้ว
+3. เมื่อ mutation ที่ได้รับอนุญาตถึง cohesive verified checkpoint ให้สร้าง local commit เป็น default
+   และให้เอกสารอยู่ commit เดียวกับงาน; stage เฉพาะ paths/hunks ใน scope ห้ามรวม dirty work เดิม
+   และห้าม push หากผู้ใช้ไม่ได้สั่ง.
+   รวมถึงลบ `TODO(scope)` ในโค้ดที่งานนี้ปิดแล้ว
    (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
 4. **section ไหนใน CLAUDE.md โตเกิน ~15 บรรทัด → promote ทันที**: ย้ายเนื้อไป
    `docs/<topic>.md` (หรือ `memory/<fact>.md` ถ้าเป็น fact สั้น) แล้วเหลือสรุป 1–3 บรรทัด
    + ลิงก์ — ห้ามปล่อยให้ CLAUDE.md เป็นที่กองเนื้อหา (มันถูกโหลดเต็มทุก session)
-_(มี lifecycle hooks ใน `.claude/settings.json` คอยเตือนระหว่างงาน; ข้อความ hook เป็น signal
-ให้ disposition ตาม objective ปัจจุบันและ commit เฉพาะงานที่ได้รับอนุญาต ไม่ใช่สิทธิ์เปิดงานเพิ่ม
-หรือ push)_
+_(lifecycle hooks ใน `.claude/settings.json` ตรวจเฉพาะ baseline/link, shared-memory index และ
+continuity; ไม่บังคับ docs disposition หรือ commit ของ source edit ปกติ)_

@@ -7,7 +7,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 
 ## ทำงานกับ repository นี้
 
-- `claude/rules/` คือ default engineering principles ที่โหลดทุก session; อ่าน [operating-contract.md](claude/rules/core/operating-contract.md) ก่อนเพิ่มหรือย้าย rule
+- `claude/rules/` คือ safety invariants แบบสั้นที่โหลดทุก session; domain procedure อยู่ใน skills
 - `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
 - `claude/agents/` คือ SCC (ทำงานหลัก) และ ACV (ตรวจรับอิสระ)
 - `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand
@@ -16,7 +16,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 ## กติกาการออกแบบ config
 
 - rules และ agent specs ต้อง generic: ห้ามใส่ชื่อระบบจริงหรือรายละเอียดเฉพาะ repo งาน
-- rule ใหม่ต้องมาจากปัญหาซ้ำที่พิสูจน์ได้ และต้องรวมเข้ากฎเดิมก่อนสร้างไฟล์ใหม่
+- rule ใหม่ต้องมาจากปัญหาซ้ำที่พิสูจน์ได้, ผ่านกรณีงานธรรมดาที่ไม่ควรถูก trigger และต้องรวมเข้ากฎเดิมก่อนสร้างไฟล์ใหม่
 - ทุก instruction ต้องเพิ่ม decision leverage: ช่วยให้ agent เข้าใจ ตัดสินใจ ลงมือ ตรวจ หรือ recover
   ได้ดีขึ้นอย่างมีนัยสำคัญ. “มีเนื้อ” ไม่ได้แปลว่าสั้น แต่ทุก detail ต้องให้ context หรือเปลี่ยน
   การทำงานจริง; ตัด prose, checklist, ceremony และ duplication ที่ไม่สร้างผลดังกล่าว
@@ -24,6 +24,9 @@ Project vision และขอบเขตหลักมี canonical owner อ
   และต้องบอก trigger, เหตุผล และ next action/alternative ที่ทำให้งานเดินต่อได้ ไม่จบที่ restriction
 - ก่อนคง instruction ให้ตอบว่า “ถ้าถอดข้อความนี้ออก การตัดสินใจ การลงมือ หรือการตรวจจะแย่ลงอย่างไร?”
   ถ้าตอบไม่ได้ให้ลดหรือถอดออก
+- แก้ behavioral incident ด้วย instruction ที่เล็กที่สุดซึ่งครอบ root cause; ห้าม encode transcript,
+  ตัวอย่างเฉพาะเคส หรือ checklist รอบเหตุการณ์นั้นจนกลายเป็น universal workflow. เพิ่ม negative/non-trigger
+  case เมื่อมีโอกาส overfit และหยุดเพิ่มทันทีเมื่อหนึ่ง rule + หนึ่ง regression พิสูจน์ behavior ที่ต้องการได้
 - **Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน:**
 
   | Surface | เนื้อที่ควรมี |
@@ -67,7 +70,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
   และ reconcile กับ diff จริงหลังแก้
 - แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
 - อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
-- SCC ส่งงานที่เปลี่ยน behavior, public API หรือมี production/user risk ให้ ACV ตรวจ; งานเอกสารหรือการสำรวจไม่ต้องส่งเว้นแต่กำหนดไว้
+- SCC ส่ง feature, bug fix, public API หรือ change ที่มี production/user risk ให้ ACV ตรวจตามความเสี่ยง; งานเอกสารหรือการสำรวจไม่ต้องส่งเว้นแต่กำหนดไว้
 
 ## เอกสารอ้างอิง
 

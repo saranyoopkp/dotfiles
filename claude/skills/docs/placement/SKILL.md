@@ -1,6 +1,6 @@
 ---
 name: docs:placement
-description: ต้องใช้ทันทีเมื่อวางแผน ออกแบบ review หรือทำการจัดวางความรู้ระหว่าง inline comment, docstring, docs/, memory/ และ CLAUDE.md รวมถึงเมื่อจะเขียน comment/docstring, จด decision/quirk, จัด topology/index หรือถูกทักว่าเอกสารอยู่ผิดที่ แม้ยังไม่มี repo/ไฟล์จริงหรือผู้ใช้ขอเพียงแผน; invoke ก่อน inventory แล้วค่อยระบุ Unverified หากหลักฐานยังไม่พร้อม
+description: Decide where substantial repository knowledge belongs among comments, docstrings, docs, memory, and CLAUDE.md. Use when documentation placement or topology is the actual decision; not for ordinary comments or incidental documentation updates with an obvious owner.
 ---
 
 # Doc Placement — ความรู้ทุกชิ้นมีบ้านเดียว เลือกบ้านจาก "กลไกที่ถูกอ่าน"
@@ -14,7 +14,7 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
 | ชั้น | ถูกอ่านเมื่อ | ใส่ได้เฉพาะ | เพดาน |
 |---|---|---|---|
 | **codetag** `TODO(scope):` | grep/ตารางสถานะ | เครื่องหมายงานค้าง (PEP 350) — ไม่ใช่คำอธิบาย | **ต้องตาย**ใน commit ที่ปิดงาน; แช่นาน = ย้ายขึ้น CLAUDE.md TODO |
-| **inline comment** | ตาแตะบรรทัดนั้นตอนแก้ | constraint/why ที่โค้ดแสดงเองไม่ได้ + guard ณ จุดแก้ ("ห้ามแก้โดยไม่ X") | **1 บรรทัด + pointer** |
+| **inline comment** | ตาแตะบรรทัดนั้นตอนแก้ | constraint/why ที่โค้ดแสดงเองไม่ได้ + guard ณ จุดแก้ | สั้นพอให้อ่านกับโค้ด; ใช้ pointer เมื่อ rationale กว้างกว่า local context |
 | **docstring** | จะเรียกใช้/แก้ function-module นั้น | interface contract: ทำอะไร, param/return, invariant, side effect | สั้น ครบ contract |
 | **docs/<topic>.md** | *รู้ตัว*ว่าทำเรื่องนั้น (pull) | เจาะลึกรายเรื่อง: design, runbook, ประวัติ, ผลทดลอง | ยาวได้ |
 | **memory/<fact>.md** | ถูก surface *ก่อนรู้ว่าต้องหา* (recall) | fact เม็ดเดียว: quirk, กับดัก, preference, decision สั้น | 1 fact/ไฟล์ |
@@ -25,16 +25,14 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
 
 ## วินัย comment (มาตรฐาน: code = how, comment = why)
 
-- **ตั้งแต่ 2 บรรทัดขึ้นไป**: สร้างปลายทางใน `docs/` ก่อน ย้ายรายละเอียด/ประวัติ/ผลทดลอง แล้วเหลือหนึ่งบรรทัดสำหรับการตัดสินใจหรือข้อจำกัดพร้อม pointer
-  ```python
-  # frozen instrument — แก้ prompt = ต้องรัน eval ซ้ำ (ทำไม+ผล sweep: docs/metrics.md)
-  ```
+- เก็บ local constraint และเหตุผลที่จำเป็นต่อการแก้ code ไว้ใกล้ code. ย้ายไป docs เมื่อเนื้อหา
+  เป็น rationale, history, experiment หรือ procedure ที่มี scope กว้างกว่า local context—not merely
+  because the comment spans a particular number of lines.
 - **สร้างปลายทางก่อนเขียน pointer — ทั้งไฟล์และหัวข้อ** (`docs/x.md#heading` = heading
   นั้นต้องมีจริงแล้ว); pointer ผี = แย่กว่าไม่มี pointer (`/docs:link` ตรวจทั้งสองระดับ)
 - pointer ที่ commit ต้อง resolve จาก clone ของ repo; ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง
 - ห้าม: เล่าว่าบรรทัดถัดไปทำอะไร · justify งานให้คนรีวิว · changelog ("เดิมเคยเป็น...") ·
   commented-out code (ลบ — git จำให้)
-- **ก่อนกดเขียน comment บรรทัดที่ 2 = สัญญาณว่ากำลังเขียน docs ผิดที่** — หยุด ย้าย
 
 ## วินัย docstring
 
@@ -94,7 +92,7 @@ description: ต้องใช้ทันทีเมื่อวางแผ�
 มักเป็น contract ที่ถูกต้อง · triple-quoted data string ก็ติดมาด้วย)
 
 ไล่ต่อไฟล์:
-1. **comment ตั้งแต่ 2 บรรทัดขึ้นไป** — จำแนกเนื้อทีละก้อน:
+1. **comment ที่มี scope เกิน local code context** — จำแนกเนื้อทีละก้อน:
    - why/constraint จริง → บีบเหลือหนึ่งบรรทัด + pointer
    - รายละเอียด/ประวัติ/ผลทดลอง → ย้ายเข้า `docs/<topic>.md` (สร้างไฟล์ก่อนเขียน pointer)
    - **comment เดียวกัน copy verbatim หลายไฟล์** → doc เดียว + pointer ทุกจุด (หนี้ถูกสุด

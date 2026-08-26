@@ -98,6 +98,14 @@ Commit boundary ปรับตาม workflow ของ user วันที่
 ยังห้ามรวม baseline dirty paths และการ push/deploy/history rewrite ต้อง explicit. ข้อนี้แทน wording
 ชั่วคราวที่กำหนดให้ commit ต้อง explicit ซึ่งทำให้งานหลาย project ค้างปนกันจนระบุที่มายาก.
 
+Cutover 2026-08-26: ถอน default นี้หลัง instruction-overload audit. Local commit กลับไปเป็น
+user/repository workflow decision; hook ไม่บล็อก source edit เพื่อบังคับ commit, docs disposition หรือ
+comment length แล้ว และ Stop คงเฉพาะ shared-memory leaf/index mismatch ที่ตรวจ deterministic ได้.
+
+หลัง audit ผู้ใช้เลือกให้ local commit กลับเป็น default ที่ cohesive verified checkpoint เพื่อให้
+track/revert ได้. Enforcement อยู่ใน core/SCC โดยตรง; hook ยังคง low-ceremony และไม่ block source edit
+เพื่อบังคับ commit.
+
 Regression shell test พิสูจน์ logic ระดับ script/settings เท่านั้น. ตามบทเรียนหลักด้านบน
 behavior ใน hook runner จริงยังต้องยืนยันด้วย Claude Code session ใหม่หลัง deploy/restart;
 ห้ามสรุปว่า live integration ผ่านจากการเรียก script ใน Bash tool.

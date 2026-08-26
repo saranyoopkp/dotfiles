@@ -51,15 +51,11 @@ colon ได้** (`name: docs:link`) → invoke `/docs:link` ทำงาน; �
 
 ## Taxonomy: rule ↔ skill (ตัดสิน 2026-07-16)
 
-rule ย้ายเป็น skill เมื่อครบ**ทั้งสาม**: (ก) work type ประกาศตัวชัด (ข) miss แล้วกู้ได้
-(ค) ลึก/จะลึกจริง — skills ปัจจุบันรวม `docs`, `ui-ux-baseline`, `data-design`, `api-design`,
-`ops`, `greenfield-foundation`, `research`, `retro`, `performance`, `stack-contracts` และ
-`testing-strategy`; ที่คง **always-on**:
-money/authz/time (ฝังในงานอื่น + miss เจ็บถาวร) · `external-integration-safety` (**ทดลองย้ายแล้ว
-revert** — เนื้อเป็นแนวทาง/bounded ไม่ลึกพอ) · cross-cutting rules (ใช้เกือบทุกงาน) ·
-compatibility/documentation safety floor แบบสั้น · thin routing stub ของ domain ที่ miss แล้ว
-เสีย baseline (`performance`, `stack-contracts`, `testing-strategy`) โดย procedure เต็มอยู่ใน skill
-**ห้ามย้ายเพราะเพดาน 400 อย่างเดียว — depth คือเหตุผลจริง**
+rule คงอยู่เมื่อเป็น invariant ที่ต้องเห็นก่อนจำแนก domain และ miss แล้วเกิดความเสียหายที่กู้ยาก.
+รายละเอียดที่ผูกกับ work surface, stage หรือ decision เฉพาะงานอยู่ใน skill แม้เป็น domain เสี่ยง;
+always-on เก็บ risk classifier สั้น ๆ แล้ว route ไป `risk-review`. Skills ปัจจุบันรวม `docs`,
+`ui-ux-baseline`, `data-design`, `api-design`, `ops`, `greenfield-foundation`, `research`, `retro`,
+`performance`, `stack-contracts`, `testing-strategy` และ `risk-review`.
 
 Growth path ของ skill เดี่ยว: แตกเป็น group เมื่อ SKILL.md เกิน ~200 บรรทัด + มี
 sub-concern ต่างกันชัด (แต่ละ sub ได้ description/routing ของตัวเอง) — ต่ำกว่านั้น
@@ -81,14 +77,8 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 | intent, objective continuity/detour, behavioral change, refactor, instruction-system change และ task tracking | `claude/rules/core/change-control.md` | SCC เป็น behavior owner; ACV ตรวจ authorization และ observable behavior |
 | compatibility และ rollout | `claude/rules/engineering/compatibility-rollout.md` | SCC route ไป `api-design:evolution`, `data-design:schema-migrations`, `ops:infra-change`; ACV ตรวจผลที่อนุมัติ |
 | docs/memory safety floor | `claude/rules/engineering/documentation-discipline.md` | SCC route ไป `docs`; child skill เป็น owner ของ placement/setup/link/stale/workspace |
-| performance safety floor | `claude/rules/engineering/performance-discipline.md` | SCC route ไป `performance` |
-| shared dependency/contract safety floor | `claude/rules/engineering/stack-contracts.md` | SCC route ไป `stack-contracts`; technology choice ใช้ `research:technology-vendor` ร่วม |
-| test-evidence safety floor | `claude/rules/engineering/testing-strategy.md` | SCC route ไป `testing-strategy`; ACV เป็น independent acceptance oracle |
-| authorization และ tenant isolation | `claude/rules/risk/authz-multitenancy.md` | rule เป็น owner ของ safety floor; procedure เฉพาะ domain อยู่ใน skill ที่งานนั้น route เข้า |
-| external integration safety | `claude/rules/risk/external-integration-safety.md` | rule เป็น owner ของ safety floor; API/data/ops skill เติม procedure ตาม surface |
-| money correctness | `claude/rules/risk/money-handling.md` | rule เป็น owner ของ safety floor; API/data skill เติม contract/transaction procedure |
-| production recovery | `claude/rules/risk/production-recovery.md` | rule เป็น owner ของ safety floor; `ops:incident-response`, `ops:observability`, `ops:infra-change` เติม procedure |
-| time/timezone correctness | `claude/rules/risk/time-timezone.md` | rule เป็น owner ของ safety floor; API/data/UI skill เติม procedure ตาม boundary |
+| test evidence, performance และ shared contracts | core evidence/operating invariants | SCC route ไป `testing-strategy`, `performance` หรือ `stack-contracts` เมื่อมี decision ที่ตรง |
+| auth, tenant, money, time, integration, production และ destructive boundaries | `claude/rules/risk/risk-boundaries.md` | `risk-review` โหลดเฉพาะ reference ที่ตรงกับ active surface |
 
 ### On-demand skill entry points
 
@@ -103,8 +93,9 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 | Research | `claude/skills/research/SKILL.md` | description ของ router + child routing ใน body; SCC มี research triggers |
 | Behavioral signals/surprise, session feedback, objective loss และ attention drift | `claude/skills/retro/SKILL.md` | description; read-only by default; runtime continuity อยู่ใน `change-control` + SCC ไม่ใช่ skill |
 | Shared stack/contracts | `claude/skills/stack-contracts/SKILL.md` | description + thin rule + SCC trigger |
-| Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + thin rule + SCC trigger |
+| Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + SCC trigger |
 | UI/UX/frontend | `claude/skills/ui-ux-baseline/SKILL.md` | description ของ router + child routing ใน body |
+| Risk-domain procedure | `claude/skills/risk-review/SKILL.md` | thin risk boundary rule + SCC trigger; references โหลดตาม active surface |
 
 ### Map maintenance and change traceability
 

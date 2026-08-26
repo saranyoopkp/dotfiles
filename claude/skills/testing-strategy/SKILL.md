@@ -57,7 +57,7 @@ primary deliverable; report เป็นหลักฐานประกอบ 
 - รัน targeted test และ flow จริงตาม risk; รันไม่ได้ให้รายงาน criterion ที่ยังไม่พิสูจน์
 - test suite ต้องมีคำสั่ง canonical ที่รันซ้ำได้และจดใน operational home ที่ repo กำหนด;
   ถ้ายังไม่พบบ้านให้รายงานและเสนอที่เก็บ ห้ามแต่ง path ขึ้นเอง
-- ปรับความลึกตาม stage/risk ที่พิสูจน์จาก repo; production path ใช้ `production-recovery`
+- ปรับความลึกตาม stage/risk ที่พิสูจน์จาก repo; production path ใช้ `risk-review`
   ร่วมกำหนด smoke/health evidence แต่เงิน, authorization และ tenant isolation เป็นขั้นต่ำทุก stage
 - เมื่อ scope ครอบ deployment ให้ smoke consumer flow จริงก่อนปล่อยตาม risk และตรวจ flow/health
   หลังปล่อย; การมี resource หรือ process อยู่ไม่แทนการใช้งานจริง
