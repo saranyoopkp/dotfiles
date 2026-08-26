@@ -120,6 +120,7 @@ flowchart LR
     OPS -.->|Production boundary| RISK_PRODUCTION
     API_MUTATIONS -.->|Transaction or race| DATA_TX
     API_EVOLUTION -.->|Persisted shape changes| DATA_SCHEMA
+    API_EVOLUTION -.->|Affected frontend consumer| UI
     DATA_CACHE -.->|Measured latency concern| PERFORMANCE
     UI_COLLECTIONS -.->|Measured rendering concern| PERFORMANCE
     API -.->|Test design unclear| TESTING
