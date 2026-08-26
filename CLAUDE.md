@@ -75,6 +75,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 ## เอกสารอ้างอิง
 
 - กลไก Claude Code และข้อจำกัด: `docs/claude-code-mechanisms.md`
+- routing graph และ trigger ของ skill: `docs/skill-routing-graph.md`
 - audit และ baseline: `docs/dogfood-audit-2026-07-15.md`
 - การทดลองพฤติกรรม SCC และ cutovers: `docs/scc-behavior-experiment.md`
 - hook behavior: `docs/hook-saga.md`
