@@ -51,7 +51,8 @@ Project vision และขอบเขตหลักมี canonical owner อ
 
 - `install.sh` ทำ link สำหรับ macOS/Linux; Windows ใช้ Git Bash สำหรับ script ที่ deploy หรือ hook
 - `~/.claude/skills` เป็นของ harness: link skill เป็นรายตัว ไม่ link ทั้ง directory
-- agent directory บนเครื่องนี้ชี้ที่ `claude/agents/`; เครื่องอื่นต้องสร้าง link ของตนเอง
+- `~/.claude/agents` และ `~/.claude/rules` link ทั้ง directory จาก source ใน repo; agent path เดิมที่
+  ไม่ใช่ link ต้อง backup แบบ collision-safe ก่อนติดตั้ง
 - script ที่ deploy/hook ใช้ Bash เดียว; เครื่องมือวิเคราะห์ใน `test/` ใช้ Python ได้
 - hook ที่รันจริงอาจมี environment ต่างจาก Bash tool ของ agent; การแก้ hook ต้องให้ผู้ใช้ restart session และยืนยันผลจริงก่อนสรุปว่าหาย
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verify the installer exposes nested skills and the recursive rules tree.
+# Verify the installer exposes agents, nested skills, and the recursive rules tree.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -27,6 +27,27 @@ for manifest in "$ROOT"/claude/skills/*/*/SKILL.md; do
   }
 done
 
+[ -L "$TEMP_HOME/.claude/agents" ] || {
+  echo "missing agents directory link" >&2
+  exit 1
+}
+[ "$(readlink "$TEMP_HOME/.claude/agents")" = "$ROOT/claude/agents" ] || {
+  echo "wrong agents directory target" >&2
+  exit 1
+}
+for agent in SCC-v1.0.1.md scout.md ACV-v1.0.1.md; do
+  [ -f "$TEMP_HOME/.claude/agents/$agent" ] || {
+    echo "missing installed agent: $agent" >&2
+    exit 1
+  }
+done
+HOME="$TEMP_HOME" bash "$ROOT/install.sh" >/dev/null
+[ -L "$TEMP_HOME/.claude/agents" ] &&
+  [ "$(readlink "$TEMP_HOME/.claude/agents")" = "$ROOT/claude/agents" ] || {
+    echo "agents link must remain stable after reinstall" >&2
+    exit 1
+  }
+
 [ -L "$TEMP_HOME/.claude/rules" ] || {
   echo "missing rules directory link" >&2
   exit 1
@@ -41,6 +62,30 @@ for owner in core engineering risk; do
     exit 1
   }
 done
+
+LEGACY_AGENT_HOME="$TEMP_ROOT/legacy-agent-home"
+LEGACY_AGENT_NAME="legacy-agent-probe.md"
+mkdir -p "$LEGACY_AGENT_HOME/.claude/agents" "$LEGACY_AGENT_HOME/.claude/agents.bak-pre-dotfiles"
+printf '%s\n' '# must remain in backup' > "$LEGACY_AGENT_HOME/.claude/agents/$LEGACY_AGENT_NAME"
+printf '%s\n' 'keep existing backup' > "$LEGACY_AGENT_HOME/.claude/agents.bak-pre-dotfiles/marker"
+
+HOME="$LEGACY_AGENT_HOME" bash "$ROOT/install.sh" >/dev/null
+[ -L "$LEGACY_AGENT_HOME/.claude/agents" ] || {
+  echo "legacy agents directory must be replaced by a link" >&2
+  exit 1
+}
+[ "$(readlink "$LEGACY_AGENT_HOME/.claude/agents")" = "$ROOT/claude/agents" ] || {
+  echo "wrong agents target after legacy backup" >&2
+  exit 1
+}
+[ -f "$LEGACY_AGENT_HOME/.claude/agents.bak-pre-dotfiles/marker" ] || {
+  echo "legacy agents backup must not overwrite an existing backup" >&2
+  exit 1
+}
+[ -f "$LEGACY_AGENT_HOME/.claude/agents.bak-pre-dotfiles-1/$LEGACY_AGENT_NAME" ] || {
+  echo "legacy agents were not preserved in a collision-safe backup" >&2
+  exit 1
+}
 
 LEGACY_HOME="$TEMP_ROOT/legacy-home"
 LEGACY_RULE_NAME="legacy-import-probe.md"
@@ -73,4 +118,4 @@ rg -q "stopped before linking" "$TEMP_ROOT/legacy-install.log" || {
   exit 1
 }
 
-echo "top-level/nested skills, recursive rules, and legacy fail-loud installation verified"
+echo "agents, top-level/nested skills, recursive rules, and legacy backups verified"

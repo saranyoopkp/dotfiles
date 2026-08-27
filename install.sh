@@ -19,8 +19,23 @@ make_link() {
   fi
 }
 
+backup_existing_path() {
+  local target_path="$1"
+  local label="$2"
+  local backup_path="$target_path.bak-pre-dotfiles"
+  local backup_index=1
+  while [ -e "$backup_path" ] || [ -L "$backup_path" ]; do
+    backup_path="$target_path.bak-pre-dotfiles-$backup_index"
+    backup_index=$((backup_index + 1))
+  done
+  mv "$target_path" "$backup_path"
+  echo "$label: backed up old path to $backup_path"
+}
+
 rules_source="$REPO/claude/rules"
 rules_target="$HOME/.claude/rules"
+agents_source="$REPO/claude/agents"
+agents_target="$HOME/.claude/agents"
 backup_legacy_rules_and_stop() {
   [ -d "$rules_target" ] && [ ! -L "$rules_target" ] || return 0
 
@@ -71,8 +86,18 @@ for d in "$REPO"/claude/skills/*/; do
   fi
 done
 
+# agents: link role definitions as one directory, like rules.
+if [ -L "$agents_target" ]; then
+  echo "agents: link exists - skipped"
+else
+  if [ -e "$agents_target" ]; then
+    backup_existing_path "$agents_target" "agents"
+  fi
+  make_link "$agents_target" "$agents_source"
+  echo "agents: linked"
+fi
+
 # rules: link ทั้ง recursive tree → dotfiles
-# (agents จงใจไม่ทำที่นี่ — owner จัดการ link เองต่อเครื่อง, decision 2026-07-12)
 backup_legacy_rules_and_stop
 if [ -L "$rules_target" ]; then
   echo "rules: link exists - skipped"

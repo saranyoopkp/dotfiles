@@ -148,7 +148,7 @@ test/config/       guardrail and install verification
 test/metrics/      session-corpus indexing and evaluation pipeline
 docs/              rationale, experiments and measured cutovers
 references/        on-demand reference material
-install.sh         links ~/.claude/{skills,rules}; agent directory remains a per-machine link
+install.sh         links ~/.claude/{agents,skills,rules}
 ```
 
 ## Install
@@ -157,8 +157,9 @@ install.sh         links ~/.claude/{skills,rules}; agent directory remains a per
 git clone <this-repo> && cd dotfiles && bash install.sh
 ```
 
-Skills are linked individually rather than as a directory, because `~/.claude/skills` belongs to
-the harness. Edit here, commit, push; other machines pull and the links keep pointing at the repo.
+Agents and rules are linked as directories. Skills are linked individually because
+`~/.claude/skills` belongs to the harness. Edit here, commit, push; other machines pull and the
+links keep pointing at the repo. Existing non-link agent directories are backed up before linking.
 
 One deliberate exception: `claude/skills/docs/setup/kit/CLAUDE.template.md` is **copied** into a
 target repository, not linked, because the target may not have this configuration installed at
