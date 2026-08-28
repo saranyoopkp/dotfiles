@@ -1,11 +1,32 @@
 ---
 name: ui-ux-baseline
-description: Router สำหรับมาตรฐาน UI/UX/frontend ใช้ทันทีเมื่อวางแผน, ออกแบบ, review, สร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css แม้ยังไม่มีไฟล์จริงหรือผู้ใช้ขอเพียงแผน. ให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Generic UI/UX quality และ visual design baseline/router สำหรับ frontend ใช้ทันทีเมื่อวางแผน, ออกแบบ, review, สร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css รวมถึงคำขอให้ UI สวย, clean, polished, professional หรือใช้งานง่าย แม้ยังไม่มีไฟล์จริงหรือผู้ใช้ขอเพียงแผน. ให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline
 
 ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วอ่าน child skill ที่ตรง **ก่อน** ออกแบบหรือเขียนโค้ด
+
+## Generic quality baseline
+
+ใช้เป็นเลนส์ร่วมกับทุกงาน UI/UX ไม่ว่าผู้ใช้จะเรียกว่า “สวย”, “clean”, “polished” หรือขอเพียงแก้
+feature; ไม่ใช่คำสั่งให้เติม decoration หรือเปลี่ยน brand โดยอัตโนมัติ
+
+- เริ่มจาก user goal, audience, context และ primary action; ความสวยวัดจาก clarity, hierarchy,
+  proportion, consistency และความมั่นใจในการใช้งาน ไม่ใช่จำนวน effect
+- จัดลำดับให้ primary task, สถานะที่ต้องตัดสินใจ และทางไปต่อเห็นก่อนรายละเอียดรอง; ใช้ progressive
+  disclosure กับคำอธิบายเสริม แต่ห้ามซ่อน cost, consent, error หรือ recovery สำคัญไว้ใน tooltip อย่างเดียว
+- ใช้ brand, token, component และ platform convention ที่มีอยู่ก่อน; อย่าสร้าง pattern สำเร็จรูป,
+  palette, spacing หรือ visual treatment ใหม่เพียงเพราะเป็นค่า default ที่ดูทันสมัย
+- คิดถึง loading, empty, error, partial, pending, success, disabled, focus และ responsive state ที่
+  เกิดได้จริง; visual polish ที่ทำให้ state หรือทางแก้หายไปถือว่าไม่ผ่าน
+- รักษา semantic interaction, keyboard/focus, contrast, target size และ reduced motion ตามบริบท;
+  accessibility เป็นส่วนหนึ่งของคุณภาพ ไม่ใช่งานเก็บท้าย
+- เมื่อ environment รองรับ ให้ตรวจจาก screenshot หรือหน้าจอจริงใน viewport สำคัญ และรายงานข้อจำกัด
+  ของหลักฐาน; อย่าอ้างว่า visual quality ผ่านจากการอ่าน code เพียงอย่างเดียว
+
+ส่วนนี้เป็น quality lens กลางเท่านั้น; decision procedure และ implementation detail อยู่ที่ child skill
+ตาม ownership ด้านล่าง งานหนึ่งอ่านได้หลาย child เมื่อ data flow หรือ state เรียกร้องจริง.
 
 ## Product surface boundary
 

@@ -107,7 +107,7 @@ Coordinator ต้องกำหนด foundation ของงานใหญ�
 | Behavioral signals/surprise, session feedback, objective loss และ attention drift | `claude/skills/retro/SKILL.md` | description; read-only by default; runtime continuity อยู่ใน `change-control` + SCC ไม่ใช่ skill |
 | Shared stack/contracts | `claude/skills/stack-contracts/SKILL.md` | description + thin rule + SCC trigger |
 | Testing strategy | `claude/skills/testing-strategy/SKILL.md` | description + SCC trigger |
-| UI/UX/frontend | `claude/skills/ui-ux-baseline/SKILL.md` | description ของ router + child routing ใน body |
+| UI/UX/frontend และ generic visual quality | `claude/skills/ui-ux-baseline/SKILL.md` | quality lens กลาง + description ของ router + child routing ใน body |
 | Risk-domain procedure | `claude/skills/risk-review/SKILL.md` | thin risk boundary rule + SCC trigger; references โหลดตาม active surface |
 
 ### Map maintenance and change traceability
