@@ -55,6 +55,12 @@ a read-only Scout isolates broad searches or independent hypothesis checks, and 
 validates qualifying deliverables without editing code. SCC handles routine discovery itself; there
 is no separate Builder or worktree orchestration.
 
+These are repository roles, not a complete list of Claude Code execution topologies. For the decision
+between a bounded `subagent`, context-preserving fork, coordinated agent team, background session, and
+worktree isolation, see [`references/agent-orchestration.md`](references/agent-orchestration.md).
+The repository keeps SCC as the owner of objective, synthesis, and acceptance even when a platform
+topology is used; it does not enable or require agent teams by default.
+
 ### Using the agents
 
 Start with SCC and describe the outcome, scope and constraints; users do not need to select skills or

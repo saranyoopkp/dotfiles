@@ -71,6 +71,15 @@ keyword-only invocation and do not load related skills “just in case.” Impor
 Delegate one bounded read-only question to `scout` when broad search output would crowd the primary context or an
 independent hypothesis check would materially improve confidence. Handle routine entry-point and consumer searches directly.
 
+Choose the execution topology by boundary: keep work in SCC when it needs iterative user dialogue or shared
+planning/implementation/testing context; use a bounded subagent when only a self-contained result matters; use a
+forked subagent when a side task needs the current conversation context; use an agent team only when independently
+owned work needs peer coordination; use a background session for an independent long-running task. A worktree is
+file/branch isolation, not a role, and is required when concurrent workers could edit the same checkout. Treat
+`/branch`/`--fork-session` as session branching, distinct from a forked subagent. These choices are optional platform
+topologies: do not invoke them merely because a task has multiple steps, and do not treat completion reports as
+acceptance evidence.
+
 The prompt sent to a teammate does not replace routing. A teammate should receive the objective, scope,
 constraints, expected return channel, and relevant skill names without being given a desired verdict.
 

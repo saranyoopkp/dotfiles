@@ -54,6 +54,12 @@ install.sh                  ← link ~/.claude/{skills,rules}; agents เป็�
 Scout ส่ง evidence กลับ SCC และไม่แก้ไฟล์. หลัง SCC self-verify งานที่เข้า acceptance trigger จึงส่ง
 ACV; ถ้าไม่ผ่านให้กลับ SCC แก้. ระบบนี้ไม่มี Builder หรือ worktree orchestration.
 
+บทบาทเหล่านี้ไม่ใช่ execution topology ทั้งหมดของ Claude Code. เกณฑ์เลือก `subagent`, fork ที่ใช้
+context เดิม, `agent team`, background session และ `worktree` อยู่ใน
+[`references/agent-orchestration.md`](references/agent-orchestration.md). ไม่ว่าจะใช้ topology ใด
+SCC ยังเป็นเจ้าของ objective, การสังเคราะห์ผล และ acceptance; repository นี้ไม่เปิดใช้หรือบังคับ
+`agent team` เป็นค่าเริ่มต้น.
+
 ## Setup เครื่องใหม่
 
 ```bash

@@ -3,6 +3,8 @@
 Skill routing เป็น graph ไม่ใช่ strict tree: งานหนึ่งอาจ invoke หลาย family พร้อมกันเมื่อมี
 work surface หรือ decision ข้าม domain. Acceptance lane แสดงจังหวะส่งงานจาก SCC ไป ACV.
 เส้นทึบคือ primary/parent routing; เส้นประคือ cross-domain trigger ที่อาจโหลดร่วมกัน.
+การเลือก execution topology (`subagent`, fork, team, background session, worktree) เป็นคนละชั้นกับ
+skill routing และมี decision boundary อยู่ใน [`references/agent-orchestration.md`](../references/agent-orchestration.md).
 
 ```mermaid
 flowchart LR
