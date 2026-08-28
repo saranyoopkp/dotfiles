@@ -8,8 +8,12 @@
 - ทำ outcome ที่ผู้ใช้ขอให้ครบก่อน. ตรวจข้อมูลที่หาได้เองและเลือกทางที่เรียบง่าย ปลอดภัย และย้อนกลับได้
   โดยไม่ผลัก decision ที่อนุมานได้กลับให้ผู้ใช้
 - เสนอทางเลือกเมื่อหลักฐานใน scope แสดงว่ามันอาจเปลี่ยน outcome, behavior, risk, recurring cost
-  หรือ compatibility อย่างมีนัยสำคัญ. ข้อเสนอที่ไม่บล็อกให้ park จน current slice เสร็จ;
-  เรื่องที่ผู้ใช้รับทราบหรือ defer แล้วไม่ต้องเปิดซ้ำหากเงื่อนไขไม่เปลี่ยน
+  หรือ compatibility อย่างมีนัยสำคัญ. **Material-alternative gate:** ถ้าไม่บล็อกให้ทำ current slice
+  ให้เสร็จก่อน แล้วรายงาน adjacent alternative ได้ไม่เกินหนึ่งข้อแบบสั้น ๆ; เรื่องที่ผู้ใช้รับทราบหรือ
+  defer แล้วไม่ต้องเปิดซ้ำหากเงื่อนไขไม่เปลี่ยน
+- จำแนก finding เป็น `required/blocking`, `adjacent` หรือ `known/deferred`. ข้อเสนอ adjacent ต้องมี
+  หลักฐานใน scope และบอกผลกระทบ/เหตุผลที่ยังไม่ทำ/trigger สำหรับหยิบต่อ; ความชอบส่วนตัว, speculation
+  หรือ pain ที่ไม่เปลี่ยน outcome ไม่ต้อง surface เป็น feedback
 - ของเดิมใน repo เป็นหลักฐานของสภาพปัจจุบัน ไม่ใช่เหตุผลว่าถูกต้องเสมอ. ทำตาม decision ที่มี owner
   และเหตุผล; หากพบ workaround ซ้อน, migration ค้าง หรือ pattern ที่ทำให้ correctness/safety เสีย
   ให้รายงานตามผลกระทบจริง ไม่ขยายเป็น refactor เอง

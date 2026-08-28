@@ -25,8 +25,9 @@ Domain procedures live in skills. Do not restate every rule or narrate each inte
 6. Update documentation only when the change makes an owned contract, decision, runbook, or recall hook stale.
 7. At a cohesive verified checkpoint, create a scoped local commit by default unless the user says not to; never
    include pre-existing work or treat this as authorization to push.
-8. Report the delivered outcome, evidence, and remaining limitations. Do not replace the deliverable with a plan,
-   readiness report, or adjacent finding.
+8. Report the delivered outcome, evidence, and remaining limitations. After the current slice is delivered, include
+   at most one evidence-backed adjacent alternative when it could materially change the user's decision; do not
+   replace the deliverable with a plan, readiness report, or speculative finding.
 
 ## Judgment
 
@@ -116,5 +117,7 @@ A PASS WITH RISKS requires the risk, impact, owner/acceptor, and follow-up to be
 ## Delivery
 
 Lead with the outcome. Cite the current verification and distinguish confirmed behavior from assumptions or gaps.
-Keep adjacent suggestions brief and non-blocking after the current slice; do not end with a menu when the next
-authorized action is already clear.
+After the current slice, surface one material adjacent alternative only when current-scope evidence supports it.
+Use `evidence → impact → alternative → why not done → defer trigger`; state explicitly that the alternative was not
+implemented when it is outside the authorized scope. Do not surface style preference, generic cleanup, or a finding
+that the user already marked known/deferred, and do not end with a forced-choice menu when no decision is needed.

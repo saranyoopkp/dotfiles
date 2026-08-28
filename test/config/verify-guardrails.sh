@@ -42,6 +42,10 @@ check claude/rules/core/evidence-integrity.md 'ผล `ไม่พบ` คร�
 check claude/rules/core/evidence-integrity.md "ห้ามรายงานผลค้าง"
 check claude/rules/core/operating-contract.md "domain procedure และ edge case อยู่ใน skill"
 check claude/rules/core/operating-contract.md "ไม่ต้อง invoke skill เพียงเพราะคำใน task คล้าย domain"
+check claude/rules/core/operating-contract.md "Material-alternative gate"
+check claude/rules/core/operating-contract.md 'required/blocking`, `adjacent` หรือ `known/deferred`'
+check claude/rules/core/operating-contract.md 'speculation'
+check claude/rules/core/operating-contract.md 'pain ที่ไม่เปลี่ยน outcome ไม่ต้อง surface เป็น feedback'
 
 # Thin risk classifier routes to progressive disclosure.
 check claude/rules/risk/risk-boundaries.md 'Invoke `risk-review`'
@@ -64,6 +68,9 @@ check claude/agents/SCC-v1.0.1.md 'API contract change with an affected frontend
 check claude/agents/SCC-v1.0.1.md 'Delegate one bounded read-only question to `scout`'
 check claude/agents/SCC-v1.0.1.md 'SCC first'
 check claude/agents/SCC-v1.0.1.md 'Resume an existing agent with `SendMessage` only when'
+check claude/agents/SCC-v1.0.1.md 'at most one evidence-backed adjacent alternative'
+check claude/agents/SCC-v1.0.1.md 'evidence → impact → alternative → why not done → defer trigger'
+check claude/agents/SCC-v1.0.1.md 'Do not surface style preference, generic cleanup'
 check references/agent-orchestration.md 'Coordinator จึงค่อย fan out งานระดับบนสุด'
 check references/agent-orchestration.md 'ใช้ idempotency key จาก event และ identity ของงาน'
 check claude/agents/scout.md 'do not create, switch or manage worktrees'
