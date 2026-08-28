@@ -15,6 +15,7 @@ description: เลือกและออกแบบ toast, banner, inline er
 | warning สำคัญที่ต้องเห็นขณะทำงานข้ามหน้า/ส่วน | persistent banner หรือ notification center ตาม product pattern |
 | ต้องตัดสินใจก่อนทำต่อ หรือมีผล destructive/irreversible | dialog/confirmation ก่อน action ไม่ใช่ toast หลังเกิดเหตุ |
 
+- map error ตามขอบเขตที่ผู้ใช้แก้ได้เล็กที่สุด: field error → inline ที่ field, cross-field/domain validation → form-level, resource/global failure → context-level; ถ้า response ไม่ระบุ field ห้ามเดา field เอง และอย่าใช้ transient toast แทน feedback ที่ต้องแก้หรือย้อนกลับมาอ่าน
 - toast เป็น transient feedback ไม่ใช่ที่ซ่อน error ที่ผู้ใช้ต้องแก้, ผลลัพธ์ที่มีรายละเอียดสำคัญ หรือ failure ที่ต้อง retry; ข้อความที่ต้องอ้างอิงภายหลังต้องมีบ้านที่คงอยู่กว่า
 - toast ต้องระบุผลและ object/action ที่เกี่ยวข้องอย่างกระชับ, ไม่หายก่อนอ่าน, มี action/retry เฉพาะเมื่อทำได้จริง และต้อง dedupe/batch เหตุการณ์ burst เพื่อไม่ spam ผู้ใช้
 - error ต้องแยกว่าอะไรล้มเหลว, อะไรยังสำเร็จ, ผลต่อข้อมูลคืออะไร และผู้ใช้ทำอะไรต่อได้; partial failure ห้ามสรุปว่า “สำเร็จ” รวม ๆ
