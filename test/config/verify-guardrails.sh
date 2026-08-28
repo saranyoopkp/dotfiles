@@ -83,13 +83,16 @@ check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก�
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
 check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
 check docs/skill-routing-graph.md 'SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY'
-check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality และ visual design baseline'
+check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality and visual design baseline'
+check claude/skills/ui-ux-baseline/SKILL.md 'usability, accessibility, information hierarchy, responsive behavior, visual consistency'
+check claude/skills/ui-ux-baseline/SKILL.md 'แบบ on-demand; ไม่โหลด child ทั้งหมดโดย default'
 check claude/skills/ui-ux-baseline/SKILL.md 'Generic quality baseline'
 check claude/skills/ui-ux-baseline/SKILL.md 'ความสวยวัดจาก clarity, hierarchy'
 check claude/skills/ui-ux-baseline/SKILL.md 'ห้ามซ่อน cost, consent, error หรือ recovery สำคัญไว้ใน tooltip อย่างเดียว'
 check docs/claude-code-mechanisms.md 'UI/UX/frontend และ generic visual quality'
 check docs/skill-routing-graph.md 'generic quality baseline'
 check docs/skill-routing-graph.md 'ui-ux-baseline` เป็น generic quality baseline'
+check docs/skill-routing-graph.md 'usability, accessibility, information hierarchy, responsive behavior และ visual consistency'
 
 # Coordinator topology and continuation guardrails.
 python3 - <<'PY'

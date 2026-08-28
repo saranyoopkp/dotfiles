@@ -5,8 +5,9 @@ work surface หรือ decision ข้าม domain. Acceptance lane แส�
 เส้นทึบคือ primary/parent routing; เส้นประคือ cross-domain trigger ที่อาจโหลดร่วมกัน.
 การเลือก execution topology (`subagent`, fork, team, background session, worktree) เป็นคนละชั้นกับ
 skill routing และมี decision boundary อยู่ใน [`references/agent-orchestration.md`](../references/agent-orchestration.md).
-`ui-ux-baseline` เป็น generic quality baseline และ quality lens กลางของงาน UI/UX/frontend; child edges ด้านล่างเป็น owner ของ
-procedure เฉพาะเรื่อง ไม่ใช่ skill ใหม่แยกต่างหาก.
+`ui-ux-baseline` เป็น generic quality baseline และ quality lens กลางของงาน UI/UX/frontend; คำขอด้าน
+usability, accessibility, information hierarchy, responsive behavior และ visual consistency เป็น routing
+signal ของ router นี้; child edges ด้านล่างเป็น owner ของ procedure เฉพาะเรื่อง ไม่ใช่ skill ใหม่แยกต่างหาก.
 
 ```mermaid
 flowchart LR

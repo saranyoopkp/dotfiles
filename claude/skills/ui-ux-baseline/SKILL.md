@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline
-description: Generic UI/UX quality และ visual design baseline/router สำหรับ frontend ใช้ทันทีเมื่อวางแผน, ออกแบบ, review, สร้างหรือแก้ frontend component, หน้าจอ, layout, form, list/feed/chat, shared UI component, localization/i18n หรือไฟล์ .tsx/.jsx/.vue/.css รวมถึงคำขอให้ UI สวย, clean, polished, professional หรือใช้งานง่าย แม้ยังไม่มีไฟล์จริงหรือผู้ใช้ขอเพียงแผน. ให้ map data flow และ user action แล้วอ่าน child skill ที่ตรง; interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Generic UI/UX quality and visual design baseline สำหรับงาน frontend. ใช้เมื่อวางแผน, ออกแบบ, review หรือแก้ user-facing UI รวมถึงคำขอด้าน usability, accessibility, information hierarchy, responsive behavior, visual consistency หรือ UI ที่สวย, clean, polished และ professional. ให้ route ไป child skill ตาม surface ที่เกี่ยวข้องแบบ on-demand; ไม่โหลด child ทั้งหมดโดย default และ interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline
