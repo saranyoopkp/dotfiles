@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:visual-direction
-description: กำหนด visual direction สำหรับหน้าใหม่, landing page, marketing surface, redesign ที่เปลี่ยนภาพลักษณ์ หรือหน้าเดิมที่ผู้ใช้ขอเสนอ design/ทำให้สวยขึ้น, modern, premium หรือมี character. ใช้เมื่อโจทย์ต้องการ aesthetic direction, brand expression, typography, palette หรือ layout concept; ไม่ใช้กับการ polish เล็ก ๆ ที่ต้องคง visual direction, information architecture และ behavior เดิม
+description: กำหนด visual direction สำหรับหน้าใหม่, landing page, marketing surface, redesign ที่เปลี่ยนภาพลักษณ์ หรือหน้าเดิมที่ผู้ใช้ขอเสนอ design/ทำให้สวยขึ้น, modern, premium หรือมี character โดยสืบทอด visual language ที่มีหลักฐานอยู่แล้วเมื่อเหมาะสม. ใช้เมื่อโจทย์ต้องการ aesthetic direction, brand expression, typography, palette หรือ layout concept; ไม่ใช้กับการ polish เล็ก ๆ ที่ต้องคง visual direction, information architecture และ behavior เดิม
 ---
 
 # Visual Direction
@@ -14,9 +14,28 @@ description: กำหนด visual direction สำหรับหน้าใ�
 - ถ้าเจตนาด้านภาพลักษณ์ยังไม่ชัด ให้เสนอ direction capsule สั้น ๆ ก่อนแก้ code; ห้าม default ไป
   `visual-polish` เพียงเพราะเป็นหน้าจอเดิม
 
+## Creative direction without conservative bias
+
+- คำว่า operational, table หรือหน้าจอเดิมเป็น context ไม่ใช่ hard gate ให้ทำได้แค่ polish. เมื่อผู้ใช้
+  ขอให้สวยขึ้น, modern, premium, distinctive, มี character หรือขอเสนอ design ให้เปิดพื้นที่เปลี่ยน
+  composition, grouping, visual anchor และ hierarchy ได้ โดยรักษา semantics, behavior, accessibility
+  และ contract ที่มีอยู่
+- ก่อนเลือก direction ให้ตรวจหน้าที่เกี่ยวข้อง, shared tokens/components และ visual decisions ล่าสุดที่
+  มีหลักฐาน. ถ้ามี visual language จากหน้าพี่น้องหรืองานก่อนหน้า ให้ต่อยอดให้เป็นระบบเดียวกัน ไม่เริ่ม
+  generic ใหม่ และไม่ถือว่าการใช้ของเดิมหมายถึงห้ามสร้าง expression ใหม่
+- สำหรับหน้าเดิม ให้ทำ visual audit สั้น ๆ จาก code และ screenshot/runtime เมื่อเข้าถึงได้: ระบุสิ่งที่
+  เป็น visual anchor ปัจจุบัน, จุดที่ทำให้หน้าดู generic/แน่น/ไร้น้ำหนัก และ constraint ที่ห้ามเปลี่ยน.
+  จากนั้นเสนอ direction ที่มี thesis, composition, type/color roles, visual anchor และลำดับการปรับที่
+  เห็นผลจริงก่อนลงมือ
+- ถ้าคำขอ creative ชัด อย่าจบด้วยคำว่า clean, readable, consistent หรือ accessible โดยไม่มี point of
+  view ทางภาพ. คำเหล่านี้เป็น acceptance floor ไม่ใช่ผลลัพธ์ทั้งหมดของงาน aesthetic
+- อย่าใช้ “ห้าม decoration”, “ใช้ pattern เดิม” หรือ “minimal” เป็นเหตุผลปฏิเสธ direction โดยลำพัง;
+  ให้ตรวจว่าองค์ประกอบนั้นช่วย thesis และ product goal หรือไม่ แล้วอธิบาย trade-off แทน
+
 เป้าหมายคือ visual identity ที่มาจากโจทย์จริง ไม่ใช่ความแปลกเพื่อความแปลก. งาน operational,
-settings, table และ flow ที่ใช้ซ้ำชนะด้วยความชัดเจนและ consistency; ไม่ต้องสร้าง signature element
-เพียงเพราะ skill นี้ถูกโหลด.
+settings, table และ flow ที่ใช้ซ้ำยังต้องมี clarity และ consistency เป็น floor; เมื่อ brief ขอ creative
+direction ให้เลือก expression และ signature ที่ช่วย product goal ได้ ไม่ใช่ตัดทิ้งเพียงเพราะ skill นี้
+ถูกโหลด.
 
 ## ก่อนเขียน UI
 

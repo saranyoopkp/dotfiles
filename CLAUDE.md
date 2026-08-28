@@ -47,6 +47,21 @@ Project vision และขอบเขตหลักมี canonical owner อ
 - `docs-setup` และ artifact ใน kit เป็นข้อยกเว้น: ของที่ copy ไป repo ปลายทางต้อง self-contained
   เพราะปลายทางอาจไม่มี agents/rules/skills ของ dotfiles
 
+## Calibrate constraints for creative work
+
+- แยกงานที่มีคำตอบถูกต้อง/ความเสี่ยงตายตัว ออกจากงาน creative หรือ open-ended ก่อนใช้กฎเข้ม: safety,
+  privacy, data integrity, public contract, accessibility และข้อจำกัดที่ผู้ใช้ระบุยังเป็น hard constraint;
+  ส่วน aesthetic preference, convention, “ทำให้น้อยที่สุด”, “ใช้ของเดิม” และ “อย่าเติม decoration” เป็น
+  default ที่ต้องชั่งกับ brief ไม่ใช่ veto อัตโนมัติ
+- เมื่องานขอ creative direction, ความสวย, novelty หรือการเสนอทางเลือก ให้รักษาพื้นที่สำหรับสมมติฐานที่มี
+  point of view: สร้าง direction ที่ coherent พร้อมเหตุผลและ trade-off แล้วค่อยตรวจว่าขัด constraint จริง
+  หรือไม่. ห้ามลดโจทย์เหลือ checklist ของความปลอดภัย ความสม่ำเสมอ หรือความเรียบร้อยเพียงอย่างเดียว
+- hard gate ต้องผูกกับ failure mode ที่เสียหายจริง มี trigger ชัด และมีทางเลือกให้เดินต่อ; ถ้าเป็นเพียง
+  ความชอบหรือการป้องกันความเสี่ยงเชิงสุนทรียะ ให้ใช้เป็นคำแนะนำ/คำถามตรวจ ไม่ใช่คำสั่งปฏิเสธ
+- ก่อนเพิ่ม instruction เพื่อกัน bias หรือ overfit ต้องมี negative case ยืนยันว่าไม่กดงานสร้างสรรค์ที่อยู่นอก
+  เหตุการณ์ต้นเหตุ และต้องหยุดเมื่อได้ calibration ที่เล็กที่สุดซึ่งแยก hard constraint ออกจาก creative
+  freedom ได้
+
 ## การติดตั้งและความเข้ากันได้
 
 - `install.sh` ทำ link สำหรับ macOS/Linux; Windows ใช้ Git Bash สำหรับ script ที่ deploy หรือ hook
