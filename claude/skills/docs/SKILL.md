@@ -1,6 +1,6 @@
 ---
 name: docs
-description: Route documentation-system work: repository setup, cross-repo ownership, knowledge placement, broken links, or stale-content audits. Use when documentation is the task and the relevant child is unclear; invoke a specific docs:* child directly when clear.
+description: "Route documentation-system work: repository setup, cross-repo ownership, knowledge placement, broken links, or stale-content audits. Use when documentation is the task and the relevant child is unclear; invoke a specific docs:* child directly when clear."
 ---
 
 # Docs — ตระกูลงานเอกสาร
