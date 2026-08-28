@@ -11,7 +11,7 @@
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # on-demand skills ที่มีอยู่ (เพิ่มเมื่อย้าย rule เป็น skill เพิ่ม)
-ONDEMAND_SKILLS="ui-ux-baseline data-design api-design ops greenfield-foundation research retro docs-workspace docs-placement docs-setup performance stack-contracts testing-strategy risk-review"
+ONDEMAND_SKILLS="ui-ux-baseline ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish data-design api-design ops greenfield-foundation research retro docs-workspace docs-placement docs-setup performance stack-contracts testing-strategy risk-review"
 SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ops.tsv" "$HERE/scenarios-research.tsv" "$HERE/scenarios-retro.tsv" "$HERE/scenarios-docs.tsv" "$HERE/scenarios-compatibility.tsv" "$HERE/scenarios-performance.tsv" "$HERE/scenarios-stack-contracts.tsv" "$HERE/scenarios-testing-strategy.tsv" "$HERE/scenarios-risk.tsv" "$HERE/scenarios-simple-negative.tsv")
 if [ -n "${ROUTING_SCENARIO_FILES:-}" ]; then
   IFS=':' read -r -a SCENARIO_FILES <<< "$ROUTING_SCENARIO_FILES"

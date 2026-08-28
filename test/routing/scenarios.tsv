@@ -5,8 +5,9 @@
 ui-ux-baseline	ui-list	วางแผน React component แสดง list ของ order ที่ fetch จาก API
 ui-ux-baseline	ui-tooltip	implement hover tooltip บนไอคอนใน navbar React ให้ครอบ interaction + accessibility
 ui-ux-baseline	ui-form	เพิ่มปุ่ม submit ในฟอร์ม React ที่ disable ตอนกำลังส่งและแสดง error
-ui-ux-baseline	ui-visual-direction	ออกแบบ landing page ใหม่สำหรับ studio ทำเครื่องดนตรี analogue โดยต้องมี visual identity ที่ไม่เหมือน SaaS template
-ui-ux-baseline	ui-visual-polish	ปรับ spacing, typography และ visual hierarchy ของหน้า settings เดิมให้สแกนง่ายขึ้น โดยไม่เปลี่ยน flow หรือ brand
+ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction	ออกแบบ landing page ใหม่สำหรับ studio ทำเครื่องดนตรี analogue โดยต้องมี visual identity ที่ไม่เหมือน SaaS template
+ui-ux-baseline ui-ux-baseline-visual-polish	ui-ux-baseline-visual-direction	ui-visual-polish	ปรับ spacing, typography และ visual hierarchy ของหน้า settings เดิมให้สแกนง่ายขึ้น โดยไม่เปลี่ยน flow หรือ brand
+ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction-existing	หน้า account เดิมยังไม่สวย ช่วยเสนอ design ให้ดู modern และมี character โดยยังไม่ต้องลงมือแก้ code
 ui-ux-baseline	ui-motion	เพิ่ม microinteraction ตอนบันทึกค่า และ transition ของ panel ที่เปิด/ปิด โดยต้องไม่รบกวน keyboard user
 ui-ux-baseline	ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมทั้ง product พร้อมตรวจ contrast
 ui-ux-baseline	ui-localization	เพิ่มคำแปลภาษาอาหรับให้ form พร้อม pluralization, locale formatting, ข้อความยาว และ RTL

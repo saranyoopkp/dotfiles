@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:visual-polish
-description: ปรับ Visual Design ของหน้าจอหรือ component เดิมให้ชัด อ่านง่าย สมดุล และเนี้ยบขึ้น โดยคง brand, information architecture และ behavior เดิม ใช้เมื่อผู้ใช้ขอ polish UI, ปรับ spacing/typography/color hierarchy/density/alignment หรือแก้หน้าตาโดยไม่ต้องการ rebrand/redesign ใหญ่
+description: ปรับ Visual Design ของหน้าจอหรือ component เดิมให้ชัด อ่านง่าย สมดุล และเนี้ยบขึ้น โดยคง brand, visual direction, information architecture และ behavior เดิม. ใช้เมื่อผู้ใช้ขอ clean, simplify, polish UI, ปรับ spacing/typography/color hierarchy/density/alignment หรือแก้หน้าตาเล็กน้อย; ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง, modern, premium หรือเปลี่ยน visual direction
 ---
 
 # Visual Polish

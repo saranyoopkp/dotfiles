@@ -7,7 +7,9 @@ work surface หรือ decision ข้าม domain. Acceptance lane แส�
 skill routing และมี decision boundary อยู่ใน [`references/agent-orchestration.md`](../references/agent-orchestration.md).
 `ui-ux-baseline` เป็น generic quality baseline และ quality lens กลางของงาน UI/UX/frontend; คำขอด้าน
 usability, accessibility, information hierarchy, responsive behavior และ visual consistency เป็น routing
-signal ของ router นี้; child edges ด้านล่างเป็น owner ของ procedure เฉพาะเรื่อง ไม่ใช่ skill ใหม่แยกต่างหาก.
+signal ของ router นี้. งานที่ขอ aesthetic direction หรือทำให้หน้าปัจจุบันสวยขึ้นแบบเปิดกว้างไป
+`visual-direction`; งาน clean/polish ที่คง direction เดิมไป `visual-polish`. Child edges ด้านล่างเป็น
+owner ของ procedure เฉพาะเรื่อง ไม่ใช่ skill ใหม่แยกต่างหาก.
 
 ```mermaid
 flowchart LR
@@ -53,8 +55,8 @@ flowchart LR
         UI -->|Toast, banner, result, recovery| UI_FEEDBACK["ui-ux-baseline:feedback-notifications"]
         UI -->|Shared component or variant| UI_SYSTEM["ui-ux-baseline:design-system"]
         UI -->|Shared token, theme, icon| UI_FOUNDATION["ui-ux-baseline:design-foundations"]
-        UI -->|New identity or redesign| UI_DIRECTION["ui-ux-baseline:visual-direction"]
-        UI -->|Polish existing screen| UI_POLISH["ui-ux-baseline:visual-polish"]
+        UI -->|New identity, redesign, or aesthetic direction| UI_DIRECTION["ui-ux-baseline:visual-direction"]
+        UI -->|Clean/polish existing screen| UI_POLISH["ui-ux-baseline:visual-polish"]
         UI -->|Animation or transition| UI_MOTION["ui-ux-baseline:motion-microinteractions"]
         UI -->|i18n, locale, RTL| UI_I18N["ui-ux-baseline:content-localization"]
         UI -->|Chat, feed, live stream| UI_REALTIME["ui-ux-baseline:realtime-conversation"]

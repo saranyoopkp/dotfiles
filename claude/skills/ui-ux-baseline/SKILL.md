@@ -5,7 +5,7 @@ description: Generic UI/UX quality and visual design baseline สำหรับ
 
 # UI/UX Baseline
 
-ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วอ่าน child skill ที่ตรง **ก่อน** ออกแบบหรือเขียนโค้ด
+ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วแยก intent ของคำขอด้านภาพลักษณ์ก่อนอ่าน child skill: งาน clean/polish ที่คงโครงเดิมไป `visual-polish`; งานที่ขอเสนอ design, สวยขึ้น, modern, premium หรือมี character ไป `visual-direction` **ก่อน** ออกแบบหรือเขียนโค้ด
 
 ## Generic quality baseline
 
@@ -35,8 +35,8 @@ feature; ไม่ใช่คำสั่งให้เติม decoration �
 
 | ลักษณะงาน | ต้องอ่าน |
 |---|---|
-| สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอ direction ด้านภาพลักษณ์ | `ui-ux-baseline:visual-direction` |
-| ปรับ Visual Design หรือ UI effect ของหน้าจอเดิม เช่น spacing, typography, shadow, blur, gradient, overlay โดยคง brand/flow เดิม | `ui-ux-baseline:visual-polish` |
+| สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอเสนอ design, ให้หน้าปัจจุบันสวยขึ้น, modern, premium หรือมี character | `ui-ux-baseline:visual-direction` |
+| ปรับ Visual Design หรือ UI effect ของหน้าจอเดิม เช่น clean, simplify, spacing, typography, shadow, blur, gradient, overlay โดยคง brand/flow/IA เดิมและไม่ขอเปลี่ยน direction | `ui-ux-baseline:visual-polish` |
 | เพิ่มหรือแก้ transition, animation, progress, reveal, scroll behavior หรือ microinteraction | `ui-ux-baseline:motion-microinteractions` |
 | สร้างหรือแก้ shared color/type/spacing/grid/theme/elevation/icon หรือ motion token | `ui-ux-baseline:design-foundations` |
 | เลือก icon/icon library, สร้าง icon language หรือพบ decorative emoji ใน UI | `ui-ux-baseline:design-foundations` |

@@ -1,9 +1,18 @@
 ---
 name: ui-ux-baseline:visual-direction
-description: กำหนด visual direction สำหรับหน้าใหม่, landing page, marketing surface หรือ redesign ที่เปลี่ยนภาพลักษณ์ ใช้เมื่อโจทย์ต้องการ aesthetic direction, brand expression, typography, palette, layout concept หรือ UI ที่ไม่ควรออกมาเป็น generic template; ไม่ใช้กับการแก้ feature UI เล็ก ๆ ที่ต้องคง design system เดิม
+description: กำหนด visual direction สำหรับหน้าใหม่, landing page, marketing surface, redesign ที่เปลี่ยนภาพลักษณ์ หรือหน้าเดิมที่ผู้ใช้ขอเสนอ design/ทำให้สวยขึ้น, modern, premium หรือมี character. ใช้เมื่อโจทย์ต้องการ aesthetic direction, brand expression, typography, palette หรือ layout concept; ไม่ใช้กับการ polish เล็ก ๆ ที่ต้องคง visual direction, information architecture และ behavior เดิม
 ---
 
 # Visual Direction
+
+## Intent boundary
+
+- หน้าเดิมที่ผู้ใช้ขอเพียง clean, simplify, อ่านง่าย หรือเนี้ยบขึ้น โดยคง visual direction, IA และ
+  behavior เดิม → ใช้ `visual-polish`
+- หน้าเดิมที่ผู้ใช้ขอ “สวยขึ้น”, modern, premium, distinctive, เสนอ design หรือเปิดให้เปลี่ยน
+  composition/identity → ใช้ skill นี้ก่อน แม้ยังไม่มีการเปลี่ยน behavior
+- ถ้าเจตนาด้านภาพลักษณ์ยังไม่ชัด ให้เสนอ direction capsule สั้น ๆ ก่อนแก้ code; ห้าม default ไป
+  `visual-polish` เพียงเพราะเป็นหน้าจอเดิม
 
 เป้าหมายคือ visual identity ที่มาจากโจทย์จริง ไม่ใช่ความแปลกเพื่อความแปลก. งาน operational,
 settings, table และ flow ที่ใช้ซ้ำชนะด้วยความชัดเจนและ consistency; ไม่ต้องสร้าง signature element
