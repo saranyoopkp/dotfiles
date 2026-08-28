@@ -40,8 +40,22 @@ direction ให้เลือก expression และ signature ที่ช�
 ## ก่อนเขียน UI
 
 กำหนด **aesthetic thesis** หนึ่งประโยคจาก subject, audience และงานหลักหนึ่งอย่างของหน้านี้. ใช้
-context, brand system และ preference ที่มีอยู่ก่อนเดา; ถ้าโจทย์เปิดกว้าง ให้เลือก direction ที่มีเหตุผล
-และบอกเฉพาะเมื่อเป็น decision ที่ผู้ใช้ต้องตัดสินใจ.
+context, brand system และ preference ที่มีอยู่ก่อนเดา; ถ้าโจทย์เปิดกว้าง ให้เสนอ direction ที่มีเหตุผล
+และแยก decision ที่ผู้ใช้ต้องเป็นคนเลือกออกจากรายละเอียดที่ agent ตัดสินใจได้เอง.
+
+## Proposal gate
+
+- ถ้า brief ยังไม่ได้เลือก aesthetic direction และมีหลายทางที่เปลี่ยน composition, identity, approach
+  หรือ scope อย่างมีนัยสำคัญ ให้หยุดหลัง audit แล้วเสนอ 2–3 direction ที่แตกต่างกันพอให้เลือกได้.
+- แต่ละตัวเลือกควรสรุป thesis, visual anchor, key moves, สิ่งที่คงไว้, trade-off และขอบเขตงาน. ให้
+  recommendation ได้ แต่ติดป้ายว่าเป็น recommendation ไม่ใช่การอนุมัติแทนผู้ใช้.
+- ต้องเป็น proposal ที่เห็นภาพและนำไปตัดสินใจได้จริง ไม่ใช่เพียงบอกว่า “งานนี้เป็น creative” หรือถาม
+  ผู้ใช้กว้าง ๆ ว่าอยากได้แบบไหน. Agent ต้องสร้าง candidates จาก brief, evidence และ constraints เอง.
+- คำขอ “ทำให้สวยขึ้น”, “modern” หรือ “มี character” เพียงอย่างเดียว อนุญาตให้สำรวจและเสนอ ไม่ใช่
+  authorization ให้เลือก direction แล้วเขียน code หรือทำ mutation ทันที. รอผู้ใช้เลือกหรือระบุ direction
+  ก่อนลงมือ.
+- ถ้าผู้ใช้ระบุ/เลือก direction แล้ว หรือเป็น polish เล็ก ๆ ที่ไม่เปิด creative decision ใหม่ ให้ทำต่อได้
+  โดยรักษา hard constraints และ visual language ที่ตกลงไว้.
 
 สำหรับหน้าใหม่หรือ redesign ใหญ่ ให้ทำ direction capsule สั้น ๆ ก่อนเขียน code:
 
