@@ -76,6 +76,11 @@ role ใน repository (`SCC`, `Scout`, `ACV`) แยกจาก topology ท�
 isolation และไม่ใช่ role ใหม่. การเปลี่ยน topology ไม่เปลี่ยน owner ของ objective หรือ acceptance:
 SCC ยังต้องสังเคราะห์และตรวจผล ส่วน ACV ยังเป็นผู้ตรวจอิสระเมื่อเข้า acceptance trigger.
 
+Coordinator ต้องกำหนด foundation ของงานใหญ่ก่อน fan-out เพื่อให้ slices มี boundary และ context
+พอดี. ค่า `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` ใน docs setup kit ปิดการ redispatch จาก worker
+แต่ยังให้ Coordinator สร้าง worker ระดับบนสุดได้. การต่อเนื่องของงานใช้ `SendMessage` กับ agent เดิม
+เมื่อ continuity ตรงกัน; เรื่องที่เพียงเกี่ยวข้องกันให้สร้าง context ใหม่.
+
 ### Always-on rules
 
 | Concern | Shared invariant owner | Agent behavior / on-demand procedure |

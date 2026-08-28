@@ -85,6 +85,10 @@ symlink บน unix — memory ตัวจริงชุดเดียวอ�
 
 init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.json` ให้ (ติด git → ทุกเครื่อง ทุก OS):
 
+settings template จำกัด nested subagent ไว้ที่ depth 1: Coordinator ยัง spawn worker ระดับบนสุดได้
+แต่ worker จะไม่แตก agent ต่อเอง. งานใหญ่ต้องกำหนด foundation และ dependency ที่ Coordinator ก่อน
+แล้วจึง fan out; หากงานเดิมยังไม่จบให้ resume worker เดิมเมื่อ continuity ตรงกัน.
+
 | Event | หน้าที่ |
 |---|---|
 | `SessionStart` | บันทึก baseline ตาม `session_id`, แยก dirty path เดิมเป็นของ user/previous session, ตรวจ memory link แบบ read-only และ register watchPaths; การ merge/ซ่อม link อยู่ใน `/docs:setup` |

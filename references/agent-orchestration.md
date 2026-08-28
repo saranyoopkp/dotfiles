@@ -6,7 +6,17 @@
 `agent team`, `background session` และ `worktree` คือกลไกจัด context, coordination และ file
 isolation ของ Claude Code จึงไม่ควรสร้าง agent role ใหม่เพียงเพราะมี topology ใหม่.
 
-เลือกจาก boundary ของงาน ไม่ใช่จากจำนวนขั้นตอน:
+เลือกจาก boundary ของงาน ไม่ใช่จากจำนวนขั้นตอน. งานใหญ่เริ่มจาก foundation ของ Coordinator ก่อน
+แตกออกเป็น slices ที่ self-contained เพื่อให้แต่ละ worker ใช้ context ได้พอดีและไม่ตัดสินใจบน
+สมมติฐานที่ยังไม่ถูกกำหนด:
+
+1. objective และ acceptance evidence
+2. scope, owner, paths, revision/worktree และสิ่งที่ห้ามแตะ
+3. dependency/order, shared contract และ assumption ที่ต้องใช้ร่วมกัน
+4. verification plan และรูปแบบผลลัพธ์กลับสู่ Coordinator
+
+หลัง foundation แล้ว Coordinator จึงค่อย fan out งานระดับบนสุดตาม boundary. Worker ไม่ควร
+redispatch งานต่อเอง เว้นแต่ Coordinator อนุมัติให้แตก independent subtasks อย่างชัดเจน.
 
 | รูปแบบ | ใช้เมื่อ | ขอบเขตที่ต้องรักษา |
 |---|---|---|
@@ -29,6 +39,22 @@ isolation ของ Claude Code จึงไม่ควรสร้าง agent
 3. dependency หรือข้อมูลที่ worker ต้องรู้เองตั้งแต่ต้น
 4. สิทธิ์ในการอ่าน/แก้ และเจ้าของการตัดสินใจ
 5. รูปแบบผลลัพธ์: claim, evidence/probe, changed paths, tests และ limitation
+
+### Continue หรือ spawn ใหม่
+
+การเรียก `Agent` ใหม่สร้าง context ใหม่เสมอ. ถ้างานเดิมยังไม่จบ ให้ resume agent เดิมด้วย
+`SendMessage` ก่อน โดยต้องตรงกันทั้ง objective, acceptance, scope/ownership, repository revision
+และ worktree. คำว่า "เกี่ยวข้องกัน" อย่างเดียวไม่พอ: ถ้าเปลี่ยน owner, boundary, dependency หรือ
+ต้องการมุมมองอิสระ ให้สร้าง agent ใหม่เพื่อกัน context และสิทธิ์เดิมกระทบงานใหม่. การ resume
+ไม่ใช่การอนุมัติให้เปลี่ยน permission, config หรือ CLAUDE.md.
+
+### Hook execution และ feedback ซ้ำ
+
+แยกการยิงตาม lifecycle ออกจาก duplicate execution ก่อนแก้: tool hook เกิดทุก tool call,
+`Stop` เกิดทุก turn และ settings/plugin hooks อาจทำงานใน subagent ด้วย. ใช้ `agent_id`/`agent_type`
+แยก main กับ subagent เมื่อ hook มี owner เฉพาะฝั่งใดฝั่งหนึ่ง. Handler ที่ต้อง repeat-safe ให้
+ใช้ idempotency key จาก event และ identity ของงาน; `Stop` ต้องตรวจ `stop_hook_active` ก่อน block
+ซ้ำ. ห้ามใช้ delay/debounce แทนการพิสูจน์ว่า event เดิมหรือคนละ event.
 
 งานที่เป็น platform behavior ให้ตรวจเทียบเอกสารทางการตาม version ที่ใช้งานจริง; reference นี้เก็บ
 decision boundary ของ repository ไม่ใช่การคัดลอกคู่มือ Claude Code ทั้งหมด.

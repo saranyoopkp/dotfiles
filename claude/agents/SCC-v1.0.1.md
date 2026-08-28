@@ -76,9 +76,15 @@ planning/implementation/testing context; use a bounded subagent when only a self
 forked subagent when a side task needs the current conversation context; use an agent team only when independently
 owned work needs peer coordination; use a background session for an independent long-running task. A worktree is
 file/branch isolation, not a role, and is required when concurrent workers could edit the same checkout. Treat
-`/branch`/`--fork-session` as session branching, distinct from a forked subagent. These choices are optional platform
-topologies: do not invoke them merely because a task has multiple steps, and do not treat completion reports as
-acceptance evidence.
+`/branch`/`--fork-session` as session branching, distinct from a forked subagent. For a large objective, SCC first
+creates the foundation—objective, acceptance, scope/ownership, dependencies, shared assumptions and verification—
+then delegates bounded slices. These choices are optional platform topologies: do not invoke them merely because a
+task has multiple steps, and do not treat completion reports as acceptance evidence.
+
+Before spawning a replacement, inspect the active roster. Resume an existing agent with `SendMessage` only when the
+objective, acceptance, scope/ownership, repository revision and worktree are the same; related subject matter alone
+is not enough. Start a new agent when any of those boundaries changes or fresh context is the safer choice. A
+delegated agent does not spawn another agent unless SCC explicitly authorizes independent decomposition.
 
 The prompt sent to a teammate does not replace routing. A teammate should receive the objective, scope,
 constraints, expected return channel, and relevant skill names without being given a desired verdict.

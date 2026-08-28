@@ -62,6 +62,10 @@ check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md '`risk-review`'
 check claude/agents/SCC-v1.0.1.md 'API contract change with an affected frontend consumer'
 check claude/agents/SCC-v1.0.1.md 'Delegate one bounded read-only question to `scout`'
+check claude/agents/SCC-v1.0.1.md 'SCC first'
+check claude/agents/SCC-v1.0.1.md 'Resume an existing agent with `SendMessage` only when'
+check references/agent-orchestration.md 'Coordinator จึงค่อย fan out งานระดับบนสุด'
+check references/agent-orchestration.md 'ใช้ idempotency key จาก event และ identity ของงาน'
 check claude/agents/scout.md 'do not create, switch or manage worktrees'
 check claude/agents/scout.md 'Scout output is a lead for SCC to verify against primary evidence'
 check README.md '**3 agents**'
@@ -79,6 +83,15 @@ check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก�
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
 check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
 check docs/skill-routing-graph.md 'SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY'
+
+# Coordinator topology and continuation guardrails.
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+settings = json.loads(Path("claude/skills/docs/setup/kit/hooks/settings.json").read_text())
+assert settings.get("env", {}).get("CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH") == "1"
+PY
 
 # Independent validation remains evidence-based and read-only.
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
