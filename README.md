@@ -55,20 +55,14 @@ a read-only Scout isolates broad searches or independent hypothesis checks, and 
 validates qualifying deliverables without editing code. SCC handles routine discovery itself; there
 is no separate Builder or worktree orchestration.
 
-These are repository roles, not a complete list of Claude Code execution topologies. For the decision
-between a bounded `subagent`, context-preserving fork, coordinated agent team, background session, and
-worktree isolation, see [`references/agent-orchestration.md`](references/agent-orchestration.md).
-The repository keeps SCC as the owner of objective, synthesis, and acceptance even when a platform
-topology is used; it does not enable or require agent teams by default.
+These are repository roles. Agent selection and any use of additional sessions are manual decisions made
+by the user; the repository does not automatically delegate work or select an execution topology.
 
 ### Using the agents
 
-Start with SCC and describe the outcome, scope and constraints; users do not need to select skills or
-delegate ordinary work. SCC may send one bounded read-only question to Scout when doing so protects the
-primary context or provides useful independence. Scout returns evidence to SCC and never implements.
-After SCC implements and self-verifies, qualifying features, fixes, contract changes or risky work go to
-ACV; a failure returns to SCC for correction. Questions, exploration, documentation-only work and internal
-behaviour-preserving edits can be delivered directly unless the project or user requires ACV.
+Start with SCC and describe the outcome, scope and constraints. Users may manually select Scout for bounded
+read-only discovery or ACV for independent acceptance review; neither is automatically invoked. Scout never
+implements, and ACV never edits code.
 
 ## Verification
 
@@ -91,9 +85,6 @@ being forced into a false expectation.
 
 Every run keeps per-scenario raw stream-json, stderr and exit status, so a failure can be opened
 and read rather than guessed at.
-
-`test/agent-routing/` applies the same ground-truth approach to optional Scout delegation, including
-a routine-search negative case.
 
 ### Friction and guardrail checks (`test/friction/`, `test/config/`)
 
@@ -148,7 +139,6 @@ claude/rules/      13 always-loaded invariants (core, engineering, risk)
 claude/skills/     49 on-demand domain procedures
 claude/agents/     3 role definitions: SCC, Scout, ACV
 test/routing/      skill auto-invocation regression, real sessions
-test/agent-routing/ optional Scout delegation regression, real sessions
 test/friction/     simple-task ceremony regression
 test/config/       guardrail and install verification
 test/metrics/      session-corpus indexing and evaluation pipeline

@@ -68,19 +68,6 @@ sub-concern ต่างกันชัด (แต่ละ sub ได้ descri
 `SCC` แปลง trigger เป็น action, `ACV` ตรวจผลแบบอิสระ และ skill เป็น procedure แบบ on-demand.
 เรื่องเดียวกันข้ามชั้นได้เมื่อทำคนละหน้าที่เท่านั้น.
 
-### Agent execution topology
-
-role ใน repository (`SCC`, `Scout`, `ACV`) แยกจาก topology ที่ Claude Code ใช้รันงาน. เกณฑ์เลือก
-และ delegation packet อยู่ที่ [`references/agent-orchestration.md`](../references/agent-orchestration.md).
-`subagent`/fork/team/background session จัด context หรือ coordination; `worktree` จัด file/branch
-isolation และไม่ใช่ role ใหม่. การเปลี่ยน topology ไม่เปลี่ยน owner ของ objective หรือ acceptance:
-SCC ยังต้องสังเคราะห์และตรวจผล ส่วน ACV ยังเป็นผู้ตรวจอิสระเมื่อเข้า acceptance trigger.
-
-Coordinator ต้องกำหนด foundation ของงานใหญ่ก่อน fan-out เพื่อให้ slices มี boundary และ context
-พอดี. ค่า `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` ใน docs setup kit ปิดการ redispatch จาก worker
-แต่ยังให้ Coordinator สร้าง worker ระดับบนสุดได้. การต่อเนื่องของงานใช้ `SendMessage` กับ agent เดิม
-เมื่อ continuity ตรงกัน; เรื่องที่เพียงเกี่ยวข้องกันให้สร้าง context ใหม่.
-
 ### Always-on rules
 
 | Concern | Shared invariant owner | Agent behavior / on-demand procedure |

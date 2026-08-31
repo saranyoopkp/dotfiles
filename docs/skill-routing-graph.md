@@ -1,10 +1,9 @@
 # Agent and Skill Routing Graph
 
 Skill routing เป็น graph ไม่ใช่ strict tree: งานหนึ่งอาจ invoke หลาย family พร้อมกันเมื่อมี
-work surface หรือ decision ข้าม domain. Acceptance lane แสดงจังหวะส่งงานจาก SCC ไป ACV.
+work surface หรือ decision ข้าม domain. เอกสารนี้อธิบายเฉพาะ routing ของ skill;
+การเลือก agent หรือ session เป็น manual decision ของผู้ใช้และอยู่นอก graph นี้.
 เส้นทึบคือ primary/parent routing; เส้นประคือ cross-domain trigger ที่อาจโหลดร่วมกัน.
-การเลือก execution topology (`subagent`, fork, team, background session, worktree) เป็นคนละชั้นกับ
-skill routing และมี decision boundary อยู่ใน [`references/agent-orchestration.md`](../references/agent-orchestration.md).
 `ui-ux-baseline` เป็น generic quality baseline และ quality lens กลางของงาน UI/UX/frontend; คำขอด้าน
 usability, accessibility, information hierarchy, responsive behavior และ visual consistency เป็น routing
 signal ของ router นี้. งานที่ขอ aesthetic direction หรือทำให้หน้าปัจจุบันสวยขึ้นแบบเปิดกว้างไป
@@ -15,22 +14,7 @@ owner ของ procedure เฉพาะเรื่อง ไม่ใช่ s
 flowchart LR
     REQ["User request / current task"]
     SCC["SCC-v1.0.1"]
-    SCOUT["scout"]
     REQ -->|Primary implementation agent| SCC
-    SCC -->|Bounded discovery with broad output or independent hypothesis| SCOUT
-    SCOUT -->|Evidence package; SCC verifies and decides| SCC
-
-    subgraph ACCEPTANCE_FLOW["Post-change acceptance"]
-        ACV["ACV-v1.0.1"]
-        DELIVERY["Delivery"]
-        REWORK["Return to implementation"]
-        ACV -->|PASS or accepted PASS WITH RISKS| DELIVERY
-        ACV -->|FAIL or evidence gap| REWORK
-    end
-
-    SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV
-    SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY
-    REWORK -->|Fix and self-verify again| SCC
 
     SCC -->|Frontend, page, component, table| UI
     SCC -->|HTTP endpoint or public contract| API
@@ -148,8 +132,6 @@ flowchart LR
 1. **Surface trigger** — งานกำลังแตะ UI, API, data, operations หรือ documentation surface ใด
 2. **Decision trigger** — มี decision เฉพาะด้าน เช่น pagination, mutation, migration หรือ permission หรือไม่
 3. **Risk trigger** — งานข้าม auth/tenant, money, production, external หรือ irreversible boundary หรือไม่
-4. **Acceptance trigger** — หลัง SCC self-verify งานที่เปลี่ยน behavior/contract หรือมี user/production risk
-   ต้องส่ง ACV ก่อน delivery; งานถาม สำรวจ docs-only และ internal behavior-preserving edit ส่งมอบได้ตรง
 
 Skill family ไม่ได้ถูก invoke จาก keyword อย่างเดียว. ตัวอย่าง `RBAC` ใน prose ที่แก้ typo ไม่ควร
 invoke `risk-review`; แต่การออกแบบหรือเปลี่ยน role/permission behavior ต้อง invoke authorization reference.

@@ -95,8 +95,8 @@ description: Decide where repository knowledge belongs among comments, docstring
 ### Comment audit mode (read-only ก่อน remediation)
 
 ใช้เมื่อผู้ใช้ขอ audit/review comment หรือ docstring โดยยังไม่ได้ขอแก้. กำหนด scope เป็น diff,
-directory หรือทั้ง repo ก่อน; repo-wide audit ที่ผลกว้างอาจส่ง bounded batches ให้ Scout สำรวจได้
-แต่ SCC ต้องตรวจ primary evidence และเป็น owner ของข้อสรุป.
+directory หรือทั้ง repo ก่อน; repo-wide audit ที่ผลกว้างอาจแบ่งเป็น bounded batches แบบ read-only ได้
+และผู้ขอต้องตรวจ primary evidence ก่อนสรุป.
 
 ```bash
 python <skill-dir>/scripts/scan.py <repo> --diff HEAD --format json

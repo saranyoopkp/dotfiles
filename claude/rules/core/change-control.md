@@ -40,7 +40,7 @@
 
 ## Tracking และ instruction-system changes
 
-- ใช้ task tracking เมื่อ state มีโอกาสหล่นจริง: งานหลาย turn, dependency หลายชั้น, handoff,
+- ใช้ task tracking เมื่อ state มีโอกาสหล่นจริง: งานหลาย turn, dependency หลายชั้น,
   blocker หรือ verification หลายชุด. งานสั้นที่มีหลายคำสั่งไม่ต้องสร้าง task list เพียงเพราะนับได้หลายข้อ
 - เมื่อเปลี่ยน `agents/`, `rules/`, `skills/` หรือ routing ข้าม owner ให้ทำ impact map ก่อน mutation:
   `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`. หลังแก้ reconcile กับ diff,

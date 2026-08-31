@@ -1,3 +1,0 @@
-# require	forbid	label	task
-scout	-	scout-broad-audit	วางแผน audit แบบ read-only ว่า status contract เดียวกันถูก consume อย่างไรใน frontend, backend, worker และ generated client ของ workspace ขนาดใหญ่ โดยแยกหลักฐาน ข้อขัดแย้ง และ unknown ก่อนให้ primary agent ตัดสินใจ
--	scout	scout-routine-negative	วางแผนแก้ typo ใน error message ของ endpoint เดียว เริ่มจากหา handler และ test ที่เกี่ยวไม่กี่ไฟล์แล้วแก้ใน scope เดิม

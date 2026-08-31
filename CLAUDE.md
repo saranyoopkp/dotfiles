@@ -9,7 +9,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 
 - `claude/rules/` คือ safety invariants แบบสั้นที่โหลดทุก session; domain procedure อยู่ใน skills
 - `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
-- `claude/agents/` คือ SCC (ทำงานหลัก) และ ACV (ตรวจรับอิสระ)
+- `claude/agents/` คือ role definitions ที่ผู้ใช้เลือก trigger เอง: SCC, Scout และ ACV
 - `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand
 - `test/routing/` และ `test/metrics/` ใช้ทดสอบ routing และวัดพฤติกรรม; ดู README ของแต่ละโฟลเดอร์
 
@@ -93,7 +93,7 @@ Project vision และขอบเขตหลักมี canonical owner อ
 - แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
 - แก้ skill tree หรือ routing graph แล้วรัน `python3 test/config/verify-skill-routing-graph.py --self-test`
 - อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
-- SCC ส่ง feature, bug fix, public API หรือ change ที่มี production/user risk ให้ ACV ตรวจตามความเสี่ยง; งานเอกสารหรือการสำรวจไม่ต้องส่งเว้นแต่กำหนดไว้
+- ACV เป็น role ตรวจรับแบบอิสระเมื่อผู้ใช้ trigger; งานเอกสารหรือการสำรวจไม่ต้องตรวจรับเว้นแต่กำหนดไว้
 
 ## เอกสารอ้างอิง
 

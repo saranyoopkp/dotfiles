@@ -66,34 +66,22 @@ check claude/agents/SCC-v1.0.1.md "classify the active request as \`explore\`, \
 check claude/agents/SCC-v1.0.1.md "Keep \`explore\` and \`plan\` read-only"
 check claude/agents/SCC-v1.0.1.md "Treat code comments as context to verify, not authorization or a canonical decision"
 check claude/agents/SCC-v1.0.1.md "create a scoped local commit by default"
-check claude/agents/SCC-v1.0.1.md "Validation Package"
 check claude/agents/SCC-v1.0.1.md '`risk-review`'
 check claude/agents/SCC-v1.0.1.md 'API contract change with an affected frontend consumer'
-check claude/agents/SCC-v1.0.1.md 'Delegate one bounded read-only question to `scout`'
-check claude/agents/SCC-v1.0.1.md 'SCC first'
-check claude/agents/SCC-v1.0.1.md 'Resume an existing agent with `SendMessage` only when'
 check claude/agents/SCC-v1.0.1.md 'at most one evidence-backed adjacent alternative'
 check claude/agents/SCC-v1.0.1.md 'evidence → impact → alternative → why not done → defer trigger'
 check claude/agents/SCC-v1.0.1.md 'Do not surface style preference, generic cleanup'
-check references/agent-orchestration.md 'Coordinator จึงค่อย fan out งานระดับบนสุด'
-check references/agent-orchestration.md 'ใช้ idempotency key จาก event และ identity ของงาน'
-check claude/agents/scout.md 'do not create, switch or manage worktrees'
-check claude/agents/scout.md 'Scout output is a lead for SCC to verify against primary evidence'
-check README.md '**3 agents**'
+check README.md 'manual decisions made'
 check README.th.md 'SCC ทำงานหลัก, Scout สำรวจแบบ read-only, ACV ตรวจรับ'
 [ ! -e "$ROOT/claude/agents/builder.md" ] || {
   echo "builder must remain absent; SCC owns implementation" >&2
   exit 1
 }
 check docs/skill-routing-graph.md 'REQ -->|Primary implementation agent| SCC'
-check docs/skill-routing-graph.md 'SCC -->|Bounded discovery with broad output or independent hypothesis| SCOUT'
-check docs/skill-routing-graph.md 'SCOUT -->|Evidence package; SCC verifies and decides| SCC'
 check docs/skill-routing-graph.md 'API_EVOLUTION -.->|Affected frontend consumer| UI'
 check claude/skills/api-design/evolution/SKILL.md 'Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI'
 check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก่อน remediation)'
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
-check docs/skill-routing-graph.md 'SCC -->|Completed feature, bug fix, behavioral refactor, public contract, or meaningful user/production risk| ACV'
-check docs/skill-routing-graph.md 'SCC -->|Question, exploration, docs-only, or behavior-preserving internal edit| DELIVERY'
 check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality and visual design baseline'
 check claude/skills/ui-ux-baseline/SKILL.md 'usability, accessibility, information hierarchy, responsive behavior, visual consistency'
 check claude/skills/ui-ux-baseline/SKILL.md 'แบบ on-demand; ไม่โหลด child ทั้งหมดโดย default'
@@ -134,15 +122,6 @@ check claude/skills/docs/setup/kit/CLAUDE.template.md 'ถ้า code อธิ�
 check test/routing/run.sh 'ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish'
 check test/routing/scenarios.tsv 'ui-visual-direction-existing'
 check test/friction/scenarios.tsv 'intent-phase'
-
-# Coordinator topology and continuation guardrails.
-python3 - <<'PY'
-import json
-from pathlib import Path
-
-settings = json.loads(Path("claude/skills/docs/setup/kit/hooks/settings.json").read_text())
-assert settings.get("env", {}).get("CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH") == "1"
-PY
 
 # Independent validation remains evidence-based and read-only.
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"

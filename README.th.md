@@ -38,7 +38,6 @@ claude/rules/               ← engineering standards — โหลดทุก 
 claude/skills/              ← domain procedures แบบ on-demand
 claude/agents/              ← SCC ทำงานหลัก, Scout สำรวจแบบ read-only, ACV ตรวจรับ
 test/routing/               ← regression ของ skill auto-invocation
-test/agent-routing/         ← regression ของ optional Scout delegation
 test/friction/              ← regression กัน ceremony ในงานง่าย
 test/config/                ← ตรวจ guardrail และการติดตั้ง
 test/metrics/               ← pipeline วัดพฤติกรรมจาก session corpus
@@ -48,17 +47,9 @@ install.sh                  ← link ~/.claude/{skills,rules}; agents เป็�
 
 ## การใช้งาน agents
 
-เริ่มงานกับ SCC โดยบอกผลลัพธ์ ขอบเขต และข้อจำกัดตามปกติ ผู้ใช้ไม่ต้องเลือก skill หรือ delegate
-งานทั่วไปเอง. SCC สำรวจและ implement เองเป็น default; ใช้ Scout เฉพาะคำถาม read-only ที่มีขอบเขตชัด
-เมื่อผลค้นหากว้างจนรบกวน context หลักหรือการตรวจ hypothesis อย่างอิสระเพิ่มความมั่นใจได้จริง.
-Scout ส่ง evidence กลับ SCC และไม่แก้ไฟล์. หลัง SCC self-verify งานที่เข้า acceptance trigger จึงส่ง
-ACV; ถ้าไม่ผ่านให้กลับ SCC แก้. ระบบนี้ไม่มี Builder หรือ worktree orchestration.
-
-บทบาทเหล่านี้ไม่ใช่ execution topology ทั้งหมดของ Claude Code. เกณฑ์เลือก `subagent`, fork ที่ใช้
-context เดิม, `agent team`, background session และ `worktree` อยู่ใน
-[`references/agent-orchestration.md`](references/agent-orchestration.md). ไม่ว่าจะใช้ topology ใด
-SCC ยังเป็นเจ้าของ objective, การสังเคราะห์ผล และ acceptance; repository นี้ไม่เปิดใช้หรือบังคับ
-`agent team` เป็นค่าเริ่มต้น.
+เริ่มงานกับ SCC โดยบอกผลลัพธ์ ขอบเขต และข้อจำกัดตามปกติ. ผู้ใช้เป็นผู้เลือก trigger เองว่าจะใช้
+Scout สำหรับ discovery แบบ read-only หรือ ACV สำหรับการตรวจรับอิสระ; ไม่มีการ delegate หรือเลือก
+execution topology อัตโนมัติ. Scout ไม่แก้ไฟล์ และ ACV ไม่แก้โค้ด.
 
 ## Setup เครื่องใหม่
 
