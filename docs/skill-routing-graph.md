@@ -5,10 +5,10 @@ work surface หรือ decision ข้าม domain. เอกสารนี
 การเลือก agent หรือ session เป็น manual decision ของผู้ใช้และอยู่นอก graph นี้.
 เส้นทึบคือ primary/parent routing; เส้นประคือ cross-domain trigger ที่อาจโหลดร่วมกัน.
 `ui-ux-baseline` เป็น generic quality baseline และ quality lens กลางของงาน UI/UX/frontend; คำขอด้าน
-usability, accessibility, information hierarchy, responsive behavior และ visual consistency เป็น routing
+usability, accessibility, information hierarchy, content clarity, responsive behavior และ visual consistency เป็น routing
 signal ของ router นี้. งานที่ขอ aesthetic direction หรือทำให้หน้าปัจจุบันสวยขึ้นแบบเปิดกว้างไป
 `visual-direction`; งาน clean/polish ที่คง direction เดิมไป `visual-polish`. Child edges ด้านล่างเป็น
-owner ของ procedure เฉพาะเรื่อง ไม่ใช่ skill ใหม่แยกต่างหาก.
+skill on-demand ที่เป็น owner ของ procedure เฉพาะเรื่อง.
 
 ```mermaid
 flowchart LR
@@ -43,6 +43,7 @@ flowchart LR
         UI -->|Clean/polish existing screen| UI_POLISH["ui-ux-baseline:visual-polish"]
         UI -->|Animation or transition| UI_MOTION["ui-ux-baseline:motion-microinteractions"]
         UI -->|i18n, locale, RTL| UI_I18N["ui-ux-baseline:content-localization"]
+        UI -->|Labels, headings, actions, helper text| UI_COPY["ui-ux-baseline:content-copy"]
         UI -->|Chat, feed, live stream| UI_REALTIME["ui-ux-baseline:realtime-conversation"]
     end
 

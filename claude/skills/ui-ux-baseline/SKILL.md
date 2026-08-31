@@ -1,11 +1,14 @@
 ---
 name: ui-ux-baseline
-description: Generic UI/UX quality and visual design baseline สำหรับงาน frontend. ใช้เมื่อวางแผน, ออกแบบ, review หรือแก้ user-facing UI รวมถึงคำขอด้าน usability, accessibility, information hierarchy, responsive behavior, visual consistency หรือ UI ที่สวย, clean, polished และ professional. ให้ route ไป child skill ตาม surface ที่เกี่ยวข้องแบบ on-demand; ไม่โหลด child ทั้งหมดโดย default และ interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Generic UI/UX quality, content และ visual design baseline สำหรับงาน frontend. ใช้เมื่อวางแผน, ออกแบบ, review หรือแก้ user-facing UI รวมถึงโครงสร้าง, copy, interaction, state, accessibility, responsive behavior, visual consistency หรือ UI ที่สวย, clean, polished และ professional. ให้ route ไป child skill ตาม surface ที่เกี่ยวข้องแบบ on-demand; ไม่โหลด child ทั้งหมดโดย default และ interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
 ---
 
 # UI/UX Baseline
 
-ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา, หรือใช้ shared primitive แล้วแยก intent ของคำขอด้านภาพลักษณ์ก่อนอ่าน child skill: งาน clean/polish ที่คงโครงเดิมไป `visual-polish`; งานที่ขอเสนอ design, สวยขึ้น, modern, premium หรือมี character ไป `visual-direction` **ก่อน** ออกแบบหรือเขียนโค้ด
+ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังอ่านเนื้อหา, ดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา,
+หรือใช้ shared primitive แล้วแยก intent ของคำขอด้าน copy/ภาพลักษณ์ก่อนอ่าน child skill: งาน wording ทั่วไปไป
+`content-copy`; งาน clean/polish ที่คงโครงเดิมไป `visual-polish`; งานที่ขอเสนอ design, สวยขึ้น, modern,
+premium หรือมี character ไป `visual-direction` **ก่อน** ออกแบบหรือเขียนโค้ด
 
 ## Generic quality baseline
 
@@ -14,6 +17,8 @@ feature; ไม่ใช่คำสั่งให้เติม decoration �
 
 - เริ่มจาก user goal, audience, context และ primary action; ความสวยวัดจาก clarity, hierarchy,
   proportion, consistency และความมั่นใจในการใช้งาน ไม่ใช่จำนวน effect
+- ทุกข้อความและองค์ประกอบที่ผู้ใช้เห็นต้องช่วยให้เข้าใจ ตัดสินใจ หรือทำงานต่อได้; ใช้ terminology,
+  label และ action ให้สอดคล้องกัน และไม่เพิ่มคำอธิบายเพียงเพราะมีพื้นที่ให้ใส่
 - จัดลำดับให้ primary task, สถานะที่ต้องตัดสินใจ และทางไปต่อเห็นก่อนรายละเอียดรอง; ใช้ progressive
   disclosure กับคำอธิบายเสริม แต่ห้ามซ่อน cost, consent, error หรือ recovery สำคัญไว้ใน tooltip อย่างเดียว
 - ใช้ brand, token, component และ platform convention ที่มีอยู่ก่อน; อย่าสร้าง pattern สำเร็จรูป,
@@ -41,6 +46,7 @@ feature; ไม่ใช่คำสั่งให้เติม decoration �
 | สร้างหรือแก้ shared color/type/spacing/grid/theme/elevation/icon หรือ motion token | `ui-ux-baseline:design-foundations` |
 | เลือก icon/icon library, สร้าง icon language หรือพบ decorative emoji ใน UI | `ui-ux-baseline:design-foundations` |
 | i18n/localization, translation, locale formatting, text expansion หรือ RTL | `ui-ux-baseline:content-localization` |
+| wording ของ UI ทั่วไป เช่น heading, label, button, placeholder, helper text, tooltip, empty/help copy หรือ terminology | `ui-ux-baseline:content-copy` |
 | render resource จาก server/client state | `ui-ux-baseline:resource-states` |
 | submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
