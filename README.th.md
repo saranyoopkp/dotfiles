@@ -49,7 +49,8 @@ install.sh                  ← link ~/.claude/{skills,rules}; agents เป็�
 
 เริ่มงานกับ SCC โดยบอกผลลัพธ์ ขอบเขต และข้อจำกัดตามปกติ. ผู้ใช้เป็นผู้เลือก trigger เองว่าจะใช้
 Scout สำหรับ discovery แบบ read-only หรือ ACV สำหรับการตรวจรับอิสระ; ไม่มีการ delegate หรือเลือก
-execution topology อัตโนมัติ. Scout ไม่แก้ไฟล์ และ ACV ไม่แก้โค้ด.
+execution topology อัตโนมัติ. SCC อาจ suggest ให้ตรวจ ACV เมื่อ change เข้าเกณฑ์ แต่ผู้ใช้เป็นผู้ตัดสินใจ
+ว่าจะ trigger หรือไม่. Scout ไม่แก้ไฟล์ และ ACV ไม่แก้โค้ด.
 
 คำอธิบายสำหรับคนอ่านเกี่ยวกับ subagent, team, fork, background session และ worktree อยู่ที่
 [`docs/agent-topologies.md`](docs/agent-topologies.md); เอกสารนี้ไม่ใช่ active instruction

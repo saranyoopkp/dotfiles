@@ -93,7 +93,8 @@ Project vision และขอบเขตหลักมี canonical owner อ
 - แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
 - แก้ skill tree หรือ routing graph แล้วรัน `python3 test/config/verify-skill-routing-graph.py --self-test`
 - อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
-- ACV เป็น role ตรวจรับแบบอิสระเมื่อผู้ใช้ trigger; งานเอกสารหรือการสำรวจไม่ต้องตรวจรับเว้นแต่กำหนดไว้
+- ACV เป็น role ตรวจรับแบบอิสระเมื่อผู้ใช้ trigger; เมื่อ change เข้า 5 acceptance triggers ให้ SCC suggest
+  การตรวจ ACV ได้ แต่ห้ามเรียกเองหรือ block delivery; งานเอกสารหรือการสำรวจไม่ต้องตรวจรับเว้นแต่กำหนดไว้
 
 ## เอกสารอ้างอิง
 

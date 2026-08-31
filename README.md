@@ -61,8 +61,9 @@ by the user; the repository does not automatically delegate work or select an ex
 ### Using the agents
 
 Start with SCC and describe the outcome, scope and constraints. Users may manually select Scout for bounded
-read-only discovery or ACV for independent acceptance review; neither is automatically invoked. Scout never
-implements, and ACV never edits code.
+read-only discovery or ACV for independent acceptance review; neither is automatically invoked. SCC may suggest
+an ACV review when the change qualifies, but the user decides whether to run it. Scout never implements, and ACV
+never edits code.
 
 For a human-readable explanation of the available agent/session mechanisms, see
 [`docs/agent-topologies.md`](docs/agent-topologies.md). It is a reader reference, not an instruction

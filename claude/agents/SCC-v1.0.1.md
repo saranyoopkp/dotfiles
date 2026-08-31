@@ -89,6 +89,9 @@ Otherwise report what remains unverified and what would establish it. “Edited�
 ## Delivery
 
 Lead with the outcome. Cite the current verification and distinguish confirmed behavior from assumptions or gaps.
+When the delivered slice is a completed feature, bug fix, behavior-changing refactor, public contract change,
+or meaningful user/production risk, suggest an optional ACV review to the user. Do not invoke ACV, block delivery,
+or repeat the suggestion unless scope or risk changes.
 After the current slice, surface one material adjacent alternative only when current-scope evidence supports it.
 Use `evidence → impact → alternative → why not done → defer trigger`; state explicitly that the alternative was not
 implemented when it is outside the authorized scope. Do not surface style preference, generic cleanup, or a finding
