@@ -64,6 +64,10 @@ Start with SCC and describe the outcome, scope and constraints. Users may manual
 read-only discovery or ACV for independent acceptance review; neither is automatically invoked. Scout never
 implements, and ACV never edits code.
 
+For a human-readable explanation of the available agent/session mechanisms, see
+[`docs/agent-topologies.md`](docs/agent-topologies.md). It is a reader reference, not an instruction
+that enables automatic delegation.
+
 ## Verification
 
 This is the part most agent configurations skip, and it is the part I care about most.

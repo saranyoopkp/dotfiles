@@ -51,6 +51,10 @@ install.sh                  ← link ~/.claude/{skills,rules}; agents เป็�
 Scout สำหรับ discovery แบบ read-only หรือ ACV สำหรับการตรวจรับอิสระ; ไม่มีการ delegate หรือเลือก
 execution topology อัตโนมัติ. Scout ไม่แก้ไฟล์ และ ACV ไม่แก้โค้ด.
 
+คำอธิบายสำหรับคนอ่านเกี่ยวกับ subagent, team, fork, background session และ worktree อยู่ที่
+[`docs/agent-topologies.md`](docs/agent-topologies.md); เอกสารนี้ไม่ใช่ active instruction
+และไม่เปิดการ delegate อัตโนมัติ.
+
 ## Setup เครื่องใหม่
 
 ```bash
