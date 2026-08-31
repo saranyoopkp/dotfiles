@@ -14,20 +14,21 @@ description: Decide where repository knowledge belongs among comments, docstring
 | ชั้น | ถูกอ่านเมื่อ | ใส่ได้เฉพาะ | เพดาน |
 |---|---|---|---|
 | **codetag** `TODO(scope):` | grep/ตารางสถานะ | เครื่องหมายงานค้าง (PEP 350) — ไม่ใช่คำอธิบาย | **ต้องตาย**ใน commit ที่ปิดงาน; แช่นาน = ย้ายขึ้น CLAUDE.md TODO |
-| **inline comment** | ตาแตะบรรทัดนั้นตอนแก้ | constraint/why ที่โค้ดแสดงเองไม่ได้ + guard ณ จุดแก้ | สั้นพอให้อ่านกับโค้ด; ใช้ pointer เมื่อ rationale กว้างกว่า local context |
+| **inline comment** | ตาแตะบรรทัดนั้นตอนแก้ | constraint/why ที่ code, type, test หรือชื่อที่ดีแสดงเองไม่ได้ + guard ณ จุดแก้ | ไม่เขียนเป็นค่าเริ่มต้น; ถ้าจำเป็นให้สั้นพออ่านกับโค้ด; ใช้ pointer เมื่อ rationale กว้างกว่า local context |
 | **docstring** | จะเรียกใช้/แก้ function-module นั้น | interface contract: ทำอะไร, param/return, invariant, side effect | สั้น ครบ contract |
 | **docs/<topic>.md** | *รู้ตัว*ว่าทำเรื่องนั้น (pull) | เจาะลึกรายเรื่อง: design, runbook, ประวัติ, ผลทดลอง | ยาวได้ |
 | **memory/<fact>.md** | ถูก surface *ก่อนรู้ว่าต้องหา* (recall) | fact เม็ดเดียว: quirk, กับดัก, preference, decision สั้น | 1 fact/ไฟล์ |
 | **CLAUDE.md** | ทุก session (push — ทุกบรรทัดคือภาษี) | ภาพรวม + operational ที่ไม่เห็นแล้วงานพัง | section ≤~15 บรรทัด |
 
-คำถามลัด: *ใครจะเจอสิ่งนี้ตอนไหน?* — งานค้าง→codetag · ตอนแก้บรรทัด→comment ·
+คำถามลัด: *ใครจะเจอสิ่งนี้ตอนไหน?* — งานค้าง→codetag · ตอนแก้บรรทัดถ้ามี why ที่จำเป็น→comment ·
 ตอนเรียกใช้→docstring · ตอนทำเรื่องนั้น→docs · ต้องนึกออกเอง→memory · ทุก session→CLAUDE.md
 
 ## วินัย comment (มาตรฐาน: code = how, comment = why)
 
-- เก็บ local constraint และเหตุผลที่จำเป็นต่อการแก้ code ไว้ใกล้ code. ย้ายไป docs เมื่อเนื้อหา
-  เป็น rationale, history, experiment หรือ procedure ที่มี scope กว้างกว่า local context—not merely
-  because the comment spans a particular number of lines.
+- เก็บเฉพาะ local constraint และเหตุผลที่จำเป็นต่อการแก้ code และ code, type, test หรือชื่อที่ดีแสดงเองไม่ได้
+  ไว้ใกล้ code; ถ้า code อธิบายได้แล้วให้ไม่เขียน comment. ย้ายไป docs เมื่อเนื้อหาเป็น rationale, history,
+  experiment หรือ procedure ที่มี scope กว้างกว่า local context—not merely because the comment spans a
+  particular number of lines.
 - **สร้างปลายทางก่อนเขียน pointer — ทั้งไฟล์และหัวข้อ** (`docs/x.md#heading` = heading
   นั้นต้องมีจริงแล้ว); pointer ผี = แย่กว่าไม่มี pointer (`/docs:link` ตรวจทั้งสองระดับ)
 - pointer ที่ commit ต้อง resolve จาก clone ของ repo; ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง

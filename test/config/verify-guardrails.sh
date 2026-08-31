@@ -122,6 +122,11 @@ check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'เสนอ 2–3
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'ต้องเป็น proposal ที่เห็นภาพและนำไปตัดสินใจได้จริง'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'authorization ให้เลือก direction แล้วเขียน code หรือทำ mutation ทันที'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'รอผู้ใช้เลือกหรือระบุ direction'
+check claude/agents/SCC-v1.0.1.md 'Do not add code comments by default'
+check claude/agents/SCC-v1.0.1.md 'never use comments to narrate code, explain a diff, justify work, or preserve history'
+check claude/skills/docs/placement/SKILL.md 'ไม่เขียนเป็นค่าเริ่มต้น'
+check claude/skills/docs/placement/SKILL.md 'code, type, test หรือชื่อที่ดีแสดงเองไม่ได้'
+check claude/skills/docs/setup/kit/CLAUDE.template.md 'ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment'
 check test/routing/run.sh 'ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish'
 check test/routing/scenarios.tsv 'ui-visual-direction-existing'
 

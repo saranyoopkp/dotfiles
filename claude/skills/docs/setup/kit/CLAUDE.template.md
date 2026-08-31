@@ -149,8 +149,9 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
   ระหว่าง module) อยู่ root
 
 **สองชั้นในโค้ด (อยู่ใต้ตารางเดียวกัน — ถูกอ่านใกล้โค้ดที่สุด):**
-- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → เก็บ why/constraint ที่จำเป็นต่อ local context;
-  rationale, history, experiment หรือ procedure ที่กว้างกว่าจุดนั้นให้ย้ายไป `docs/` พร้อม pointer
+- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → เก็บเฉพาะ why/constraint ที่จำเป็นต่อ local context และ
+  code, type, test หรือชื่อที่ดีแสดงเองไม่ได้; ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment. rationale,
+  history, experiment หรือ procedure ที่กว้างกว่าจุดนั้นให้ย้ายไป `docs/` พร้อม pointer
   เมื่อช่วยให้ค้นและดูแลได้ดีขึ้น — จำนวนบรรทัดอย่างเดียวไม่ใช่เกณฑ์;
   pointer ที่ commit ต้อง resolve จาก clone ของ repo ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง;
   ห้าม commented-out code (git จำให้) และห้ามเล่าว่าบรรทัดถัดไปทำอะไร;

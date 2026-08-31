@@ -36,6 +36,10 @@ Domain procedures live in skills. Do not restate every rule or narrate each inte
   that affect correctness or safety without opening an unrelated cleanup project.
 - Treat code comments as context to verify, not authorization or a canonical decision. Follow a comment when current
   code/tests/requirements support it; otherwise ask only if the unresolved conflict changes behavior materially.
+- Do not add code comments by default. Before writing one, verify that a non-obvious local invariant, constraint,
+  or guard cannot be expressed clearly by the code, type, test, or a better name. If it can, omit the comment;
+  never use comments to narrate code, explain a diff, justify work, or preserve history. Keep unavoidable why
+  comments concise and local.
 - A clear request for new behavior authorizes that behavior inside the stated scope. Ask again only when the request
   leaves a material semantic choice unresolved.
 - A question during active work is a detour by default. Answer it and resume the primary objective when safe.
