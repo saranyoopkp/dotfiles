@@ -77,7 +77,9 @@ server ใหม่↔tab/mobile app ที่ยังไม่รีเฟร�
 <!-- โครง workspace, source of truth ของ schema/config, คำสั่งพื้นฐาน -->
 
 ## Conventions
-<!-- ภาษา (เว็บ=EN, internal=TH ได้), naming, กติกาที่ตกลงแล้ว -->
+<!-- ภาษา (เว็บ=EN, internal=TH ได้), naming, กติกาที่ตกลงแล้ว
+     optional product voice/tone: audience, บุคลิก 3–5 คำ, ระดับความเป็นทางการ และคำที่ควรใช้/เลี่ยง;
+     ถ้ารายละเอียดโต ให้ย้ายไป docs/content-voice-tone.md แล้วเหลือ pointer ที่นี่ -->
 
 ## Mission / Boundary
 <!-- ทำอะไร ไม่ทำอะไร ทำไม — กัน scope creep + กัน re-litigate -->

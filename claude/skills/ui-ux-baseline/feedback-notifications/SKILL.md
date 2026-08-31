@@ -15,6 +15,15 @@ description: เลือกและออกแบบ toast, banner, inline er
 | warning สำคัญที่ต้องเห็นขณะทำงานข้ามหน้า/ส่วน | persistent banner หรือ notification center ตาม product pattern |
 | ต้องตัดสินใจก่อนทำต่อ หรือมีผล destructive/irreversible | dialog/confirmation ก่อน action ไม่ใช่ toast หลังเกิดเหตุ |
 
+## Voice & tone
+
+- User-facing copy ใช้ **professional-neutral** เป็น default: clear, calm, respectful, concise และ actionable;
+  หลีกเลี่ยงภาษากันเองเกินไป, slang, มุก หรือ filler เว้นแต่ project convention อนุญาตชัดเจน
+- ก่อนเปลี่ยน wording ให้ตรวจ project-owned voice/tone convention ใน `CLAUDE.md` หรือเอกสารที่ชี้ไว้;
+  convention ปรับบุคลิกและระดับความเป็นทางการได้ แต่ห้ามลด safety, accuracy, accessibility, consent หรือ recovery ที่จำเป็น
+- ปรับน้ำเสียงตาม state: error ต้อง factual/non-blaming/actionable, validation ต้องสั้น, success ยืนยันผลจริง,
+  destructive/security/money ต้องชัดและจริงจัง, empty/help เป็นมิตรแต่กระชับ, internal/admin ใช้ศัพท์เทคนิคได้เมื่อ audience เข้าใจ
+
 - map error ตามขอบเขตที่ผู้ใช้แก้ได้เล็กที่สุด: field error → inline ที่ field, cross-field/domain validation → form-level, resource/global failure → context-level; ถ้า response ไม่ระบุ field ห้ามเดา field เอง และอย่าใช้ transient toast แทน feedback ที่ต้องแก้หรือย้อนกลับมาอ่าน
 - toast เป็น transient feedback ไม่ใช่ที่ซ่อน error ที่ผู้ใช้ต้องแก้, ผลลัพธ์ที่มีรายละเอียดสำคัญ หรือ failure ที่ต้อง retry; ข้อความที่ต้องอ้างอิงภายหลังต้องมีบ้านที่คงอยู่กว่า
 - toast ต้องระบุผลและ object/action ที่เกี่ยวข้องอย่างกระชับ, ไม่หายก่อนอ่าน, มี action/retry เฉพาะเมื่อทำได้จริง และต้อง dedupe/batch เหตุการณ์ burst เพื่อไม่ spam ผู้ใช้
