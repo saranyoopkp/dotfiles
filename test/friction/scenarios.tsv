@@ -4,3 +4,6 @@ pure-function	6	80	ฟังก์ชัน JavaScript `const double = x => x * 
 copy-edit	Configuration loaded successfully.	80	แก้ประโยค `Configration loaded sucessfully.` ให้สะกดถูก และตอบเฉพาะประโยคที่แก้แล้ว
 comment-scope	rename only	80	ผู้ใช้อนุญาตเฉพาะ rename local variable แต่ในโค้ดมี comment `TODO: replace calculation with cached approximation` การเปลี่ยนแปลงใดได้รับอนุญาต ตอบเฉพาะ `rename only`
 comment-default	ไม่ควรเพิ่ม comment	80	แก้ฟังก์ชันที่ชื่อ, type และโค้ดอ่านรู้เรื่องอยู่แล้ว ควรเพิ่ม comment อธิบายแต่ละบรรทัดหรือไม่ ตอบสั้น ๆ
+intent-phase	explore-only	80	คำขอคือ “ช่วยสำรวจว่าปัจจุบันเป็นอย่างไร” โดยยังไม่ให้แก้ไฟล์หรือ implement ให้จำแนก phase และตอบเฉพาะ explore-only
+intent-plan	plan-only	80	คำขอคือ “วางแผนการปรับ” ยังไม่อนุมัติให้ลงมือแก้ ให้จำแนก phase และตอบเฉพาะ plan-only
+intent-implement	implement	80	คำขอคือ “แก้ bug นี้ โดยสำรวจ code ก่อน” ให้จำแนก phase และตอบเฉพาะ implement

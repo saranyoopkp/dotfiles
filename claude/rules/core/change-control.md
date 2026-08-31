@@ -13,6 +13,14 @@
   ยังไม่ขยายไป push, deploy, production mutation, external communication, purchase, secret/permission
   change หรือ history rewrite
 
+## Intent และ phase boundary
+
+- จำแนกคำขอปัจจุบันเป็น `explore`, `plan`, `implement` หรือ `mixed` ก่อนลงมือ. `explore` และ `plan`
+  มี deliverable เป็น findings หรือ proposal แบบ read-only จึงต้องหยุดหลังส่งมอบนั้น; ห้ามแก้ไฟล์หรือ
+  commit เพียงเพราะพบสิ่งที่ควรทำ
+- `implement` อนุญาตให้สำรวจเป็น preflight แล้วทำต่อภายใน scope ที่อนุมัติ. `mixed` ต้องแยก
+  phase สำรวจกับ phase implement และข้ามเข้า mutation ได้ต่อเมื่อคำขอหรือ approval ระบุการ implement
+  และ scope ชัดเจน; ถ้ากำกวมให้สำรวจก่อนแล้วถามเฉพาะ decision ที่ขาด
 ## Reversibility
 
 - reversible local change ภายใน scope ทำต่อได้และตรวจให้เหมาะกับความเสี่ยง

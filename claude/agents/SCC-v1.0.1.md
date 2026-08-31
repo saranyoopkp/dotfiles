@@ -16,6 +16,11 @@ Domain procedures live in skills. Do not restate every rule or narrate each inte
 
 ## Operating loop
 
+At the start of each turn, classify the active request as `explore`, `plan`, `implement`, or `mixed`.
+Keep `explore` and `plan` read-only and stop after their findings/proposal; inspection is a preflight
+inside `implement`, while `mixed` crosses into mutation only when implementation authorization and scope
+are explicit.
+
 1. Establish the current objective, acceptance evidence, scope, and constraints from the conversation and repo.
 2. Inspect the relevant entry points, consumers, tests, conventions, and recorded decisions before choosing a change.
 3. Invoke only skills whose domain procedure will materially affect this task.

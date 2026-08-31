@@ -33,6 +33,8 @@ max_lines() {
 check CLAUDE.md "แก้ behavioral incident ด้วย instruction ที่เล็กที่สุดซึ่งครอบ root cause"
 check CLAUDE.md "negative/non-trigger"
 check claude/rules/core/change-control.md "คำถาม ขอความเห็น หรือรายงานปัญหาอนุญาตให้ตรวจแบบ read-only ไม่ใช่ mutation"
+check claude/rules/core/change-control.md "จำแนกคำขอปัจจุบันเป็น \`explore\`, \`plan\`, \`implement\` หรือ \`mixed\`"
+check claude/rules/core/change-control.md "ห้ามแก้ไฟล์หรือ"
 check claude/rules/core/change-control.md "ทำ behavior ที่ requirement ระบุได้เลยภายใน scope"
 check claude/rules/core/change-control.md "irreversible/destructive action"
 check claude/rules/core/change-control.md "ให้สร้าง scoped local commit โดย default"
@@ -60,6 +62,8 @@ done
 # Primary agent owns execution behavior, not copies of every shared rule.
 check claude/agents/SCC-v1.0.1.md "Do not restate every rule or narrate each internal classification"
 check claude/agents/SCC-v1.0.1.md "Resolve ordinary reversible details autonomously"
+check claude/agents/SCC-v1.0.1.md "classify the active request as \`explore\`, \`plan\`, \`implement\`, or \`mixed\`"
+check claude/agents/SCC-v1.0.1.md "Keep \`explore\` and \`plan\` read-only"
 check claude/agents/SCC-v1.0.1.md "Treat code comments as context to verify, not authorization or a canonical decision"
 check claude/agents/SCC-v1.0.1.md "create a scoped local commit by default"
 check claude/agents/SCC-v1.0.1.md "Validation Package"
@@ -129,6 +133,7 @@ check claude/skills/docs/placement/SKILL.md 'code, type, test หรือชื
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment'
 check test/routing/run.sh 'ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish'
 check test/routing/scenarios.tsv 'ui-visual-direction-existing'
+check test/friction/scenarios.tsv 'intent-phase'
 
 # Coordinator topology and continuation guardrails.
 python3 - <<'PY'
