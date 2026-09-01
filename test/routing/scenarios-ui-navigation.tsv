@@ -1,0 +1,2 @@
+# Focused UI navigation-state routing regression
+ui-ux-baseline ui-ux-baseline-layout-navigation	ui-ux-baseline-content-copy	ui-navigation	ปรับ navigation ของ dashboard ให้รองรับ nested route, active item, deep link, back/forward และ restore scroll โดยไม่เปลี่ยน business behavior

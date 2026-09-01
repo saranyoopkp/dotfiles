@@ -35,7 +35,7 @@ flowchart LR
         UI -->|Create, edit, toggle, delete, retry| UI_FLOWS["ui-ux-baseline:task-flows"]
         UI -->|Loading, empty, error, stale| UI_STATES["ui-ux-baseline:resource-states"]
         UI -->|Button, input, menu, dialog| UI_A11Y["ui-ux-baseline:interaction-a11y"]
-        UI -->|Page, route, shell, responsive| UI_LAYOUT["ui-ux-baseline:layout-navigation"]
+        UI -->|Page, route, shell, navigation state, responsive| UI_LAYOUT["ui-ux-baseline:layout-navigation"]
         UI -->|Toast, banner, result, recovery| UI_FEEDBACK["ui-ux-baseline:feedback-notifications"]
         UI -->|Shared component or variant| UI_SYSTEM["ui-ux-baseline:design-system"]
         UI -->|Shared token, theme, icon| UI_FOUNDATION["ui-ux-baseline:design-foundations"]

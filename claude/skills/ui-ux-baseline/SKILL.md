@@ -52,7 +52,7 @@ feature; ไม่ใช่คำสั่งให้เติม decoration �
 | เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
 | search, filter, sort, table/list, pagination, selection หรือ bulk action | `ui-ux-baseline:collections` |
 | chat, feed, event stream, presence หรือข้อมูลที่เข้าตามเวลา | `ui-ux-baseline:realtime-conversation` |
-| page layout, navigation, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
+| page layout, navigation state, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
 | interactive element ทุกชนิด | `ui-ux-baseline:interaction-a11y` |
 | สร้างหรือแก้ shared component, primitive หรือ variant | `ui-ux-baseline:design-system` |
 
