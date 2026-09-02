@@ -10,8 +10,14 @@
 # ⚠️ กิน API tokens ต่อ scenario — รันหลังแก้ skill/scenarios ไม่ใช่ทุก commit.
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
-# on-demand skills ที่มีอยู่ (เพิ่มเมื่อย้าย rule เป็น skill เพิ่ม)
-ONDEMAND_SKILLS="ui-ux-baseline ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish ui-ux-baseline-content-copy ui-ux-baseline-layout-navigation data-design api-design ops greenfield-foundation research retro docs-workspace docs-placement docs-setup performance stack-contracts testing-strategy risk-review"
+ROOT="$(cd "$HERE/../.." && pwd)"
+# Derive the registry from frontmatter so adding a skill cannot silently hide it from the parser.
+ONDEMAND_SKILLS="$({
+  while IFS= read -r -d '' skill_file; do
+    sed -n 's/^name:[[:space:]]*//p' "$skill_file"
+  done < <(find "$ROOT/claude/skills" -type f -name SKILL.md -print0)
+} | tr ':' '-' | sort -u | tr '\n' ' ')"
+[ -n "$ONDEMAND_SKILLS" ] || { echo "no on-demand skills found in $ROOT/claude/skills" >&2; exit 2; }
 SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ui-content-copy.tsv" "$HERE/scenarios-ui-navigation.tsv" "$HERE/scenarios-ops.tsv" "$HERE/scenarios-research.tsv" "$HERE/scenarios-retro.tsv" "$HERE/scenarios-docs.tsv" "$HERE/scenarios-compatibility.tsv" "$HERE/scenarios-performance.tsv" "$HERE/scenarios-stack-contracts.tsv" "$HERE/scenarios-testing-strategy.tsv" "$HERE/scenarios-risk.tsv" "$HERE/scenarios-simple-negative.tsv")
 if [ -n "${ROUTING_SCENARIO_FILES:-}" ]; then
   IFS=':' read -r -a SCENARIO_FILES <<< "$ROUTING_SCENARIO_FILES"
@@ -71,9 +77,8 @@ for line in sys.stdin:
     if not isinstance(c,list): continue
     for b in c:
         if isinstance(b,dict) and b.get('type')=='tool_use' and b.get('name')=='Skill':
-            s=str((b.get('input') or {}).get('skill','')).replace(':','-')
-            for o in ond:
-                if o in s: got.add(o)
+            s=str((b.get('input') or {}).get('skill','')).replace(':','-').lstrip('/')
+            if s in ond: got.add(s)
 sys.stdout.write(' '.join(sorted(got)))
 " $ONDEMAND_SKILLS
 }
