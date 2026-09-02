@@ -14,7 +14,7 @@ description: Router สำหรับมาตรฐาน HTTP/REST API ใช
 | เพิ่ม/แก้ endpoint, request/response representation หรือ HTTP semantics | `api-design:contract-core` |
 | error, validation response, authentication/authorization failure | `api-design:errors` |
 | list/search/filter/sort/pagination | `api-design:collections` |
-| POST/PATCH/DELETE, side effect, duplicate submit หรือ retry | `api-design:mutations` |
+| POST/PUT/PATCH/DELETE, side effect, duplicate submit หรือ retry | `api-design:mutations` |
 | `202 Accepted`, background job, long-running action หรือ operation status | `api-design:async-operations` |
 | cache header, ETag, conditional request หรือ stale write | `api-design:caching-concurrency` |
 | public contract change, version, deprecation หรือ migration | `api-design:evolution` |
@@ -32,5 +32,6 @@ performance/N+1 และ external integration safety ยังเป็น owne
 อ่าน `contract-core` สำหรับ representation/method, `collections` สำหรับ list และ `mutations`
 สำหรับ create/update/delete. lifecycle ของ deletion/retention อยู่ `data-design:lifecycle-governance`.
 
-ถ้า contract เปลี่ยน behavior ที่ client สังเกตได้ ให้ผ่าน behavioral-change gate ก่อน; API ที่ public
-แล้วเป็น compatibility surface ไม่ใช่ implementation detail.
+ถ้า contract เปลี่ยน behavior ที่ client สังเกตได้ ให้ใช้ authorization และ impact rules ใน
+`claude/rules/core/change-control.md` ก่อน; API ที่ public แล้วเป็น compatibility surface ไม่ใช่
+implementation detail.

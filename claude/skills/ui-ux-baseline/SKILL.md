@@ -58,4 +58,5 @@ feature; ไม่ใช่คำสั่งให้เติม decoration �
 
 งานเดียวอ่านได้หลาย child ตาม data flow จริง; ห้ามโหลดทั้งหมดเพียงเพื่อทำ checklist และห้ามข้าม child ที่ trigger ตรงเพียงเพราะ UI ดูเล็ก
 
-หาก design ที่ขอมาขัดกับ constraint จาก child skill ให้สรุปผลกระทบและทางเลือกก่อนลงมือ ตาม behavioral-change gate ของโครงการ
+หาก design ที่ขอมาขัดกับ constraint จาก child skill ให้สรุปผลกระทบและทางเลือกก่อนลงมือ ตาม
+authorization และ impact rules ใน `claude/rules/core/change-control.md`

@@ -25,5 +25,5 @@ description: Router สำหรับ research ที่มีผลต่อ�
   inference และ unknown พร้อม source/checked date
 - research เป็นข้อมูลสำหรับ decision ไม่ใช่ authorization ให้เลือก vendor, เปลี่ยน behavior,
   เพิ่ม dependency, upgrade, ซื้อบริการ หรือเก็บข้อมูลผู้ใช้เอง
-- สรุปตาม Report-integrity gate: claim สำคัญ, evidence, applicability, limitation และสิ่งที่
-  ยังไม่ยืนยัน; จำนวนลิงก์หรือความมั่นใจไม่แทนคุณภาพหลักฐาน
+- สรุปตามหลักฐานใน `claude/rules/core/evidence-integrity.md`: claim สำคัญ, evidence, applicability,
+  limitation และสิ่งที่ยังไม่ยืนยัน; จำนวนลิงก์หรือความมั่นใจไม่แทนคุณภาพหลักฐาน

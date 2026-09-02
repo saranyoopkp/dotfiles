@@ -22,7 +22,8 @@ style guide ใหม่ทุกงาน. ใช้ค่าที่มีอ
 brand content; ห้าม bulk-replace user/brand content. ทำ mapping จาก emoji/icon เดิมไป semantic icon
 ที่ตรวจพบใน library ของ repo แล้ว migrate เป็น shared primitive หรือทีละ surface ที่ตรวจได้ โดยคง
 visible label, accessible name, interaction state และ layout. อย่าปนการเปลี่ยน icon กับการเปลี่ยน
-meaning/copy; semantic change ต้องผ่าน behavioral-change gate.
+meaning/copy; semantic change ต้องใช้ authorization และ impact rules ใน
+`claude/rules/core/change-control.md`.
 
 ลบของเดิมเมื่อค้น consumer แล้วไม่เหลือ และตรวจ screenshot ของ state/viewport ที่เกี่ยวข้องพร้อม
 keyboard/accessibility ตาม `interaction-a11y`; หาก migration ยังไม่ครบให้ระบุรายการที่เหลือและ owner.

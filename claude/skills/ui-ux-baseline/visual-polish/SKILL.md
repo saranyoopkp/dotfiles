@@ -1,13 +1,14 @@
 ---
 name: ui-ux-baseline:visual-polish
-description: ปรับ Visual Design ของหน้าจอหรือ component เดิมให้ชัด อ่านง่าย สมดุล และเนี้ยบขึ้น โดยคง brand, visual direction, information architecture และ behavior เดิม. ใช้เมื่อผู้ใช้ขอ clean, simplify, polish UI, ปรับ spacing/typography/color hierarchy/density/alignment หรือแก้หน้าตาเล็กน้อย; ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง, modern, premium หรือเปลี่ยน visual direction
+description: ปรับ Visual Design ของหน้าจอหรือ component เดิมให้ชัด อ่านง่าย สมดุล และเนี้ยบขึ้น โดยคง brand, visual direction, information architecture และ behavior เดิม. ใช้เมื่อผู้ใช้ขอ clean, simplify, polish UI, ปรับ spacing/typography/color hierarchy/density/alignment หรือ effect เช่น shadow, blur, gradient, overlay; ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง, modern, premium หรือเปลี่ยน visual direction
 ---
 
 # Visual Polish
 
 คง brand/flow เดิมก่อน: งานนี้ปรับการรับรู้และความอ่านง่าย ไม่ใช่ข้ออ้างให้เปลี่ยน
 information architecture, copy, interaction หรือ product behavior เงียบ ๆ. ถ้าต้องเปลี่ยนสิ่งเหล่านั้น
-ให้อ่าน child skill ที่เป็น owner และผ่าน behavioral-change gate.
+ให้อ่าน child skill ที่เป็น owner และใช้ authorization/impact rules ใน
+`claude/rules/core/change-control.md` หากการปรับแตะ behavior หรือความหมาย.
 
 - เริ่มจากลำดับการอ่านจริง: primary task, primary action, context และ secondary detail ต้องแยกกันเห็นได้ก่อนปรับสีหรือ decoration
 - แก้ตามลำดับ: hierarchy → grid/alignment → spacing/density → typography → color/contrast → surface/detail; อย่าทาสีทับปัญหา layout หรือ content hierarchy

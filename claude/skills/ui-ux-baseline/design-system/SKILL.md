@@ -11,4 +11,4 @@ description: ออกแบบหรือแก้ shared UI component, primit
 - variant ต้องมีความหมายเชิงพฤติกรรมหรือ semantic ไม่ใช่ prop ที่เปิดให้ผสมทุกอย่าง; feature-specific composition ให้อยู่ใกล้ feature
 - shared primitive ต้องรับ semantics, focus, disabled/pending และ responsive behavior ของมันเอง แต่ไม่ควรกลืน business flow ของแต่ละ feature
 
-ก่อนส่งมอบ ตรวจ consumer ที่ได้รับผล, visual/interaction regression ที่เกี่ยวข้อง และ compatibility ของ API/variant; ถ้า behavior เปลี่ยนให้ผ่าน behavioral-change gate ก่อน
+ก่อนส่งมอบ ตรวจ consumer ที่ได้รับผล, visual/interaction regression ที่เกี่ยวข้อง และ compatibility ของ API/variant; ถ้า behavior เปลี่ยนให้ใช้ authorization และ impact rules ใน `claude/rules/core/change-control.md` ก่อน

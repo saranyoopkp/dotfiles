@@ -1,6 +1,6 @@
 ---
 name: api-design:errors
-description: ออกแบบ HTTP error, validation response และ Problem Details contract ใช้เมื่อเพิ่มหรือแก้ 4xx/5xx, error middleware, field validation response หรือ client recovery contract ของ REST API
+description: ออกแบบ HTTP error, validation response และ Problem Details contract ใช้เมื่อเพิ่มหรือแก้ 4xx/5xx, authentication/authorization failure, error middleware, field validation response หรือ client recovery contract ของ REST API
 ---
 
 # Errors

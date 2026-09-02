@@ -81,7 +81,8 @@ description: Decide where repository knowledge belongs among comments, docstring
 ## โหมดจัดระเบียบ (remediation — เก็บหนี้ comment/docstring เดิม)
 
 **Scope discipline ก่อนเริ่ม**: ทำเฉพาะไฟล์ที่ถูกสั่ง/ไฟล์ที่งานปัจจุบันแตะ — จะกวาดทั้ง repo
-ต้องถูกสั่งชัด (ตาม calibrated-action: เกินสั่ง = เสนอ ไม่ใช่ลงมือ)
+ต้องถูกสั่งชัด (ตาม scope และ authorization rules ใน `claude/rules/core/change-control.md`:
+เกินสั่ง = เสนอ ไม่ใช่ลงมือ)
 
 **เกณฑ์หลักตอนย้าย: "กฎ" อยู่ในโค้ด — "เรื่องเล่าว่าได้กฎมายังไง" ไป docs** (guard ที่คน
 แก้จุดนั้นต้องเห็น เก็บไว้หนึ่งบรรทัด; บั๊กเก่า/ผลวัด/ประวัติเวอร์ชัน → docs + pointer —

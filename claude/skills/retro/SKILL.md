@@ -11,6 +11,8 @@ description: สกัด behavioral signals และ feedback จาก sessio
 ## Boundary
 
 - วิเคราะห์เฉพาะ session/context และ repository evidence ที่เข้าถึงได้ ห้ามแต่งเหตุการณ์หรือจำนวนครั้ง
+- เมื่อผู้ใช้ขอเทียบหลาย session ให้ตรวจเฉพาะ session/transcript ที่เกี่ยวข้องกับ objective เดียวกัน
+  และแยกหลักฐานของแต่ละ session ออกจากกัน
 - เป็น read-only โดย default: ห้ามแก้ไฟล์, บันทึก memory หรือ promote finding จนกว่าผู้ใช้จะสั่ง
 - Retro ไม่ใช่การประเมินความผิดของผู้ใช้หรือ agent; หา system cause ที่แก้ได้
 - ความรู้สึกแปลก ขัด ไม่เข้าที่ หรือน่าสนใจเป็น signal ให้สำรวจ ไม่ใช่หลักฐานว่า behavior ผิด

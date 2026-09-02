@@ -11,6 +11,8 @@ Read only the reference matching the active risk surface:
 - amount, currency, billing, allocation, or business-time boundary → [references/money-time.md](references/money-time.md)
 - webhook, OAuth, provider call, retry, or outbound side effect → [references/external-integrations.md](references/external-integrations.md)
 - production release, secrets/PII, monitoring, backup, rollback, or recovery → [references/production.md](references/production.md)
+- destructive, irreversible, or deletion action → read the production reference for recovery/rollback
+  and combine it with any matching auth, money, or external-integration reference
 
 Apply safeguards in proportion to actual stage and impact. Preserve the user's chosen scope; a review finding does
 not authorize adjacent hardening or production mutation. Verify the risk-bearing path directly and report gaps

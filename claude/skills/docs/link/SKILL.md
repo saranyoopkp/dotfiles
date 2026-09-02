@@ -1,6 +1,6 @@
 ---
 name: docs:link
-description: ตรวจ broken/stale reference ทั้ง repo — md↔md links, path ที่อ้างในเอกสาร (`docs/x.md`, `src/y.py`), pointer ใน comment ของโค้ดที่ชี้เข้า docs/memory, และ [[wiki-link]] ของ memory ใช้เมื่อ ย้าย/rename/ลบไฟล์, refactor เอกสาร, ก่อน commit งานที่แตะโครงไฟล์, หรือถูกขอให้หา broken link/ตรวจ docs stale
+description: ตรวจ broken reference และ anchor ทั้ง repo — md↔md links, path ที่อ้างในเอกสาร (`docs/x.md`, `src/y.py`), pointer ใน comment ของโค้ดที่ชี้เข้า docs/memory, และ [[wiki-link]] ของ memory ใช้เมื่อย้าย/rename/ลบไฟล์, refactor เอกสาร, ก่อน commit งานที่แตะโครงไฟล์ หรือถูกขอให้ตรวจว่า reference ชี้ถึงไฟล์จริง; ไม่ตรวจว่าเนื้อหาเอกสารยังตรงกับโค้ด
 ---
 
 # Link Check — reference ต้องไม่ตาย

@@ -20,5 +20,6 @@ description: Router สำหรับมาตรฐาน data layer ใช้
 trigger ตรงเพียงเพราะ migration หรือ worker ดูเล็ก. authz/tenant scope, query performance,
 backup/restore และ delivery reliability มี owner ใน rules/ops เดิม; skill นี้ไม่ลด requirement เหล่านั้น.
 
-การเปลี่ยน schema, data meaning หรือ lifecycle ที่ consumer สังเกตได้ต้องผ่าน behavioral-change gate
-และ compatibility/rollout rule ก่อนลงมือ.
+การเปลี่ยน schema, data meaning หรือ lifecycle ที่ consumer สังเกตได้ต้องใช้ authorization และ
+impact rules ใน `claude/rules/core/change-control.md` ก่อนลงมือ; ถ้าเป็น public/data contract
+ให้ตรวจ compatibility/rollout ตาม rule ที่เกี่ยวข้อง.

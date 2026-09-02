@@ -1,6 +1,6 @@
 ---
 name: api-design:mutations
-description: ออกแบบ REST mutation ที่มี side effect, retry, duplicate submit หรือ idempotency ใช้เมื่อเพิ่มหรือแก้ POST/PATCH/PUT/DELETE ที่สร้าง เปลี่ยน หรือลบข้อมูลหรือผลกระทบภายนอก
+description: ออกแบบ REST mutation ที่มี side effect, retry, duplicate submit หรือ idempotency ใช้เมื่อเพิ่มหรือแก้ POST/PUT/PATCH/DELETE ที่สร้าง เปลี่ยน หรือลบข้อมูลหรือผลกระทบภายนอก
 ---
 
 # Mutations

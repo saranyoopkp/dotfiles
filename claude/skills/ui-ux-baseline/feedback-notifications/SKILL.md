@@ -1,6 +1,6 @@
 ---
 name: ui-ux-baseline:feedback-notifications
-description: เลือกและออกแบบ toast, banner, inline error, alert, success/failure message, status announcement และ recovery feedback ใช้เมื่อ UI ต้องบอกผลของ action, error, warning, background completion หรือสถานะที่ผู้ใช้ต้องรับรู้
+description: เลือกและออกแบบ toast, banner, inline error, alert, success/failure message, status announcement และ recovery feedback รวมถึง voice/tone ของ feedback ใช้เมื่อ UI ต้องบอกผลของ action, error, warning, background completion หรือสถานะที่ผู้ใช้ต้องรับรู้
 ---
 
 # Feedback & Notifications

@@ -1,6 +1,6 @@
 ---
 name: stack-contracts
-description: ต้องใช้ทันทีเมื่อผู้ใช้ขอเพิ่ม/เปลี่ยน dependency ทั้งที่ workspace อาจมีเครื่องมือ concern เดียวกัน, ขอ consolidate stack/config หรือออกแบบ/แก้ shared schema/type/enum/constant/contract ระหว่าง package/service/frontend/backend/worker แม้ยังต้อง inventory manifest/consumer เพื่อยืนยันภายหลัง; ไม่ใช้กับ helper ภายในจุดเดียวหรือ schema ที่มี owner/consumer เดียว และห้ามสร้าง shared package หรือ abstraction เผื่ออนาคต
+description: ต้องใช้ทันทีเมื่อผู้ใช้ขอเพิ่ม/เปลี่ยน dependency ทั้งที่ workspace อาจมีเครื่องมือ concern เดียวกัน, ขอ consolidate stack/config หรือออกแบบ/แก้ shared schema/type/enum/constant/contract ระหว่าง package/service/frontend/backend/worker แม้ยังต้อง inventory manifest/consumer เพื่อยืนยันภายหลัง; ใช้เป็น owner ของ inventory และ shared boundary ส่วนการเปรียบเทียบ vendor/library ภายนอกให้ใช้ research:technology-vendor ร่วมเมื่อจำเป็น; ไม่ใช้กับ helper ภายในจุดเดียวหรือ schema ที่มี owner/consumer เดียว และห้ามสร้าง shared package หรือ abstraction เผื่ออนาคต
 ---
 
 # Stack Contracts — owner เดียวก่อน shared abstraction
@@ -45,6 +45,8 @@ workspace config ที่เกี่ยว. การวิเคราะห�
 
 ## Migration และ verification
 
-ถ้า public/data consumer สังเกตต่าง ให้ผ่าน behavioral/compatibility gate ก่อน mutation.
+ถ้า public/data consumer สังเกตต่าง ให้ใช้ authorization และ compatibility/impact rules ใน
+`claude/rules/core/change-control.md` และ `claude/rules/engineering/compatibility-rollout.md`
+ก่อน mutation.
 Inventory consumer ทั้งหมด, migrate ทีละ boundary และตรวจว่าไม่มี import/config/schema เก่า
 เหลือก่อน contract. รายงาน owner, consumers, compatibility window และหลักฐานต่อ consumer.

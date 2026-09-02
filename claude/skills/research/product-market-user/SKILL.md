@@ -26,4 +26,4 @@ description: วิจัย product opportunity, market/competitor และ us
 
 ส่งมอบ opportunity/insight พร้อม segment, evidence, confidence limitation และ counter-evidence;
 แยก fact จาก recommendation. Research เสนอทางเลือกได้ แต่ product behavior, experiment หรือ
-การเก็บข้อมูลใหม่ต้องผ่าน intent/behavioral-change gate ก่อน.
+การเก็บข้อมูลใหม่ต้องผ่าน intent และ authorization rules ใน `claude/rules/core/change-control.md` ก่อน.

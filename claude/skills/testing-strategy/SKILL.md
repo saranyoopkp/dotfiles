@@ -164,7 +164,7 @@ primary deliverable; report เป็นหลักฐานประกอบ 
 ## วินัยและ verdict
 
 - test ที่พังห้าม skip/comment เพื่อให้ suite เขียว; แก้, แยก flaky พร้อม owner หรือรายงาน blocker
-- test ที่ผ่านยืนยันเฉพาะ path/input/environment ที่รัน; build/typecheck ไม่แทน runtime behavior
+- รายงาน path/input/environment ที่วัดและ coverage gap; build/typecheck เป็น precondition ไม่ใช่หลักฐานแทน runtime path
 - bug fix ต้องมี regression test เมื่อทำให้ reproduce ได้อย่างเสถียร
 - รัน targeted test และ flow จริงตาม risk; รันไม่ได้ให้รายงาน criterion ที่ยังไม่พิสูจน์
 - test suite ต้องมีคำสั่ง canonical ที่รันซ้ำได้และจดใน operational home ที่ repo กำหนด;

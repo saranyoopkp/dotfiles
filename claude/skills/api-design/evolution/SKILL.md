@@ -19,6 +19,7 @@ description: จัดการ REST public contract evolution, compatibility, v
   contract ของเก่าเมื่อมี evidence ว่าไม่มี consumer เหลือ; rename ไม่ใช่ one-step change
 - OpenAPI/schema, generated client, docs และ contract tests ต้องเปลี่ยนร่วมกับ implementation
 
-ก่อนลงมือ behavioral/breaking change ให้ผ่าน behavioral-change gate พร้อมทางเลือกและ approval;
+ก่อนลงมือ behavioral/breaking change ให้ใช้ authorization และ impact rules ใน
+`claude/rules/core/change-control.md` พร้อมทางเลือกและ approval;
 feature flag/rollout mechanism ใช้ safety contract ใน `compatibility-rollout` และห้ามใช้บัง
 incompatible state. ก่อนปิดงานตรวจ consumer flow หรือ contract test ที่เป็นตัวแทนของ compatibility จริง.

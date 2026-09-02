@@ -23,7 +23,8 @@ metadata และข้อความที่ประกอบตอน runt
 1. **Extract โดยคง behavior**: ย้าย copy เดิมไป translation key/source, ต่อ fallback และรักษา
    wording, formatting, variable และ fallback behavior เดิม
 2. **Localize/ปรับ semantics**: เพิ่ม locale, plural rule, formatter, wording หรือ RTL เป็นงานแยก;
-   สิ่งที่เปลี่ยนความหมาย/default/behavior ต้องผ่าน behavioral-change gate
+    สิ่งที่เปลี่ยนความหมาย/default/behavior ต้องใช้ authorization และ impact rules ใน
+    `claude/rules/core/change-control.md`
 
 migrate ทีละ surface ที่ตรวจได้, ใช้ key convention/source เดียว และค้น consumer ก่อนลบ inline
 source เดิม; ห้ามปล่อยข้อความเดียวมี owner สองที่โดยไม่มี migration plan. ตรวจ default locale เทียบ

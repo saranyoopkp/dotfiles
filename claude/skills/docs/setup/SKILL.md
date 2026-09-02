@@ -1,6 +1,6 @@
 ---
 name: docs:setup
-description: Set up, adopt, or re-apply the repo documentation system (CLAUDE.md + docs/ + linked repository memory) using the docs-setup kit. Use for kit installation/upgrade or refactoring those surfaces as one system; not for reorganizing an established docs tree or index alone.
+description: Set up, adopt, or re-apply the repo documentation system (CLAUDE.md + docs/ + linked repository memory + lifecycle hooks) using the docs-setup kit. Use for kit installation/upgrade or refactoring those surfaces as one system; not for reorganizing an established docs tree or index alone.
 ---
 
 # Docs Setup — ระบบเอกสารมาตรฐานของ user

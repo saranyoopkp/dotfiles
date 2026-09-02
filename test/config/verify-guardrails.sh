@@ -82,8 +82,15 @@ check README.th.md 'SCC ทำงานหลัก, Scout สำรวจแบ
 check docs/skill-routing-graph.md 'REQ -->|Primary implementation agent| SCC'
 check docs/skill-routing-graph.md 'API_EVOLUTION -.->|Affected frontend consumer| UI'
 check claude/skills/api-design/evolution/SKILL.md 'Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI'
+check claude/skills/api-design/SKILL.md 'POST/PUT/PATCH/DELETE'
+check claude/skills/api-design/errors/SKILL.md 'authentication/authorization failure'
 check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก่อน remediation)'
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
+check claude/skills/docs/link/SKILL.md 'ไม่ตรวจว่าเนื้อหาเอกสารยังตรงกับโค้ด'
+check claude/skills/docs/setup/SKILL.md 'lifecycle hooks'
+check claude/skills/retro/SKILL.md 'เทียบหลาย session'
+check claude/skills/research/technology-vendor/SKILL.md 'external comparison และ recommendation'
+check claude/skills/risk-review/SKILL.md 'destructive, irreversible, or deletion action'
 check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality, content และ visual design baseline'
 check claude/skills/ui-ux-baseline/SKILL.md 'โครงสร้าง, copy, interaction, state, accessibility, responsive behavior, visual consistency'
 check claude/skills/ui-ux-baseline/SKILL.md 'แบบ on-demand; ไม่โหลด child ทั้งหมดโดย default'
@@ -118,6 +125,7 @@ check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'ไม่ใช่
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'visual language จากหน้าพี่น้องหรืองานก่อนหน้า'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'acceptance floor ไม่ใช่ผลลัพธ์ทั้งหมดของงาน aesthetic'
 check claude/skills/ui-ux-baseline/visual-polish/SKILL.md 'ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง'
+check claude/skills/ui-ux-baseline/visual-polish/SKILL.md 'effect เช่น shadow, blur, gradient, overlay'
 check CLAUDE.md 'Calibrate constraints for creative work'
 check CLAUDE.md 'aesthetic preference, convention, “ทำให้น้อยที่สุด”, “ใช้ของเดิม”'
 check CLAUDE.md 'คำขอเช่น “ทำให้สวยขึ้น” อนุญาตให้ audit และเสนอทางเลือก'
@@ -135,7 +143,7 @@ check claude/agents/SCC-v1.0.1.md 'never use comments to narrate code, explain a
 check claude/skills/docs/placement/SKILL.md 'ไม่เขียนเป็นค่าเริ่มต้น'
 check claude/skills/docs/placement/SKILL.md 'code, type, test หรือชื่อที่ดีแสดงเองไม่ได้'
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment'
-check test/routing/run.sh 'ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish'
+check test/routing/run.sh 'find "$ROOT/claude/skills" -type f -name SKILL.md -print0'
 check test/routing/scenarios.tsv 'ui-visual-direction-existing'
 check test/friction/scenarios.tsv 'intent-phase'
 
@@ -143,6 +151,12 @@ check test/friction/scenarios.tsv 'intent-phase'
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
 check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
 check claude/agents/ACV-v1.0.1.md "ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ"
+
+# Skill references must use the canonical owners instead of undefined named gates.
+if rg -n -i 'behavior.?change gate|behavioral/compatibility gate|report-integrity gate|calibrated-action' "$ROOT/claude/skills"; then
+  echo "undefined named gate remains in skill instructions" >&2
+  exit 1
+fi
 
 # Regressions that previously created universal ceremony.
 absent claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
