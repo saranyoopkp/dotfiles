@@ -43,12 +43,20 @@ If there is no answer, the line goes. Rules are only created from a failure that
 and can be pointed at; a new rule must first be merged into an existing one before it is allowed
 its own file.
 
-**13 rules** cover change control, evidence integrity, compatibility, and the risk domains where
-mistakes are expensive — authorization and tenancy, money, time zones, production recovery,
-external integrations.
+**6 rules** cover change control, evidence integrity, the operating contract, compatibility and
+rollout, documentation discipline, and a single risk boundary that fires wherever mistakes are
+expensive — authorization and tenancy, money, time zones, production recovery, external
+integrations.
 
-**49 skills** cover the procedures — API contract design, schema migrations, observability,
-incident response, performance, testing strategy, documentation placement.
+That set has been consolidated rather than grown. The first commit had **13 rule files and about
+400 lines**; it is now **6 files and 167 lines** — the five separate risk rules became one
+boundary, and four more were absorbed into the skills that already owned their procedure.
+Merging into an existing rule is the default; a new file has to be argued for.
+
+**50 skills** cover the procedures — API contract design, schema migrations, observability,
+incident response, performance, testing strategy, documentation placement. This is where the
+removed rule content went: skills grew from **8 to 50** over the same period, because a procedure
+that only matters for one kind of work should not be loaded into every session.
 
 **3 agents** separate primary work, bounded discovery and acceptance: SCC owns implementation,
 a read-only Scout isolates broad searches or independent hypothesis checks, and ACV independently
@@ -140,8 +148,8 @@ budget edges.
 ## Layout
 
 ```
-claude/rules/      13 always-loaded invariants (core, engineering, risk)
-claude/skills/     49 on-demand domain procedures
+claude/rules/      6 always-loaded invariants (core, engineering, risk)
+claude/skills/     50 on-demand domain procedures
 claude/agents/     3 role definitions: SCC, Scout, ACV
 test/routing/      skill auto-invocation regression, real sessions
 test/friction/     simple-task ceremony regression
