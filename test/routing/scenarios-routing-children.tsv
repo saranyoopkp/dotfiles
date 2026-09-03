@@ -21,6 +21,8 @@ research-product-market-user	-	child-research-user	หาหลักฐาน�
 research-research-control	-	child-research-control	วางแผน research ที่มีหลาย source ขัดกัน พร้อม scope source hierarchy และ stopping criteria
 research-security-advisories	-	child-research-security	ตรวจ dependency version ที่ resolve จริงกับ CVE ปัจจุบันและ affected range
 research-technology-vendor	-	child-research-vendor	เปรียบเทียบ managed queue สอง vendor โดยดู compatibility support pricing และ lock-in
+testing-strategy-behavior-boundaries	-	child-testing-behavior	ออกแบบ test coverage สำหรับ state transition, retry หลัง commit และ recovery side effect
+testing-strategy-input-domains	-	child-testing-input	ออกแบบ minimal validation coverage จาก equivalence partitions และ nearest-invalid boundaries
 ui-ux-baseline-collections	-	child-ui-collections	ออกแบบ table ที่มี search filter sort pagination และ bulk action
 ui-ux-baseline-content-localization	-	child-ui-localization	เพิ่มภาษาอาหรับใน form พร้อม pluralization formatting และ RTL
 ui-ux-baseline-design-foundations	-	child-ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมหลายหน้าพร้อมตรวจ contrast

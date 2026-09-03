@@ -102,7 +102,11 @@ flowchart LR
     GREENFIELD["greenfield-foundation"]
     PERFORMANCE["performance"]
     STACK["stack-contracts"]
-    TESTING["testing-strategy"]
+    subgraph TESTING_FAMILY["Testing strategy"]
+        TESTING["testing-strategy"]
+        TESTING -->|State, time, retry, recovery, concurrency| TEST_BEHAVIOR["testing-strategy:behavior-boundaries"]
+        TESTING -->|Validation, partitions, input boundaries| TEST_INPUT["testing-strategy:input-domains"]
+    end
     RETRO["retro"]
 
     UI_COLLECTIONS -.->|Management actions require API work| API
