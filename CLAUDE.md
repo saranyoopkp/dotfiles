@@ -1,109 +1,117 @@
 # dotfiles — personal Claude Code configuration
 
-สถานะ: active · repository: private · config นี้ใช้ข้ามเครื่องผ่าน link/junction
+Status: active · repository: private · this configuration is shared across machines through links or junctions
 
-Project vision และขอบเขตหลักมี canonical owner อยู่ที่ [`README.md`](README.md);
-ไฟล์นี้เก็บเฉพาะ operational context สำหรับทำงานกับ repository.
+[`README.md`](README.md) is the canonical owner of project vision and scope. This file contains only the
+operational context for working with the repository.
 
-## ทำงานกับ repository นี้
+## Working with this repository
 
-- `claude/rules/` คือ safety invariants แบบสั้นที่โหลดทุก session; domain procedure อยู่ใน skills
-- `claude/skills/` คือ playbook ตามประเภทงาน; description ใช้เป็น routing signal และ body โหลดเมื่อ invoke
-- `claude/agents/` คือ role definitions ที่ผู้ใช้เลือก trigger เอง: SCC, Scout และ ACV
-- `references/` และ `docs/` เป็นข้อมูลอ้างอิงแบบ on-demand
-- `test/routing/` และ `test/metrics/` ใช้ทดสอบ routing และวัดพฤติกรรม; ดู README ของแต่ละโฟลเดอร์
+- `claude/rules/` contains concise safety invariants loaded in every session; domain procedures belong in skills.
+- `claude/skills/` contains task-specific playbooks; descriptions are routing signals and bodies load on invocation.
+- `claude/agents/` contains role definitions manually triggered by the user: SCC, Scout, and ACV.
+- `references/` and `docs/` provide on-demand reference material.
+- `test/routing/` and `test/metrics/` test routing and measure behavior; consult each directory's README.
 
-## กติกาการออกแบบ config
+## Configuration design rules
 
-- rules และ agent specs ต้อง generic: ห้ามใส่ชื่อระบบจริงหรือรายละเอียดเฉพาะ repo งาน
-- rule ใหม่ต้องมาจากปัญหาซ้ำที่พิสูจน์ได้, ผ่านกรณีงานธรรมดาที่ไม่ควรถูก trigger และต้องรวมเข้ากฎเดิมก่อนสร้างไฟล์ใหม่
-- ทุก instruction ต้องเพิ่ม decision leverage: ช่วยให้ agent เข้าใจ ตัดสินใจ ลงมือ ตรวจ หรือ recover
-  ได้ดีขึ้นอย่างมีนัยสำคัญ. “มีเนื้อ” ไม่ได้แปลว่าสั้น แต่ทุก detail ต้องให้ context หรือเปลี่ยน
-  การทำงานจริง; ตัด prose, checklist, ceremony และ duplication ที่ไม่สร้างผลดังกล่าว
-- เขียน desired behavior หรือ decision path ก่อนข้อห้าม. ข้อห้ามใช้กับ boundary ที่มีความเสียหายจริง
-  และต้องบอก trigger, เหตุผล และ next action/alternative ที่ทำให้งานเดินต่อได้ ไม่จบที่ restriction
-- ก่อนคง instruction ให้ตอบว่า “ถ้าถอดข้อความนี้ออก การตัดสินใจ การลงมือ หรือการตรวจจะแย่ลงอย่างไร?”
-  ถ้าตอบไม่ได้ให้ลดหรือถอดออก
-- แก้ behavioral incident ด้วย instruction ที่เล็กที่สุดซึ่งครอบ root cause; ห้าม encode transcript,
-  ตัวอย่างเฉพาะเคส หรือ checklist รอบเหตุการณ์นั้นจนกลายเป็น universal workflow. เพิ่ม negative/non-trigger
-  case เมื่อมีโอกาส overfit และหยุดเพิ่มทันทีเมื่อหนึ่ง rule + หนึ่ง regression พิสูจน์ behavior ที่ต้องการได้
-- **Design invariant — แต่ละ surface สร้างคุณค่าต่างกัน:**
+- Rules and agent specifications must remain generic: do not include real system names or work-repository details.
+- A new rule must address a proven recurring problem, pass an ordinary negative case that should not trigger it,
+  and be incorporated into an existing rule before creating a new file.
+- Every instruction must add decision leverage by materially improving how the agent understands, decides, acts,
+  verifies, or recovers. Substance does not require brevity, but every detail must provide context or change actual
+  behavior; remove prose, checklists, ceremony, and duplication that do neither.
+- State desired behavior or a decision path before prohibitions. Reserve prohibitions for boundaries with real
+  harm, and include the trigger, reason, and next action or alternative that keeps work moving.
+- Before retaining an instruction, ask: “How would removing this make decisions, actions, or verification worse?”
+  Reduce or remove it when there is no concrete answer.
+- Correct a behavioral incident with the smallest instruction that covers its root cause. Do not encode the
+  transcript, a case-specific example, or an incident-shaped checklist as a universal workflow. Add a negative or
+  non-trigger case when overfitting is plausible, and stop once one rule plus one regression proves the behavior.
+- **Design invariant—each surface creates different value:**
 
-  | Surface | เนื้อที่ควรมี |
+  | Surface | Appropriate content |
   |---|---|
-  | `agents/` | trigger → judgment → action → verification/reporting ของผู้ปฏิบัติงาน |
-  | `rules/` | shared/safety invariant ที่ต้องจริงเสมอและคุ้มกับการโหลดทุก session |
-  | `skills/` | domain procedure, decision criteria และ edge case ที่ต้องรู้เมื่อทำงานชนิดนั้น |
-  | `docs/` | rationale, evidence และ operational context ที่ช่วยการตัดสินใจในอนาคต |
-  | `tests/` | หลักฐานของ observable behavior, routing หรือ invariant ที่เสี่ยงถดถอย |
-  | `memory/` | durable fact หรือ preference ที่ลดการค้นและการอธิบายซ้ำข้าม session |
+  | `agents/` | Practitioner trigger → judgment → action → verification/reporting |
+  | `rules/` | Shared or safety invariants that must always hold and justify every-session context |
+  | `skills/` | Domain procedures, decision criteria, and edge cases needed for that kind of work |
+  | `docs/` | Rationale, evidence, and operational context useful to future decisions |
+  | `tests/` | Evidence of observable behavior, routing, or invariants at risk of regression |
+  | `memory/` | Durable facts or preferences that reduce repeated discovery and explanation across sessions |
 
-- เรื่องเดียวกันอยู่ข้ามชั้นได้เฉพาะเมื่อเป็น `invariant → trigger/action → domain procedure`;
-  ห้ามคัด prose/checklist เดียวกันหลายชั้นโดยไม่มีหน้าที่เพิ่ม และห้ามลด safety floor เหลือ pointer
-  ที่อาจไม่ถูกอ่าน
-- detail ที่ผูกกับประเภทงานและกู้คืนได้ ให้เป็น skill; cross-cutting/high-impact ให้เป็น rule
-- จัดกลุ่ม skill เมื่อมี sub-concern ที่แยก routing ได้จริง ไม่ใช่เพื่อเผื่ออนาคต
-- `CLAUDE.md` นี้เก็บ operational context เท่านั้น; เหตุผลยาว ผลทดลอง และ snapshots อยู่ `docs/`
-- `docs-setup` และ artifact ใน kit เป็นข้อยกเว้น: ของที่ copy ไป repo ปลายทางต้อง self-contained
-  เพราะปลายทางอาจไม่มี agents/rules/skills ของ dotfiles
+- One concern may span layers only as `invariant → trigger/action → domain procedure`. Do not copy the same prose
+  or checklist across layers without adding responsibility, and do not reduce a safety floor to a pointer that
+  may never be read.
+- Put recoverable, task-type-specific detail in a skill; put cross-cutting or high-impact invariants in rules.
+- Group skills only when a genuinely distinct sub-concern can be routed independently, not for hypothetical growth.
+- Keep only operational context in this `CLAUDE.md`; long rationale, experiment results, and snapshots belong in `docs/`.
+- `docs:setup` and artifacts in its kit are exceptions: copied artifacts must be self-contained because a target
+  repository may not have the dotfiles agents, rules, or skills.
 
-## Calibrate constraints for creative work
+## Calibrating constraints for creative work
 
-- แยกงานที่มีคำตอบถูกต้อง/ความเสี่ยงตายตัว ออกจากงาน creative หรือ open-ended ก่อนใช้กฎเข้ม: safety,
-  privacy, data integrity, public contract, accessibility และข้อจำกัดที่ผู้ใช้ระบุยังเป็น hard constraint;
-  ส่วน aesthetic preference, convention, “ทำให้น้อยที่สุด”, “ใช้ของเดิม” และ “อย่าเติม decoration” เป็น
-  default ที่ต้องชั่งกับ brief ไม่ใช่ veto อัตโนมัติ
-- เมื่องานขอ creative direction, ความสวย, novelty หรือการเสนอทางเลือก ให้รักษาพื้นที่สำหรับสมมติฐานที่มี
-  point of view: สร้าง direction ที่ coherent พร้อมเหตุผลและ trade-off แล้วค่อยตรวจว่าขัด constraint จริง
-  หรือไม่. ห้ามลดโจทย์เหลือ checklist ของความปลอดภัย ความสม่ำเสมอ หรือความเรียบร้อยเพียงอย่างเดียว
-- เมื่อ aesthetic choice ยังเปิดและมีผลต่อ composition, identity, approach หรือ scope อย่างมีนัยสำคัญ
-  คำขอเช่น “ทำให้สวยขึ้น” อนุญาตให้ audit และเสนอทางเลือก แต่ยังไม่อนุญาตให้ agent เลือก direction
-  แล้ว mutate เอง: เสนอ 2–3 ทางพร้อม trade-off และ recommendation แล้วรอผู้ใช้เลือก. เมื่อผู้ใช้ระบุ
-  หรือเลือก direction แล้วจึงลงมือ; polish เล็ก ๆ ที่ไม่สร้าง creative decision ใหม่ทำต่อได้
-- การรอผู้ใช้เลือกไม่ใช่การโยน decision กลับด้วยคำถามกว้าง ๆ: agent ต้องสร้าง proposal ที่เห็นภาพได้
-  จากหลักฐานของงานก่อน แล้วค่อยขอให้ผู้ใช้เลือกหรือปรับทิศทาง
-- hard gate ต้องผูกกับ failure mode ที่เสียหายจริง มี trigger ชัด และมีทางเลือกให้เดินต่อ; ถ้าเป็นเพียง
-  ความชอบหรือการป้องกันความเสี่ยงเชิงสุนทรียะ ให้ใช้เป็นคำแนะนำ/คำถามตรวจ ไม่ใช่คำสั่งปฏิเสธ
-- ก่อนเพิ่ม instruction เพื่อกัน bias หรือ overfit ต้องมี negative case ยืนยันว่าไม่กดงานสร้างสรรค์ที่อยู่นอก
-  เหตุการณ์ต้นเหตุ และต้องหยุดเมื่อได้ calibration ที่เล็กที่สุดซึ่งแยก hard constraint ออกจาก creative
-  freedom ได้
+- Distinguish work with fixed correctness or risk constraints from creative or open-ended work before applying
+  strict rules. Safety, privacy, data integrity, public contracts, accessibility, and user-stated constraints remain
+  hard constraints. Aesthetic preferences, conventions, “do the minimum,” “reuse what exists,” and “avoid
+  decoration” are defaults to weigh against the brief, not automatic vetoes.
+- For creative direction, aesthetics, novelty, or alternatives, preserve room for a point of view. Produce a
+  coherent direction with rationale and trade-offs, then check whether it conflicts with an actual constraint.
+  Do not reduce the task to safety, consistency, or tidiness checklists.
+- When an open aesthetic choice materially affects composition, identity, approach, or scope, a request such as
+  “make it look better” authorizes auditing and proposing alternatives but not choosing a direction and mutating
+  autonomously. Present two or three options with trade-offs and a recommendation, then wait for the user's choice.
+  Implement once the user specifies or selects a direction; continue minor polish that creates no new creative decision.
+- Waiting for a selection is not returning the decision with a broad question. First create evidence-informed,
+  concrete proposals the user can evaluate, then ask them to choose or refine the direction.
+- Tie a hard gate to a concrete harmful failure mode, a clear trigger, and a path forward. Treat preferences and
+  aesthetic risk controls as guidance or review questions rather than refusal conditions.
+- Before adding an instruction to prevent bias or overfitting, include a negative case showing that it does not
+  suppress unrelated creative work, and stop at the smallest calibration that separates hard constraints from
+  creative freedom.
 
-## การติดตั้งและความเข้ากันได้
+## Installation and compatibility
 
-- `install.sh` ทำ link สำหรับ macOS/Linux; Windows ใช้ Git Bash สำหรับ script ที่ deploy หรือ hook
-- `~/.claude/skills` เป็นของ harness: link skill เป็นรายตัว ไม่ link ทั้ง directory
-- `~/.claude/agents` และ `~/.claude/rules` link ทั้ง directory จาก source ใน repo; agent path เดิมที่
-  ไม่ใช่ link ต้อง backup แบบ collision-safe ก่อนติดตั้ง
-- script ที่ deploy/hook ใช้ Bash เดียว; เครื่องมือวิเคราะห์ใน `test/` ใช้ Python ได้
-- hook ที่รันจริงอาจมี environment ต่างจาก Bash tool ของ agent; การแก้ hook ต้องให้ผู้ใช้ restart session และยืนยันผลจริงก่อนสรุปว่าหาย
+- `install.sh` creates links on macOS and Linux; use Git Bash for Windows deployment and hook scripts.
+- `~/.claude/skills` belongs to the harness: link each skill separately rather than linking the whole directory.
+- Link `~/.claude/agents` and `~/.claude/rules` as whole directories from the repository; before installation,
+  back up any legacy non-link agent path using a collision-safe name.
+- Deployment and hook scripts use one Bash implementation; analysis tools under `test/` may use Python.
+- A live hook may have a different environment from the agent's Bash tool. After changing a hook, have the user
+  restart the session and verify live behavior before concluding that the issue is resolved.
 
-## เอกสารและ memory
+## Documentation and memory
 
-- `/docs:setup` วางหรือปรับระบบเอกสารของ repo; kit ใน `claude/skills/docs/setup/kit/` คือ source of truth ของกลไก
-- `/docs:workspace` จัด owner ของ fact และเอกสาร cross-repo ใน workspace ที่มีหลาย independent Git roots; repo เดี่ยว/monorepo ยังใช้ setup/placement เดิม
-- template ถูก copy ตอน setup แรก ไม่ sync กลับอัตโนมัติ; re-apply ต้อง merge โดยรักษา customization ของ repo
-- memory ของ repo อยู่ใน repository และ harness link เข้ามา; private data ใช้
-  `docs/private/` หรือ `memory/private/` ของ repo นั้น ๆ (relative จาก Git root) และต้อง gitignore
+- `/docs:setup` establishes or updates a repository documentation system; `claude/skills/docs/setup/kit/` is the
+  source of truth for its mechanism.
+- `/docs:workspace` assigns fact and cross-repository document ownership in workspaces with multiple independent
+  Git roots. A single repository or monorepo continues to use the normal setup and placement model.
+- Templates are copied during initial setup and do not synchronize automatically. Reapplication must merge while
+  preserving repository customization.
+- Repository memory lives in the repository and is linked into the harness. Put private data in that repository's
+  `docs/private/` or `memory/private/`, relative to its Git root, and add it to `.gitignore`.
 
-## การตรวจและการเปลี่ยนแปลง
+## Verification and change management
 
-- current owner/routing map อยู่ใน `docs/claude-code-mechanisms.md`; การแก้ agents/rules/skills
-  ข้าม owner ต้องแสดง impact map ตาม `claude/rules/core/change-control.md` ก่อน mutation
-  และ reconcile กับ diff จริงหลังแก้
-- แก้ skill แล้วรัน `test/routing/run.sh` เมื่อ routing หรือ behavior ที่เกี่ยวข้องเปลี่ยน
-- แก้ skill tree หรือ routing graph แล้วรัน `python3 test/config/verify-skill-routing-graph.py --self-test`
-- อย่าสรุปว่า integration/hook ใช้ได้จาก simulation เพียงอย่างเดียว; ระบุข้อจำกัดของหลักฐานเสมอ
-- ACV เป็น role ตรวจรับแบบอิสระเมื่อผู้ใช้ trigger; เมื่อ change เข้า 5 acceptance triggers ให้ SCC suggest
-  การตรวจ ACV ได้ แต่ห้ามเรียกเองหรือ block delivery; งานเอกสารหรือการสำรวจไม่ต้องตรวจรับเว้นแต่กำหนดไว้
+- The current ownership and routing map is in `docs/claude-code-mechanisms.md`. Before changing agents, rules,
+  or skills across owners, produce the impact map required by `claude/rules/core/change-control.md`, then reconcile
+  it with the actual diff.
+- After changing a skill's routing or relevant behavior, run `test/routing/run.sh`.
+- After changing the skill tree or routing graph, run
+  `python3 test/config/verify-skill-routing-graph.py --self-test`.
+- Do not infer that an integration or hook works from simulation alone; always state evidence limitations.
+- ACV is an independent acceptance role triggered by the user. When a change matches one of the five acceptance
+  triggers, SCC may suggest an optional ACV review but must not invoke it or block delivery. Documentation and
+  exploration do not require acceptance review unless explicitly specified.
 
-## เอกสารอ้างอิง
+## References
 
-- กลไก Claude Code และข้อจำกัด: `docs/claude-code-mechanisms.md`
-- routing graph และ trigger ของ skill: `docs/skill-routing-graph.md`
-- audit และ baseline: `docs/dogfood-audit-2026-07-15.md`
-- การทดลองพฤติกรรม SCC และ cutovers: `docs/scc-behavior-experiment.md`
-- hook behavior: `docs/hook-saga.md`
+- Claude Code mechanisms and constraints: `docs/claude-code-mechanisms.md`
+- Skill routing graph and triggers: `docs/skill-routing-graph.md`
+- Audit and baseline: `docs/dogfood-audit-2026-07-15.md`
+- SCC behavior experiments and cutovers: `docs/scc-behavior-experiment.md`
+- Hook behavior: `docs/hook-saga.md`
 
-## งานที่ติดตาม
+## Tracked work
 
-ดู TODO และผลวัดล่าสุดในเอกสาร experiment/audit ที่เกี่ยวข้อง; อย่าคัดลอกตัวเลขหรือสถานะมาไว้ที่นี่.
+Use the relevant experiment or audit document for TODOs and current measurements; do not duplicate numbers or
+status snapshots here.

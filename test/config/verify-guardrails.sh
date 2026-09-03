@@ -30,24 +30,24 @@ max_lines() {
 }
 
 # Core safety and autonomy boundaries.
-check CLAUDE.md "แก้ behavioral incident ด้วย instruction ที่เล็กที่สุดซึ่งครอบ root cause"
-check CLAUDE.md "negative/non-trigger"
-check claude/rules/core/change-control.md "คำถาม ขอความเห็น หรือรายงานปัญหาอนุญาตให้ตรวจแบบ read-only ไม่ใช่ mutation"
-check claude/rules/core/change-control.md "จำแนกคำขอปัจจุบันเป็น \`explore\`, \`plan\`, \`implement\` หรือ \`mixed\`"
-check claude/rules/core/change-control.md "ห้ามแก้ไฟล์หรือ"
-check claude/rules/core/change-control.md "ทำ behavior ที่ requirement ระบุได้เลยภายใน scope"
-check claude/rules/core/change-control.md "irreversible/destructive action"
-check claude/rules/core/change-control.md "ให้สร้าง scoped local commit โดย default"
-check claude/rules/core/change-control.md "ไม่รวม dirty work เดิม"
-check claude/rules/core/evidence-integrity.md "ยังไม่พบใน repo"
-check claude/rules/core/evidence-integrity.md 'ผล `ไม่พบ` ครอบคลุมเพียง query และ scope ที่ตรวจ'
-check claude/rules/core/evidence-integrity.md "ห้ามรายงานผลค้าง"
-check claude/rules/core/operating-contract.md "domain procedure และ edge case อยู่ใน skill"
-check claude/rules/core/operating-contract.md "ไม่ต้อง invoke skill เพียงเพราะคำใน task คล้าย domain"
+check CLAUDE.md "smallest instruction that covers its root cause"
+check CLAUDE.md "pass an ordinary negative case that should not trigger it"
+check claude/rules/core/change-control.md "Questions, requests for opinions, and problem reports authorize read-only inspection, not mutation"
+check claude/rules/core/change-control.md "Classify the active request as \`explore\`, \`plan\`, \`implement\`, or \`mixed\`"
+check claude/rules/core/change-control.md "never edit files or commit merely"
+check claude/rules/core/change-control.md "Implement behavior specified by the requirement within scope"
+check claude/rules/core/change-control.md "irreversible or destructive action"
+check claude/rules/core/change-control.md "create a scoped local commit by default"
+check claude/rules/core/change-control.md "exclude pre-existing"
+check claude/rules/core/evidence-integrity.md "not found in the repository"
+check claude/rules/core/evidence-integrity.md 'A `not found` result covers only the query and scope inspected'
+check claude/rules/core/evidence-integrity.md "Never report stale"
+check claude/rules/core/operating-contract.md "domain procedures and edge cases belong in"
+check claude/rules/core/operating-contract.md "Do not invoke a skill merely because task wording resembles its domain"
 check claude/rules/core/operating-contract.md "Material-alternative gate"
-check claude/rules/core/operating-contract.md 'required/blocking`, `adjacent` หรือ `known/deferred`'
+check claude/rules/core/operating-contract.md 'required/blocking`, `adjacent`, or `known/deferred`'
 check claude/rules/core/operating-contract.md 'speculation'
-check claude/rules/core/operating-contract.md 'pain ที่ไม่เปลี่ยน outcome ไม่ต้อง surface เป็น feedback'
+check claude/rules/core/operating-contract.md 'pain that does not change the outcome as feedback'
 
 # Thin risk classifier routes to progressive disclosure.
 check claude/rules/risk/risk-boundaries.md 'Invoke `risk-review`'
@@ -126,13 +126,13 @@ check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'visual language �
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'acceptance floor ไม่ใช่ผลลัพธ์ทั้งหมดของงาน aesthetic'
 check claude/skills/ui-ux-baseline/visual-polish/SKILL.md 'ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง'
 check claude/skills/ui-ux-baseline/visual-polish/SKILL.md 'effect เช่น shadow, blur, gradient, overlay'
-check CLAUDE.md 'Calibrate constraints for creative work'
-check CLAUDE.md 'aesthetic preference, convention, “ทำให้น้อยที่สุด”, “ใช้ของเดิม”'
-check CLAUDE.md 'คำขอเช่น “ทำให้สวยขึ้น” อนุญาตให้ audit และเสนอทางเลือก'
-check CLAUDE.md 'เสนอ 2–3 ทางพร้อม trade-off และ recommendation แล้วรอผู้ใช้เลือก'
-check CLAUDE.md 'การรอผู้ใช้เลือกไม่ใช่การโยน decision กลับด้วยคำถามกว้าง ๆ'
-check CLAUDE.md 'hard gate ต้องผูกกับ failure mode ที่เสียหายจริง'
-check CLAUDE.md 'negative case ยืนยันว่าไม่กดงานสร้างสรรค์'
+check CLAUDE.md 'Calibrating constraints for creative work'
+check CLAUDE.md 'Aesthetic preferences, conventions, “do the minimum,” “reuse what exists,”'
+check CLAUDE.md '“make it look better” authorizes auditing and proposing alternatives'
+check CLAUDE.md 'Present two or three options with trade-offs and a recommendation'
+check CLAUDE.md 'Waiting for a selection is not returning the decision with a broad question'
+check CLAUDE.md 'Tie a hard gate to a concrete harmful failure mode'
+check CLAUDE.md 'include a negative case showing that it does not'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'Proposal gate'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'เสนอ 2–3 direction ที่แตกต่างกันพอให้เลือกได้'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'ต้องเป็น proposal ที่เห็นภาพและนำไปตัดสินใจได้จริง'
