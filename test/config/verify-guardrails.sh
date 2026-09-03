@@ -203,5 +203,6 @@ done < <(find "$ROOT/claude/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type
 
 python3 "$ROOT/test/config/verify-skill-routing-graph.py" "$ROOT" --self-test
 python3 "$ROOT/test/config/test-comment-audit.py"
+python3 "$ROOT/test/config/verify-doc-counts.py"
 
 echo "guardrail ownership and instruction budgets verified"
