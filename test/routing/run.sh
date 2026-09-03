@@ -12,12 +12,29 @@ set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
 # Derive the registry from frontmatter so adding a skill cannot silently hide it from the parser.
-ONDEMAND_SKILLS="$({
+discover_skill_names() {
+  local skill_file raw_name
   while IFS= read -r -d '' skill_file; do
-    sed -n 's/^name:[[:space:]]*//p' "$skill_file"
+    raw_name="$(sed -n 's/^name:[[:space:]]*//p' "$skill_file" | tr -d '\r')"
+    if [ -z "$raw_name" ] || [[ "$raw_name" == *$'\n'* ]] ||
+       ! printf '%s\n' "$raw_name" | grep -Eq '^[a-z0-9][a-z0-9:-]*$'; then
+      echo "invalid or ambiguous skill name in $skill_file" >&2
+      return 1
+    fi
+    printf '%s\n' "${raw_name//:/-}"
   done < <(find "$ROOT/claude/skills" -type f -name SKILL.md -print0)
-} | tr ':' '-' | sort -u | tr '\n' ' ')"
-[ -n "$ONDEMAND_SKILLS" ] || { echo "no on-demand skills found in $ROOT/claude/skills" >&2; exit 2; }
+}
+REGISTRY_NAMES="$(discover_skill_names)" || exit 2
+registry_count="$(printf '%s\n' "$REGISTRY_NAMES" | sed '/^$/d' | wc -l | tr -d ' ')"
+UNIQUE_REGISTRY_NAMES="$(printf '%s\n' "$REGISTRY_NAMES" | sed '/^$/d' | sort -u)"
+unique_registry_count="$(printf '%s\n' "$UNIQUE_REGISTRY_NAMES" | sed '/^$/d' | wc -l | tr -d ' ')"
+[ "$registry_count" -gt 0 ] || { echo "no on-demand skills found in $ROOT/claude/skills" >&2; exit 2; }
+[ "$registry_count" -eq "$unique_registry_count" ] || { echo "duplicate skill name in registry" >&2; exit 2; }
+ONDEMAND_SKILLS="$(printf '%s\n' "$UNIQUE_REGISTRY_NAMES" | tr '\n' ' ')"
+if [ "${ROUTING_LIST_SKILLS:-}" = "1" ]; then
+  printf '%s\n' "$UNIQUE_REGISTRY_NAMES"
+  exit 0
+fi
 SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ui-content-copy.tsv" "$HERE/scenarios-ui-navigation.tsv" "$HERE/scenarios-ops.tsv" "$HERE/scenarios-research.tsv" "$HERE/scenarios-retro.tsv" "$HERE/scenarios-docs.tsv" "$HERE/scenarios-compatibility.tsv" "$HERE/scenarios-performance.tsv" "$HERE/scenarios-stack-contracts.tsv" "$HERE/scenarios-testing-strategy.tsv" "$HERE/scenarios-risk.tsv" "$HERE/scenarios-simple-negative.tsv")
 if [ -n "${ROUTING_SCENARIO_FILES:-}" ]; then
   IFS=':' read -r -a SCENARIO_FILES <<< "$ROUTING_SCENARIO_FILES"

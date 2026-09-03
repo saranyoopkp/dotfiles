@@ -1,6 +1,6 @@
 ---
 name: risk-review
-description: Review or design work that crosses authorization/tenant, money, time/timezone, external integration, production, recovery, secret, PII, destructive, or irreversible boundaries. Use for a related design, mutation, or acceptance decision; not for incidental mentions.
+description: Review or design work that crosses authorization/tenant, money, time/timezone, external integration, production migration, rollback/forward recovery, secret, PII, destructive, or irreversible boundaries. Use for a related design, mutation, or acceptance decision; not for incidental mentions.
 ---
 
 # Risk Review

@@ -22,6 +22,8 @@ bash test/routing/run.sh
 - **กิน API tokens** — รันหลังแก้ skill description/scenarios ไม่ใช่ทุก commit
 - verdict อ่าน `Skill` tool use จาก raw stream-json และต้องมี CLI exit status `0`;
   startup failure/timeout เป็น FAIL ของ harness แยกจากการสรุป routing
+- ตรวจ registry โดยไม่ยิง model ได้ด้วย `ROUTING_LIST_SKILLS=1 bash test/routing/run.sh`;
+  คำสั่งจะ fail หาก frontmatter ขาด/กำกวม/ชื่อซ้ำ และ normalize CRLF ก่อนเทียบชื่อ
 
 ## ตรวจ child routes แบบ targeted
 
@@ -36,6 +38,12 @@ ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-children.tsv ROUTING_MAX_P
 ไม่บังคับ cross-domain co-fire เป็น success criterion เพราะ edge เหล่านั้นเป็น related routing
 ที่อาจโหลดร่วมกันแบบ non-deterministic; ให้ตรวจโครงสร้างด้วย graph validator และใช้ scenario
 ที่มีหลักฐานของ surface/decision จริงแทน
+
+regression ของ silent miss และ registry parser อยู่ใน `scenarios-routing-defects.tsv` และรันแยกได้ด้วย:
+
+```
+ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-defects.tsv ROUTING_MAX_PARALLEL=1 bash test/routing/run.sh
+```
 
 ## เพิ่มเคส
 

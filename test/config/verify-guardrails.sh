@@ -144,8 +144,21 @@ check claude/skills/docs/placement/SKILL.md 'ไม่เขียนเป็�
 check claude/skills/docs/placement/SKILL.md 'code, type, test หรือชื่อที่ดีแสดงเองไม่ได้'
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment'
 check test/routing/run.sh 'find "$ROOT/claude/skills" -type f -name SKILL.md -print0'
+check test/routing/run.sh "tr -d '\\r'"
 check test/routing/scenarios.tsv 'ui-visual-direction-existing'
 check test/friction/scenarios.tsv 'intent-phase'
+
+routing_registry="$(ROUTING_LIST_SKILLS=1 bash "$ROOT/test/routing/run.sh")"
+routing_registry_count="$(printf '%s\n' "$routing_registry" | sed '/^$/d' | wc -l | tr -d ' ')"
+skill_file_count="$(find "$ROOT/claude/skills" -type f -name SKILL.md | wc -l | tr -d ' ')"
+[ "$routing_registry_count" -eq "$skill_file_count" ] || {
+  echo "routing registry is incomplete: registry=$routing_registry_count files=$skill_file_count" >&2
+  exit 1
+}
+printf '%s\n' "$routing_registry" | grep -qx 'docs-link' || {
+  echo "routing registry omitted docs-link" >&2
+  exit 1
+}
 
 # Independent validation remains evidence-based and read-only.
 check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
