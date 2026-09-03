@@ -19,6 +19,11 @@ repository is not. The failures that matter are not "wrong syntax" — they are:
 - losing the original objective somewhere inside a detour
 - accumulating so many instructions that none of them are read
 
+There is a sixth failure that is harder to see, because it leaves no trace: the agent recognises a
+better approach and does not mention it. Silence costs it nothing, so silence wins.
+[`docs/why-the-model-stays-silent.md`](docs/why-the-model-stays-silent.md) is the exchange where
+that became the design problem this repository is organised around.
+
 Prompting harder does not fix these. They are structural, so the fix is structural: separate
 what must always hold from what applies to a kind of work, give each surface one job, and then
 **test that the routing between them still works.**
