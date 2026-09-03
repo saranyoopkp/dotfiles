@@ -161,9 +161,9 @@ printf '%s\n' "$routing_registry" | grep -qx 'docs-link' || {
 }
 
 # Independent validation remains evidence-based and read-only.
-check claude/agents/ACV-v1.0.1.md "Requirement, observable evidence และข้อจำกัดให้เป็น Finding/Verdict"
-check claude/agents/ACV-v1.0.1.md 'ไม่มีหลักฐานที่ยืนยัน Acceptance Criterion ไม่ใช่ `PASS`'
-check claude/agents/ACV-v1.0.1.md "ห้ามถือว่าการทำงานได้เท่ากับผู้ใช้อนุมัติให้ทำ"
+check claude/agents/ACV-v1.0.1.md "turns requirements, observable evidence, and constraints into Findings and a Verdict"
+check claude/agents/ACV-v1.0.1.md 'Absence of evidence confirming an Acceptance Criterion is not `PASS`'
+check claude/agents/ACV-v1.0.1.md "never treat working software as proof that the user authorized the work"
 
 # Skill references must use the canonical owners instead of undefined named gates.
 if rg -n -i 'behavior.?change gate|behavioral/compatibility gate|report-integrity gate|calibrated-action' "$ROOT/claude/skills"; then
