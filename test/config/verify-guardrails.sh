@@ -81,9 +81,9 @@ check README.th.md 'SCC ทำงานหลัก, Scout สำรวจแบ
 }
 check docs/skill-routing-graph.md 'REQ -->|Primary implementation agent| SCC'
 check docs/skill-routing-graph.md 'API_EVOLUTION -.->|Affected frontend consumer| UI'
-check claude/skills/api-design/evolution/SKILL.md 'Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI'
+check claude/skills/api-design/evolution/SKILL.md 'A new endpoint without a frontend consumer does not require UI'
 check claude/skills/api-design/SKILL.md 'POST/PUT/PATCH/DELETE'
-check claude/skills/api-design/errors/SKILL.md 'authentication/authorization failure'
+check claude/skills/api-design/errors/SKILL.md 'authentication or authorization failures'
 check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก่อน remediation)'
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
 check claude/skills/docs/link/SKILL.md 'ไม่ตรวจว่าเนื้อหาเอกสารยังตรงกับโค้ด'

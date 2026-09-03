@@ -1,13 +1,18 @@
 ---
 name: api-design:async-operations
-description: ออกแบบ HTTP contract สำหรับงานที่รับคำสั่งแล้วทำภายหลัง เช่น 202 Accepted, import/export, background job, provisioning หรือ long-running action ใช้เมื่อ request ไม่สามารถยืนยันผลสุดท้ายภายใน response เดียว
+description: Design HTTP contracts for commands completed later, including 202 Accepted, import/export, background jobs, provisioning, and long-running actions. Use when one response cannot confirm the final outcome.
 ---
 
 # Async Operations
 
-- `202 Accepted` หมายถึงรับงานแล้ว ไม่ใช่ทำสำเร็จแล้ว; คืน operation identifier/URL และ state ที่ client ใช้ติดตามได้ พร้อมบอก polling, callback หรือ event channel ที่ product รองรับจริง
-- operation state ต้องแยก pending/running/succeeded/failed/cancelled ตามที่เกิดได้จริง; terminal result/error ต้องใช้ representation/error contract เดียวกับ resource หลักเมื่อเหมาะสม
-- กำหนด retry, cancellation, expiry/retention และ authorization ของ operation/status resource; อย่าให้ client เดาได้จาก job implementation ภายใน
-- ถ้า client retry create-operation ต้องกำหนด idempotency/reconciliation กับ `api-design:mutations`; อย่าสร้างงานซ้ำจาก timeout โดยเงียบ ๆ
+- `202 Accepted` means accepted, not completed. Return an operation identifier or URL and a client-observable
+  state, plus the polling, callback, or event channel the product actually supports.
+- Model only real states such as pending, running, succeeded, failed, and cancelled. Terminal results and errors
+  should reuse the primary resource representation or error contract where appropriate.
+- Define retry, cancellation, expiry or retention, and authorization for the operation/status resource. Do not
+  expose internal job implementation as a client contract.
+- If clients may retry operation creation, define idempotency and reconciliation with `api-design:mutations`;
+  never create duplicate work silently after a timeout.
 
-ตรวจอย่างน้อย accept → running → terminal success และ terminal failure; ถ้ารัน end-to-end ไม่ได้ ให้ระบุ state ที่ยังไม่ยืนยันแทนการอ้างว่า async flow ใช้ได้.
+Verify accepted → running → terminal success and terminal failure. If end-to-end execution is unavailable, state
+which transitions remain unverified instead of claiming the asynchronous flow works.

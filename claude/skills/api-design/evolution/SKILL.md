@@ -1,25 +1,28 @@
 ---
 name: api-design:evolution
-description: จัดการ REST public contract evolution, compatibility, versioning, deprecation และ migration ใช้เมื่อเปลี่ยน request/response shape, semantics, enum, pagination/query behavior หรือ endpoint ที่ client เดิมอาจพึ่งอยู่
+description: Manage evolution, compatibility, versioning, deprecation, and migration of public REST contracts. Use when changing request or response shapes, semantics, enums, query or pagination behavior, or endpoints on which existing clients may depend.
 ---
 
 # Evolution
 
-- ก่อนเปลี่ยน contract หรือ observable semantics ของ endpoint เดิม ให้ inventory consumer จาก
-  usage จริง เช่น generated client, query/API wrapper, frontend, mobile, service และ external contract.
-  ถ้าพบ frontend consumer ที่ behavior ได้รับผล ให้ invoke `ui-ux-baseline` เฉพาะ child ที่ตรง
-  ก่อนวางแผนหรือแก้ consumer แม้งานนี้เป็น plan/review แล้ว migrate และ verify user flow นั้น;
-  ถ้าอยู่นอก authorized scope ให้รักษา compatibility หรือขอ
-  decision แทนการปล่อยให้ UI drift. Endpoint ใหม่ที่ยังไม่มี frontend consumer ไม่ต้อง invoke UI
-  เพียงเพราะเป็น API.
-- แยก additive change ออกจาก breaking change ด้วย observable client behavior: เพิ่ม optional field มัก additive แต่เปลี่ยน meaning/default, remove/rename field, enum narrowing, status/error/pagination semantics เปลี่ยนคือ compatibility risk
-- version เมื่อ compatibility path ไม่พอ; เลือก URL/header/media-type versioning ตาม convention เดิมของ product แล้วจด owner, client migration และ retirement condition
-- deprecation ต้องบอก consumer ที่ได้รับผล, replacement, window/timeline และ telemetry/verification ที่ใช้ตัดสินใจปิดของเก่า; ห้ามประกาศ deprecated แล้วตัดทันทีโดยไม่มี evidence
-- destructive change ใช้ expand ของใหม่แบบ optional → migrate consumer พร้อม telemetry →
-  contract ของเก่าเมื่อมี evidence ว่าไม่มี consumer เหลือ; rename ไม่ใช่ one-step change
-- OpenAPI/schema, generated client, docs และ contract tests ต้องเปลี่ยนร่วมกับ implementation
+- Before changing an existing endpoint contract or observable semantics, inventory consumers from actual usage:
+  generated clients, API wrappers, frontend, mobile, services, and external contracts. If an affected frontend
+  consumer exists, invoke only the matching `ui-ux-baseline` child before planning or changing it, even during
+  plan or review work, then migrate and verify that user flow. If consumer work is outside authorized scope,
+  preserve compatibility or request a decision. A new endpoint without a frontend consumer does not require UI
+  guidance merely because it is an API.
+- Distinguish additive from breaking change by observable client behavior. An optional field is usually additive;
+  changed meaning or defaults, removed or renamed fields, narrowed enums, and changed status, error, or pagination
+  semantics create compatibility risk.
+- Version only when compatibility cannot bridge the change. Follow the product's existing URL, header, or media-type
+  convention and record ownership, client migration, and retirement conditions.
+- Deprecation identifies affected consumers, replacement, migration window, and telemetry or verification used to
+  retire the old surface. Never announce deprecation and remove immediately without evidence.
+- For destructive change, expand with an optional replacement, migrate consumers with telemetry, then contract only
+  after evidence shows no old consumers remain. A rename is not a one-step change.
+- Update OpenAPI or schema, generated clients, documentation, and contract tests with the implementation.
 
-ก่อนลงมือ behavioral/breaking change ให้ใช้ authorization และ impact rules ใน
-`claude/rules/core/change-control.md` พร้อมทางเลือกและ approval;
-feature flag/rollout mechanism ใช้ safety contract ใน `compatibility-rollout` และห้ามใช้บัง
-incompatible state. ก่อนปิดงานตรวจ consumer flow หรือ contract test ที่เป็นตัวแทนของ compatibility จริง.
+Before a behavioral or breaking change, apply authorization and impact rules in
+`claude/rules/core/change-control.md`, including alternatives and approval. Feature flags and rollout mechanisms
+must obey `compatibility-rollout` and cannot conceal incompatible state. Before completion, verify a representative
+consumer flow or contract test that exercises actual compatibility.
