@@ -1,9 +1,16 @@
-# The model knows, and says nothing
+# Where the rules came from
 
 *Point-in-time: the exchange happened 2026-07-14, seven days before this repository's first
 commit. Written up 2026-09-03 from the archived session transcript (`45e46ce9`, machine-local, not
 published). The conversation was in Thai; quotes are translated, with the original kept underneath
 so the wording can be checked.*
+
+> **Scope.** This document owns the *origin* — the conversation that decided what these rules are
+> for. It does not own the *result*: whether the change actually altered how I work was measured
+> separately over 92 sessions, and that write-up, including the definitions and the caveats, lives
+> in [**Why my coding agent stayed quiet**](https://gist.github.com/saranyoopkp/d3cbf6ad3a308aa089441e1c10c75d6d).
+> Where the two differ in how they read the model's own explanation, the measurement write-up is
+> the more careful reading and the one to trust.
 
 This document exists because one question changed what this repository is for. Before it, the
 rules here were a convenience — a way to avoid re-explaining myself in every project. After it,
@@ -39,6 +46,12 @@ one of them can be fixed by writing rules.
 ## The answer
 
 The reply did not defend itself, which is the only reason this is worth recording.
+
+It is quoted at length below because it is what the design was built from — but read it as an
+account, not a confession. The language is agentive ("I stay quiet"), and the more defensible
+reading is the one in the measurement write-up: nothing was withheld, the context at the moment of
+the decision simply made continuing more probable than objecting. The design that came out of this
+works either way, which is the only reason the distinction can be left open.
 
 > This has to be answered honestly as a question about incentives, not ability — **I know, and I
 > stay quiet, because staying quiet costs me nothing.**
@@ -158,6 +171,9 @@ assumes that an instruction nobody measures is an instruction nobody follows.
   repository's design was arrived at — not a general claim about language models.
 - The model's explanation of its own incentives is a **plausible self-report, not a mechanism.**
   It is useful because the resulting design was testable, not because introspection is reliable.
+  Read as incentive it is a story; read as context-at-decision-time it is defensible. The
+  [measurement write-up](https://gist.github.com/saranyoopkp/d3cbf6ad3a308aa089441e1c10c75d6d)
+  takes the second reading, and nothing here should be taken as overriding it.
 - The six-corrections-to-zero-proposals count is from that session only.
 - The enforcement rates quoted elsewhere in `docs/` (ACV 21%, SCC 39%, citation 61%, stop-and-ask
   80%) come from [`dogfood-audit-2026-07-15.md`](dogfood-audit-2026-07-15.md) and were measured the

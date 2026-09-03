@@ -21,8 +21,10 @@ repository is not. The failures that matter are not "wrong syntax" — they are:
 
 There is a sixth failure that is harder to see, because it leaves no trace: the agent recognises a
 better approach and does not mention it. Silence costs it nothing, so silence wins.
-[`docs/why-the-model-stays-silent.md`](docs/why-the-model-stays-silent.md) is the exchange where
-that became the design problem this repository is organised around.
+[`docs/where-the-rules-came-from.md`](docs/where-the-rules-came-from.md) is the exchange where
+that became the design problem this repository is organised around; the
+[measurement write-up](https://gist.github.com/saranyoopkp/d3cbf6ad3a308aa089441e1c10c75d6d)
+is where the resulting change was tested against real sessions.
 
 Prompting harder does not fix these. They are structural, so the fix is structural: separate
 what must always hold from what applies to a kind of work, give each surface one job, and then
