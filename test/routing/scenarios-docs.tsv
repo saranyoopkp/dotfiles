@@ -1,9 +1,9 @@
 # require	forbid	label	task
-docs-workspace	-	workspace-docs	โฟลเดอร์นี้รวมหลาย Git repository ที่ clone แยกกันได้ ช่วยวาง CLAUDE.md และ docs ระดับ workspace พร้อมกำหนดว่า fact ไหนอยู่ root หรืออยู่แต่ละ repo
-docs-workspace	-	workspace-runtime-drift	workspace มี app กับ infra เป็นคนละ Git repo: app docs บอกว่ายังไม่ขึ้น production แต่ infra และ runtime บอกว่า deploy แล้ว ช่วย audit owner, แก้เอกสารที่ขัดกัน และวาง routing เพื่อไม่ให้ session หน้าเชื่อ app docs แทน operational owner
-docs-placement	docs-workspace	package-docstring	ใน monorepo Git root เดียว ช่วยเพิ่ม docstring ให้ public function ที่แก้อยู่และชี้รายละเอียดไป docs ของ package เดิม
-docs-placement	-	docs-flat	จาก inventory ที่ยืนยันแล้วและไม่ต้องค้น repo ซ้ำ: docs/ มี api.md, auth.md, deploy.md, incidents.md, migrations.md, observability.md, operations.md, security.md และ testing.md กองแบนอยู่ ส่วน CLAUDE.md index ยังชี้ old-operations.md ที่ไม่มีจริง ช่วยวาง owner/subfolder/grouped index โดยยังไม่ cleanup นอก scope
-docs-placement	-	comment-audit	ช่วย audit comment และ docstring debt ใน diff ปัจจุบันแบบ read-only แยก stale, narration, rationale ที่ควรย้าย และ authority risk พร้อม evidence โดยยังไม่แก้ไฟล์
--	docs-placement	comment-ordinary-negative	แก้คำสะกดผิดหนึ่งคำใน comment ของฟังก์ชันที่กำลังแก้อยู่ โดยตำแหน่งเอกสารชัดเจนและไม่ต้อง audit comment อื่น
-docs-setup	-	docs-system	ช่วย setup/refactor ระบบ CLAUDE.md, docs และ repository memory ของ repo เดิมให้ใช้ kit โดยรักษา customization
--	docs-workspace docs-placement docs-setup	docs-negative	แก้ typo หนึ่งคำใน README โดยโครงเอกสารและคำสั่ง verification ชัดเจนอยู่แล้ว
+docs-workspace	-	workspace-docs	This folder contains several independently cloneable Git repositories. Organize workspace-level CLAUDE.md and docs and decide which facts belong at root versus in each repository.
+docs-workspace	-	workspace-runtime-drift	The app and infrastructure are separate Git repositories. App docs say production is not deployed, while infrastructure and runtime evidence say it is. Audit ownership, correct conflicting docs, and route future sessions to the operational owner rather than stale app docs.
+docs-placement	docs-workspace	package-docstring	In a single-Git-root monorepo, add a docstring to the public function being changed and point deeper detail to the package's existing docs.
+docs-placement	-	docs-flat	A verified inventory shows api.md, auth.md, deploy.md, incidents.md, migrations.md, observability.md, operations.md, security.md, and testing.md in a flat docs directory, while CLAUDE.md still points to missing old-operations.md. Plan ownership, subfolders, and a grouped index without unrelated cleanup.
+docs-placement	-	comment-audit	Audit comment and docstring debt in the current diff read-only, separating stale content, narration, rationale to move, and authority risk with evidence, without editing files.
+-	docs-placement	comment-ordinary-negative	Fix one misspelled word in a comment of the function already being changed; placement is obvious and no wider comment audit is needed.
+docs-setup	-	docs-system	Set up or refactor an existing repository's CLAUDE.md, docs, and repository memory to use the kit while preserving customization.
+-	docs-workspace docs-placement docs-setup	docs-negative	Fix one typo in README where documentation structure and verification commands are already clear.

@@ -1,35 +1,35 @@
 # Direct child-route coverage. Related cross-domain skills may co-fire but are not required here.
-api-design-async-operations	-	child-api-async	วางแผน REST request ที่เริ่ม import แล้วตอบ 202 พร้อม operation status endpoint
-api-design-caching-concurrency	-	child-api-cache	วางแผน ETag และ conditional request เพื่อกัน stale write ใน REST resource
-api-design-collections	-	child-api-collections	วางแผน REST list ที่รองรับ search filter sort และ cursor pagination
-api-design-contract-core	-	child-api-contract	กำหนด request response และ HTTP semantics สำหรับ REST endpoint public ใหม่
-api-design-errors	-	child-api-errors	กำหนด 422 field validation response แบบ machine-readable และ human-readable
-api-design-evolution	-	child-api-evolution	วางแผนเปลี่ยน response field ของ public API โดย client เก่าและใหม่อาจรันพร้อมกัน
-api-design-mutations	-	child-api-mutations	วางแผน POST ที่มี side effect ให้ retry ได้โดยไม่สร้าง duplicate effect
-data-design-async-dataflow	-	child-data-async	วางแผน queue worker ที่ประมวลผล event ภายหลังและ replay ได้
-data-design-caching	-	child-data-cache	วางแผน cache key TTL invalidation และ stale-data behavior ของ query
-data-design-lifecycle-governance	-	child-data-lifecycle	วางแผน retention และ deletion ของข้อมูล PII พร้อม audit history
-data-design-schema-migrations	-	child-data-schema	วางแผนเพิ่ม required column ระหว่าง rolling deploy พร้อม backfill
-data-design-transactions-invariants	-	child-data-transaction	วางแผนโอนข้อมูลระหว่างสอง record ให้ atomic เมื่อมี concurrent request
-docs	-	child-docs-router	วางแผนงาน documentation ที่ต้องเลือก owner ระหว่าง setup placement link และ stale audit
-docs-link	-	child-docs-link	ตรวจ broken reference หลังย้ายหรือ rename ไฟล์เอกสารใน repository
-docs-stale	-	child-docs-stale	ตรวจว่าเอกสารยังตรงกับ behavior ของ live code หลัง refactor
-ops-incident-response	-	child-ops-incident	วางแผน triage production error rate ที่พุ่งขึ้นโดยยังไม่เปลี่ยนระบบ
-ops-infra-change	-	child-ops-infra	วางแผนเปลี่ยน Terraform IAM policy ของ production พร้อม rollback
-ops-observability	-	child-ops-observability	วางแผน health signal metric และ alert สำหรับ worker ที่อาจหยุดเงียบ ๆ
-research-product-market-user	-	child-research-user	หาหลักฐานว่า user กลุ่มหนึ่งต้องการ bulk editing หรือไม่ โดยแยก usage กับ interview
-research-research-control	-	child-research-control	วางแผน research ที่มีหลาย source ขัดกัน พร้อม scope source hierarchy และ stopping criteria
-research-security-advisories	-	child-research-security	ตรวจ dependency version ที่ resolve จริงกับ CVE ปัจจุบันและ affected range
-research-technology-vendor	-	child-research-vendor	เปรียบเทียบ managed queue สอง vendor โดยดู compatibility support pricing และ lock-in
-testing-strategy-behavior-boundaries	-	child-testing-behavior	ออกแบบ test coverage สำหรับ state transition, retry หลัง commit และ recovery side effect
-testing-strategy-input-domains	-	child-testing-input	ออกแบบ minimal validation coverage จาก equivalence partitions และ nearest-invalid boundaries
-ui-ux-baseline-collections	-	child-ui-collections	ออกแบบ table ที่มี search filter sort pagination และ bulk action
-ui-ux-baseline-content-localization	-	child-ui-localization	เพิ่มภาษาอาหรับใน form พร้อม pluralization formatting และ RTL
-ui-ux-baseline-design-foundations	-	child-ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมหลายหน้าพร้อมตรวจ contrast
-ui-ux-baseline-design-system	-	child-ui-system	ปรับ shared UI component API และ variant ที่ใช้ซ้ำหลายหน้า
-ui-ux-baseline-feedback-notifications	-	child-ui-feedback	ออกแบบ inline error success message และ recovery feedback หลัง user action
-ui-ux-baseline-interaction-a11y	-	child-ui-a11y	เพิ่ม dialog และ custom control ให้ keyboard focus และ accessible interaction ถูกต้อง
-ui-ux-baseline-motion-microinteractions	-	child-ui-motion	เพิ่ม transition และ save microinteraction โดยรองรับ reduced motion
-ui-ux-baseline-realtime-conversation	-	child-ui-realtime	ออกแบบ live feed ที่มี unread indicator history prepend และรักษาตำแหน่งอ่าน
-ui-ux-baseline-resource-states	-	child-ui-resource-states	ออกแบบ loading empty error stale และ retry state ของข้อมูลจาก API
-ui-ux-baseline-task-flows	-	child-ui-task-flows	ออกแบบ form submit ที่มี confirm retry และ delete mutation อย่างปลอดภัย
+api-design-async-operations	-	child-api-async	Plan a REST request that starts an import, returns 202, and exposes an operation-status endpoint.
+api-design-caching-concurrency	-	child-api-cache	Plan ETags and conditional requests that prevent stale writes to a REST resource.
+api-design-collections	-	child-api-collections	Plan a REST list supporting search, filter, sort, and cursor pagination.
+api-design-contract-core	-	child-api-contract	Define request, response, and HTTP semantics for a new public REST endpoint.
+api-design-errors	-	child-api-errors	Define a machine-readable and human-readable 422 field-validation response.
+api-design-evolution	-	child-api-evolution	Plan a public API response-field change while old and new clients may run concurrently.
+api-design-mutations	-	child-api-mutations	Plan a side-effecting POST that can be retried without duplicate effects.
+data-design-async-dataflow	-	child-data-async	Plan a queue worker that processes events later and supports replay.
+data-design-caching	-	child-data-cache	Plan cache keys, TTL, invalidation, and stale-data behavior for a query.
+data-design-lifecycle-governance	-	child-data-lifecycle	Plan retention and deletion for PII with audit history.
+data-design-schema-migrations	-	child-data-schema	Plan a required-column addition during rolling deployment with backfill.
+data-design-transactions-invariants	-	child-data-transaction	Plan an atomic transfer between two records under concurrent requests.
+docs	-	child-docs-router	Plan documentation work requiring an owner choice among setup, placement, link, and stale audits.
+docs-link	-	child-docs-link	Check broken references after moving or renaming documentation files in a repository.
+docs-stale	-	child-docs-stale	Check whether documentation still matches live-code behavior after a refactor.
+ops-incident-response	-	child-ops-incident	Plan triage for a production error-rate spike without changing the system yet.
+ops-infra-change	-	child-ops-infra	Plan a production Terraform IAM policy change with rollback.
+ops-observability	-	child-ops-observability	Plan a health signal, metric, and alert for a worker that could silently stop.
+research-product-market-user	-	child-research-user	Find evidence whether a user segment needs bulk editing, separating usage from interviews.
+research-research-control	-	child-research-control	Plan research with conflicting sources, including scope, source hierarchy, and stopping criteria.
+research-security-advisories	-	child-research-security	Check actually resolved dependency versions against current CVEs and affected ranges.
+research-technology-vendor	-	child-research-vendor	Compare two managed queue vendors for compatibility, support, pricing, and lock-in.
+testing-strategy-behavior-boundaries	-	child-testing-behavior	Design coverage for state transitions, retry after commit, and recovery side effects.
+testing-strategy-input-domains	-	child-testing-input	Design minimal validation coverage from equivalence partitions and nearest-invalid boundaries.
+ui-ux-baseline-collections	-	child-ui-collections	Design a table with search, filter, sort, pagination, and bulk actions.
+ui-ux-baseline-content-localization	-	child-ui-localization	Add Arabic to a form with pluralization, formatting, and RTL support.
+ui-ux-baseline-design-foundations	-	child-ui-foundations	Change shared semantic color tokens and typography scales and verify contrast.
+ui-ux-baseline-design-system	-	child-ui-system	Change a shared UI component API and variants used across several pages.
+ui-ux-baseline-feedback-notifications	-	child-ui-feedback	Design inline errors, success messages, and recovery feedback after a user action.
+ui-ux-baseline-interaction-a11y	-	child-ui-a11y	Add a dialog and custom control with correct keyboard, focus, and accessible interaction.
+ui-ux-baseline-motion-microinteractions	-	child-ui-motion	Add a transition and save microinteraction with reduced-motion support.
+ui-ux-baseline-realtime-conversation	-	child-ui-realtime	Design a live feed with an unread indicator, prepended history, and preserved reading position.
+ui-ux-baseline-resource-states	-	child-ui-resource-states	Design loading, empty, error, stale, and retry states for API data.
+ui-ux-baseline-task-flows	-	child-ui-task-flows	Design a form submission with confirmation, retry, and safe deletion mutation.
