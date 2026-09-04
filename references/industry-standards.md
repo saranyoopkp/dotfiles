@@ -1,6 +1,6 @@
 # Industry Standards Reference
 
-> ไว้เปิดดูตอนชนปัญหา ("เรื่องนี้มีมาตรฐานชื่ออะไร ไปค้นต่อ") — ไม่ใช่ backlog ให้ encode เป็น rule
+> Consult when a problem needs a named standard for further research. This is not a backlog to encode as rules.
 
 ## Architecture & Code
 SOLID · DRY / KISS / YAGNI · Separation of Concerns · Clean/Hexagonal Architecture ·
@@ -9,7 +9,7 @@ DDD (bounded context) · 12-Factor App · Postel's Law · Principle of Least Ast
 ## Security
 OWASP Top 10 · OWASP ASVS · Least Privilege / Defense in Depth / Zero Trust ·
 ISO 27001 · NIST CSF 2.0 · CIS Benchmarks / Controls v8 · STRIDE (threat modeling) ·
-OWASP Top 10 for LLM (prompt injection ฯลฯ)
+OWASP Top 10 for LLM Applications, including prompt injection
 
 ## Auth & Identity
 OAuth 2.0 / 2.1 · OpenID Connect (OIDC) · SAML 2.0 · JWT (RFC 7519) / JOSE ·
@@ -19,8 +19,8 @@ WebAuthn / FIDO2 / Passkeys · SCIM (provisioning) · PKCE
 REST / HTTP semantics (RFC 9110) · Problem Details (RFC 7807 — error shape) ·
 Idempotency-Key pattern · OpenAPI · JSON Schema · AsyncAPI (event-driven) ·
 CloudEvents · GraphQL · gRPC / Protocol Buffers · ACID · CAP theorem ·
-ISO 8601 / RFC 3339 (เวลา) · IANA tz database · ISO 4217 (สกุลเงิน) ·
-IEEE 754 (ทำไม float+เงินไม่ได้) · Unicode / BCP 47 / CLDR (i18n)
+ISO 8601 / RFC 3339 (time) · IANA tz database · ISO 4217 (currency) ·
+IEEE 754 (floating-point money hazards) · Unicode / BCP 47 / CLDR (i18n)
 
 ## Frontend & UX
 WCAG 2.x (accessibility) · WAI-ARIA / ARIA APG (widget a11y + keyboard model) ·
@@ -29,7 +29,7 @@ Nielsen's 10 Usability Heuristics · ISO 9241 · Design Tokens (W3C draft)
 
 ## Delivery & Git
 Conventional Commits · SemVer · Trunk-Based Development vs GitFlow · Keep a Changelog
-(สำหรับ release notes — ไม่ใช่ CLAUDE.md)
+(for release notes, not CLAUDE.md)
 
 ## Testing & Quality
 Testing Pyramid / Testing Trophy · TDD · AAA pattern · Contract Testing (Pact) ·
@@ -64,7 +64,7 @@ CSV (RFC 4180) · Schema Registry / schema evolution (backward/forward compat)
 ## Release & Deployment
 Blue-Green · Canary · Rolling update · Feature Flags / toggles ·
 Expand-Contract (parallel change) · Progressive delivery · vendor support lifecycle
-(LTS/EOL/compatibility matrix — ไม่มีมาตรฐานกลาง ต้องตรวจ official policy ปัจจุบัน)
+(LTS/EOL/compatibility matrices have no universal standard; check current official policies)
 
 ## Performance & Algorithms
 Big-O (complexity) · Amdahl's Law · Little's Law · percentile latency (p95/p99, tail) ·
@@ -72,11 +72,11 @@ Load / stress / soak testing (k6 / JMeter / Gatling)
 
 ## Operations
 Google SRE (SLI/SLO, error budget, runbook, blameless postmortem) ·
-Three Pillars of Observability + OpenTelemetry · Four Golden Signals / RED / USE (จะวัดอะไร) ·
+Three Pillars of Observability + OpenTelemetry · Four Golden Signals / RED / USE (what to measure) ·
 DORA metrics · 3-2-1 Backup rule
 
 ## Product & Process
-Agile / Scrum / Kanban · Lean Startup (MVP) · Shape Up (appetite, เหมาะ solo) ·
+Agile / Scrum / Kanban · Lean Startup (MVP) · Shape Up (appetite, suitable for solo work) ·
 RICE / MoSCoW · User Story Mapping / Jobs-to-be-Done · ADR (Architecture Decision Records)
 
 ## Documentation
@@ -85,7 +85,7 @@ Mermaid / PlantUML (diagram-as-code)
 
 ## Web / Content / SEO
 Schema.org / JSON-LD · E-E-A-T · robots.txt / sitemap / canonical / hreflang ·
-OpenGraph / Twitter Cards · RSS/Atom · llms.txt (AEO/agentic, เกิดใหม่)
+OpenGraph / Twitter Cards · RSS/Atom · llms.txt (emerging AEO/agentic convention)
 
 ## Email & Messaging
 SPF / DKIM / DMARC (deliverability) · ICS (RFC 5545, calendar)
@@ -102,10 +102,10 @@ HTTP/2 · HTTP/3 (QUIC) · TLS 1.3 · WebSocket (RFC 6455)
 PCI DSS 4.0 · EMV / 3-D Secure · ISO 20022 · ISO 8583
 
 ## Legal & Compliance
-Software licenses (MIT/Apache-2.0/GPL/**AGPL trap ใน dependency**) ·
-PDPA (ไทย) / GDPR (consent, retention, right to erasure) · SOC 2 (Trust Services Criteria) ·
-Cookie consent · ภาษี e-Service / VAT ไทย · HIPAA (US health data) ·
+Software licenses (MIT/Apache-2.0/GPL, including **AGPL dependency risk**) ·
+Thailand PDPA / GDPR (consent, retention, right to erasure) · SOC 2 (Trust Services Criteria) ·
+Cookie consent · Thailand e-Service tax and VAT · HIPAA (US health data) ·
 a11y legal: Section 508 / ADA (US) / EN 301 549 (EU) · FedRAMP (US gov cloud)
 
 ## AI / LLM
-MCP (Model Context Protocol) · EU AI Act (เฝ้าดู)
+MCP (Model Context Protocol) · EU AI Act (monitor developments)
