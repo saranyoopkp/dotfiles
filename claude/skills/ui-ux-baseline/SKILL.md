@@ -1,11 +1,11 @@
 ---
 name: ui-ux-baseline
-description: Generic UI/UX quality, content, and visual-design baseline for frontend work. Use when planning, designing, reviewing, or modifying user-facing UI, including structure, copy, interaction, state, accessibility, responsive behavior, visual consistency, pages/components, lists/tables, or UI that fetches or presents data, as well as UI requested to be beautiful, clean, polished, or professional. Route on demand to child skills for the relevant surfaces; do not load every child by default, and always read ui-ux-baseline:interaction-a11y for interactive UI.
+description: Generic UI/UX quality, content, and visual-design baseline for frontend work. Use when planning, designing, reviewing, or modifying user-facing UI, including structure, copy, interaction, state, accessibility, responsive behavior, visual consistency, pages/components, lists/tables, or UI that fetches or presents data, as well as UI requested to be beautiful, clean, polished, professional, or informed by design references. Route on demand to child skills for the relevant surfaces; do not load every child by default, and always read ui-ux-baseline:interaction-a11y for interactive UI.
 ---
 
 # UI/UX Baseline
 
-Before changing UI, identify whether users are reading content, viewing data, taking action, managing a collection, following time-based information, or using a shared primitive. Separate copy and aesthetic intent before reading child skills: general wording goes to `content-copy`; clean-up or polish that preserves the existing structure goes to `visual-polish`; requests for a design proposal or a more beautiful, modern, premium, or distinctive result go to `visual-direction` **before** design or implementation.
+Before changing UI, identify whether users are reading content, viewing data, taking action, managing a collection, following time-based information, or using a shared primitive. Separate copy and aesthetic intent before reading child skills: general wording goes to `content-copy`; clean-up or polish that preserves the existing structure goes to `visual-polish`; requests for inspiration, references, moodboards, or visual benchmarking go to `design-inspiration`; requests for a design proposal or a more beautiful, modern, premium, or distinctive result go to `visual-direction` **before** design or implementation. When both research and direction are requested, research informs the direction rather than replacing its proposal gate.
 
 ## Generic quality baseline
 
@@ -28,6 +28,7 @@ This section is a shared quality lens only. Decision procedures and implementati
 
 | Work characteristic | Must read |
 |---|---|
+| Find design inspiration, visual references, moodboards, visual benchmarks, or examples of how comparable products solve a UI problem | `ui-ux-baseline:design-inspiration` |
 | Create a new page or landing page, redesign visual identity, or respond to a request to propose a design or make an existing page more beautiful, modern, premium, or distinctive | `ui-ux-baseline:visual-direction` |
 | Refine the visual design or UI effects of an existing screen—such as cleaning up, simplifying, spacing, typography, shadows, blur, gradients, or overlays—while preserving brand, flow, IA, and direction | `ui-ux-baseline:visual-polish` |
 | Add or modify transitions, animation, progress, reveals, scrolling behavior, or microinteractions | `ui-ux-baseline:motion-microinteractions` |

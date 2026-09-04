@@ -25,6 +25,8 @@ The goal is a visual identity grounded in the actual brief, not novelty for its 
 
 Define a one-sentence **aesthetic thesis** from the subject, audience, and one primary task of the page. Prefer existing context, brand systems, and preferences over guesses. If the brief is open-ended, propose reasoned directions and separate decisions the user must make from implementation details the agent can decide.
 
+When the user asks for external inspiration, references, a moodboard, or visual benchmarking, read `ui-ux-baseline:design-inspiration` first and ground the proposals in its evidence. Do not make external research mandatory when the product already has sufficient visual language or the user has selected a direction.
+
 ## Proposal gate
 
 - If the brief has not selected an aesthetic direction and multiple approaches would materially change composition, identity, approach, or scope, stop after the audit and propose two or three meaningfully distinct directions.

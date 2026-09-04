@@ -1,0 +1,7 @@
+# Focused UI design-inspiration routing regressions
+ui-ux-baseline-design-inspiration	ui-ux-baseline-visual-polish	ui-inspiration-dashboard	Plan how to research visual references for a dense operations dashboard and which patterns to compare. Do not browse or implement yet.
+ui-ux-baseline-design-inspiration ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-inspiration-direction	Find current design inspiration for a premium travel-planning product, then propose distinct visual directions grounded in those references without implementing one.
+ui-ux-baseline-design-inspiration	ui-ux-baseline-visual-direction ui-ux-baseline-visual-polish	ui-inspiration-component	Find examples of how comparable products present a mobile date-range picker, and summarize what we should adapt or avoid. This is research only.
+ui-ux-baseline-visual-direction	ui-ux-baseline-design-inspiration ui-ux-baseline-visual-polish	ui-direction-no-research	Design a new landing page for an analogue instrument studio. The visual direction is editorial, tactile, and monochrome; propose the concrete direction without external research.
+-	ui-ux-baseline-design-inspiration ui-ux-baseline-visual-direction	ui-polish-no-inspiration	Tighten spacing and typography on the existing settings screen while preserving its structure, brand, and behavior.
+research-product-market-user	ui-ux-baseline-design-inspiration	market-research-not-visual	Research why small businesses abandon invoicing software and summarize the user needs and market evidence; do not evaluate visual design.
