@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# init.sh — setup docs system ให้ repo (ทุก OS — Windows ใช้ผ่าน Git Bash)
+# init.sh — set up the documentation system for a repository on any OS; use Git Bash on Windows.
 # usage: bash init.sh /path/to/repo [ProjectName]
 set -euo pipefail
 
@@ -15,9 +15,9 @@ NAME="${2:-$(basename "$TARGET")}"
 
 is_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; *) return 1 ;; esac; }
 
-# make_link <link> <target-dir> — junction บน Windows, symlink บน unix
-# NOTE: cmd ผ่าน Git Bash ห้ามมี quotes ฝังใน string (MSYS mangle จน mklink พัง —
-# ทดสอบแล้ว); path ไม่มี space = mklink ตรง ๆ, มี space = fallback powershell
+# make_link <link> <target-dir> — Windows junction or Unix symlink.
+# Do not embed quotes in cmd strings passed through Git Bash because MSYS mangling breaks
+# mklink. Use mklink directly for paths without spaces and PowerShell as the fallback.
 make_link() {
   if is_windows; then
     local w1 w2
@@ -31,12 +31,12 @@ make_link() {
   fi
 }
 
-# 1) CLAUDE.md (ไม่ทับของเดิม)
+# 1) CLAUDE.md (do not overwrite an existing file)
 if [ ! -f "$TARGET/CLAUDE.md" ]; then
   sed "s/<ProjectName>/$NAME/g" "$KIT/CLAUDE.template.md" > "$TARGET/CLAUDE.md"
   echo "created CLAUDE.md"
 else
-  echo "CLAUDE.md exists - skipped (merge section 'Memory policy' จาก CLAUDE.template.md เอง)"
+  echo "CLAUDE.md exists - skipped (merge the 'Memory policy' section from CLAUDE.template.md manually)"
 fi
 
 # 2) memory/ + docs/ + private dirs + .gitignore
@@ -64,8 +64,8 @@ if [ "$private_ignore_added" -eq 1 ]; then
 fi
 
 # 3) lifecycle hooks: .claude/hooks/ + settings.json (docs-drift enforcement)
-# atomic write (tmp + mv) — cp ทับตรง ๆ เคยชน Stop hook ของ session ที่รันอยู่
-# = transient "No such file or directory" (race จริง 2026-07-12)
+# Atomic write using a temporary file and mv. Direct cp previously raced a running Stop hook,
+# causing a transient "No such file or directory" failure on 2026-07-12.
 mkdir -p "$TARGET/.claude/hooks"
 for H in docs-drift; do
   cp "$KIT/hooks/$H.sh" "$TARGET/.claude/hooks/.$H.sh.tmp"
@@ -73,41 +73,41 @@ for H in docs-drift; do
   mv -f "$TARGET/.claude/hooks/.$H.sh.tmp" "$TARGET/.claude/hooks/$H.sh"
   echo "installed .claude/hooks/$H.sh"
 done
-# settings.json เป็น static template ล้วน ไม่ต้อง localize ต่อเครื่อง — hook script
-# เอง normalize backslash→forward-slash ด้วย `tr` ก่อน exec ตัวเอง (กัน Windows
-# multi-bash PATH ambiguity + JSON/harness backslash-eating โดยไม่ต้องพึ่ง absolute
-# path เฉพาะเครื่องหรือ cygpath/perl — no-op บน unix ที่ไม่มี backslash อยู่แล้ว)
+# settings.json is a static template and needs no per-machine localization. The hook script
+# normalizes backslashes to forward slashes with `tr` before execution, avoiding Windows
+# multi-Bash PATH ambiguity and JSON or harness backslash handling without machine-specific
+# absolute paths or cygpath/perl. This is a no-op on Unix paths.
 if [ ! -f "$TARGET/.claude/settings.json" ]; then
   cp "$KIT/hooks/settings.json" "$TARGET/.claude/settings.json"
   echo "created .claude/settings.json (lifecycle hooks)"
 elif grep -q 'docs-drift\.ps1' "$TARGET/.claude/settings.json"; then
-  echo "MIGRATION NEEDED: .claude/settings.json ยังชี้ docs-drift.ps1 (รุ่นเก่าก่อน bash-only)"
-  echo "  -> อัปเดต hook entries เป็นแบบ kit/hooks/settings.json (bash) และลบ .claude/hooks/docs-drift.ps1"
+  echo "MIGRATION NEEDED: .claude/settings.json still points to docs-drift.ps1 (legacy pre-Bash-only version)"
+  echo "  -> update hook entries from kit/hooks/settings.json (Bash) and remove .claude/hooks/docs-drift.ps1"
 elif ! grep -q "show-toplevel" "$TARGET/.claude/settings.json"; then
-  # เช็ค marker "show-toplevel" (git-root fallback) แทนเครื่องมือ normalize
-  # backslash (tr/sed/perl) เพราะตัวหลังเปลี่ยนได้ทุกครั้งที่แก้ kit — เจอ mismatch
-  # จริง (kit สลับ tr -> sed แต่ check ยังหา tr = MIGRATION NEEDED ผิดทุก repo) 2026-07-13
-  echo "MIGRATION NEEDED: .claude/settings.json ยังเป็น hook path resolution รุ่นเก่า"
-  echo "  -> แทนที่ args ของทุก hook event ด้วยรูปแบบใน kit/hooks/settings.json ปัจจุบัน"
+  # Check the stable "show-toplevel" git-root fallback marker rather than an interchangeable
+  # normalization tool such as tr, sed, or perl. A tool-specific check caused false migrations
+  # when the kit changed from tr to sed on 2026-07-13.
+  echo "MIGRATION NEEDED: .claude/settings.json uses legacy hook path resolution"
+  echo "  -> replace every hook event's args with the current pattern in kit/hooks/settings.json"
 else
-  echo ".claude/settings.json exists - skipped (merge hooks from kit/hooks/settings.json เอง)"
+  echo ".claude/settings.json exists - skipped (merge hooks from kit/hooks/settings.json manually)"
 fi
-# 3b) settings.local.json = per-machine harness settings (permission ที่ approve ไว้,
-# env, agent/model override) — harness เขียนเอง, kit ไม่แตะเนื้อใน แค่กันไม่ให้ commit
-# (เคยมี acv-gate wire ไว้ที่นี่ — ถอดออก 2026-07-17 ดู kit/README.md)
+# 3b) settings.local.json contains per-machine harness settings such as approved permissions,
+# environment, and agent or model overrides. The harness owns its content; the kit only keeps it
+# out of Git. An earlier ACV gate entry was removed on 2026-07-17; see kit/README.md.
 if ! grep -qs 'settings\.local\.json' "$TARGET/.gitignore"; then
   printf '\n# docs-setup: per-machine harness settings (never committed)\n.claude/settings.local.json\n' >> "$TARGET/.gitignore"
   echo "added .claude/settings.local.json to .gitignore"
 fi
 
-# เก็บกวาด hook script รุ่น powershell ถ้า settings ไม่ได้ใช้แล้ว
+# Remove the legacy PowerShell hook script when settings no longer reference it.
 if [ -f "$TARGET/.claude/hooks/docs-drift.ps1" ] && ! grep -q 'docs-drift\.ps1' "$TARGET/.claude/settings.json" 2>/dev/null; then
   rm "$TARGET/.claude/hooks/docs-drift.ps1"
   echo "removed obsolete .claude/hooks/docs-drift.ps1"
 fi
 
-# 4) link: harness memory dir → repo memory/ (memory ตัวจริงชุดเดียวอยู่ใน repo)
-#    <id> = OS-native absolute path โดยแทนอักขระที่ไม่ใช่ a-z/0-9 ด้วย '-'
+# 4) Link the harness memory directory to repository memory/, the single real copy.
+#    <id> is the OS-native absolute path with non-alphanumeric characters replaced by '-'.
 if is_windows; then NATIVE="$(cygpath -w "$TARGET")"; else NATIVE="$TARGET"; fi
 ID="$(printf '%s' "$NATIVE" | sed 's/[^A-Za-z0-9]/-/g')"
 HARNESS="$HOME/.claude/projects/$ID/memory"
@@ -117,7 +117,7 @@ if [ -L "$HARNESS" ]; then
   echo "harness memory link exists - skipped ($(readlink "$HARNESS"))"
 else
   if [ -d "$HARNESS" ]; then
-    # มี dir เดิม: ย้ายไฟล์ที่ repo ยังไม่มีเข้า repo ก่อน แล้วเก็บของเดิมเป็น .bak
+    # Existing directory: move files absent from the repository first, then retain a .bak copy.
     for f in "$HARNESS"/*; do
       [ -f "$f" ] || continue
       base="$(basename "$f")"
@@ -131,4 +131,4 @@ else
 fi
 
 echo
-echo "done. ถัดไป: เติม CLAUDE.md ตาม placeholder + เขียน fact แรกลง memory/ (commit memory ใหม่เป็นระยะ; sensitive ลง docs/private/ ของ Git root)"
+echo "done. Next: fill CLAUDE.md placeholders and write the first fact in memory/ (commit reviewed memory periodically; put sensitive material in Git-root-relative docs/private/)"

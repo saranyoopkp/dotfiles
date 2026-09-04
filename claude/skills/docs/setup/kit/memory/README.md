@@ -6,14 +6,12 @@ The Claude Code harness memory dir (`~/.claude/projects/<id>/memory`) is a **lin
 (Windows junction / unix symlink, created when this repo was set up) pointing here,
 so the harness reads/writes these exact files. No manual sync.
 
-กติกา:
-- 1 ไฟล์ = 1 fact — สั้น อ่านจบใน 30 วินาที; เรื่องใหญ่ให้ไป `docs/` แล้ว memory เป็น pointer
-- ทุกไฟล์มี frontmatter ตาม `_fact.template.md` (name/description/type)
-- `MEMORY.md` เก็บเฉพาะ pointer + recall hook ของ shared fact; leaf ไม่ถูกเปิดตาม pointer เอง
-- create/move/rename/delete shared leaf → เพิ่ม/แก้/ลบ index entry ใน commit เดียวกัน;
-  edit leaf → ตรวจว่า title/hook/relevance ยังตรงและแก้ index เมื่อความหมายเปลี่ยน
-- `memory/private/` ของ repo นั้น ๆ (relative จาก Git root) ไม่อยู่ใน index;
-  เรื่องเฉพาะเครื่องต้องค้นแยกก่อนสรุปว่าไม่มี
-- memory ใหม่ที่ harness บันทึก = untracked file ใน repo → คัดกรองแล้ว commit
-- fact ที่ผิดแล้ว = ลบทิ้ง อย่าเก็บของเก่าไว้หลอก session หน้า
-- ย้าย repo ไปเครื่องอื่น → link ฝั่ง harness จะไม่มี ต้องสร้างใหม่ (คำสั่งอยู่ใน CLAUDE.md section "Memory policy")
+Rules:
+- One file equals one fact. Keep it short enough to read in about 30 seconds; put larger topics in `docs/` and let memory point there.
+- Every file uses the frontmatter from `_fact.template.md` (`name`, `description`, and `type`).
+- `MEMORY.md` contains only pointers and recall hooks for shared facts; leaf files are not opened automatically through those pointers.
+- When creating, moving, renaming, or deleting a shared leaf, update the index in the same commit. When editing a leaf, verify its title, hook, and relevance and update the index if meaning changes.
+- Repository-local `memory/private/`, relative to the Git root, is excluded from the index. Search machine-specific memory separately before concluding that no fact exists.
+- New memory written by the harness appears as an untracked repository file. Review and commit it deliberately.
+- Delete facts that are no longer true instead of misleading future sessions with obsolete content.
+- Moving the repository to another machine does not recreate the harness link. Recreate it using the command in the CLAUDE.md “Memory policy” section.
