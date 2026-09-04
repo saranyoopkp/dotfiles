@@ -51,21 +51,21 @@ class TranscriptIndexTest(unittest.TestCase):
     def build_fixture(self):
         main = self.root / "-Users-GSP-Work-App" / "session-main.jsonl"
         rows = [
-            record("user", "ทำ load test", uuid="u1", parentUuid="root",
+            record("user", "Run a load test", uuid="u1", parentUuid="root",
                    promptSource="typed", timestamp="2026-08-01T01:00:03Z"),
-            record("assistant", [{"type": "text", "text": "เริ่มตรวจ"}], uuid="a1",
+            record("assistant", [{"type": "text", "text": "Starting inspection"}], uuid="a1",
                    parentUuid="u1", timestamp="2026-08-01T01:00:02Z"),
             record("assistant", [{"type": "tool_use", "id": "tool-1", "name": "Read",
                                   "input": {"file_path": "/tmp/example"}}], uuid="a2",
                    parentUuid="a1"),
             record("user", [{"type": "tool_result", "tool_use_id": "tool-1",
                              "content": "result"}], uuid="tr1", parentUuid="a2"),
-            record("assistant", [{"type": "text", "text": "พร้อมทำต่อ"}], uuid="a3",
+            record("assistant", [{"type": "text", "text": "Ready to continue"}], uuid="a3",
                    parentUuid="tr1"),
-            record("user", "ข้อความก่อน edit", uuid="u2-old", parentUuid="edit-parent"),
-            record("user", "คำถามแทรกที่แก้แล้ว", uuid="u2", parentUuid="edit-parent",
+            record("user", "Message before edit", uuid="u2-old", parentUuid="edit-parent"),
+            record("user", "Edited interruption question", uuid="u2", parentUuid="edit-parent",
                    promptSource="queued"),
-            record("assistant", [{"type": "text", "text": "ตอบคำถามแทรก"}], uuid="a4",
+            record("assistant", [{"type": "text", "text": "Answering the interruption"}], uuid="a4",
                    parentUuid="u2"),
             record("user", [{"type": "text", "text": "injected"}], uuid="meta1",
                    parentUuid="a4", isMeta=True, promptSource="system"),
@@ -134,8 +134,8 @@ class TranscriptIndexTest(unittest.TestCase):
         finally:
             conn.close()
         self.assertEqual(kinds["tool_result"], 1)
-        self.assertIn("เริ่มตรวจ", first[0])
-        self.assertIn("พร้อมทำต่อ", first[0])
+        self.assertIn("Starting inspection", first[0])
+        self.assertIn("Ready to continue", first[0])
         self.assertEqual(json.loads(first[1]), ["Read"])
 
     def test_physical_order_wins_over_timestamp_and_sibling_is_retained(self):
@@ -150,7 +150,7 @@ class TranscriptIndexTest(unittest.TestCase):
         finally:
             conn.close()
         self.assertEqual([row[1] for row in turns],
-                         ["ทำ load test", "ข้อความก่อน edit", "คำถามแทรกที่แก้แล้ว"])
+                         ["Run a load test", "Message before edit", "Edited interruption question"])
         self.assertEqual(turns[1][2:], (0, "unanswered_edit:1/2"))
         self.assertEqual(turns[2][2:], (1, "executed_branch:2/2"))
 
@@ -178,7 +178,7 @@ class TranscriptIndexTest(unittest.TestCase):
     def test_dotfiles_self_modification_is_explicitly_excluded(self):
         mutator = self.root / "-Users-GSP-Work-App" / "mutator.jsonl"
         self.write_jsonl(mutator, [
-            record("user", "ปรับ rule", uuid="u1", promptSource="typed"),
+            record("user", "Update the rule", uuid="u1", promptSource="typed"),
             record("assistant", [{
                 "type": "tool_use", "id": "edit-1", "name": "Edit",
                 "input": {"file_path": str(INDEX.REPO_ROOT / "claude/rules/example.md")},
@@ -186,7 +186,7 @@ class TranscriptIndexTest(unittest.TestCase):
         ])
         reader = self.root / "-Users-GSP-Work-App" / "reader.jsonl"
         self.write_jsonl(reader, [
-            record("user", "อ่าน rule", uuid="u2", promptSource="typed"),
+            record("user", "Read the rule", uuid="u2", promptSource="typed"),
             record("assistant", [{
                 "type": "tool_use", "id": "read-1", "name": "Read",
                 "input": {"file_path": str(INDEX.REPO_ROOT / "CLAUDE.md")},
@@ -217,7 +217,7 @@ class TranscriptIndexTest(unittest.TestCase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(sessions[0]["session_id"], "session-main")
         self.assertEqual([turn["user"] for turn in sessions[0]["turns"]],
-                         ["ทำ load test", "ข้อความก่อน edit", "คำถามแทรกที่แก้แล้ว"])
+                         ["Run a load test", "Message before edit", "Edited interruption question"])
         self.assertEqual(sessions[0]["expected_review_count"], 2)
         self.assertTrue(all(turn["source_file"] and turn["source_line"]
                             for turn in sessions[0]["turns"]))

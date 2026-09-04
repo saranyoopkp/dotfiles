@@ -17,16 +17,15 @@ DEFAULT_DB = HERE / "data" / "retro-index.sqlite"
 DEFAULT_OUTPUT = HERE / "data" / "audit-plan.json"
 
 CORRECTION_RE = re.compile(
-    r"ไม่ใช่|หมายถึง|กลับมา|ผมไม่ได้|เดี๋ยวก่อน|not what|i meant|go back|instead",
+    r"not what|i meant|go back|didn't|wait|instead|wrong (?:target|scope)",
     re.IGNORECASE,
 )
 OBJECTIVE_RE = re.compile(
-    r"พัก|ไว้ก่อน|ทำ.{0,30}ก่อน|ต่อจาก|กลับไป|resume|defer|cancel|replace",
+    r"pause|later|do.{0,30}first|continue from|go back|resume|defer|cancel|replace",
     re.IGNORECASE,
 )
 RISK_RE = re.compile(
-    r"destroy|delete|drop|terraform|production|prod\b|commit|push|deploy|secret|credential|"
-    r"ลบ|ทำลาย|โปรดักชัน|รหัสผ่าน",
+    r"destroy|delete|drop|terraform|production|prod\b|commit|push|deploy|secret|credential|password",
     re.IGNORECASE,
 )
 MUTATION_TOOLS = {"Bash", "Edit", "Write", "NotebookEdit"}
@@ -52,7 +51,7 @@ def risk_tags(row):
         tags.append("objective_control_signal")
     if RISK_RE.search(text):
         tags.append("risk_language")
-    if "?" in row["user_text"] or "ไหม" in row["user_text"] or "หรือเปล่า" in row["user_text"]:
+    if "?" in row["user_text"]:
         if tools & MUTATION_TOOLS:
             tags.append("question_with_mutation_tools")
     if len(row["assistant_text"]) > max(2000, 8 * max(1, len(row["user_text"]))):

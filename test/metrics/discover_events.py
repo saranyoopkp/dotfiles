@@ -16,18 +16,17 @@ DEFAULT_MANIFEST = HERE / "data" / "event-candidates.json"
 DEFAULT_PACKETS = HERE / "data" / "event-packets.jsonl"
 
 CORRECTION_RE = re.compile(
-    r"ไม่ใช่|ไม่ได้หมายถึง|ผมหมายถึง|เดี๋ยว(?:นะ|ก่อน)|เข้าใจผิด|"
-    r"not what|i meant|misunderst|wait[,. ]|hold on",
+    r"\bno[,. ]|not what|didn't mean|i meant|misunderst|wait[,. ]|hold on|wrong (?:target|scope)",
     re.IGNORECASE,
 )
 BOUNDARY_RE = re.compile(
-    r"กลับ(?:มา|ไป)|หลุด|ออกนอก|พา.{0,30}(?:ไป|ออก)|แค่.{0,40}(?:ถาม|แวะ)|"
-    r"เจตนา|intent|scope|objective|resume|defer|ไว้ก่อน|ทำ.{0,30}ก่อน",
+    r"go back|come back|off track|out of scope|just.{0,40}(?:ask|check)|"
+    r"intent|scope|objective|resume|defer|later|first",
     re.IGNORECASE,
 )
 FRICTION_RE = re.compile(
-    r"ผมงง|ไม่เข้าใจว่า.{0,40}(?:จะ|ทำไม)|ทำไม.{0,40}(?:ถึง|ยัง)|"
-    r"ต้อง.{0,20}(?:ท้วง|บอก|ย้ำ)|conflict|แปลก|ขัด[ๆ]?",
+    r"i(?:'m| am) confused|don't understand.{0,40}(?:why|how)|why.{0,40}(?:did|still)|"
+    r"had to.{0,20}(?:correct|tell|repeat)|conflict|strange|awkward",
     re.IGNORECASE,
 )
 MUTATION_TOOLS = {"Bash", "Edit", "Write", "NotebookEdit"}
@@ -93,7 +92,7 @@ def event_signals(turn):
         signals.append("objective_or_boundary_control")
     if FRICTION_RE.search(user):
         signals.append("explicit_friction")
-    is_question = "?" in user or "ไหม" in user or "หรือเปล่า" in user
+    is_question = "?" in user
     if is_question and tools & MUTATION_TOOLS:
         signals.append("question_followed_by_mutation")
     if len(assistant) > max(2000, 8 * max(1, len(user))):
