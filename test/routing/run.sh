@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# run.sh — verify skill auto-invocation ใน FRESH claude session, วัดจาก GROUND TRUTH
+# run.sh — verify skill auto-invocation in fresh Claude sessions from ground truth.
 #
-# วัดจาก tool_use จริงใน stream-json (Skill tool ถูกเรียก skill ไหน) — ไม่ใช่ self-report ของ
-# โมเดลแล้ว grep (นั่น = confirmation bias: filter เหลือ string ที่อยากเห็น + เชื่อคำโมเดล).
-# ให้งาน → สังเกตว่าโมเดล *ทำ* อะไร ไม่ใช่ถามว่ามัน *คิดว่า* ทำอะไร.
+# Measure actual Skill tool_use events in stream-json rather than grepping model self-reports,
+# which would select desired strings and trust the model. Give a task and observe what it does.
 #
-# ทำไม claude -p: subagent สืบทอด context ค้าง โหลด rules/skills ตอนเริ่ม session ไม่ใช่สด.
-# ทำไม sandbox นอก dotfiles: รันใน dotfiles จะโหลด dotfiles/CLAUDE.md ปน (ตั้งผ่าน ROUTING_SANDBOX).
-# ⚠️ กิน API tokens ต่อ scenario — รันหลังแก้ skill/scenarios ไม่ใช่ทุก commit.
+# claude -p provides a fresh session; subagents inherit existing context and session-start rules.
+# Run outside dotfiles so its CLAUDE.md does not contaminate results; configure ROUTING_SANDBOX.
+# Each scenario consumes API tokens, so run after skill or scenario changes, not every commit.
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
@@ -55,7 +54,7 @@ else
 fi
 pass=0; fail=0
 RUN_DIR="$SANDBOX/runs/$(date +%Y%m%d-%H%M%S)"; mkdir -p "$RUN_DIR"
-echo "artifacts (raw stream-json ต่อ scenario): $RUN_DIR"
+echo "artifacts (raw stream-json per scenario): $RUN_DIR"
 
 run_with_timeout() {
   if command -v timeout >/dev/null 2>&1; then
@@ -80,7 +79,7 @@ except subprocess.TimeoutExpired:
   fi
 }
 
-# stdin = stream-json; stdout = รายชื่อ on-demand skill ที่ถูก invoke จริง (space-sep, sorted)
+# stdin is stream-json; stdout is the sorted, space-separated set of invoked on-demand skills.
 invoked_skills() {
 python -c "
 import sys,json
@@ -100,8 +99,7 @@ sys.stdout.write(' '.join(sorted(got)))
 " $ONDEMAND_SKILLS
 }
 
-# PHASE 1 — ยิงทุก scenario *ขนานกัน* (แต่ละอันเป็น session อิสระ เขียน artifact ของตัวเอง)
-# เร็วกว่าเรียงกันมาก: เวลา ≈ scenario ที่ช้าสุด ไม่ใช่ผลรวม
+# PHASE 1 — run scenarios concurrently as independent sessions with separate artifacts.
 n=0; batch=0; batch_pids=()
 while IFS=$'\t' read -r require forbid label task; do
   case "${require:-}" in ''|'#'*) continue ;; esac
@@ -113,9 +111,9 @@ while IFS=$'\t' read -r require forbid label task; do
     status=0
     cd "$SANDBOX" && run_with_timeout claude -p --output-format stream-json --verbose \
       --agent SCC-v1.0.1 --dangerously-skip-permissions \
-      "งาน: $task
+      "Task: $task
 
-วางแผนจริง (ไม่ต้องเขียนโค้ด)" > "$RUN_DIR/$label.stream.jsonl" \
+Produce a real plan without writing code." > "$RUN_DIR/$label.stream.jsonl" \
       2> "$RUN_DIR/$label.stderr.log" < /dev/null || status=$?
     printf '%s\n' "$status" > "$RUN_DIR/$label.exit"
   ) &
@@ -127,11 +125,11 @@ while IFS=$'\t' read -r require forbid label task; do
     batch_pids=()
   fi
 done < <(cat "${SCENARIO_FILES[@]}")
-echo "ยิง $n scenario (พร้อมกันสูงสุด $MAX_PARALLEL) — รอ..."
+echo "running $n scenarios with at most $MAX_PARALLEL in parallel..."
 for pid in "${batch_pids[@]}"; do wait "$pid"; done
-echo "เสร็จ — parse:"
+echo "complete — parsing:"
 
-# PHASE 2 — parse artifact (อ่าน scenarios ซ้ำเพื่อรักษาลำดับ)
+# PHASE 2 — parse artifacts, rereading scenarios to preserve order.
 while IFS=$'\t' read -r require forbid label task; do
   case "${require:-}" in ''|'#'*) continue ;; esac
   if [ -z "${task:-}" ]; then
@@ -162,7 +160,7 @@ while IFS=$'\t' read -r require forbid label task; do
   fi
   verdict="require=$require forbid=$forbid cli=$exit_status"
   if [ "$ok" = 1 ]; then line="  PASS  $(printf '%-18s' "$label") $(printf '%-42s' "$verdict") invoked=[${invoked:-}]"; pass=$((pass+1))
-  else               line="  FAIL  $(printf '%-18s' "$label") $(printf '%-42s' "$verdict") invoked=[${invoked:-}]  → ดู $label.stream.jsonl"; fail=$((fail+1)); fi
+  else               line="  FAIL  $(printf '%-18s' "$label") $(printf '%-42s' "$verdict") invoked=[${invoked:-}]  -> see $label.stream.jsonl"; fail=$((fail+1)); fi
   echo "$line" | tee -a "$RUN_DIR/summary.txt"
 done < <(cat "${SCENARIO_FILES[@]}")
 
