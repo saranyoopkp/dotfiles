@@ -1,21 +1,21 @@
 ---
 name: ops:infra-change
-description: วางแผน ตรวจ และดำเนินการเปลี่ยน infrastructure เช่น IaC, cloud resource, network, IAM, secret reference, provisioning, state และ drift ใช้เมื่อแก้ Terraform/Pulumi/CloudFormation/Kubernetes config หรือเปลี่ยน resource/permission/configuration ที่กระทบ environment จริง
+description: Plan, inspect, and perform infrastructure changes involving IaC, cloud resources, networks, IAM, secret references, provisioning, state, or drift. Use for Terraform, Pulumi, CloudFormation, Kubernetes, or real environment resource, permission, and configuration changes.
 ---
 
 # Infrastructure Change
 
-แยกให้ชัดว่าเป็น `inspect`, `plan`, หรือ `apply`: inspect/plan รวบรวมหลักฐานได้ตาม scope; apply หรือ mutation ของ provider/state ต้องมี authorization ชัดเจนก่อนเสมอ
+Distinguish `inspect`, `plan`, and `apply`. Inspection and planning may gather in-scope evidence; provider or
+state mutation always requires explicit authorization.
 
-1. ระบุ environment, account/project/cluster/region, source of truth และ resource ที่จะกระทบ; ห้ามเดาจากชื่อ file หรือ default CLI context
-2. อ่าน existing state/config และ dependency ก่อนเปลี่ยน: consumer, permission boundary, network path, data/state ที่มีอยู่ และ rollback/mitigation ที่ทำได้จริง
-3. สร้าง plan ที่ตรวจสอบได้และสรุป create/change/destroy, blast radius, precondition, downtime/compatibility risk และสิ่งที่ย้อนกลับไม่ได้; plan สะอาดไม่เท่ากับปลอดภัย
-4. secret มีได้เฉพาะ reference/secret manager/env ที่เหมาะสม: ห้าม print, copy ลง state/log/doc ที่ track หรือใช้เป็น output ของ plan
-5. ก่อน apply อธิบาย target, plan, risk, rollback/mitigation และขอ authorization; ห้ามขยายจาก resource ที่ขอไปแก้ drift อื่นเงียบ ๆ
-6. หลัง apply ตรวจผลที่ผู้ใช้/consumer ใช้จริง ไม่ใช่แค่ tool exit 0: permission ใช้ได้, network เชื่อมได้, service health และ alert/monitor ที่เกี่ยวข้องยังทำงาน
-7. บันทึก source of truth, intentional exception และ runbook ที่จำเป็นใน repo docs; sensitive detail ไป private path ตาม policy
+1. Identify environment, account/project/cluster/region, source of truth, and affected resources. Never infer them from filenames or default CLI context.
+2. Inspect state, configuration, consumers, permissions, network paths, stored data, dependencies, and real rollback or mitigation before change.
+3. Produce a reviewable plan summarizing create/change/destroy, blast radius, preconditions, downtime or compatibility risk, and irreversible effects. A clean plan is not proof of safety.
+4. Keep secrets in references, secret managers, or appropriate environment variables. Never print or copy them into tracked state, logs, documentation, or plan output.
+5. Before apply, present target, plan, risk, and rollback or mitigation and obtain authorization. Do not silently repair unrelated drift.
+6. After apply, verify consumer-visible use rather than only exit zero: permissions, connectivity, service health, and relevant monitoring.
+7. Record sources of truth, intentional exceptions, and required runbooks; place sensitive detail in policy-approved private paths.
 
-rolling change ต้องตรวจของเก่า/ใหม่อยู่ร่วมกัน, dependency order และ rollback ที่ไม่สมมติว่า
-data/state ย้อนกลับได้; precondition ขาดต้อง fail loud ห้ามข้ามแล้วรายงานว่าสำเร็จ.
-
-หาก provider/framework behavior เป็นเหตุผลของ plan ให้ใช้ primary documentation ที่ตรง version/context และแยกออกจากหลักฐานว่า environment นี้ได้รับผลจริงอย่างไร.
+For rolling changes, verify coexistence, dependency order, and rollback without assuming data or state reversibility.
+Missing preconditions fail loudly. When platform behavior informs the plan, verify version-specific primary
+documentation separately from evidence of impact in this environment.

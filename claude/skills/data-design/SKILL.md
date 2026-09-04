@@ -1,25 +1,24 @@
 ---
 name: data-design
-description: Router สำหรับมาตรฐาน data layer ใช้ทันทีเมื่อวางแผน, ออกแบบ, review หรือแก้ DB schema, migration, index, transaction/concurrency/invariant, cache, queue/worker/dataflow, data retention, soft/hard delete, audit หรือ PII lifecycle แม้ยังไม่มี schema/repo จริงหรือผู้ใช้ขอเพียงแผน. ก่อนตัดสินใจให้ map source of truth, writer, reader และ lifecycle แล้วอ่าน child ที่ตรง; งาน schema หรือ migration ต้องอ่าน data-design:schema-migrations เสมอ
+description: Router for data-layer standards. Use when planning, designing, reviewing, or changing schemas, migrations, indexes, transactions, concurrency, invariants, caches, queues, workers, dataflows, retention, deletion, audit, or PII lifecycle—even for planning without an existing repository. Map source of truth, writers, readers, and lifecycle, then read matching children; schema or migration work always requires data-design:schema-migrations.
 ---
 
 # Data Design
 
-ก่อนเปลี่ยน data layer ให้ระบุ source of truth, ใครเขียน/อ่าน, invariant ที่ห้ามพัง และ data ต้องอยู่
-นานเท่าไร แล้วอ่าน child ที่ตรง **ก่อน** แก้ schema, worker หรือ cache.
+Before changing the data layer, identify the source of truth, writers and readers, invariants that must hold,
+and required lifetime. Read matching children before changing a schema, worker, or cache.
 
-| ลักษณะงาน | ต้องอ่าน |
+| Work surface | Required child |
 |---|---|
-| ตาราง, column, relation, enum, JSON, index, ID หรือ migration/backfill | `data-design:schema-migrations` |
-| หลาย write ต้องถูกต้องร่วมกัน, lock, isolation, duplicate race หรือ DB event/outbox | `data-design:transactions-invariants` |
-| cache key, TTL, invalidation, staleness หรือ cache miss | `data-design:caching` |
-| queue/worker, derived data, external sync, event/data pipeline หรือ single writer | `data-design:async-dataflow` |
-| retention, archive, soft/hard delete, anonymization, audit/history หรือ PII lifecycle | `data-design:lifecycle-governance` |
+| Tables, columns, relations, enums, JSON, indexes, IDs, migration, or backfill | `data-design:schema-migrations` |
+| Atomic writes, locks, isolation, duplicate races, or database events/outbox | `data-design:transactions-invariants` |
+| Cache keys, TTL, invalidation, staleness, or misses | `data-design:caching` |
+| Queues, workers, derived data, external sync, pipelines, or single writers | `data-design:async-dataflow` |
+| Retention, archive, deletion, anonymization, audit/history, or PII lifecycle | `data-design:lifecycle-governance` |
 
-งานเดียวอ่านได้หลาย child ตาม flow จริง; ห้ามโหลดทั้งหมดเพียงเพื่อ checklist และห้ามข้าม child ที่
-trigger ตรงเพียงเพราะ migration หรือ worker ดูเล็ก. authz/tenant scope, query performance,
-backup/restore และ delivery reliability มี owner ใน rules/ops เดิม; skill นี้ไม่ลด requirement เหล่านั้น.
+Load multiple children only when the actual flow spans them. Do not load all as a checklist or skip a matching
+child because work looks small. Authorization, tenant boundaries, query performance, backup/restore, and delivery
+reliability retain their existing owners.
 
-การเปลี่ยน schema, data meaning หรือ lifecycle ที่ consumer สังเกตได้ต้องใช้ authorization และ
-impact rules ใน `claude/rules/core/change-control.md` ก่อนลงมือ; ถ้าเป็น public/data contract
-ให้ตรวจ compatibility/rollout ตาม rule ที่เกี่ยวข้อง.
+Before changing consumer-observable schema, data meaning, or lifecycle, apply authorization and impact rules from
+`claude/rules/core/change-control.md`; apply compatibility and rollout rules to public or persisted contracts.

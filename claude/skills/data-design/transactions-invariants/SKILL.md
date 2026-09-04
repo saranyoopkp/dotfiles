@@ -1,18 +1,20 @@
 ---
 name: data-design:transactions-invariants
-description: ออกแบบ transaction boundary, database invariant, locking, isolation, concurrent update, duplicate race และ transactional outbox ใช้เมื่อ operation หนึ่งเขียนหลาย record หรือผลลัพธ์ต้องถูกต้องแม้มี retry/worker/client พร้อมกัน
+description: Design transaction boundaries, database invariants, locking, isolation, concurrent updates, duplicate races, and transactional outboxes. Use when one operation writes several records or must remain correct across concurrent clients, workers, or retries.
 ---
 
 # Transactions & Invariants
 
-- ระบุ invariant ก่อนเลือก transaction: อะไรห้ามติดลบ, ซ้ำ, ข้าม tenant หรืออยู่ใน state ที่เป็นไปไม่ได้ แล้วบังคับด้วย DB constraint เมื่อบังคับได้
-- ทำ write ที่ต้อง commit/rollback ร่วมกันใน transaction เดียว; อย่าอ่านแล้วตัดสินใจแล้วเขียนภายหลังโดยไม่มี lock/precondition เมื่อ concurrent request ทำให้ผลผิดได้
-- เลือก optimistic precondition หรือ row/advisory lock ตาม conflict ที่เกิดได้จริง; กำหนด retry สำหรับ serialization/deadlock failure แบบ bounded และไม่ซ่อนผล conflict จาก caller
-- ห้ามทำ external side effect ที่ย้อนกลับไม่ได้ใน DB transaction. หากต้อง commit data พร้อม publish event ให้บันทึก intent/outbox ใน transaction แล้วให้ worker ส่งแบบ idempotent
-- worker claim ต้อง atomic และอยู่ใน transaction; `FOR UPDATE SKIP LOCKED` นอก transaction ไม่กันงานซ้ำ
+- State the invariant before selecting a transaction: what must never become negative, duplicated, cross-tenant,
+  or impossible. Enforce it with database constraints when possible.
+- Keep writes that must commit or roll back together in one transaction. Do not read, decide, and write later
+  without locking or a precondition when concurrency can invalidate the result.
+- Choose optimistic preconditions or row/advisory locks for actual conflict patterns. Bound retries for serialization
+  or deadlock failures and do not hide conflicts from callers.
+- Never perform an irreversible external side effect inside a database transaction. To commit data with an event,
+  record intent or an outbox entry transactionally and publish idempotently from a worker.
+- Worker claims must be atomic and transactional; `FOR UPDATE SKIP LOCKED` outside a transaction does not prevent duplicate work.
 
-API retry/idempotency อ่าน `api-design:mutations`; delivery retry/DLQ และ webhook reliability อยู่
-`risk-review` reference external integrations. Skill นี้เป็น owner ของความถูกต้องของ state ใน database และ boundary ระหว่าง state
-นั้นกับ event.
-
-ตรวจ happy path, rollback/failure กลางทาง และ race หรือ retry อย่างน้อยหนึ่ง flow ตาม invariant ที่เพิ่ม.
+Use `api-design:mutations` for API retry or idempotency and `risk-review` for delivery, dead-letter, and webhook
+reliability. This skill owns database-state correctness and the state-to-event boundary. Verify the happy path,
+mid-operation rollback, and at least one race or retry relevant to the invariant.
