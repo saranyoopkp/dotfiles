@@ -1,19 +1,13 @@
 ---
 name: deliverable-form-data-first
-description: "user ขอ \"รายงาน/ผลวัด/trend\" = ต้องการตัวเลขและกราฟเป็นตัวหลัก ไม่ใช่ความเรียงวิเคราะห์"
+description: When the user requests a report, measurements, or trends, lead with numbers and charts rather than analytical prose.
 metadata:
   node_type: memory
   type: feedback
 ---
 
-เมื่อ user ขอ "รายงาน", "ผลวัด", "trend", "ดูหน่อย" เกี่ยวกับ metrics — deliverable ที่ต้องการคือ
-**ตัวเลข + กราฟ/ตาราง เป็นตัวหลัก** (dashboard, ค่ารายวัน, before/after) — ความเรียง/insight
-เป็นได้แค่ caption สั้น ๆ ประกอบ
+For metrics requests such as “report,” “measurements,” “trend,” or “take a look,” the primary deliverable is **numbers plus charts or tables**: dashboards, daily values, and before/after comparisons. Narrative insight is only a concise caption.
 
-**Why:** 2026-07-17 ผมส่ง HTML narrative report ตอบคำขอ "ทำรายงานมาดูหน่อย" — user แก้สองรอบ:
-"ผมหมายถึงตัวเลข metrics แต่ละรอบ (จะดูกราฟ ไม่ได้จะดูคำอธิบาย)" — และ preference นี้ประกาศ
-ตั้งแต่แรก ("อยากทำ semantic **ดู graph**"). root cause ที่วัดได้: context ที่โหลดทุก session
-เป็น prose 99.3% + ไม่มี counterweight — memory นี้คือ counterweight
+**Why:** On 2026-07-17 an HTML narrative report answered a metrics request, and the user corrected it twice: they wanted metric values and a graph, not explanations. The always-loaded context was 99.3% prose with no counterweight; this memory provides one.
 
-**How to apply:** ก่อนสร้าง deliverable เชิงผลวัด: default = ตัวเลข/กราฟก่อน แล้วประกาศ form
-หนึ่งบรรทัดตามกฎ assumption-declare ของ SCC (cutover-3) — เกี่ยวข้อง: [[audit-questions-mean-check-evidence]]
+**How to apply:** For measurement deliverables, default to numbers and charts first and state the chosen form in one line under SCC assumption-declaration guidance. See [[audit-questions-mean-check-evidence]].

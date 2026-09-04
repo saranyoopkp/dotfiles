@@ -2,14 +2,12 @@
 
 Version-controlled project memory — **the only copy**.
 
-The Claude Code harness memory dir (`~/.claude/projects/<id>/memory`) is a **link**
-(Windows junction / unix symlink, created when this repo was set up) pointing here,
-so the harness reads/writes these exact files. No manual sync.
+The Claude Code harness memory directory (`~/.claude/projects/<id>/memory`) is a link—a Windows junction or Unix symlink created during repository setup—pointing here. The harness reads and writes these exact files; no manual synchronization exists.
 
-กติกา:
-- 1 ไฟล์ = 1 fact — สั้น อ่านจบใน 30 วินาที; เรื่องใหญ่ให้ไป `docs/` แล้ว memory เป็น pointer
-- ทุกไฟล์มี frontmatter ตาม `_fact.template.md` (name/description/type)
-- เพิ่ม/แก้ไฟล์แล้ว **อัปเดต `MEMORY.md` index ด้วยเสมอ** — index นี้ถูก harness โหลดทุก session
-- memory ใหม่ที่ harness บันทึก = untracked file ใน repo → คัดกรองแล้ว commit
-- fact ที่ผิดแล้ว = ลบทิ้ง อย่าเก็บของเก่าไว้หลอก session หน้า
-- ย้าย repo ไปเครื่องอื่น → link ฝั่ง harness จะไม่มี ต้องสร้างใหม่ (คำสั่งอยู่ใน CLAUDE.md section "Memory policy")
+Rules:
+- One file equals one concise fact, readable in about 30 seconds. Put larger topics in `docs/` and let memory point there.
+- Every file follows `_fact.template.md` frontmatter with `name`, `description`, and `type`.
+- Always update the `MEMORY.md` index after adding or changing files; the harness loads it every session.
+- New harness memory appears as untracked repository files. Review and commit it deliberately.
+- Delete facts that are no longer true rather than misleading future sessions.
+- Moving the repository to another machine does not recreate the harness link. Use the command in CLAUDE.md's “Memory policy” section.

@@ -175,8 +175,8 @@ fi
 absent claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
 absent claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัด"
 absent claude/agents/SCC-v1.0.1.md "Behavioral Gates (trigger → action)"
-absent memory/code-comments-why-plus-pointer.md "ก่อนเขียน comment >2 บรรทัด"
-check memory/code-comments-why-plus-pointer.md "ไม่ใช่จำนวนบรรทัด"
+absent memory/code-comments-why-plus-pointer.md "comments longer than two lines must move"
+check memory/code-comments-why-plus-pointer.md "not line count"
 [ -x "$ROOT/test/friction/run.sh" ] || {
   echo "missing executable simple-task friction regression" >&2
   exit 1

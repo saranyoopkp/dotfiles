@@ -1,9 +1,10 @@
 ---
 name: powershell-commit-no-quotes
-description: commit message ผ่าน harness PowerShell tool ห้ามใส่เครื่องหมายคำพูดใน here-string (PS 5.1 parse พัง) — ใช้ ASCII เรียบ ๆ
+description: Commit messages passed through the harness PowerShell tool should avoid quotes in here-strings because Windows PowerShell 5.1 parsing can fail; use plain ASCII.
 metadata:
   type: project
 ---
 
-commit ผ่าน PowerShell tool: here-string ที่มีเครื่องหมายคำพูด/อักขระพิเศษ = parse พัง
-**How to apply:** เขียน commit message เป็น ASCII เรียบ ๆ ไม่มี quote; หรือ commit ผ่าน Bash tool
+Commit messages passed through the PowerShell tool can fail when a here-string contains quotation marks or special characters.
+
+**How to apply:** Use a plain ASCII commit message without quotes, or commit through Bash.

@@ -1,17 +1,13 @@
 ---
 name: audit-questions-mean-check-evidence
-description: "คำถามสั้น ๆ ของ user (\"แม่นหรอ / จริงหรือแค่อนุมาน / ใครตัดสิน\") = สัญญาณให้เปิดหลักฐานดิบ ไม่ใช่ให้อธิบายเพิ่ม"
+description: Brief user audit questions such as “is that accurate, inferred, or decided by whom?” signal a need to inspect raw evidence rather than explain more.
 metadata:
   node_type: memory
   type: feedback
 ---
 
-user คนนี้ audit ด้วยคำถามสั้น ๆ ("แบบนี้มันแม่นหรอ", "ได้ดู insight จริงหรือแค่อนุมาน",
-"ใครเป็นคนตัดสินใจว่าแพง", "ยังไม่มีหรอครับ") — ทุกครั้งที่เกิดใน 2026-07-17 คำถามชี้ไปที่
-defect จริงของการวัด/การอ้าง (6/6 ครั้ง)
+This user audits with brief questions such as “Is that accurate?”, “Did you inspect the insight or infer it?”, “Who decided this is expensive?”, and “Does it still not exist?” In every observed case on 2026-07-17, the question exposed a real measurement or claim defect.
 
-**Why:** ตอบคำถามพวกนี้ด้วยการอธิบาย/ทฤษฎี = ผิดทาง; สิ่งที่ user ต้องการคือการ*ไปเช็คของจริง*
-(เปิด raw case, grep ไฟล์, วัดใหม่) แล้วรายงานพร้อมยอมรับถ้าที่พูดไปก่อนหน้าเกินหลักฐาน
+**Why:** Answering with more theory is the wrong move. The user expects inspection of actual evidence—raw cases, repository search, or a new measurement—and an explicit withdrawal when an earlier claim exceeded the evidence.
 
-**How to apply:** เจอคำถาม audit-style → move แรกคือ tool call หาหลักฐานดิบ ไม่ใช่ย่อหน้าอธิบาย;
-ถ้า claim เดิมของเราเกินหลักฐาน ให้ถอนอย่างชัดเจนก่อนเสนอเรื่องใหม่ — ดู [[deliverable-form-data-first]]
+**How to apply:** On an audit-style question, make the first move a tool call for primary evidence rather than an explanatory paragraph. Retract unsupported claims before proposing anything new. See [[deliverable-form-data-first]].
