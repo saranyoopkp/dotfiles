@@ -1,75 +1,59 @@
 ---
 name: retro
-description: สกัด behavioral signals และ feedback จาก session/transcript เพื่อหา improvement ของ dotfiles จากความรู้สึกว่าพฤติกรรมแปลก ขัด ไม่เข้าที่ หรือน่าสนใจแม้ยังไม่สรุปว่าเป็นปัญหา, สิ่งที่ผู้ใช้ต้องบอกหรือแก้ซ้ำ, objective/attention drift, pain ที่ agent พบ, false claim, near miss และพฤติกรรมที่ควรรักษา ต้อง invoke เมื่อผู้ใช้เรียก /retro, ขอ retrospective/session feedback, ให้เทียบ session เพื่อวิเคราะห์พฤติกรรม agent, ชี้ observation ลักษณะข้างต้น หรือถามว่าควรปรับ agents/rules/skills อะไรจากงานที่ผ่านมา แม้ context ปัจจุบันยังไม่มีหลักฐานครบ; รายงานแบบมีหลักฐานและ read-only โดย default
+description: Extract evidence-backed behavioral signals and feedback from sessions or transcripts to improve dotfiles. Use for /retro, retrospectives, session comparison, repeated corrections, objective or attention drift, agent pain, false claims, near misses, surprising behavior, or behavior worth preserving—even when the user only reports that something feels wrong or unusual. Read-only by default.
 ---
 
 # Session Retro
 
-เปลี่ยนเหตุการณ์หรือ observation ใน session ปัจจุบันเป็นข้อเสนอปรับ dotfiles ที่ตรวจย้อนกลับได้
-โดยไม่ถือว่าทุก signal คือปัญหาหรือต้องแก้ด้วย instruction เพิ่ม
+Turn session observations into traceable dotfiles improvements without treating every signal as a defect or an
+instruction gap.
 
 ## Boundary
 
-- วิเคราะห์เฉพาะ session/context และ repository evidence ที่เข้าถึงได้ ห้ามแต่งเหตุการณ์หรือจำนวนครั้ง
-- เมื่อผู้ใช้ขอเทียบหลาย session ให้ตรวจเฉพาะ session/transcript ที่เกี่ยวข้องกับ objective เดียวกัน
-  และแยกหลักฐานของแต่ละ session ออกจากกัน
-- เป็น read-only โดย default: ห้ามแก้ไฟล์, บันทึก memory หรือ promote finding จนกว่าผู้ใช้จะสั่ง
-- Retro ไม่ใช่การประเมินความผิดของผู้ใช้หรือ agent; หา system cause ที่แก้ได้
-- ความรู้สึกแปลก ขัด ไม่เข้าที่ หรือน่าสนใจเป็น signal ให้สำรวจ ไม่ใช่หลักฐานว่า behavior ผิด
-  หรือควรเปลี่ยน config
-- ถ้าหลักฐานไม่พอ ให้ระบุ `Unverified` และสิ่งที่ต้องตรวจเพิ่ม
+- Analyze only accessible session, context, and repository evidence; never invent events or frequency.
+- Compare only sessions relevant to the same objective and preserve each session's evidence separately.
+- Remain read-only unless the user explicitly authorizes changes, memory updates, or promotion of findings.
+- Seek correctable system causes rather than assigning blame to users or agents.
+- A strange or uncomfortable feeling is a signal to investigate, not proof that behavior or configuration is wrong.
+- Mark insufficient evidence `Unverified` and state the next check.
 
 ## Workflow
 
-1. หาเหตุการณ์ที่มี signal:
-   - ผู้ใช้รู้สึกว่าพฤติกรรมแปลก ขัด ไม่เข้าที่ หรือน่าสนใจ แม้ยังอธิบาย expectation
-     ที่ไม่ตรงกันหรือผลกระทบไม่ได้
-   - ผู้ใช้ต้องบอก, แก้ความเข้าใจ หรือท้วงเรื่องเดิมซ้ำ
-   - agent ติดขัด, ตรวจซ้ำด้วยมือ, ใช้หลักฐานผิด หรือเสียเวลากับทางตัน
-   - false claim, near miss, behavioral surprise หรือ verification ที่วัดผิดสิ่ง
-   - วิธีทำงานที่ได้ผลและไม่ควรถดถอย
-2. รวมเหตุการณ์ที่มี root concern เดียวกัน แต่เก็บหลักฐานแต่ละเหตุการณ์ไว้ ห้ามนับข้อความอ้างถึงเหตุการณ์เดิมเป็น occurrence ใหม่
-3. ตรวจของเดิมใน repository ก่อนเสนอเพิ่ม:
-   - ถ้ามี instruction ครอบคลุมแล้ว ให้พิจารณา execution miss, routing, enforcement หรือ test gap
-   - ถ้ายังไม่มีหรือ wording ทำให้ตีความผิดซ้ำ จึงจัดเป็น instruction gap
-4. จำแนกสาเหตุเป็น `instruction gap`, `instruction overload`, `execution miss`, `tool/harness limitation`, `repository-specific`, `user preference` หรือ `unknown` ได้มากกว่าหนึ่งข้อเมื่อหลักฐานรองรับ
-   สำหรับบทสนทนาหลาย turn ให้จำแนกเพิ่มว่าเป็น `objective loss`, `attention drift`,
-   `reopened deferred issue` หรือ `beneficial scope deepening`: คำถามแทรกอย่างเดียวไม่พิสูจน์ว่า
-   ผู้ใช้เปลี่ยน objective และการขุดต่อไม่ใช่ drift หากจำเป็นต่อ outcome/correctness/safety เดิม
-5. เลือก candidate owner ตาม design invariant:
-   - trigger → action ของผู้ปฏิบัติงาน: `Agent`
-   - invariant กลาง: `Rule`
-   - procedure/มาตรฐานเฉพาะงาน: `Skill`
-   - การตรวจ regression หรือข้อจำกัดเครื่องมือ: `Test/Harness`
-   - preference ที่ต้องคงข้าม session: `Memory`
-   - เฉพาะ repository ปลายทาง: `Target repository`
-6. เสนอเฉพาะการแก้ขั้นต่ำที่จัดการต้นเหตุ พร้อมความเสี่ยงเรื่อง instruction noise, overlap และ behavior change
+1. Identify signals: user surprise or discomfort; repeated corrections; agent stalls, manual rechecks, misuse of
+   evidence, or dead ends; false claims, near misses, behavioral surprises, invalid verification; and effective
+   behavior worth preserving.
+2. Group events by root concern while retaining individual evidence. Repeated references to one event are not new occurrences.
+3. Inspect existing repository coverage. Existing instructions suggest execution, routing, enforcement, or test gaps;
+   absent or repeatedly misread guidance may indicate an instruction gap.
+4. Classify supported causes as `instruction gap`, `instruction overload`, `execution miss`,
+   `tool/harness limitation`, `repository-specific`, `user preference`, or `unknown`. For multi-turn work,
+   also consider `objective loss`, `attention drift`, `reopened deferred issue`, or
+   `beneficial scope deepening`. An interjected question does not prove an objective change, and necessary work
+   for the original outcome, correctness, or safety is not drift.
+5. Select an owner: practitioner trigger/action → Agent; shared invariant → Rule; domain procedure → Skill;
+   regression or tool limitation → Test/Harness; cross-session preference → Memory; target-specific concern →
+   Target repository.
+6. Propose only the smallest root-cause correction and state instruction-noise, overlap, and behavior-change risks.
 
 ## Output
 
-เริ่มด้วยสรุป signal ที่พบ แล้วรายงานแต่ละข้อด้วย:
+For each signal report:
 
 ```text
 Finding:
 Status: Verified | Inferred | Unverified | Contradicted
-Evidence: เหตุการณ์หรือข้อความที่ตรวจย้อนกลับได้
-Frequency: จำนวนที่ยืนยันได้ใน scope นี้
+Evidence: traceable event or message
+Frequency: occurrences verified in this scope
 Pain/impact:
 Likely cause:
-Existing coverage: มี/ไม่มี/ยังไม่ตรวจ พร้อมตำแหน่งเมื่อมี
+Existing coverage: present | absent | unverified, with location when present
 Candidate owner: Agent | Rule | Skill | Test/Harness | Memory | Target repository | None
 Minimal improvement:
 Risk/overlap:
 ```
 
-แยกท้ายรายงานเป็น:
+Conclude with `Consider changing`, `Do not change dotfiles yet`, and `Preserve`. For scope drift, identify the
+current objective, detour or interruption, resume or loss point, and the user message needed to restore work.
+Never treat a user follow-up as retroactive authorization for an agent-originated proposal or mutation.
 
-- `ควรพิจารณาปรับ` — มีหลักฐานและ owner ที่สมเหตุสมผล
-- `ยังไม่ควรแก้ dotfiles` — isolated event, ของเดิมครอบคลุม หรือหลักฐานยังไม่พอ
-- `ควรรักษาไว้` — behavior หรือ guardrail ที่ทำงานดีและไม่ควรถดถอย
-
-เมื่อ finding เกี่ยวกับ scope drift ให้ระบุ current objective, detour/interrupt, จุดที่ resume
-หรือหล่นหาย และข้อความที่ผู้ใช้ต้องใช้ดึงงานกลับ; ห้ามนับการถามตามของผู้ใช้เป็น authorization
-ย้อนหลังให้ข้อเสนอหรือ mutation ที่ agent เป็นฝ่ายเปิด.
-
-ห้ามทำ mutation หลังรายงาน แม้ข้อเสนอชัดเจน; รอให้ผู้ใช้เลือกข้อที่จะดำเนินการ
+Do not mutate after reporting, even when the proposal is clear; wait for the user to select an action.

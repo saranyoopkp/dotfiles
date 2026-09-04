@@ -88,7 +88,7 @@ check claude/skills/docs/placement/SKILL.md 'Comment audit mode (read-only ก�
 check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากความยาวหรือ category'
 check claude/skills/docs/link/SKILL.md 'ไม่ตรวจว่าเนื้อหาเอกสารยังตรงกับโค้ด'
 check claude/skills/docs/setup/SKILL.md 'lifecycle hooks'
-check claude/skills/retro/SKILL.md 'เทียบหลาย session'
+check claude/skills/retro/SKILL.md 'Compare only sessions relevant to the same objective'
 check claude/skills/research/technology-vendor/SKILL.md 'Own external comparison and recommendations'
 check claude/skills/risk-review/SKILL.md 'destructive, irreversible, or deletion action'
 check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality, content และ visual design baseline'
