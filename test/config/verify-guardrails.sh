@@ -89,7 +89,7 @@ check claude/skills/docs/placement/SKILL.md 'ห้าม auto-fix จากค�
 check claude/skills/docs/link/SKILL.md 'ไม่ตรวจว่าเนื้อหาเอกสารยังตรงกับโค้ด'
 check claude/skills/docs/setup/SKILL.md 'lifecycle hooks'
 check claude/skills/retro/SKILL.md 'เทียบหลาย session'
-check claude/skills/research/technology-vendor/SKILL.md 'external comparison และ recommendation'
+check claude/skills/research/technology-vendor/SKILL.md 'Own external comparison and recommendations'
 check claude/skills/risk-review/SKILL.md 'destructive, irreversible, or deletion action'
 check claude/skills/ui-ux-baseline/SKILL.md 'Generic UI/UX quality, content และ visual design baseline'
 check claude/skills/ui-ux-baseline/SKILL.md 'โครงสร้าง, copy, interaction, state, accessibility, responsive behavior, visual consistency'

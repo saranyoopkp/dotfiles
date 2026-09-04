@@ -1,52 +1,43 @@
 ---
 name: stack-contracts
-description: ต้องใช้ทันทีเมื่อผู้ใช้ขอเพิ่ม/เปลี่ยน dependency ทั้งที่ workspace อาจมีเครื่องมือ concern เดียวกัน, ขอ consolidate stack/config หรือออกแบบ/แก้ shared schema/type/enum/constant/contract ระหว่าง package/service/frontend/backend/worker แม้ยังต้อง inventory manifest/consumer เพื่อยืนยันภายหลัง; ใช้เป็น owner ของ inventory และ shared boundary ส่วนการเปรียบเทียบ vendor/library ภายนอกให้ใช้ research:technology-vendor ร่วมเมื่อจำเป็น; ไม่ใช้กับ helper ภายในจุดเดียวหรือ schema ที่มี owner/consumer เดียว และห้ามสร้าง shared package หรือ abstraction เผื่ออนาคต
+description: Use when adding or changing a dependency where the workspace may already solve the same concern, consolidating stack or configuration, or designing shared schemas, types, enums, constants, or contracts across packages, services, frontends, backends, or workers. Own inventory and shared boundaries; combine with research:technology-vendor for external comparison. Do not use for one-site helpers or single-owner contracts, and never create shared abstractions for hypothetical future use.
 ---
 
-# Stack Contracts — owner เดียวก่อน shared abstraction
+# Stack Contracts — Establish One Owner Before Sharing
 
-## Inventory ก่อนตัดสิน
+## Inventory before deciding
 
-ตรวจจาก repo:
-
-- dependency/config ที่ทำ concern เดียวกันอยู่แล้ว
-- producer, consumer และ runtime boundary ของ contract
-- source of truth, generated artifact และ compatibility path
-- duplication เป็น contract เดียวจริงหรือเพียงหน้าตาคล้ายกัน
-
-ไม่พบจาก query หนึ่งครั้งห้ามสรุปว่าไม่มี; ตรวจ manifest, imports, barrel/registration และ
-workspace config ที่เกี่ยว. การวิเคราะห์ไม่ใช่ authorization ให้เพิ่มหรือ migrate dependency.
+Inspect the repository for existing dependencies or configuration serving the concern, producers and consumers,
+runtime boundaries, sources of truth, generated artifacts, compatibility paths, and whether apparent duplication
+is one contract or merely similar shape. One empty query does not prove absence; inspect manifests, imports,
+registrations, barrels, and workspace configuration. Analysis does not authorize additions or migration.
 
 ## Dependency consistency
 
-- concern เดียวกัน default ใช้ของเดิม เพื่อไม่เพิ่ม runtime, API และ maintenance surface
-- ตัวใหม่ดีกว่าให้เสนอ benefit, compatibility, security/license, migration cost และ exit path
-- อนุมัติให้เปลี่ยนแล้ว migrate ตาม boundary ที่ตกลง; ห้ามปล่อยสองมาตรฐานโดยไม่มี owner/exit
-- ความต่างที่มีเหตุผลตาม runtime/team/deploy boundary จดเหตุผล ไม่บังคับ consolidate
-- decision ที่ทำให้ stack ต่างหรือเปลี่ยนมาตรฐานต้องจดใน decision/operational home ที่ repo
-  กำหนด; ถ้ายังไม่พบบ้านให้เสนอที่เก็บ ห้ามแต่ง path ขึ้นเอง
+- Prefer the existing solution for the same concern to avoid another runtime, API, and maintenance surface.
+- For a better alternative, present benefit, compatibility, security and licensing, migration cost, and exit path.
+- After approval, migrate within the agreed boundary; do not leave two standards without owner and exit conditions.
+- Preserve justified differences across runtime, team, or deployment boundaries and record their rationale.
+- Record decisions that change or diverge stack standards in the repository's decision or operational home. If none
+  exists, propose a location rather than inventing a path.
 
-## Shared contract
+## Shared contracts
 
-- กำหนด owner ของ schema/type/enum/error code ก่อนเลือกที่เก็บ
-- generate/infer จาก authoritative schema เมื่อทำได้; ห้ามมี writable sources หลายชุด
-- shared package คุ้มเมื่อมีหลาย consumer ที่ต้อง release/verify contract เดียวกัน
-- consumer เดียวหรือ contract ยังไม่นิ่งให้เก็บกับ owner ก่อน; อย่าสร้าง package เผื่ออนาคต
-- validate ที่ runtime boundary แม้มี shared static type
+- Assign ownership of a schema, type, enum, or error code before choosing storage.
+- Generate or infer from the authoritative schema when possible; never maintain several writable sources.
+- A shared package is justified by multiple consumers releasing or verifying one contract.
+- Keep unstable or single-consumer contracts with their owner; do not extract for future use.
+- Validate runtime boundaries even when static types are shared.
 
 ## Monorepo consistency
 
-- error shape, naming, folder boundary และ formatter/linter/build config ที่เป็น concern ร่วม
-  ควรมี owner/source เดียว; package layout/override ต่างได้เมื่อ runtime, deploy หรือ ownership
-  boundary ต้องการและมีเหตุผล
-- utility ที่ซ้ำเกิน 2 จุดให้ตรวจว่า semantics และ change cadence เดียวกันจริงแล้วเสนอ consolidate;
-  ห้ามยกเข้า shared packageจากจำนวนอย่างเดียว
-- เจอความไม่สอดคล้องเดิมให้ทักและเสนอ migration; ห้ามเพิ่มความต่างใหม่ตาม precedent เงียบ ๆ
+Shared error shapes, naming, folder boundaries, and formatter, linter, or build configuration should have one owner.
+Package layouts and overrides may differ for justified runtime, deployment, or ownership boundaries. Before
+consolidating a utility repeated in more than two places, verify identical semantics and change cadence; count
+alone is insufficient. Report existing inconsistency and propose migration rather than silently extending it.
 
-## Migration และ verification
+## Migration and verification
 
-ถ้า public/data consumer สังเกตต่าง ให้ใช้ authorization และ compatibility/impact rules ใน
-`claude/rules/core/change-control.md` และ `claude/rules/engineering/compatibility-rollout.md`
-ก่อน mutation.
-Inventory consumer ทั้งหมด, migrate ทีละ boundary และตรวจว่าไม่มี import/config/schema เก่า
-เหลือก่อน contract. รายงาน owner, consumers, compatibility window และหลักฐานต่อ consumer.
+For consumer-visible public or data behavior, apply authorization, impact, and compatibility rules before mutation.
+Inventory consumers, migrate one boundary at a time, and verify no old imports, configuration, or schema remain
+before contraction. Report owner, consumers, compatibility window, and evidence for each consumer.

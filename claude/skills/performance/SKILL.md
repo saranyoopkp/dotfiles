@@ -1,53 +1,49 @@
 ---
 name: performance
-description: ต้องใช้เมื่อวิเคราะห์ ออกแบบ review หรือแก้ performance ที่มี latency, throughput, query/list/pagination, N+1, batching, cache, timeout, async work, rendering หรือ resource concern ที่วัดได้หรือมี workload/constraint ชัด รวมถึงเมื่อต้องตัดสินว่าควร cache งานแพงที่ทำซ้ำหรือไม่แม้ data-design:caching จะเกี่ยวด้วย; ไม่ใช้กับ CRUD/list ขนาดคงที่หรืองานทั่วไปที่ยังไม่มี performance concern และห้ามเพิ่ม cache/queue/virtualization จาก scale สมมติ
+description: Use when analyzing, designing, reviewing, or changing measurable performance involving latency, throughput, queries, lists, pagination, N+1, batching, caching, timeouts, asynchronous work, rendering, or resource constraints, including decisions about caching repeated expensive work. Do not use for bounded CRUD or ordinary work without a performance concern, and never add caching, queues, or virtualization for hypothetical scale.
 ---
 
-# Performance — วัดก่อน เลือกทางเล็กสุดที่พอ
+# Performance — Measure First, Choose the Smallest Sufficient Change
 
 ## Gate
 
-ก่อนเสนอ optimization ระบุ:
+Before proposing optimization, identify:
 
-- symptom และ metric ที่กระทบ
-- workload/data volume/concurrency ที่เกี่ยว
-- budget หรือผลลัพธ์ที่ต้องการ
-- baseline และวิธีวัดซ้ำ
+- the symptom and affected metric
+- relevant workload, data volume, and concurrency
+- the budget or required outcome
+- a baseline and repeatable measurement
 
-ยังไม่มีหลักฐานให้เสนอ probe ที่ถูกที่สุดก่อน; ห้ามสร้าง cache, queue, index หรือ abstraction
-เพื่อ performance จากความคุ้นเคยกับ pattern อย่างเดียว. การวิเคราะห์ไม่ใช่ authorization ให้แก้.
+Without evidence, propose the cheapest valid probe first. Never add a cache, queue, index, or abstraction merely
+because the pattern is familiar. Analysis is not authorization to mutate.
 
-N+1 บน collection ที่โตได้, unbounded data growth และ external I/O ที่ไม่มี timeout/deadline
-เป็น safety baseline เมื่อเงื่อนไขนั้นมีอยู่จริง ไม่ต้องรอ benchmark เพื่อยอมรับ risk; measurement
-ใช้เลือกและพิสูจน์ทางแก้ ไม่ใช่ใช้ปฏิเสธ risk ที่ตรวจพบ.
+N+1 on a growing collection, unbounded data growth, and external I/O without a timeout or deadline are baseline
+risks when those conditions actually exist; they do not require a benchmark to acknowledge. Measurement selects
+and verifies the remedy rather than dismissing an observed risk.
 
 ## Data access
 
-- หา query ใน loop/N+1 แล้วเปลี่ยนเป็น join, batch หรือ `IN` เมื่อ semantics เท่ากัน
-- list ที่โตตาม user/data ต้องมี bound, pagination หรือ streaming; list คงที่และมีเพดานจริงไม่ต้อง
-- column ที่ filter/sort บ่อยให้ประเมิน index จาก query plan/write cost ไม่ใช่ชื่อ column
-- payload ใหญ่ให้ select/serialize เฉพาะที่ใช้ โดยรักษา contract เดิม
+- Replace loop queries or N+1 with joins, batches, or `IN` when semantics remain equivalent.
+- Bound, paginate, or stream lists that grow with users or data; genuinely fixed small lists need no added machinery.
+- Evaluate indexes for frequent filters and sorts from query plans and write cost, not column names.
+- Select and serialize only used data from large payloads while preserving the contract.
 
-## Runtime และ external I/O
+## Runtime and external I/O
 
-- กำหนด timeout/deadline ให้ I/O ภายนอก; failure path ต้องบอกสาเหตุที่ตามได้
-- งานเกิน request budget ให้เลือก async/queue เมื่อผู้ใช้รับ semantics ของ deferred result;
-  ห้ามเปลี่ยน synchronous behavior เงียบ ๆ
-- cache ต้องตอบให้ได้ว่า key, owner, invalidation, consistency window และ fallback คืออะไร
-- วัด CPU, memory, connection/queue pressure ก่อนเพิ่ม concurrency
+- Give external I/O a timeout or deadline and make failures traceable.
+- Move work beyond a request budget to asynchronous execution only when the user accepts deferred-result semantics.
+- A cache requires defined key, owner, invalidation, consistency window, and fallback.
+- Measure CPU, memory, connections, and queue pressure before increasing concurrency.
 
 ## Frontend
 
-- แยกว่าช้ามาจาก network, server, bundle, render หรือ interaction ก่อนแก้
-- รายการยาวจริงค่อย paginate/window/virtualize; อย่าเพิ่ม complexity ให้รายการเล็ก
-- asset ใต้ fold lazy-load และระบุขนาดเมื่อมี layout-shift risk
-- state ที่เปลี่ยนถี่ให้จำกัด render scope แล้ววัดก่อน/หลัง
+- Distinguish network, server, bundle, rendering, and interaction latency before changing code.
+- Paginate, window, or virtualize only genuinely long collections.
+- Lazy-load below-fold assets and declare dimensions when layout shift is possible.
+- Constrain render scope for frequently changing state and measure before and after.
 
-## Verify และ report
+## Verify and report
 
-รัน workload เดิมบน state ที่เปรียบเทียบได้ แล้วรายงาน:
-
-`baseline → change → result → variance/coverage → trade-off`
-
-ผล benchmark ครั้งเดียวหรือคนละ environment ไม่พิสูจน์ improvement. ถ้าทางขั้นต่ำถึง budget
-แล้ว ให้หยุดและเสนอ defer trigger สำหรับทางที่ซับซ้อนกว่า.
+Run the same workload against comparable states and report
+`baseline → change → result → variance/coverage → trade-off`. One benchmark or different environments do not
+prove improvement. Stop when the smallest change meets the budget and state a defer trigger for greater complexity.
