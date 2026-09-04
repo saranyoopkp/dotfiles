@@ -2,7 +2,7 @@
 
 Skill routing is a graph rather than a strict tree. One task may invoke several families when work surfaces or decisions cross domains. This document covers skill routing only; agent and session selection is a manual user decision outside this graph.
 
-Solid edges represent primary or parent routing; dashed edges represent cross-domain triggers that may co-load. `ui-ux-baseline` is the generic quality baseline and shared lens for UI, UX, and frontend work. Usability, accessibility, information hierarchy, content clarity, responsive behavior, and visual consistency route there. Open-ended aesthetic direction and requests to make an existing page more beautiful route to `visual-direction`; clean-up and polish preserving the current direction route to `visual-polish`. Child edges identify on-demand owners of specialized procedures.
+Solid edges represent primary or parent routing; dashed edges represent cross-domain triggers that may co-load. `ui-ux-baseline` is the generic quality baseline and shared lens for UI, UX, and frontend work. Usability, accessibility, information hierarchy, content clarity, responsive behavior, and visual consistency route there. Inspiration, references, moodboards, and visual benchmarking route to `design-inspiration`; open-ended aesthetic direction and requests to make an existing page more beautiful route to `visual-direction`; clean-up and polish preserving the current direction route to `visual-polish`. Child edges identify on-demand owners of specialized procedures.
 
 ```mermaid
 flowchart LR
@@ -33,6 +33,7 @@ flowchart LR
         UI -->|Toast, banner, result, recovery| UI_FEEDBACK["ui-ux-baseline:feedback-notifications"]
         UI -->|Shared component or variant| UI_SYSTEM["ui-ux-baseline:design-system"]
         UI -->|Shared token, theme, icon| UI_FOUNDATION["ui-ux-baseline:design-foundations"]
+        UI -->|Inspiration, references, moodboard, visual benchmark| UI_INSPIRATION["ui-ux-baseline:design-inspiration"]
         UI -->|New identity, redesign, or aesthetic direction| UI_DIRECTION["ui-ux-baseline:visual-direction"]
         UI -->|Clean/polish existing screen| UI_POLISH["ui-ux-baseline:visual-polish"]
         UI -->|Animation or transition| UI_MOTION["ui-ux-baseline:motion-microinteractions"]

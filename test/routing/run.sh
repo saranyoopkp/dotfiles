@@ -34,7 +34,7 @@ if [ "${ROUTING_LIST_SKILLS:-}" = "1" ]; then
   printf '%s\n' "$UNIQUE_REGISTRY_NAMES"
   exit 0
 fi
-SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ui-content-copy.tsv" "$HERE/scenarios-ui-navigation.tsv" "$HERE/scenarios-ops.tsv" "$HERE/scenarios-research.tsv" "$HERE/scenarios-retro.tsv" "$HERE/scenarios-docs.tsv" "$HERE/scenarios-compatibility.tsv" "$HERE/scenarios-performance.tsv" "$HERE/scenarios-stack-contracts.tsv" "$HERE/scenarios-testing-strategy.tsv" "$HERE/scenarios-risk.tsv" "$HERE/scenarios-simple-negative.tsv")
+SCENARIO_FILES=("$HERE/scenarios.tsv" "$HERE/scenarios-ui-content-copy.tsv" "$HERE/scenarios-ui-navigation.tsv" "$HERE/scenarios-ui-design-inspiration.tsv" "$HERE/scenarios-ops.tsv" "$HERE/scenarios-research.tsv" "$HERE/scenarios-retro.tsv" "$HERE/scenarios-docs.tsv" "$HERE/scenarios-compatibility.tsv" "$HERE/scenarios-performance.tsv" "$HERE/scenarios-stack-contracts.tsv" "$HERE/scenarios-testing-strategy.tsv" "$HERE/scenarios-risk.tsv" "$HERE/scenarios-simple-negative.tsv")
 if [ -n "${ROUTING_SCENARIO_FILES:-}" ]; then
   IFS=':' read -r -a SCENARIO_FILES <<< "$ROUTING_SCENARIO_FILES"
 fi

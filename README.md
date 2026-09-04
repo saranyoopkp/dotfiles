@@ -58,9 +58,9 @@ That set has been consolidated rather than grown. The first commit had **13 rule
 boundary, and four more were absorbed into the skills that already owned their procedure.
 Merging into an existing rule is the default; a new file has to be argued for.
 
-**50 skills** cover the procedures — API contract design, schema migrations, observability,
+**53 skills** cover the procedures — API contract design, schema migrations, observability,
 incident response, performance, testing strategy, documentation placement. This is where the
-removed rule content went: skills grew from **8 to 50** over the same period, because a procedure
+removed rule content went: skills grew from **8 to 53** over the same period, because a procedure
 that only matters for one kind of work should not be loaded into every session.
 
 **3 agents** separate primary work, bounded discovery and acceptance: SCC owns implementation,
@@ -154,7 +154,7 @@ budget edges.
 
 ```
 claude/rules/      6 always-loaded invariants (core, engineering, risk)
-claude/skills/     50 on-demand domain procedures
+claude/skills/     53 on-demand domain procedures
 claude/agents/     3 role definitions: SCC, Scout, ACV
 test/routing/      skill auto-invocation regression, real sessions
 test/friction/     simple-task ceremony regression
