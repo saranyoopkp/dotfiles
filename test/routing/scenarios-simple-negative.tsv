@@ -1,5 +1,5 @@
 # Simple tasks test routing precision only: incidental simplicity must not invoke domain skills.
-NONE	simple-readme	แก้ typo หนึ่งคำใน README แล้วใช้คำสั่งตรวจเดิมของ repo
-NONE	simple-rename	เปลี่ยนชื่อตัวแปร local ภายในฟังก์ชันเดียว โดย behavior และ consumer ไม่เปลี่ยน
-NONE	simple-json	เพิ่ม key คงที่หนึ่งค่าในไฟล์ fixture JSON ที่ test ระบุ expected result ชัดแล้ว
-NONE	simple-explain	อธิบายจากข้อความที่ให้มาว่าฟังก์ชัน pure นี้คืนค่าอะไร โดยไม่แก้ไฟล์
+NONE	simple-readme	Fix one typo in README and use the repository's existing verification command.
+NONE	simple-rename	Rename a local variable within one function without changing behavior or consumers.
+NONE	simple-json	Add one constant key to a JSON fixture whose expected test result is already explicit.
+NONE	simple-explain	Explain from the provided text what this pure function returns without editing files.
