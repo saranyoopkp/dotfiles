@@ -74,7 +74,7 @@ check claude/agents/SCC-v1.0.1.md 'at most one evidence-backed adjacent alternat
 check claude/agents/SCC-v1.0.1.md 'evidence → impact → alternative → why not done → defer trigger'
 check claude/agents/SCC-v1.0.1.md 'Do not surface style preference, generic cleanup'
 check README.md 'manual decisions made'
-check README.th.md 'SCC ทำงานหลัก, Scout สำรวจแบบ read-only, ACV ตรวจรับ'
+check README.md 'SCC owns implementation'
 [ ! -e "$ROOT/claude/agents/builder.md" ] || {
   echo "builder must remain absent; SCC owns implementation" >&2
   exit 1
@@ -113,10 +113,10 @@ check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md 'professional
 check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md 'Avoid excessive familiarity'
 check claude/skills/ui-ux-baseline/feedback-notifications/SKILL.md 'project-owned voice and tone convention'
 check claude/skills/docs/setup/kit/CLAUDE.template.md 'Optional product voice/tone'
-check docs/claude-code-mechanisms.md 'UI/UX/frontend และ generic visual quality'
+check docs/claude-code-mechanisms.md 'UI/UX/frontend and generic visual quality'
 check docs/skill-routing-graph.md 'generic quality baseline'
-check docs/skill-routing-graph.md 'ui-ux-baseline` เป็น generic quality baseline'
-check docs/skill-routing-graph.md 'usability, accessibility, information hierarchy, content clarity, responsive behavior และ visual consistency'
+check docs/skill-routing-graph.md '`ui-ux-baseline` is the generic quality baseline'
+check docs/skill-routing-graph.md 'Usability, accessibility, information hierarchy, content clarity, responsive behavior, and visual consistency'
 check docs/skill-routing-graph.md 'New identity, redesign, or aesthetic direction'
 check docs/skill-routing-graph.md 'Clean/polish existing screen'
 check claude/skills/ui-ux-baseline/visual-direction/SKILL.md 'existing page that users want “more beautiful,” modern, premium, distinctive'
@@ -172,8 +172,8 @@ if rg -n -i 'behavior.?change gate|behavioral/compatibility gate|report-integrit
 fi
 
 # Regressions that previously created universal ceremony.
-absent claude/rules/engineering/documentation-discipline.md "ตั้งแต่ 2 บรรทัด"
-absent claude/skills/docs/placement/SKILL.md "ตั้งแต่ 2 บรรทัด"
+absent claude/rules/engineering/documentation-discipline.md "two lines or longer"
+absent claude/skills/docs/placement/SKILL.md "two lines or longer"
 absent claude/agents/SCC-v1.0.1.md "Behavioral Gates (trigger → action)"
 absent memory/code-comments-why-plus-pointer.md "comments longer than two lines must move"
 check memory/code-comments-why-plus-pointer.md "not line count"

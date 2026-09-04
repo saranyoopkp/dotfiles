@@ -6,8 +6,6 @@ behaviour as something you design, verify and measure — not something you prom
 It has been in daily use across every repository I work in, on more than one machine, since
 early 2026.
 
-> Thai version of this document: [`README.th.md`](README.th.md)
-
 ## The problem this solves
 
 An agent that can edit files is easy to get. An agent you can trust with a production
