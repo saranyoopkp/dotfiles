@@ -1,16 +1,16 @@
 ---
 name: ui-ux-baseline:collections
-description: ออกแบบ UI สำหรับค้นหา อ่าน จัดลำดับ เลือก และจัดการข้อมูลหลายรายการ เช่น table, list, grid, search/filter/sort, pagination, bulk action และ virtualized collection ใช้เมื่อผู้ใช้จัดการ collection ที่ไม่ใช่ realtime conversation โดยตรง
+description: Design UI for finding, reading, ordering, selecting, and managing multiple records, including tables, lists, grids, search/filter/sort, pagination, bulk actions, and virtualized collections. Use when users manage collections that are not directly part of a realtime conversation.
 ---
 
 # Collections
 
-ถือ query, filter, sort, pagination และ selection เป็น state ของงาน ไม่ใช่รายละเอียดของ widget
+Treat query, filter, sort, pagination, and selection as task state, not widget details.
 
-- แยก collection ว่างจริง ออกจากผลลัพธ์ว่างเพราะ query/filter; แสดง query ที่มีผลและทาง reset ที่ไม่ทำให้ผู้ใช้หลงทาง
-- เมื่อผู้ใช้กลับมา, refresh หรือ share URL ให้รักษา state เท่าที่ architecture ของผลิตภัณฑ์รองรับ; อย่า reset filter/หน้า/selection เงียบ ๆ
-- pagination/load more ต้องสื่อขอบเขตและสถานะกำลังโหลด; เปลี่ยน sort/filter แล้วต้องกำหนดอย่างชัดเจนว่า page และ selection ถูก reset หรือ reconcile อย่างไร
-- bulk action ต้องแสดงจำนวนและขอบเขตของสิ่งที่จะได้รับผล รวมทั้ง failure แบบ partial หากเกิดได้
-- ใช้ virtualization หรือ server-side query เมื่อขนาดข้อมูล/การวัดจริงบ่งชี้ว่าจำเป็น; อย่าทำให้ keyboard, focus และ scroll restoration พังเพียงเพื่อ optimization
+- Distinguish a genuinely empty collection from an empty query/filter result; show the active query and a reset path that does not disorient the user.
+- Preserve state when users return, refresh, or share a URL to the extent supported by the product architecture; do not silently reset filters, pages, or selection.
+- Pagination and load-more controls must communicate scope and loading state. Define explicitly how page and selection state reset or reconcile when sort or filter changes.
+- Bulk actions must show the number and scope of affected items, including partial failures when they can occur.
+- Use virtualization or server-side queries when data size or real measurements justify them; do not break keyboard use, focus, or scroll restoration merely for optimization.
 
-ตรวจอย่างน้อย: empty collection, no-match query, paging/filter transition, selection และ bulk-action result ตาม flow ที่มีจริง
+At minimum, verify empty collections, no-match queries, paging/filter transitions, selection, and bulk-action results for flows that actually exist.

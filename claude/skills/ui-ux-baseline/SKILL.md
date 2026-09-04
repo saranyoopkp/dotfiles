@@ -1,62 +1,49 @@
 ---
 name: ui-ux-baseline
-description: Generic UI/UX quality, content และ visual design baseline สำหรับงาน frontend. ใช้เมื่อวางแผน, ออกแบบ, review หรือแก้ user-facing UI รวมถึงโครงสร้าง, copy, interaction, state, accessibility, responsive behavior, visual consistency, page/component, list/table หรือ UI ที่ fetch หรือแสดงข้อมูล รวมถึง UI ที่สวย, clean, polished และ professional. ให้ route ไป child skill ตาม surface ที่เกี่ยวข้องแบบ on-demand; ไม่โหลด child ทั้งหมดโดย default และ interactive UI ต้องอ่าน ui-ux-baseline:interaction-a11y เสมอ
+description: Generic UI/UX quality, content, and visual-design baseline for frontend work. Use when planning, designing, reviewing, or modifying user-facing UI, including structure, copy, interaction, state, accessibility, responsive behavior, visual consistency, pages/components, lists/tables, or UI that fetches or presents data, as well as UI requested to be beautiful, clean, polished, or professional. Route on demand to child skills for the relevant surfaces; do not load every child by default, and always read ui-ux-baseline:interaction-a11y for interactive UI.
 ---
 
 # UI/UX Baseline
 
-ก่อนแก้ UI ให้ระบุว่าผู้ใช้กำลังอ่านเนื้อหา, ดูข้อมูล, สั่งงาน, จัดการข้อมูลหลายรายการ, ติดตามข้อมูลตามเวลา,
-หรือใช้ shared primitive แล้วแยก intent ของคำขอด้าน copy/ภาพลักษณ์ก่อนอ่าน child skill: งาน wording ทั่วไปไป
-`content-copy`; งาน clean/polish ที่คงโครงเดิมไป `visual-polish`; งานที่ขอเสนอ design, สวยขึ้น, modern,
-premium หรือมี character ไป `visual-direction` **ก่อน** ออกแบบหรือเขียนโค้ด
+Before changing UI, identify whether users are reading content, viewing data, taking action, managing a collection, following time-based information, or using a shared primitive. Separate copy and aesthetic intent before reading child skills: general wording goes to `content-copy`; clean-up or polish that preserves the existing structure goes to `visual-polish`; requests for a design proposal or a more beautiful, modern, premium, or distinctive result go to `visual-direction` **before** design or implementation.
 
 ## Generic quality baseline
 
-ใช้เป็นเลนส์ร่วมกับทุกงาน UI/UX ไม่ว่าผู้ใช้จะเรียกว่า “สวย”, “clean”, “polished” หรือขอเพียงแก้
-feature; ไม่ใช่คำสั่งให้เติม decoration หรือเปลี่ยน brand โดยอัตโนมัติ
+Use this lens for all UI/UX work, whether the user calls it “beautiful,” “clean,” or “polished,” or asks only for a feature change. It does not automatically authorize adding decoration or changing the brand.
 
-- เริ่มจาก user goal, audience, context และ primary action; ความสวยวัดจาก clarity, hierarchy,
-  proportion, consistency และความมั่นใจในการใช้งาน ไม่ใช่จำนวน effect
-- ทุกข้อความและองค์ประกอบที่ผู้ใช้เห็นต้องช่วยให้เข้าใจ ตัดสินใจ หรือทำงานต่อได้; ใช้ terminology,
-  label และ action ให้สอดคล้องกัน และไม่เพิ่มคำอธิบายเพียงเพราะมีพื้นที่ให้ใส่
-- จัดลำดับให้ primary task, สถานะที่ต้องตัดสินใจ และทางไปต่อเห็นก่อนรายละเอียดรอง; ใช้ progressive
-  disclosure กับคำอธิบายเสริม แต่ห้ามซ่อน cost, consent, error หรือ recovery สำคัญไว้ใน tooltip อย่างเดียว
-- ใช้ brand, token, component และ platform convention ที่มีอยู่ก่อน; อย่าสร้าง pattern สำเร็จรูป,
-  palette, spacing หรือ visual treatment ใหม่เพียงเพราะเป็นค่า default ที่ดูทันสมัย
-- คิดถึง loading, empty, error, partial, pending, success, disabled, focus และ responsive state ที่
-  เกิดได้จริง; visual polish ที่ทำให้ state หรือทางแก้หายไปถือว่าไม่ผ่าน
-- รักษา semantic interaction, keyboard/focus, contrast, target size และ reduced motion ตามบริบท;
-  accessibility เป็นส่วนหนึ่งของคุณภาพ ไม่ใช่งานเก็บท้าย
-- เมื่อ environment รองรับ ให้ตรวจจาก screenshot หรือหน้าจอจริงใน viewport สำคัญ และรายงานข้อจำกัด
-  ของหลักฐาน; อย่าอ้างว่า visual quality ผ่านจากการอ่าน code เพียงอย่างเดียว
+- Start from the user goal, audience, context, and primary action. Evaluate beauty through clarity, hierarchy, proportion, consistency, and confidence in use, not by the number of effects.
+- Every user-visible message and element must help users understand, decide, or continue their task. Keep terminology, labels, and actions consistent, and do not add explanation merely because space is available.
+- Put the primary task, decision-relevant state, and next step before secondary detail. Use progressive disclosure for supporting explanations, but never hide important cost, consent, errors, or recovery solely in a tooltip.
+- Prefer existing brand, tokens, components, and platform conventions. Do not invent generic patterns, palettes, spacing, or visual treatments merely because they look modern by default.
+- Account for realistic loading, empty, error, partial, pending, success, disabled, focus, and responsive states. Visual polish that removes a state or recovery path does not pass.
+- Preserve semantic interaction, keyboard and focus behavior, contrast, target size, and reduced-motion behavior appropriate to context. Accessibility is part of quality, not final cleanup.
+- When the environment supports it, inspect screenshots or the real UI at important viewports and report evidence limitations. Do not claim visual quality passed from code inspection alone.
 
-ส่วนนี้เป็น quality lens กลางเท่านั้น; decision procedure และ implementation detail อยู่ที่ child skill
-ตาม ownership ด้านล่าง งานหนึ่งอ่านได้หลาย child เมื่อ data flow หรือ state เรียกร้องจริง.
+This section is a shared quality lens only. Decision procedures and implementation details belong to the child skills below. One task may require several children when the actual data flow or states justify them.
 
 ## Product surface boundary
 
-- User-facing UI สื่อสิ่งที่ผู้ใช้สังเกตได้ ผลกระทบ และสิ่งที่ทำต่อได้. เก็บรายละเอียด implementation, raw code, protocol และ diagnostic evidence ไว้ใน log, test artifact หรือ technical details ที่ผู้ใช้เลือกเปิด เว้นแต่ audience และงานนั้นต้องใช้ข้อมูลดังกล่าวจริง
-- หลักฐานทดสอบต้องสังเกต product behavior; ห้ามเปลี่ยน product copy หรือ surface เพียงเพื่อให้ screenshot หรือ test artifact อธิบายตัวเองได้
+- User-facing UI communicates what users can observe, the impact, and what they can do next. Keep implementation detail, raw code, protocol information, and diagnostic evidence in logs, test artifacts, or opt-in technical details unless the audience and task genuinely require them.
+- Test evidence must observe product behavior. Do not change product copy or surfaces merely to make screenshots or test artifacts self-explanatory.
 
-| ลักษณะงาน | ต้องอ่าน |
+| Work characteristic | Must read |
 |---|---|
-| สร้างหน้า/landing page ใหม่, redesign visual identity หรือผู้ใช้ขอเสนอ design, ให้หน้าปัจจุบันสวยขึ้น, modern, premium หรือมี character | `ui-ux-baseline:visual-direction` |
-| ปรับ Visual Design หรือ UI effect ของหน้าจอเดิม เช่น clean, simplify, spacing, typography, shadow, blur, gradient, overlay โดยคง brand/flow/IA เดิมและไม่ขอเปลี่ยน direction | `ui-ux-baseline:visual-polish` |
-| เพิ่มหรือแก้ transition, animation, progress, reveal, scroll behavior หรือ microinteraction | `ui-ux-baseline:motion-microinteractions` |
-| สร้างหรือแก้ shared color/type/spacing/grid/theme/elevation/icon หรือ motion token | `ui-ux-baseline:design-foundations` |
-| เลือก icon/icon library, สร้าง icon language หรือพบ decorative emoji ใน UI | `ui-ux-baseline:design-foundations` |
-| i18n/localization, translation, locale formatting, text expansion หรือ RTL | `ui-ux-baseline:content-localization` |
-| wording ของ UI ทั่วไป เช่น heading, label, button, placeholder, helper text, tooltip, empty/help copy หรือ terminology | `ui-ux-baseline:content-copy` |
-| render resource จาก server/client state | `ui-ux-baseline:resource-states` |
-| submit, edit, toggle, delete, confirm หรือ retry | `ui-ux-baseline:task-flows` |
-| เลือกหรือแก้ toast, banner, inline error, alert, success/failure message หรือ recovery feedback | `ui-ux-baseline:feedback-notifications` |
-| search, filter, sort, table/list, pagination, selection หรือ bulk action | `ui-ux-baseline:collections` |
-| chat, feed, event stream, presence หรือข้อมูลที่เข้าตามเวลา | `ui-ux-baseline:realtime-conversation` |
-| page layout, navigation state, responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
-| interactive element ทุกชนิด | `ui-ux-baseline:interaction-a11y` |
-| สร้างหรือแก้ shared component, primitive หรือ variant | `ui-ux-baseline:design-system` |
+| Create a new page or landing page, redesign visual identity, or respond to a request to propose a design or make an existing page more beautiful, modern, premium, or distinctive | `ui-ux-baseline:visual-direction` |
+| Refine the visual design or UI effects of an existing screen—such as cleaning up, simplifying, spacing, typography, shadows, blur, gradients, or overlays—while preserving brand, flow, IA, and direction | `ui-ux-baseline:visual-polish` |
+| Add or modify transitions, animation, progress, reveals, scrolling behavior, or microinteractions | `ui-ux-baseline:motion-microinteractions` |
+| Create or modify shared color, type, spacing, grid, theme, elevation, icon, or motion tokens | `ui-ux-baseline:design-foundations` |
+| Choose an icon or icon library, establish icon language, or encounter decorative emoji in UI | `ui-ux-baseline:design-foundations` |
+| i18n/localization, translation, locale formatting, text expansion, or RTL | `ui-ux-baseline:content-localization` |
+| General UI wording such as headings, labels, buttons, placeholders, helper text, tooltips, empty/help copy, or terminology | `ui-ux-baseline:content-copy` |
+| Render a resource from server or client state | `ui-ux-baseline:resource-states` |
+| Submit, edit, toggle, delete, confirm, or retry | `ui-ux-baseline:task-flows` |
+| Select or modify toasts, banners, inline errors, alerts, success/failure messages, or recovery feedback | `ui-ux-baseline:feedback-notifications` |
+| Search, filter, sort, tables/lists, pagination, selection, or bulk actions | `ui-ux-baseline:collections` |
+| Chat, feeds, event streams, presence, or information arriving over time | `ui-ux-baseline:realtime-conversation` |
+| Page layout, navigation state, or responsive/mobile hierarchy | `ui-ux-baseline:layout-navigation` |
+| Any interactive element | `ui-ux-baseline:interaction-a11y` |
+| Create or modify shared components, primitives, or variants | `ui-ux-baseline:design-system` |
 
-งานเดียวอ่านได้หลาย child ตาม data flow จริง; ห้ามโหลดทั้งหมดเพียงเพื่อทำ checklist และห้ามข้าม child ที่ trigger ตรงเพียงเพราะ UI ดูเล็ก
+A task may read several child skills according to its actual data flow. Do not load all children merely as a checklist, and do not skip a directly triggered child because the UI appears small.
 
-หาก design ที่ขอมาขัดกับ constraint จาก child skill ให้สรุปผลกระทบและทางเลือกก่อนลงมือ ตาม
-authorization และ impact rules ใน `claude/rules/core/change-control.md`
+If the requested design conflicts with a child skill's constraints, summarize the impact and options before implementation, following the authorization and impact rules in `claude/rules/core/change-control.md`.

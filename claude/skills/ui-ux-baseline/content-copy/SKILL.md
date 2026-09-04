@@ -1,31 +1,23 @@
 ---
 name: ui-ux-baseline:content-copy
-description: ออกแบบหรือแก้ข้อความ UI ทั่วไป เช่น heading, label, button, placeholder, helper text, tooltip, empty/help copy และ terminology โดยรักษาความหมาย, accessibility และ project voice. ใช้เมื่อโจทย์หลักคือ wording หรือ content clarity; ไม่ใช้แทน feedback-notifications, content-localization หรือ visual-direction
+description: Design or revise general UI text such as headings, labels, buttons, placeholders, helper text, tooltips, empty/help copy, and terminology while preserving meaning, accessibility, and project voice. Use when wording or content clarity is the primary task; do not use in place of feedback-notifications, content-localization, or visual-direction.
 ---
 
 # UI Content Copy
 
-กำหนดข้อความจาก user goal, audience, context และ action ที่ผู้ใช้ต้องทำ; ตรวจศัพท์และ voice/tone
-ของ project ก่อนเปลี่ยน wording. ถ้า project ไม่ได้กำหนดไว้ ให้ใช้ professional-neutral: ชัด สุภาพ
-กระชับ และไม่เป็นกันเองเกินไป.
+Derive copy from the user goal, audience, context, and required action. Check the project's terminology and voice/tone before changing wording. If the project defines none, use a professional-neutral voice: clear, respectful, concise, and not overly casual.
 
-- ให้ข้อความแต่ละชิ้นมีหน้าที่เดียว และวางสิ่งที่ผู้ใช้ต้องรู้หรือทำก่อนรายละเอียดรอง; ใช้ progressive
-  disclosure กับคำอธิบายเสริม แต่ไม่ซ่อน cost, consent, error หรือ recovery สำคัญไว้ใน tooltip อย่างเดียว
-- ใช้คำเรียก action, object และสถานะให้คงที่ตลอด flow; label และ button ต้องบอกสิ่งที่จะเกิดขึ้นจริง
-  และไม่ใช้ placeholder เป็น label หลัก
-- ตัด filler, jargon และคำอธิบายที่ไม่ช่วยตัดสินใจ; อย่าประดิษฐ์ claim, promise หรือ terminology ใหม่
-  โดยไม่มีหลักฐานจาก product/domain
-- copy ที่เป็น visible label, accessible name, instruction หรือ state ต้องยังเข้าใจได้เมื่ออ่านข้อความ
-  แยกจาก layout; รายละเอียดของ semantic/keyboard/focus อยู่ที่ `interaction-a11y`
-- ถ้าการเปลี่ยน wording กระทบความหมาย, consent, risk, public terminology หรือ brand อย่างมีนัยสำคัญ
-  ให้เสนอทางเลือกสั้น ๆ พร้อม trade-off ก่อนแก้; การเกลาคำเล็กน้อยใน scope ที่ชัดทำต่อได้
+- Give each piece of copy one job, and put what users need to know or do before secondary detail. Use progressive disclosure for supporting explanations, but do not hide important cost, consent, error, or recovery information solely in a tooltip.
+- Use consistent names for actions, objects, and states throughout a flow. Labels and buttons must describe what will actually happen, and placeholders must not serve as primary labels.
+- Remove filler, jargon, and explanations that do not help a decision. Do not invent claims, promises, or terminology without product or domain evidence.
+- Copy used as a visible label, accessible name, instruction, or state must remain understandable apart from the layout. Semantic, keyboard, and focus details belong to `interaction-a11y`.
+- If wording materially affects meaning, consent, risk, public terminology, or brand, propose concise options and trade-offs before editing. Small refinements within a clear scope may proceed.
 
 ## Boundary
 
-- error, validation, success, warning, notification และ recovery channel/content → `feedback-notifications`
-- translation, locale, pluralization, formatting, text expansion และ RTL → `content-localization`
-- visual identity, composition หรือ aesthetic direction → `visual-direction`
-- button/input/menu/dialog semantics และ accessible interaction → `interaction-a11y`
+- Error, validation, success, warning, notification, and recovery channels or content → `feedback-notifications`
+- Translation, locale, pluralization, formatting, text expansion, and RTL → `content-localization`
+- Visual identity, composition, or aesthetic direction → `visual-direction`
+- Button/input/menu/dialog semantics and accessible interaction → `interaction-a11y`
 
-ก่อนส่งมอบ ตรวจ terminology ที่แก้, ข้อความยาว/สั้นที่เกิดได้จริง และความสอดคล้องระหว่าง label,
-action และผลลัพธ์ โดยไม่เปลี่ยน product behavior เพียงเพื่อให้ copy ดูดี.
+Before delivery, verify changed terminology, realistic long and short text, and consistency between labels, actions, and results. Do not change product behavior merely to make copy read better.

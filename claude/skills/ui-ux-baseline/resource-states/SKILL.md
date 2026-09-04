@@ -1,16 +1,16 @@
 ---
 name: ui-ux-baseline:resource-states
-description: ออกแบบ UI state ของ resource ที่ระบบโหลดหรือ refresh เช่น loading, empty, error, loaded, stale data และ retry ใช้เมื่อ component/page แสดงข้อมูลจาก API, query, cache หรือ async read operation
+description: Design resource UI states loaded or refreshed by the system, including loading, empty, error, loaded, stale-data, and retry states. Use when a component or page displays data from an API, query, cache, or asynchronous read operation.
 ---
 
 # Resource States
 
-เริ่มจาก data flow จริง: state ไหนเกิดได้จาก request, cache, permission, query หรือ action ของผู้ใช้ แล้วออกแบบเฉพาะ state เหล่านั้น ไม่สร้างครบชุดเพื่อ checklist
+Start from the actual data flow: determine which states can result from requests, cache, permissions, queries, or user actions, and design only those states instead of manufacturing a complete checklist.
 
-- loading, empty, error และ loaded ต้องมีเมื่อเกิดได้จริงจาก data flow หรือ action ของผู้ใช้
-- loading ที่รู้ shape ของ content ใช้ skeleton ที่ใกล้ layout จริง เพื่อไม่ให้ layout shift; ถ้าไม่รู้ shape ให้ใช้ progress ที่ไม่หลอกว่ามี content แล้ว
-- แยก `ไม่มีข้อมูลในระบบ` ออกจาก `ค้นหาแล้วไม่พบผลลัพธ์`; แต่ละ state ต้องบอกความหมายและทางไปต่อที่เหมาะสม
-- error บอกสิ่งที่ผู้ใช้ทำต่อได้: retry, เปลี่ยน query, ตรวจ permission หรือกลับไปหน้าที่ปลอดภัย; อย่าลบ context ที่กรอก/เลือกไว้โดยไม่จำเป็น — หากต้องเลือก toast/banner/inline error ให้อ่าน `ui-ux-baseline:feedback-notifications`
-- refresh หรือ stale data ต้องสื่อว่าข้อมูลเก่าแค่ไหนและ interaction ใดปลอดภัยระหว่างรอ; อย่าแสดงข้อมูลเก่าเป็นข้อมูลใหม่เงียบ ๆ
+- Provide loading, empty, error, and loaded states when the data flow or user actions can actually produce them.
+- When the content shape is known, use a skeleton close to the real layout to prevent layout shifts. When it is unknown, use progress feedback that does not falsely imply content already exists.
+- Distinguish `no data in the system` from `no search results`; each state must explain its meaning and provide an appropriate next step.
+- Errors must explain what users can do next: retry, change the query, check permissions, or return to a safe page. Do not discard entered or selected context unnecessarily. When choosing among toast, banner, and inline error, read `ui-ux-baseline:feedback-notifications`.
+- Refresh and stale-data states must communicate how old the data is and which interactions are safe while waiting. Do not silently present old data as current.
 
-ตรวจ state transition อย่างน้อย: initial load → loaded, load → error → retry, และ query/action ที่ทำให้ empty หรือ refresh หาก flow นั้นมีอยู่จริง
+At minimum, verify `initial load → loaded`, `load → error → retry`, and query or action transitions that produce empty or refresh states when those flows actually exist.

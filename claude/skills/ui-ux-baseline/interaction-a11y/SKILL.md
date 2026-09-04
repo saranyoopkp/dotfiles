@@ -1,16 +1,16 @@
 ---
 name: ui-ux-baseline:interaction-a11y
-description: มาตรฐาน interaction และ accessibility สำหรับ UI ที่มี interactive element ใช้ทุกครั้งที่เพิ่มหรือแก้ button, link, input, menu, dialog, tooltip, disclosure, drag/drop หรือ custom control ไม่ว่าหน้าจอจะเล็กเพียงใด
+description: Interaction and accessibility standards for UI with interactive elements. Use whenever adding or changing a button, link, input, menu, dialog, tooltip, disclosure, drag-and-drop interaction, or custom control, regardless of screen size.
 ---
 
 # Interaction & Accessibility
 
-- ใช้ semantic HTML ก่อน: ปุ่มคือ `<button>`, navigation คือ link/nav, input คือ form control; ห้ามใช้ `<div onClick>` แทน control ที่มี semantics อยู่แล้ว
-- interactive element ต้องมี state ที่สังเกตได้ตามที่เกิดได้จริง: hover, active, **focus-visible**, disabled และ pending; keyboard user ต้องเห็นตำแหน่ง focus เสมอ
-- ทุก action ต้อง keyboard reachable และทำงานด้วย keyboard ตาม native expectation; อย่าเขียน role/keyboard handler ซ้ำเมื่อ native element ทำให้ได้แล้ว
-- dialog, menu, tooltip และ disclosure ให้ทำตาม WAI-ARIA APG: focus management, Escape, labeling และ announcement ถูกต้อง; อย่าใส่ ARIA ซ้ำกับ accessible name ที่มีอยู่
-- validation/error และ dynamic update ต้องมี name, instruction และ announcement ที่ผู้ใช้ assistive technology เข้าใจได้; สีอย่างเดียวไม่ใช่การสื่อสารที่พอ
-- motion ที่มีความหมายหรือเล่นต่อเนื่องต้องเคารพ `prefers-reduced-motion`; ลดหรือปิดโดยไม่ซ่อนข้อมูล, state หรือทางสั่งงาน
-- icon-only control ต้องมี accessible name; action ที่กำกวมหรือเสี่ยงต้องมี visible label ไม่พึ่ง tooltip อย่างเดียว. icon ตกแต่งต้องซ่อนจาก accessibility tree และ emoji ห้ามเป็นช่องทางเดียวที่สื่อ action/state/severity
+- Prefer semantic HTML: buttons are `<button>`, navigation uses links and `nav`, and inputs are form controls. Do not substitute `<div onClick>` for controls with existing semantics.
+- Interactive elements must expose every observable state that can actually occur: hover, active, **focus-visible**, disabled, and pending. Keyboard users must always be able to see focus.
+- Every action must be keyboard reachable and work according to native keyboard expectations. Do not recreate roles or keyboard handlers when a native element already provides them.
+- Follow WAI-ARIA APG for dialogs, menus, tooltips, and disclosures, including correct focus management, Escape behavior, labeling, and announcements. Do not duplicate an existing accessible name with ARIA.
+- Validation, errors, and dynamic updates must provide names, instructions, and announcements that assistive-technology users can understand. Color alone is not sufficient communication.
+- Meaningful or continuous motion must respect `prefers-reduced-motion`; reduce or disable it without hiding information, state, or controls.
+- Icon-only controls need accessible names. Ambiguous or risky actions need visible labels and must not rely solely on tooltips. Hide decorative icons from the accessibility tree, and never use emoji as the only signal for an action, state, or severity.
 
-ตรวจอย่างน้อยด้วย keyboard: tab order, focus-visible, activate, dismiss และ focus return สำหรับ pattern ที่มีจริง
+At minimum, use the keyboard to verify tab order, focus visibility, activation, dismissal, and focus return for patterns that actually exist.
