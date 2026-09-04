@@ -1,15 +1,15 @@
 ---
 name: ui-ux-baseline:realtime-conversation
-description: ออกแบบ chat, feed และ realtime event stream ที่มีข้อความ/รายการเข้าตามเวลา ใช้เมื่อมี sticky bottom, unread indicator, history prepend, websocket/socket event, presence หรือ live update ที่อาจรบกวนตำแหน่งอ่านของผู้ใช้
+description: Design chats, feeds, and realtime event streams where messages or records arrive over time. Use for sticky-bottom behavior, unread indicators, prepended history, WebSocket/socket events, presence, or live updates that may disrupt the user's reading position.
 ---
 
 # Realtime Conversation
 
-- **sticky bottom**: อยู่ล่างสุดและมีข้อความใหม่เข้า → auto-scroll ตาม
-- **scroll ขึ้น = ปลด sticky**: เมื่อผู้ใช้กำลังอ่านย้อน ห้าม scroll ทับ; แสดง indicator “มีข้อความใหม่” และให้ผู้ใช้เลือกกลับลงล่าง
-- ผู้ใช้ส่งข้อความเอง = intent กลับล่างสุด จึง scroll ลงเสมอหลังผลที่แสดงได้ถูก reconcile
-- history ใช้ pagination เมื่อ scroll ขึ้น และต้องรักษา scroll position ตอน prepend; ห้ามโหลดทั้งหมดตั้งแต่แรกโดยไม่มีเหตุผลด้านขนาดข้อมูล
-- event จาก realtime ต้องจัดการ ordering, duplicate, reconnect และ reconciliation กับ server state; debounce mutation ที่มาเป็น burst และอย่าให้ effect depend on reference ที่เปลี่ยนทุก refetch จนเกิด feedback loop
-- reserve ขนาด media ก่อนโหลด และแยก event ใหม่ที่ยังไม่อ่านออกจาก event ที่ผู้ใช้เห็นแล้ว
+- **Sticky bottom**: when the view is already at the bottom and a new message arrives, auto-scroll with it.
+- **Scrolling up releases the sticky state**: while users read earlier content, do not scroll over their position. Show a “New messages” indicator and let them choose to return to the bottom.
+- Sending a message expresses intent to return to the bottom, so scroll down after the displayed result is reconciled.
+- Paginate history while scrolling upward and preserve scroll position when prepending. Do not load all history initially without a data-size reason.
+- Realtime events must handle ordering, duplicates, reconnection, and reconciliation with server state. Debounce burst mutations, and do not make effects depend on references that change on every refetch and create a feedback loop.
+- Reserve media dimensions before loading, and distinguish new unread events from events the user has already seen.
 
-ตรวจอย่างน้อย: อยู่ล่างสุด, อ่านย้อนขณะ event เข้า, ส่งเอง, prepend history และ reconnect/duplicate event ตามระบบที่มีจริง
+At minimum, verify being at the bottom, reading earlier content while events arrive, sending a message, prepending history, and reconnect or duplicate-event handling supported by the actual system.

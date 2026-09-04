@@ -1,22 +1,17 @@
 ---
 name: ui-ux-baseline:visual-polish
-description: ปรับ Visual Design ของหน้าจอหรือ component เดิมให้ชัด อ่านง่าย สมดุล และเนี้ยบขึ้น โดยคง brand, visual direction, information architecture และ behavior เดิม. ใช้เมื่อผู้ใช้ขอ clean, simplify, polish UI, ปรับ spacing/typography/color hierarchy/density/alignment หรือ effect เช่น shadow, blur, gradient, overlay; ไม่ใช้เมื่อผู้ใช้ขอเสนอ design, ทำให้สวยขึ้นแบบเปิดกว้าง, modern, premium หรือเปลี่ยน visual direction
+description: Refine the visual design of an existing screen or component for clarity, readability, balance, and finish while preserving its brand, visual direction, information architecture, and behavior. Use for requests to clean up, simplify, or polish UI; adjust spacing, typography, color hierarchy, density, or alignment; or refine effects such as shadows, blur, gradients, and overlays. Do not use for open-ended design proposals, requests to make a UI beautiful, modern, premium, or changes to visual direction.
 ---
 
 # Visual Polish
 
-คง brand/flow เดิมก่อน: งานนี้ปรับการรับรู้และความอ่านง่าย ไม่ใช่ข้ออ้างให้เปลี่ยน
-information architecture, copy, interaction หรือ product behavior เงียบ ๆ. ถ้าต้องเปลี่ยนสิ่งเหล่านั้น
-ให้อ่าน child skill ที่เป็น owner และใช้ authorization/impact rules ใน
-`claude/rules/core/change-control.md` หากการปรับแตะ behavior หรือความหมาย.
+Preserve the existing brand and flow. This work refines perception and readability; it does not authorize silent changes to information architecture, copy, interaction, or product behavior. If those must change, read the owning child skill and apply the authorization and impact rules in `claude/rules/core/change-control.md` when behavior or meaning is affected.
 
-- เริ่มจากลำดับการอ่านจริง: primary task, primary action, context และ secondary detail ต้องแยกกันเห็นได้ก่อนปรับสีหรือ decoration
-- แก้ตามลำดับ: hierarchy → grid/alignment → spacing/density → typography → color/contrast → surface/detail; อย่าทาสีทับปัญหา layout หรือ content hierarchy
-- ใช้ token, component และ visual language เดิมก่อน; สี/spacing/type/theme ใหม่ที่มี consumer ร่วมเป็น owner ของ `design-foundations` และ shared component/variant เป็น owner ของ `design-system` ไม่ใช่แก้เฉพาะหน้าจอโดยพลการ
-- UI effect เช่น shadow, blur, gradient, overlay, opacity หรือ texture ต้องบอกลำดับชั้น, depth, grouping หรือ state จริง; ห้ามใช้เป็นหมอกบัง hierarchy/contrast หรือทำทุก surface ให้เด่นเท่ากัน
-- ความเนี้ยบต้องไม่ลด contrast, focus-visible, tap target, responsive priority หรือสถานะที่ผู้ใช้พึ่งพา; Visual Design ที่อ่านง่ายกว่าแต่ state หายไม่ใช่ polish
-- ตรวจจากหน้าจอจริงหรือ screenshot เปรียบเทียบที่ viewport สำคัญเมื่อ environment รองรับ; ถ้าไม่มี visual artifact ให้ระบุข้อจำกัด ไม่อ้างว่า visual regression ผ่าน
+- Start with the actual reading order: the primary task, primary action, context, and secondary detail must be distinguishable before adjusting color or decoration.
+- Refine in this order: hierarchy → grid/alignment → spacing/density → typography → color/contrast → surface/detail. Do not paint over layout or content-hierarchy problems.
+- Prefer existing tokens, components, and visual language. New shared colors, spacing, type, or theme values belong to `design-foundations`, and shared components or variants belong to `design-system`; do not improvise them on one screen.
+- Effects such as shadows, blur, gradients, overlays, opacity, or texture must communicate real hierarchy, depth, grouping, or state. Do not use them to obscure hierarchy or contrast, or make every surface equally prominent.
+- Polish must not weaken contrast, focus visibility, tap targets, responsive priority, or states users depend on. A more readable visual design with missing states is not polished.
+- When the environment supports it, compare the real screen or screenshots at important viewports. Without a visual artifact, state the limitation rather than claiming visual regression passed.
 
-งานที่ต้องเปลี่ยน identity/brand direction อ่าน `visual-direction`; effect ที่เปลี่ยนตามเวลา,
-interaction หรือ state transition อ่าน `motion-microinteractions`; interaction/accessibility, layout และ
-feedback ยังคงอยู่กับ child owner เดิม.
+For identity or brand-direction changes, read `visual-direction`. For effects that change over time, through interaction, or across state transitions, read `motion-microinteractions`. Interaction/accessibility, layout, and feedback remain with their existing child owners.

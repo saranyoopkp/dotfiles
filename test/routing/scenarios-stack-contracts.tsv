@@ -1,6 +1,6 @@
 # require	forbid	label	task
-stack-contracts	-	stack-dependency	ช่วยวางมาตรฐาน generic สำหรับกรณีจะเพิ่ม date library ใหม่ใน workspace ที่มี library ทำ concern เดียวกันอยู่แล้ว ว่าควรประเมินใช้ของเดิมหรือ migrate อย่างไร โดยไม่ได้อ้างว่า sandbox นี้คือ repo จริง
-stack-contracts	-	stack-schema	Frontend และ backend มี request schema คนละชุดและเริ่ม drift ช่วยกำหนด source of truth และ migration boundary
-stack-contracts	-	stack-enum	สถานะเดียวกันถูกประกาศซ้ำใน API, web และ worker ช่วยวางแนว consolidate โดยไม่สร้าง abstraction เกินจำเป็น
--	stack-contracts	stack-local-helper	helper นี้ใช้เฉพาะไฟล์เดียวและไม่มี consumer อื่น ช่วยวางแผนปรับชื่อให้เข้าใจง่าย
-data-design	stack-contracts	stack-local-schema	เพิ่ม column ภายใน service เดียว ไม่มี shared consumer หรือ contract ข้าม package
+stack-contracts	-	stack-dependency	Define generic guidance for evaluating an existing date library versus adding or migrating to another in a workspace that already has one serving the same concern, without claiming this sandbox is the real repository.
+stack-contracts	-	stack-schema	Frontend and backend have separate request schemas that are beginning to drift. Define the source of truth and migration boundary.
+stack-contracts	-	stack-enum	The same status is declared in the API, web app, and worker. Plan consolidation without unnecessary abstraction.
+-	stack-contracts	stack-local-helper	This helper is used only in one file and has no other consumers. Plan a clearer rename.
+data-design	stack-contracts	stack-local-schema	Add a column inside one service with no shared consumer or cross-package contract.

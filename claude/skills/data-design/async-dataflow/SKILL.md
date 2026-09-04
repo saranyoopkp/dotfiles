@@ -1,16 +1,16 @@
 ---
 name: data-design:async-dataflow
-description: ออกแบบ queue/worker, derived data, external sync, event/data pipeline, single-writer boundary และ replay/reconciliation ใช้เมื่อข้อมูลถูกประมวลผลภายหลังหรือไหลข้าม service/provider
+description: Design queues and workers, derived data, external synchronization, event/data pipelines, single-writer boundaries, replay, and reconciliation. Use when data is processed later or crosses service or provider boundaries.
 ---
 
 # Async Dataflow
 
-- อย่า queue สิ่งที่ caller ต้องรู้ผลทันที; queue คือ eventual completion ไม่ใช่ sync ที่ปลอมเป็น async
-- fact หนึ่งมี writer หลักเดียว. หากหลาย source เขียนได้ ให้กำหนด source priority/conflict resolution และจดไว้ก่อน implement
-- derived data ต้อง recompute ได้จาก source; เก็บ source/raw event, external ID และ sync timestamp สำหรับ external sync เพื่อ replay, reconcile และตรวจย้อนกลับได้
-- ข้อความ/งานที่ส่งซ้ำได้ต้อง idempotent และ worker ต้อง reconcile หลัง retry/crash; อย่าถือว่า event delivery exactly-once โดยไม่มี evidence
-- กำหนด visibility ของ pending/failed work, replay boundary และ owner ของ dead letter ให้ชัด; ห้ามลบหลักฐานที่ยังต้องใช้ recover หรือ audit
+- Do not queue results a caller needs immediately; a queue represents eventual completion, not synchronous work disguised as asynchronous.
+- Give each fact one primary writer. If several sources may write it, define source priority and conflict resolution before implementation.
+- Derived data must be recomputable from its source. Preserve source or raw events, external IDs, and synchronization timestamps for replay, reconciliation, and traceability.
+- Redelivered messages and jobs must be idempotent, and workers must reconcile after retry or crash. Never assume exactly-once delivery without evidence.
+- Define visibility for pending or failed work, replay boundaries, and dead-letter ownership. Do not delete evidence still needed for recovery or audit.
 
-reliability ของ inbound/outbound webhook, replay/reconciliation และ DLQ อยู่ `risk-review`; operation ที่
-client ติดตามผ่าน HTTP อยู่ `api-design:async-operations`; health/backlog signal อยู่ `ops:observability`.
-ตรวจ duplicate, crash/retry และ reconciliation อย่างน้อยหนึ่ง flow ที่ระบบอ้างว่ารองรับ.
+Inbound or outbound webhook reliability, replay/reconciliation, and dead letters belong to `risk-review`;
+HTTP-tracked operations belong to `api-design:async-operations`; health and backlog signals belong to
+`ops:observability`. Verify duplicate delivery, crash/retry, and at least one supported reconciliation flow.

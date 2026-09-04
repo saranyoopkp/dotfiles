@@ -1,14 +1,14 @@
 ---
 name: ui-ux-baseline:design-system
-description: ออกแบบหรือแก้ shared UI component, primitive, component API และ variant ใช้เมื่อเปลี่ยนของที่ใช้ซ้ำหลายหน้าหรือกำลังตัดสินใจว่าจะ abstract feature UI เป็น shared component; ไม่ใช้กำหนด shared visual token หรือ theme
+description: Design or modify shared UI components, primitives, component APIs, and variants. Use when changing UI reused across multiple screens or deciding whether to abstract feature UI into a shared component; do not use for shared visual tokens or themes.
 ---
 
 # Design System
 
-- แยก feature-specific UI ออกจาก shared primitive: abstract เมื่อมี contract และ use case ร่วมที่พิสูจน์ได้ ไม่ใช่เพียงหน้าตาคล้ายกันครั้งเดียว
-- ก่อนเปลี่ยน shared component ให้ระบุ consumer, existing API/variant และ visual/interaction contract ที่ต้องคงไว้; component ที่ใช้แล้วคือ public surface ภายใน
-- ใช้ semantic token จาก `design-foundations`; อย่ากำหนดสี, spacing, type scale หรือ theme ใหม่ใน component เฉพาะกิจ. หาก shared foundation ยังไม่มี ให้ส่งงานนั้นไป owner ก่อน
-- variant ต้องมีความหมายเชิงพฤติกรรมหรือ semantic ไม่ใช่ prop ที่เปิดให้ผสมทุกอย่าง; feature-specific composition ให้อยู่ใกล้ feature
-- shared primitive ต้องรับ semantics, focus, disabled/pending และ responsive behavior ของมันเอง แต่ไม่ควรกลืน business flow ของแต่ละ feature
+- Separate feature-specific UI from shared primitives. Abstract only when a shared contract and use case are demonstrated, not merely because two instances look alike once.
+- Before changing a shared component, identify its consumers, existing API/variants, and the visual and interaction contracts that must remain intact. A component already in use is an internal public surface.
+- Use semantic tokens from `design-foundations`; do not invent colors, spacing, type scales, or themes inside an ad hoc component. If a shared foundation is missing, route that work to its owner first.
+- Variants must express behavioral or semantic meaning, not expose props that permit arbitrary combinations. Keep feature-specific composition close to the feature.
+- Shared primitives must own their semantics, focus, disabled/pending states, and responsive behavior, but should not absorb each feature's business flow.
 
-ก่อนส่งมอบ ตรวจ consumer ที่ได้รับผล, visual/interaction regression ที่เกี่ยวข้อง และ compatibility ของ API/variant; ถ้า behavior เปลี่ยนให้ใช้ authorization และ impact rules ใน `claude/rules/core/change-control.md` ก่อน
+Before delivery, verify affected consumers, relevant visual and interaction regressions, and API/variant compatibility. If behavior changes, first apply the authorization and impact rules in `claude/rules/core/change-control.md`.

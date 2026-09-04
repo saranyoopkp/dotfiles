@@ -1,16 +1,19 @@
 ---
 name: ops
-description: Router สำหรับงาน operations, infrastructure และ production reliability ใช้เมื่อวางแผนหรือแก้ IaC, cloud/network/IAM/secret, incident/production outage, logging/metrics/traces/alerts, health check หรือ SLI/SLO. เลือก sub-skill ตามชนิดงานก่อนทำการวิเคราะห์หรือเปลี่ยนแปลง
+description: Router for operations, infrastructure, and production reliability. Use when planning or changing IaC, cloud, network, IAM, secrets, incidents, production outages, logs, metrics, traces, alerts, health checks, or SLI/SLOs. Select the matching child before analysis or mutation.
 ---
 
 # Operations
 
-Rules ด้าน production readiness, compatibility/rollout และ operations/observability เป็น safety floor เสมอ; skills นี้เพิ่ม workflow เฉพาะงาน ไม่ลด requirement หรือให้สิทธิ์เปลี่ยน external state เอง
+Production-readiness, compatibility/rollout, and observability rules remain the safety floor. These skills add
+task-specific workflows without lowering requirements or authorizing external mutation.
 
-| ลักษณะงาน | ต้องอ่าน |
+| Work surface | Required child |
 |---|---|
-| IaC, cloud resource, network, IAM, secret, state, drift หรือ provisioning | `ops:infra-change` |
-| outage, incident, degraded production, mitigation หรือ post-incident evidence | `ops:incident-response` |
-| health check, logs, metrics, traces, alert, dashboard, SLI/SLO หรือ silent failure | `ops:observability` |
+| IaC, cloud resources, network, IAM, secrets, state, drift, or provisioning | `ops:infra-change` |
+| Outage, incident, degradation, mitigation, or post-incident evidence | `ops:incident-response` |
+| Health, logs, metrics, traces, alerts, dashboards, SLI/SLO, or silent failure | `ops:observability` |
 
-ก่อน mutation ภายนอกเสมอ: ระบุ environment, target, blast radius, rollback/mitigation และ authorization ที่ชัดเจน. การอ่านสถานะและรวบรวมหลักฐานทำได้ก่อน แต่ plan ไม่ใช่ approval และ incident ไม่ใช่สิทธิ์ให้ restart/rollback/deploy เอง.
+Before any external mutation, identify environment, target, blast radius, rollback or mitigation, and explicit
+authorization. Read-only evidence gathering may proceed, but a plan is not approval and an incident does not
+authorize restart, rollback, or deployment.

@@ -1,13 +1,20 @@
 ---
 name: api-design:errors
-description: ออกแบบ HTTP error, validation response และ Problem Details contract ใช้เมื่อเพิ่มหรือแก้ 4xx/5xx, authentication/authorization failure, error middleware, field validation response หรือ client recovery contract ของ REST API
+description: Design HTTP errors, validation responses, and Problem Details contracts. Use when adding or changing 4xx/5xx behavior, authentication or authorization failures, error middleware, field validation, or REST client recovery contracts.
 ---
 
 # Errors
 
-- 400 = malformed request; 401 = ไม่รู้ว่าเป็นใคร; 403 = รู้แล้วแต่ไม่มีสิทธิ์; 404 = ไม่มี resource หรือซ่อน cross-tenant ตาม rule authz; 409 = domain conflict; 422 = semantic validation; 429 = rate limit; 500 = unexpected; 503 = unavailable/maintenance
-- ใช้ Problem Details shape เดียวทั้ง API: machine-readable `type`/code สำหรับ client branch, `title`/`detail` ที่ผู้ใช้เข้าใจได้ และ field errors เมื่อแก้ได้เป็นราย field; ห้าม leak stack, SQL, internal path หรือ secret
-- response ที่ partial failure ต้องระบุว่า item/action ใดสำเร็จหรือล้มเหลว; ห้ามคืน 200/"success" รวม ๆ เพื่อซ่อนผลที่ client ต้อง recover
-- validation rule, authorization/tenant visibility และ error logging เป็น owner ของ rule ที่เกี่ยวข้อง; อย่าสร้าง error shape ใหม่เพื่อหลบ contract กลาง
+- Use 400 for malformed requests; 401 for unknown identity; 403 for known identity without permission; 404 for
+  absence or authorized cross-tenant hiding; 409 for domain conflict; 422 for semantic validation; 429 for rate
+  limiting; 500 for unexpected failure; and 503 for unavailable or maintenance states.
+- Use one Problem Details shape across the API: machine-readable `type` or code for client branching, human-readable
+  `title` and `detail`, and field errors when users can correct individual fields. Never leak stacks, SQL, internal
+  paths, or secrets.
+- Partial failure responses must identify successful and failed items or actions. Never hide required recovery
+  information behind a generic 200 or “success.”
+- Validation rules, authorization visibility, and error logging retain their domain owners. Do not invent another
+  error shape to bypass the shared contract.
 
-ตรวจ error path ที่เกิดจริงอย่างน้อยหนึ่ง path ต่อ semantics ที่เพิ่มหรือเปลี่ยน และให้ client parse shape เดียวกับ runtime response.
+Exercise at least one real error path for every added or changed semantic and confirm the client parses the same
+shape returned at runtime.

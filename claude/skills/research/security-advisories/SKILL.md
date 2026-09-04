@@ -1,29 +1,27 @@
 ---
 name: research:security-advisories
-description: ตรวจ security advisory, CVE, vulnerability, affected/fixed version, exploit precondition, transitive dependency และ remediation ที่เป็นปัจจุบัน. ใช้เมื่อ audit dependency/runtime/image/OS, มี vulnerability alert, จะเพิ่มหรือ upgrade package หรือ claim ว่า repo ได้รับผลหรือปลอดภัย; ต้อง map advisory กลับ exact version และ reachable deployment ของ repo
+description: Investigate current security advisories, CVEs, vulnerabilities, affected and fixed versions, exploit preconditions, transitive dependencies, and remediation. Use for dependency, runtime, image, or OS audits, vulnerability alerts, package additions or upgrades, or claims that a repository is affected or safe. Map advisories to exact resolved versions and reachable deployments.
 ---
 
 # Security Advisories
 
-ใช้ `research:research-control` เมื่อมีหลาย advisory, หลาย component หรือผลตรวจจะนำไปสู่
-upgrade/mitigation ที่มี compatibility risk.
+Use `research:research-control` when several advisories or components are involved, or when remediation carries
+compatibility risk.
 
-1. Inventory ตัวตนจริงก่อน: ecosystem, package/product, exact resolved version, dependency path,
-   OS/image/runtime, deployment และ feature/code path ที่เกี่ยวข้อง. ชื่อคล้ายกันไม่ใช่ artifact เดียวกัน
-2. ตรวจ source ปัจจุบันตามลำดับ claim: vendor/project advisory และ fixed release,
-   authoritative CVE record, ecosystem advisory database แล้วจึงใช้ scanner/secondary source
-   เป็น lead. เก็บ advisory ID, affected range, fixed range, publication/update date และ checked date
-3. แยก `present → affected version → vulnerable configuration/precondition → reachable/exposed`.
-   package มีอยู่หรือ scanner match ไม่ได้พิสูจน์ว่า exploit path ใช้งานได้; unreachable ก็ไม่ทำให้
-   advisory หายไป ต้องรายงาน residual risk
-4. ตรวจ backport, distro/vendor patch, fork, alias, transitive resolution และ runtime flag จาก
-   source ของผู้ดูแลจริง; เปรียบเทียบ version string อย่างเดียวอาจให้ผลผิด
-5. ประเมินผลกระทบจาก confidentiality/integrity/availability, privilege, exposure, exploit maturity
-   และข้อมูลของ repo; CVSS/severity label เป็น input ไม่ใช่ verdict
-6. เสนอ remediation เป็นลำดับ: fixed compatible version, configuration/feature mitigation,
-   exposure reduction หรือ compensating control พร้อม compatibility, rollout และ rollback risk.
-   Research ไม่ใช่ authorization ให้อัปเกรดหรือเปลี่ยน behavior
+1. Inventory the real artifact first: ecosystem, package or product, exact resolved version, dependency path,
+   OS/image/runtime, deployment, and relevant feature or code path. Similar names do not identify the same artifact.
+2. Check current sources by claim: vendor or project advisory and fixed release, authoritative CVE record,
+   ecosystem advisory database, then scanner or secondary sources as leads. Preserve advisory ID, affected and
+   fixed ranges, publication or update date, and checked date.
+3. Separate `present → affected version → vulnerable configuration or precondition → reachable or exposed`.
+   Presence or a scanner match does not prove exploitability; lack of reachability does not erase residual risk.
+4. Verify backports, distribution patches, forks, aliases, transitive resolution, and runtime flags from maintainer
+   sources. Version-string comparison alone may be wrong.
+5. Assess confidentiality, integrity, availability, privileges, exposure, exploit maturity, and repository context.
+   CVSS and severity labels are inputs, not verdicts.
+6. Order remediation options: compatible fixed version, configuration or feature mitigation, exposure reduction,
+   or compensating control, with compatibility, rollout, and rollback risks. Research does not authorize changes.
 
-ส่งมอบต่อ advisory เป็น `Affected / Not affected / Unknown` พร้อม component/version/path,
-precondition/reachability, source + checked date, probe และ remediation/residual risk.
-ห้ามใช้ audit exit code อย่างเดียวรับรองว่า “ปลอดภัย”.
+For each advisory report `Affected / Not affected / Unknown`, component, version, path, preconditions,
+reachability, source and checked date, probe, remediation, and residual risk. Never use an audit exit code alone
+to certify safety.

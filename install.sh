@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# install.sh — link dotfiles เข้าเครื่องนี้ (ทุก OS — Windows ใช้ผ่าน Git Bash) — idempotent
+# install.sh — idempotently link dotfiles on any OS; use Git Bash on Windows.
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")" && pwd)"
 
 is_windows() { case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) return 0 ;; *) return 1 ;; esac; }
-# NOTE: cmd ผ่าน Git Bash ห้ามมี quotes ฝังใน string (MSYS mangle) — no-space = mklink,
-# มี space = fallback powershell
+# Do not embed quotes in cmd strings passed through Git Bash because MSYS mangles them.
+# Use mklink for paths without spaces and PowerShell as the fallback.
 make_link() {
   if is_windows; then
     local w1 w2
@@ -55,11 +55,9 @@ backup_legacy_rules_and_stop() {
 # Preflight before linking skills: legacy flat rules require human classification into owner folders.
 backup_legacy_rules_and_stop
 
-# skills: link รายตัว claude/skills/<name> → ~/.claude/skills/<name>
-# (ตัว dir skills เป็นของ harness — ห้าม link ทั้งก้อน)
-# group skills (มี sub ที่มี SKILL.md ชั้นใน): harness ไม่ scan nested (ground-truth
-# 2026-07-17, docs/claude-code-mechanisms.md §grouping) → ต้อง link แบนรายตัว
-# เป็นชื่อ <group>-<sub> ด้วย; ชื่อ invoke จริงมาจาก frontmatter name (มี colon ได้)
+# Link each claude/skills/<name> entry separately; the harness owns the skills directory.
+# The harness does not scan nested grouped skills, as verified on 2026-07-17, so link each child
+# flat as <group>-<sub>. Invocation names still come from frontmatter and may contain colons.
 mkdir -p "$HOME/.claude/skills"
 for sub in "$REPO"/claude/skills/*/*/SKILL.md; do
   [ -f "$sub" ] || continue
@@ -97,7 +95,7 @@ else
   echo "agents: linked"
 fi
 
-# rules: link ทั้ง recursive tree → dotfiles
+# Link the complete recursive rules tree into dotfiles.
 backup_legacy_rules_and_stop
 if [ -L "$rules_target" ]; then
   echo "rules: link exists - skipped"

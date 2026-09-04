@@ -1,29 +1,29 @@
 ---
 name: research
-description: Router สำหรับ research ที่มีผลต่อการตัดสินใจด้าน software, security, dependency, technology/vendor, product, market หรือ user. ใช้เมื่อคำตอบต้องอาศัยข้อมูลปัจจุบันจากภายนอก, ตรวจ dependency/runtime version กับ security advisory หรือ CVE, เปรียบเทียบทางเลือกหรือ build-vs-buy, ตรวจ user/market evidence หรือควบคุม scope/budget/stopping criteria/source disagreement; ให้กำหนดคำถามวิจัยแล้วอ่าน child skill ที่ตรงก่อนสรุป
+description: Router for research that informs software, security, dependency, technology/vendor, product, market, or user decisions. Use when an answer requires current external evidence, dependency or runtime versions must be checked against advisories or CVEs, alternatives or build-vs-buy need comparison, user or market evidence needs evaluation, or scope, appetite, stopping criteria, and source disagreement must be controlled. Define the research question and read matching children before concluding.
 ---
 
 # Research
 
-เริ่มจาก decision ที่ research ต้องช่วยตอบ ไม่ใช่เริ่มจากการสะสมลิงก์. ใช้ `research:research-control`
-กับงานที่มีผลต่อ decision, ต้องใช้หลาย source หรือมีความไม่แน่นอน แล้วเลือก domain เพิ่ม:
+Begin with the decision research must support, not link collection. Use `research:research-control` when
+research affects a decision, spans sources, or carries uncertainty, then add matching domain children.
 
-| งาน | Skill |
+| Work | Skill |
 |---|---|
-| CVE, security advisory, affected version, exploit precondition หรือ remediation | `research:security-advisories` |
-| dependency/technology/vendor, build-vs-buy, pricing, support, license หรือ lock-in | `research:technology-vendor` |
-| product opportunity, market/competitor, user need, interview, survey หรือ usage evidence | `research:product-market-user` |
-| กำหนด research question, source plan, appetite, stopping criteria หรือจัดการ source ขัดกัน | `research:research-control` |
+| CVE, advisory, affected version, exploit precondition, or remediation | `research:security-advisories` |
+| Dependency, technology, vendor, build-vs-buy, pricing, support, license, or lock-in | `research:technology-vendor` |
+| Product opportunity, market or competitor, user need, interviews, surveys, or usage evidence | `research:product-market-user` |
+| Research question, source plan, appetite, stopping criteria, or conflicting evidence | `research:research-control` |
 
-หนึ่ง decision ใช้หลาย child ได้ แต่ห้ามคัด workflow ข้ามกันจนกลายเป็น checklist รวม.
+One decision may require several children, but do not merge their workflows into a universal checklist.
 
 ## Shared contract
 
-- ตรวจ task/repository/decision/runtime ก่อนเพื่อรู้ context และ version; external source ไม่พิสูจน์
-  ว่า repo นี้ได้รับผลจนกว่าจะ map กลับมาที่ code/config/runtime หรือ user context
-- ใช้ source ที่ใกล้ claim ที่สุดและเป็นปัจจุบัน; แยก official fact, independent evidence,
-  inference และ unknown พร้อม source/checked date
-- research เป็นข้อมูลสำหรับ decision ไม่ใช่ authorization ให้เลือก vendor, เปลี่ยน behavior,
-  เพิ่ม dependency, upgrade, ซื้อบริการ หรือเก็บข้อมูลผู้ใช้เอง
-- สรุปตามหลักฐานใน `claude/rules/core/evidence-integrity.md`: claim สำคัญ, evidence, applicability,
-  limitation และสิ่งที่ยังไม่ยืนยัน; จำนวนลิงก์หรือความมั่นใจไม่แทนคุณภาพหลักฐาน
+- Inspect task, repository, decision, and runtime first to establish context and version. An external source does
+  not prove repository impact until mapped to code, configuration, runtime, or user context.
+- Use current sources closest to each claim. Separate official fact, independent evidence, inference, and unknown,
+  with source and checked date.
+- Research informs decisions but does not authorize vendor selection, behavioral change, dependencies, upgrades,
+  purchases, or user-data collection.
+- Follow `claude/rules/core/evidence-integrity.md`: report material claims, evidence, applicability, limitations,
+  and unknowns. Link count and confidence do not replace evidence quality.

@@ -1,20 +1,20 @@
 ---
 name: data-design:schema-migrations
-description: ออกแบบหรือแก้ DB schema, relation, enum, JSON field, ID, constraint, index, migration หรือ backfill ใช้ทุกครั้งที่เพิ่ม/เปลี่ยน table หรือ column และเมื่อ data shape ที่ code เดิมพึ่งพาอาจเปลี่ยน
+description: Design or change database schemas, relations, enums, JSON fields, IDs, constraints, indexes, migrations, and backfills. Use whenever adding or changing a table or column, or when data shapes used by old code may change.
 ---
 
 # Schema & Migrations
 
-- normalize by default; denormalize เมื่อมีหลักฐานด้าน performance พร้อม owner และวิธี keep-in-sync ไม่ใช่เพราะไม่อยาก join
-- ใช้ enum type หรือ lookup table สำหรับ state/type ที่ถูกควบคุม; ใช้ JSON เฉพาะข้อมูลที่ variable จริง และย้าย field ที่ filter/join/aggregate บ่อยเป็น column
-- ให้ DB บังคับ invariant ที่เป็นจริงเสมอด้วย FK, unique, check หรือ constraint ที่เหมาะสม; ทุก table มี created/updated timestamp และ FK ที่ join/cascade ต้องมี index
-- เลือก ID ตั้งแต่แรก และให้ external reference ที่ import มี unique constraint; ระบุ on-delete behavior ของ relation เสมอ
-- ตรวจ index จาก query/filter/sort ที่มีจริง ไม่สร้าง index หรือ materialized shape จากการเดา
+- Normalize by default. Denormalize only with performance evidence, an owner, and a synchronization method—not to avoid joins.
+- Use enums or lookup tables for controlled state and type. Use JSON only for genuinely variable data; promote frequently filtered, joined, or aggregated fields to columns.
+- Enforce always-true invariants with suitable foreign-key, unique, check, or other constraints. Give tables created and updated timestamps, and index foreign keys used for joins or cascades.
+- Choose IDs deliberately, add unique constraints to imported external references, and define relation deletion behavior.
+- Derive indexes from real query, filter, and sort paths rather than guessed workloads.
 
-ก่อน migration ให้ระบุ consumer และ schema/code ที่อยู่ร่วมกันได้. การ remove/rename, เปลี่ยน meaning,
-บังคับ required หรือ rewrite data ใช้ expand → migrate/backfill → switch consumer → contract ตาม
-`compatibility-rollout`; backfill ต้องทำเป็น batch ที่ monitor/หยุด/รันซ้ำได้ และ migration ต้องรู้ lock
-กับผลต่อ deploy/rollback หรือ forward-fix ก่อน apply.
+Before migration, identify consumers and compatible schema/code combinations. Removal, rename, meaning changes,
+required fields, and rewrites follow expand → migrate/backfill → switch consumers → contract under
+`compatibility-rollout`. Backfills must be batched, observable, stoppable, and repeatable. Understand locking,
+deployment effects, rollback, or forward repair before applying.
 
-ตรวจ migration กับ schema เดิมและข้อมูล representative รวมทั้ง constraint/index ที่เพิ่ม; ถ้าตรวจ lock
-หรือ backfill จริงไม่ได้ ให้ระบุความเสี่ยงและแผน verify แทนการอ้างว่าปลอดภัย.
+Verify migration from the old schema with representative data and new constraints or indexes. If real locking or
+backfill behavior cannot be tested, report the risk and verification plan rather than calling it safe.

@@ -4,8 +4,9 @@
 Output: data/turns.jsonl  ({id, ts, sid, proj, text})
 Usage:  python extract_turns.py [--since 2026-07-01]
 Filters: subagents, Temp projects, system/tool/caveat messages,
-abandoned sibling branches (rewind/message-edit สร้างลูกหลายตัวใต้ parentUuid เดียว —
-เก็บเฉพาะตัวสุดท้าย = ตัวที่ถูกตอบจริง; วัด 07-17: ~9% ของ corpus เป็น branch ผี)
+abandoned sibling branches. Rewind or message editing creates several children under one
+parentUuid; retain only the latest child, which was actually answered. On 07-17, about 9% of
+the corpus consisted of abandoned branches.
 """
 import argparse, glob, json, os
 
@@ -26,8 +27,8 @@ def main():
         for f in files:
             sid = os.path.basename(f)[:8]
             proj = f.replace("\\", "/").split("projects/")[1].split("/")[0][:40]
-            prev = ""  # ข้อความ assistant ล่าสุดก่อน user turn (context สำหรับ classify)
-            cand = {}  # parentUuid -> record (ตัวสุดท้ายชนะ = branch ที่ถูกตอบจริง)
+            prev = ""  # Latest assistant message before the user turn, used as classifier context.
+            cand = {}  # parentUuid -> latest record, representing the branch actually answered.
             seq = 0
             try:
                 for line in open(f, encoding="utf-8", errors="replace"):
@@ -55,7 +56,7 @@ def main():
                         continue
                     key = d.get("parentUuid") or f"_seq{seq}"
                     if key in cand:
-                        dropped += 1  # sibling เก่าถูกแทน (rewind/edit)
+                        dropped += 1  # An older sibling was replaced by rewind or editing.
                     cand[key] = {"ts": ts, "sid": sid, "proj": proj,
                                  "text": txt[:400], "prev": prev}
                     seq += 1

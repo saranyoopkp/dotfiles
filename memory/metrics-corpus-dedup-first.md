@@ -1,13 +1,10 @@
 ---
 name: metrics-corpus-dedup-first
-description: วัดอะไรจาก session corpus ต้อง dedup rewind/edit sibling ก่อน (~9% ผี, bias เข้า corrective) + main session เท่านั้น + ดู time trend ไม่ใช่ค่าเฉลี่ยรวม
+description: Before measuring a session corpus, remove abandoned rewind or edit siblings, use primary sessions, and inspect time trends rather than only aggregate averages.
 metadata:
   type: project
 ---
 
-Corpus ใน ~/.claude/projects มี sibling branch ผีจาก rewind/message-edit (เก็บ sibling
-สุดท้ายต่อ parentUuid — extract_turns.py ทำให้) และ compact ตัด parentUuid chain กลางไฟล์
-(ห้ามใช้วิธี "เดิน path จาก leaf" — จะทิ้งประวัติก่อน compact)
+The corpus under `~/.claude/projects` contains abandoned sibling branches from rewinds and message edits. `extract_turns.py` keeps the final sibling per parentUuid. Compaction can break parentUuid chains mid-file, so walking backward from a leaf discards pre-compaction history.
 
-**How to apply:** ใช้ test/metrics/ เสมอ อย่า scan ดิบ; กรอง subagents/Temp/-p;
-แยก WORK/META ก่อนอ่าน concession/corrective — ดู docs/scc-behavior-experiment.md
+**How to apply:** Always use `test/metrics/` instead of scanning raw transcripts. Exclude subagents, Temp sessions, and `-p` runs; separate WORK from META before interpreting concession or correction signals. See `docs/scc-behavior-experiment.md`.

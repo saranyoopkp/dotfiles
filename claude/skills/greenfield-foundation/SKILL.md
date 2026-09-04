@@ -1,71 +1,52 @@
 ---
 name: greenfield-foundation
-description: วาง foundation สำหรับ greenfield software project, application, service, package หรือ repository ใหม่ ใช้เมื่อเริ่มระบบจากศูนย์, scaffold โครงการ, เลือก architecture/stack/runtime/framework/database หรือกำหนด baseline แรกที่ยังไม่มี active implementation/contract ให้ยึด ต้องตรวจ official LTS/support lifecycle และ compatibility ของ version chain ปัจจุบันก่อนเลือกหรือสร้างเสมอ
+description: Establish foundations for a new software project, application, service, package, or repository. Use when starting from zero, scaffolding, selecting architecture, stack, runtime, framework, or database, or defining the first baseline without an active implementation or contract. Always verify current official support lifecycle and compatibility across the version chain before selecting or creating.
 ---
 
 # Greenfield Foundation
 
-ใช้ลำดับ `พิสูจน์ขอบเขต → ค้นข้อจำกัด → ตรวจ version chain → ขอ decision → สร้าง vertical slice → verify`.
-Greenfield ให้อิสระในการเลือกมากขึ้น แต่ไม่ใช่ใบอนุญาตให้เดา requirement หรือสร้าง architecture เผื่อ.
+Use `verify scope → discover constraints → verify version chain → obtain decisions → build a vertical slice → verify`.
+Greenfield work allows more choice but does not authorize guessed requirements or speculative architecture.
 
-## 1. พิสูจน์ว่าเป็น greenfield
+## 1. Verify greenfield status
 
-- ตรวจ task, repository, decision/contract, entry point และ runtime ที่เข้าถึงได้ก่อน. ผลค้นหา
-  “ไม่พบ” จาก probe เดียวไม่พิสูจน์ว่าไม่มีระบบเดิม
-- แยกทั้งระบบใหม่ออกจาก component ใหม่ใน brownfield. ถ้ามี consumer, public contract, data,
-  deployment หรือ convention เดิมที่ต้องอยู่ร่วม ให้ถือส่วนนั้นเป็น compatibility boundary
-- ระบุสิ่งที่ verified, inferred และยังเป็น assumption. การไม่มี precedent ไม่ใช่ authorization
-  ให้เลือก product behavior, stack, cost หรือ irreversible architecture เอง
+- Inspect task, repository, decisions, contracts, entry points, and accessible runtime. One empty search does not prove no prior system exists.
+- Distinguish a new system from a new component in brownfield. Existing consumers, contracts, data, deployments, and conventions create compatibility boundaries.
+- Separate verified facts, inference, and assumptions. Lack of precedent does not authorize product behavior, stack, cost, or irreversible architecture.
 
-## 2. ค้นก่อนถาม
+## 2. Discover before asking
 
-เก็บข้อมูลที่หาได้ก่อน: outcome/ผู้ใช้, stage และ maintenance horizon, environment/deployment target,
-data sensitivity, integration, budget/operational constraint และสิ่งที่ผู้ใช้กำหนดไว้แล้ว.
-จากนั้นถามเฉพาะ decision ที่คำตอบเปลี่ยน behavior, security, cost, compatibility หรือ scope อย่างมีนัยสำคัญ.
+First gather available outcomes and users, project stage and maintenance horizon, target environment and deployment,
+data sensitivity, integrations, budget and operational constraints, and prior user decisions. Ask only for decisions
+that materially change behavior, security, cost, compatibility, or scope. Define the problem boundary and minimum
+end-to-end outcome before choosing a framework.
 
-อย่าเริ่มจาก framework. สรุป problem boundary และ minimum end-to-end outcome ที่ต้องพิสูจน์ก่อน.
+## 3. LTS and compatibility gate — required for every greenfield project
 
-## 3. LTS & Compatibility Gate — บังคับทุก greenfield
+Before proposing or pinning a runtime, framework, database, compiler, build tool, SDK, or deployment platform:
 
-ก่อนเสนอหรือ pin runtime, framework, database, compiler, build tool, SDK หรือ deployment platform:
+1. Check current primary sources for official releases and support policy, LTS schedules, end of life, compatibility matrices, and major-version migration notes.
+2. If the ecosystem has no official LTS designation, say so and select a stable supported release from its policy. Never infer LTS from familiarity.
+3. Verify the actual chain: OS and architecture → runtime → package manager/compiler/build → framework → driver/SDK → database/service → deployment platform.
+4. Compare support windows with the maintenance horizon. “Latest” and “LTS” alone are insufficient, and a near-EOL LTS may provide less runway.
+5. Preview, RC, nightly, EOL, or unsupported combinations require risks, alternatives, and authorization before selection.
+6. Record `component | selected version/line | support status/EOL | compatible-with | source | checked date | unresolved risk`. External sources prove policy; clean install, build, and runtime prove the selected combination.
 
-1. ค้น **primary source ปัจจุบัน** ของแต่ละตัว: official release/support policy, LTS schedule,
-   end-of-life, compatibility matrix และ migration/release note ที่ตรง major version
-2. ถ้า ecosystem ไม่มีคำว่า LTS อย่างเป็นทางการ ให้เขียนว่า “ไม่มี official LTS” แล้วเลือก
-   stable supported release ตาม support policy; ห้ามเรียก version ว่า LTS จากความคุ้นเคย
-3. ตรวจ version chain ที่ใช้จริง ไม่ใช่แค่คู่ใดคู่หนึ่ง: OS/architecture → runtime → package manager/
-   compiler/build → framework → driver/SDK → database/service → deployment platform เท่าที่เกี่ยวข้อง
-4. เทียบ support window กับ maintenance horizon. LTS ที่ใกล้ EOL อาจแย่กว่า supported line
-   ที่มี runway ยาวกว่า; “latest” หรือ “LTS” อย่างเดียวไม่ใช่เหตุผลพอ
-5. preview, RC, nightly, EOL หรือ version combination ที่ official source ไม่รองรับ ต้องเสนอ
-   risk/alternative และขอ authorization ก่อนเลือก
-6. บันทึก `component | selected version/line | support status/EOL | compatible-with | source |
-   checked date | unresolved risk`. External source ยืนยัน policy; clean install/build/runtime
-   ยืนยันว่า combination ของโครงการทำงานจริง — อย่างใดอย่างหนึ่งแทนกันไม่ได้
+If primary sources are unavailable, stop before a version-bound decision or scaffold, report the unknown, and state
+the next check. Never use model memory to certify a current LTS.
 
-ถ้าเข้าถึง primary source ไม่ได้ ให้หยุดก่อนตัดสินใจหรือ scaffold ที่ผูก version, รายงานว่า
-ยังไม่ยืนยัน และระบุสิ่งที่ต้องตรวจต่อ. ห้ามใช้ความจำของ model ยืนยัน “current LTS”.
+## 4. Decide foundations before mutation
 
-## 4. ตัดสิน foundation ก่อน mutation
+Present material decisions with rationale and cost: system boundary and minimum vertical slice; currently justified
+architecture and dependencies; verified stack chain; required data ownership, lifecycle, auth, tenancy, and
+integrations; and stage-appropriate testing, delivery, observability, and recovery. Apply KISS/YAGNI: abstractions
+need verified consumers or variation, and starters are inputs to inspect rather than architecture decisions.
+Obtain user decisions for behavior, lock-in, recurring cost, and expensive-to-reverse choices.
 
-เสนอเฉพาะ decision ที่มีผลจริง พร้อมเหตุผลและต้นทุน:
+## 5. Build and prove a vertical slice
 
-- system boundary และ minimum vertical slice
-- architecture/dependency direction เท่าที่ use case ปัจจุบันต้องใช้
-- stack/version chain จาก gate ข้างบน
-- data ownership/lifecycle, auth/tenant และ external integration ที่ requirement ทำให้เกิดจริง
-- test, delivery, observability และ recovery baseline ตาม stage/deployment target
-
-ใช้ KISS/YAGNI: interface หรือ abstraction ต้องมี consumer/variation ที่พิสูจน์ได้. เลือกมาตรฐานของ
-ecosystem และ dependency ให้น้อยที่สุด; template/starter เป็น input ที่ต้องตรวจ ไม่ใช่ architecture decision.
-ก่อน mutation ให้ผู้ใช้ตัดสินใจเรื่องที่เปลี่ยน behavior, vendor lock-in, recurring cost หรือย้อนกลับแพง.
-
-## 5. สร้างและพิสูจน์ vertical slice
-
-- scaffold เท่าที่ vertical slice แรกต้องใช้ แล้ว pin toolchain/lockfile ตาม convention ของ ecosystem
-- invoke skill เจ้าของโดเมนเมื่อ flow แตะ API, data, UI/UX หรือ ops; skill นี้ไม่ทำ checklist เหล่านั้นซ้ำ
-- ตรวจจาก clean state: install/restore dependency, typecheck/build/test, start runtime และยิง flow
-  end-to-end ที่เล็กที่สุดบน environment ที่ใกล้ target เท่าที่ทำได้
-- ตรวจว่า version ที่รันจริงตรงกับ compatibility record; generated default ที่ไม่ได้ใช้ให้ลบ
-- ส่งมอบ decision, sources/checked date, verification result, assumption และ known gap.
-  ห้ามกล่าวว่า foundation พร้อมใช้เมื่อ install/build/runtime หรือ compatibility criterion ยังไม่ผ่าน
+- Scaffold only what the first slice needs and pin toolchain or lockfiles by ecosystem convention.
+- Invoke domain owners for API, data, UI/UX, and operations rather than duplicating their checklists.
+- From clean state, install or restore dependencies, typecheck, build, test, start runtime, and exercise the smallest end-to-end flow near the target environment.
+- Confirm actual runtime versions match the compatibility record and remove unused generated defaults.
+- Deliver decisions, sources and checked dates, verification results, assumptions, and known gaps. Never call the foundation ready while install, build, runtime, or compatibility criteria remain unproven.

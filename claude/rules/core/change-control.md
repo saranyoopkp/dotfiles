@@ -1,47 +1,52 @@
 # Change Control
 
-## Authorization และ continuity
+## Authorization and continuity
 
-- คำถาม ขอความเห็น หรือรายงานปัญหาอนุญาตให้ตรวจแบบ read-only ไม่ใช่ mutation. คำสั่งให้ทำชัดเจน
-  หรือการตอบรับ proposal ที่มี scope ชัดจาก turn ก่อน อนุญาต mutation ภายใน scope นั้น
-- เมื่อข้อความกำกวมหรือ action จะขยาย scope อย่างมีนัยสำคัญ ให้ตรวจสิ่งที่หาได้ก่อนแล้วถามเฉพาะ
-  decision ที่เปลี่ยน outcome, risk หรือ cost; ระหว่างนั้นทำ read-only work ที่ช่วยตัดสินใจได้
-- คำถามแทรกเป็น detour โดย default. ตอบแล้ว resume primary deliverable หาก next action เดิมยังปลอดภัย
-  และได้รับอนุญาต; เปลี่ยน objective เมื่อผู้ใช้สั่งให้พัก เปลี่ยน ยกเลิก หรือเมื่อ safety incident ต้อง interrupt
-- เมื่อ mutation ที่ได้รับอนุญาตถึง cohesive verified checkpoint ให้สร้าง scoped local commit โดย default
-  เพื่อให้ track/revert ได้; stage เฉพาะ paths/hunks ของงานนี้และไม่รวม dirty work เดิม. Authorization
-  ยังไม่ขยายไป push, deploy, production mutation, external communication, purchase, secret/permission
-  change หรือ history rewrite
+- Questions, requests for opinions, and problem reports authorize read-only inspection, not mutation. A clear
+  instruction to act, or acceptance of a clearly scoped proposal from the previous turn, authorizes mutation
+  within that scope.
+- When a message is ambiguous or an action would materially expand scope, inspect what is available first and
+  ask only for decisions that change outcome, risk, or cost. Continue useful read-only work meanwhile.
+- Treat an interjected question as a detour by default. Answer it, then resume the primary deliverable when the
+  prior next action remains safe and authorized. Change objectives when the user pauses, changes, or cancels the
+  work, or when a safety incident requires interruption.
+- When an authorized mutation reaches a cohesive verified checkpoint, create a scoped local commit by default
+  so it can be tracked and reverted. Stage only paths or hunks belonging to this work and exclude pre-existing
+  dirty work. Authorization does not extend to push, deploy, production mutation, external communication,
+  purchase, secret or permission changes, or history rewriting.
 
-## Intent และ phase boundary
+## Intent and phase boundaries
 
-- จำแนกคำขอปัจจุบันเป็น `explore`, `plan`, `implement` หรือ `mixed` ก่อนลงมือ. `explore` และ `plan`
-  มี deliverable เป็น findings หรือ proposal แบบ read-only จึงต้องหยุดหลังส่งมอบนั้น; ห้ามแก้ไฟล์หรือ
-  commit เพียงเพราะพบสิ่งที่ควรทำ
-- `implement` อนุญาตให้สำรวจเป็น preflight แล้วทำต่อภายใน scope ที่อนุมัติ. `mixed` ต้องแยก
-  phase สำรวจกับ phase implement และข้ามเข้า mutation ได้ต่อเมื่อคำขอหรือ approval ระบุการ implement
-  และ scope ชัดเจน; ถ้ากำกวมให้สำรวจก่อนแล้วถามเฉพาะ decision ที่ขาด
+- Classify the active request as `explore`, `plan`, `implement`, or `mixed` before acting. `explore` and `plan`
+  produce read-only findings or proposals and must stop after delivering them; never edit files or commit merely
+  because an improvement was discovered.
+- `implement` authorizes preflight inspection followed by work within the approved scope. For `mixed`, separate
+  exploration from implementation and cross into mutation only when the request or approval clearly authorizes
+  implementation and scope. If ambiguous, explore first and ask only for the missing decision.
+
 ## Reversibility
 
-- reversible local change ภายใน scope ทำต่อได้และตรวจให้เหมาะกับความเสี่ยง
-- change ที่ย้อนยากหรือมีหลาย consumer ต้องระบุ impact, compatibility และ rollback/mitigation;
-  หาก direction อยู่ในคำขอชัดแล้วไม่ต้องขออนุมัติ semantic เดิมซ้ำ
-- irreversible/destructive action หรือ action ต่อ production, เงินจริง, ข้อมูลจริง, secret, permission,
-  external recipient หรือ Git history ต้องยืนยัน target/action ก่อนทำ
-- rollback command ไม่ทำให้ action reversible หากยังเสี่ยงสูญเสีย data, เงิน, สิทธิ์ หรือกระทบ consumer
+- Proceed with reversible local changes within scope and verify them in proportion to risk.
+- For difficult-to-reverse changes or changes with multiple consumers, identify impact, compatibility, and
+  rollback or mitigation. Do not request repeated approval for the same semantic direction when it is explicit.
+- Confirm the target and action before an irreversible or destructive action, or any action involving production,
+  real money, real data, secrets, permissions, external recipients, or Git history.
+- A rollback command does not make an action reversible when data, money, permissions, or consumers may still
+  be harmed.
 
-## Behavior และ refactor
+## Behavior and refactoring
 
-- ทำ behavior ที่ requirement ระบุได้เลยภายใน scope. ขอ decision เพิ่มเมื่อพบ semantic choice
-  ที่ requirement ไม่ได้ตัดสินและทางเลือกให้ผลกระทบต่างกันอย่างมีนัยสำคัญ
-- refactor ที่อยู่ใน scope ต้องระบุ invariant ที่คงไว้และ verify เทียบ invariant นั้น. แยก mechanical
-  change ออกจาก semantic change เมื่อช่วยให้ review/rollback ชัด และ migrate consumer ก่อนลบ contract เดิม
-- adjacent cleanup ไม่ใช่ authorization ให้ขยายงาน; park ไว้หลัง current slice เว้นแต่บล็อก correctness/safety
+- Implement behavior specified by the requirement within scope. Request a decision when the requirement leaves
+  a semantic choice unresolved and the options have materially different effects.
+- For an in-scope refactor, state the invariant being preserved and verify against it. Separate mechanical from
+  semantic changes when that clarifies review or rollback, and migrate consumers before removing an old contract.
+- Adjacent cleanup is not authorization to expand the task. Park it until after the current slice unless it blocks
+  correctness or safety.
 
-## Tracking และ instruction-system changes
+## Tracking and instruction-system changes
 
-- ใช้ task tracking เมื่อ state มีโอกาสหล่นจริง: งานหลาย turn, dependency หลายชั้น,
-  blocker หรือ verification หลายชุด. งานสั้นที่มีหลายคำสั่งไม่ต้องสร้าง task list เพียงเพราะนับได้หลายข้อ
-- เมื่อเปลี่ยน `agents/`, `rules/`, `skills/` หรือ routing ข้าม owner ให้ทำ impact map ก่อน mutation:
-  `คงไว้ | ย้าย old → new | เปลี่ยน behavior | ถอดออก | ยังไม่ยืนยัน`. หลังแก้ reconcile กับ diff,
-  destination, routing และ verification จริง
+- Use task tracking when state can realistically be lost: work spanning multiple turns, layered dependencies,
+  blockers, or multiple verification sets. A short task does not need a task list merely because it has several commands.
+- Before changing `agents/`, `rules/`, `skills/`, or routing across owners, create an impact map:
+  `preserved | moved old → new | behavior changed | removed | unverified`. After the change, reconcile it with
+  the actual diff, destination, routing, and verification evidence.

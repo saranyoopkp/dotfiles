@@ -1,36 +1,26 @@
 ---
 name: ui-ux-baseline:design-foundations
-description: กำหนดหรือแก้ shared visual foundations เช่น semantic color/contrast, typography roles/scale, spacing/grid, radius/elevation, iconography, theme/density และ motion token รวมถึงเลือก icon library หรือแทน decorative emoji ใน UI ใช้เมื่อค่าพื้นฐานเปลี่ยนข้ามหลายหน้าหรือมีการตัดสินใจเรื่อง icon/emoji; ไม่ใช้ปรับเฉพาะหน้าจอทั่วไปหรือเปลี่ยน component API
+description: Define or modify shared visual foundations such as semantic color/contrast, typography roles/scales, spacing/grids, radius/elevation, iconography, themes/density, and motion tokens, including choosing an icon library or replacing decorative emoji in UI. Use when foundational values change across multiple screens or when making icon/emoji decisions; do not use for ordinary single-screen refinements or component API changes.
 ---
 
 # Design Foundations
 
-Foundation คือค่าร่วมที่ทำให้ UI สม่ำเสมอและเข้าถึงได้ ไม่ใช่ข้ออ้างให้เปลี่ยน brand หรือสร้าง
-style guide ใหม่ทุกงาน. ใช้ค่าที่มีอยู่ก่อน และเพิ่ม/เปลี่ยนเมื่อมี consumer ร่วมกับ semantic ที่ชัดเจน.
+Foundations are shared values that make UI consistent and accessible, not a reason to change the brand or create a new style guide for every task. Prefer existing values, and add or change them only when shared consumers and clear semantics exist.
 
-- กำหนด token ตามเจตนา เช่น surface, text, action, feedback และ focus แทนชื่อสีหรือค่าดิบ; state สำคัญต้องไม่ต่างกันด้วยสีอย่างเดียว และต้องรักษา contrast ที่เหมาะกับบริบท
-- กำหนดบทบาทและ scale ของ type, spacing, grid, radius และ elevation ให้ช่วย hierarchy; อย่าให้หน้าจอหนึ่งสร้างค่าพิเศษถ้า semantic เดิมใช้ได้
-- ใช้ icon library และ icon set ที่ตรวจพบใน repo ก่อน โดยรักษา semantic, size, stroke/optical weight และ alignment ให้สม่ำเสมอ; ห้ามสมมติชื่อ library, วาด SVG ใหม่ หรือเพิ่ม dependency เงียบ ๆ เมื่อยังไม่พบของเดิม
-- **ห้ามใช้ emoji ตกแต่ง UI โดย default**. เมื่อพบ decorative emoji ให้เสนอ icon ที่มี semantic ตรงจาก library เดิมแทน; หาก repo ยังไม่มี icon library ให้เสนอทางเลือกและต้นทุนก่อนเพิ่ม dependency. ใช้ emoji ได้เมื่อเป็น user content, brand requirement หรือผู้ใช้ขอชัดเจนเท่านั้น
-- theme หรือ density ต้องคงความหมายของ semantic role, contrast และ focus treatment; หลีกเลี่ยง override เฉพาะหน้าจอที่ทำให้ระบบสลาย
-- กำหนด duration/easing เป็น shared token เฉพาะเมื่อมี use case ร่วม; เหตุผล, trigger และ interruption ของ motion อยู่ `motion-microinteractions`
-- ก่อนเปลี่ยน foundation ที่ใช้แล้ว ให้ระบุ consumer, theme/viewport ที่กระทบ, migration และ visual regression ที่ต้องตรวจ
+- Name tokens by intent, such as surface, text, action, feedback, and focus, rather than by color or raw value. Important states must not differ by color alone and must preserve context-appropriate contrast.
+- Define type, spacing, grid, radius, and elevation roles and scales that support hierarchy. Do not create one-off values when existing semantics fit.
+- Prefer icon libraries and sets observed in the repository, keeping semantics, size, stroke or optical weight, and alignment consistent. Do not assume library names, draw new SVGs, or silently add dependencies when no existing system is found.
+- **Do not use decorative emoji in UI by default.** When decorative emoji exists, propose a semantically matching icon from the existing library. If the repository has no icon library, present options and costs before adding a dependency. Emoji is appropriate only for user content, brand requirements, or an explicit user request.
+- Themes and density must preserve semantic-role meaning, contrast, and focus treatment. Avoid screen-specific overrides that fragment the system.
+- Define duration and easing as shared tokens only when a shared use case exists. Motion purpose, triggers, and interruption belong to `motion-microinteractions`.
+- Before changing an existing foundation, identify consumers, affected themes and viewports, migration needs, and required visual regression checks.
 
 ## Refactor Icon & Emoji
 
-ก่อนแทนของเดิม ให้ inventory usage และจำแนกเป็น decoration, action, state, user content หรือ
-brand content; ห้าม bulk-replace user/brand content. ทำ mapping จาก emoji/icon เดิมไป semantic icon
-ที่ตรวจพบใน library ของ repo แล้ว migrate เป็น shared primitive หรือทีละ surface ที่ตรวจได้ โดยคง
-visible label, accessible name, interaction state และ layout. อย่าปนการเปลี่ยน icon กับการเปลี่ยน
-meaning/copy; semantic change ต้องใช้ authorization และ impact rules ใน
-`claude/rules/core/change-control.md`.
+Before replacing existing items, inventory usage and classify it as decoration, action, state, user content, or brand content. Never bulk-replace user or brand content. Map existing emoji or icons to semantic icons found in the repository's library, then migrate through a shared primitive or one verifiable surface at a time while preserving visible labels, accessible names, interaction states, and layout. Do not combine icon changes with meaning or copy changes; semantic changes require the authorization and impact rules in `claude/rules/core/change-control.md`.
 
-ลบของเดิมเมื่อค้น consumer แล้วไม่เหลือ และตรวจ screenshot ของ state/viewport ที่เกี่ยวข้องพร้อม
-keyboard/accessibility ตาม `interaction-a11y`; หาก migration ยังไม่ครบให้ระบุรายการที่เหลือและ owner.
+Remove old assets only after finding no remaining consumers, and verify screenshots for relevant states and viewports together with keyboard/accessibility checks from `interaction-a11y`. If migration is incomplete, identify the remaining items and owner.
 
-`visual-direction` เป็น owner ของ identity และ direction ใหม่; `visual-polish` ปรับหน้าจอเดิมโดยใช้
-foundation; `layout-navigation` เป็น owner ของ composition ของหน้า; `interaction-a11y` เป็น owner ของ
-semantic HTML, keyboard และ focus behavior; `design-system` เป็น owner ของ component API และ variant.
+`visual-direction` owns identity and new directions; `visual-polish` refines existing screens using the foundation; `layout-navigation` owns page composition; `interaction-a11y` owns semantic HTML, keyboard, and focus behavior; `design-system` owns component APIs and variants.
 
-ก่อนส่งมอบ ตรวจ representative screen ที่ได้รับผล รวมถึง theme/contrast/focus treatment ที่เกี่ยวข้อง
-จาก artifact จริงเมื่อ environment รองรับ; หากตรวจไม่ได้ ให้ระบุขอบเขตแทนการอ้างว่าผ่าน.
+Before delivery, verify representative affected screens, including relevant themes, contrast, and focus treatment, using real artifacts when the environment supports it. If verification is unavailable, state the boundary instead of claiming it passed.

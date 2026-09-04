@@ -1,66 +1,54 @@
-# test/routing — skill auto-invocation regression
+# Skill Routing Tests
 
-domain rule ที่ลึก (`ui-ux-baseline`, `data-design`, `risk-review`, ...) ทำเป็น **skill** (on-demand):
-description บาง ๆ always-loaded เป็น routing signal, body โหลด**ครั้งเดียวตอน invoke**
-(ไม่มี pointer, ไม่โหลดทุก turn แบบ path-scoped). ความเสี่ยงคือ **โมเดลไม่ auto-invoke เมื่อควร**
-หรือ **invoke ตอนไม่เกี่ยว** suite นี้ยิงงานหลาย domain พร้อม simple-task negative-routing cases ผ่าน fresh `claude -p` แล้วเช็คว่า
-skill *หลัก* fire (miss=FAIL), NONE ไม่ fire อะไร. **related skill co-fire เพิ่มได้** —
-webhook↔data-design เนื้อทับกัน (queue/retry) → co-fire แบบ non-deterministic เป็นเรื่องปกติ
-ไม่นับ over-invoke. รายการ on-demand skills derive จาก frontmatter registry โดยอัตโนมัติ และ parser
-ใช้ exact skill name หลัง normalize `:` เป็น `-` จึงไม่ถือว่า parent ถูก invoke เพียงเพราะชื่อเป็น prefix
-ของ child
+Deep domain rules such as `ui-ux-baseline`, `data-design`, and `risk-review` are on-demand skills. Their lightweight descriptions provide always-available routing signals, while bodies load once when invoked. The main risks are missing an appropriate invocation and invoking an unrelated skill.
 
-## รัน
-```
+This suite sends cross-domain and simple negative-routing tasks through fresh `claude -p` sessions. It passes when required primary skills fire and `NONE` cases invoke no on-demand skill. Related skills may co-fire: overlapping concerns such as webhooks and data design can route nondeterministically without constituting over-invocation.
+
+The registry is derived automatically from skill frontmatter. The parser compares exact names after converting `:` to `-`, so a child-name prefix does not count as invoking its parent.
+
+## Run
+
+```bash
 bash test/routing/run.sh
 ```
-- แต่ละ scenario = fresh session (โหลด rules/skills สด — subagent ทำแทนไม่ได้ สืบทอด context ค้าง)
-- default รันพร้อมกันสูงสุด 4 session เพื่อลด CLI startup race; ปรับด้วย
-  `ROUTING_MAX_PARALLEL` และเลือกไฟล์ด้วย `ROUTING_SCENARIO_FILES` (คั่นด้วย `:`)
-- รันใน sandbox นอก repo เพื่อไม่ให้ `dotfiles/CLAUDE.md` ปนเปื้อน
-  (ตั้งผ่าน `ROUTING_SANDBOX` หรือ `.local.sh`; environment ที่ระบุขณะรันมี precedence)
-- **กิน API tokens** — รันหลังแก้ skill description/scenarios ไม่ใช่ทุก commit
-- verdict อ่าน `Skill` tool use จาก raw stream-json และต้องมี CLI exit status `0`;
-  startup failure/timeout เป็น FAIL ของ harness แยกจากการสรุป routing
-- ตรวจ registry โดยไม่ยิง model ได้ด้วย `ROUTING_LIST_SKILLS=1 bash test/routing/run.sh`;
-  คำสั่งจะ fail หาก frontmatter ขาด/กำกวม/ชื่อซ้ำ และ normalize CRLF ก่อนเทียบชื่อ
 
-## ตรวจ child routes แบบ targeted
+- Every scenario uses a fresh session so rules and skills load from a clean start. A subagent cannot substitute because it inherits existing context.
+- The default runs at most four sessions concurrently to reduce CLI startup races. Configure `ROUTING_MAX_PARALLEL` and select colon-separated files with `ROUTING_SCENARIO_FILES`.
+- The suite runs in a sandbox outside the repository so `dotfiles/CLAUDE.md` cannot contaminate results. Configure `ROUTING_SANDBOX` or `.local.sh`; an environment value supplied at execution takes precedence.
+- Each scenario consumes API tokens. Run after changing skill descriptions or scenarios, not on every commit.
+- Verdicts inspect actual Skill tool use from raw stream-json and require CLI exit status 0. Startup failures and timeouts are harness failures distinct from routing conclusions.
+- Validate the registry without model calls using `ROUTING_LIST_SKILLS=1 bash test/routing/run.sh`. This fails for missing, ambiguous, or duplicate frontmatter names and normalizes CRLF before comparison.
 
-default suite ตรวจ surface-level routing และ negative cases. child routes ทั้ง registry มี scenario
-แยกไว้ที่ `scenarios-routing-children.tsv` เพื่อรันเมื่อแก้ parent router, child description หรือ
-routing harness:
+## Targeted child routes
 
-```
-ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-children.tsv ROUTING_MAX_PARALLEL=4 bash test/routing/run.sh
+The default suite covers surface-level routing and negative cases. `scenarios-routing-children.tsv` covers every registry child and should run after changing a parent router, child description, or routing graph:
+
+```bash
+ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-children.tsv bash test/routing/run.sh
 ```
 
-ไม่บังคับ cross-domain co-fire เป็น success criterion เพราะ edge เหล่านั้นเป็น related routing
-ที่อาจโหลดร่วมกันแบบ non-deterministic; ให้ตรวจโครงสร้างด้วย graph validator และใช้ scenario
-ที่มีหลักฐานของ surface/decision จริงแทน
+Cross-domain co-fire is not a success requirement because those related edges may load nondeterministically. Validate their structure with the graph validator and use scenarios with real surface or decision evidence.
 
-regression ของ silent miss และ registry parser อยู่ใน `scenarios-routing-defects.tsv` และรันแยกได้ด้วย:
+Silent-miss and registry-parser regressions are in `scenarios-routing-defects.tsv`:
 
-```
-ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-defects.tsv ROUTING_MAX_PARALLEL=1 bash test/routing/run.sh
+```bash
+ROUTING_SCENARIO_FILES=test/routing/scenarios-routing-defects.tsv bash test/routing/run.sh
 ```
 
-## เพิ่มเคส
+## Add a case
 
-รูปแบบใหม่: `require<TAB>forbid<TAB>label<TAB>task`
+Preferred format:
 
-- `require`/`forbid` ใส่ชื่อ skill คั่นด้วย space; `-` = ไม่กำหนด
-- ใช้ `forbid` ทดสอบ over-trigger โดยยังอนุญาตให้ skill อื่น fire
-- รูปแบบเดิม `expect<TAB>label<TAB>task` ยังรองรับ; `NONE` = ห้ามทุก on-demand skill
+```text
+require<TAB>forbid<TAB>label<TAB>task
+```
 
-## artifacts / trace back
-แต่ละ run เซฟ **raw stream-json + stderr ต่อ scenario** ลง
-`$ROUTING_SANDBOX/runs/<timestamp>/<label>.{stream.jsonl,stderr.log,exit}` + `summary.txt` —
-เปิดดู `tool_use`/CLI failure ของเคสนั้นได้ (เคส FAIL → summary ชี้ไฟล์ให้)
-(harness เองก็เซฟ session ที่ `~/.claude/projects/<cwd-hash>/<session-id>.jsonl` แต่ไม่ label
-scenario + กองรวมกัน — ใช้ artifact ที่ label แล้วใน runs/ แทน). playground อยู่นอก repo =
-ไม่ track; ลบ `runs/` เก่าทิ้งได้
+- Separate multiple `require` or `forbid` skill names with spaces; `-` means unspecified.
+- Use `forbid` to test over-triggering while allowing unrelated skills to fire.
+- The legacy `expect<TAB>label<TAB>task` format remains supported; `NONE` forbids every on-demand skill.
 
-## baseline (2026-07-16)
-skill `ui-ux-baseline` validated: fresh frontend→invoke · backend→NONE · long-session
-(turn 6)→ยัง invoke (จุดที่ pointer hack เดิมตาย). recognition นิ่งใน n ที่ทดสอบ (เก็บเพิ่มระหว่างใช้จริง)
+## Artifacts
+
+Each run saves raw stream-json and stderr per scenario under the configured sandbox's timestamped `runs/` directory. Failed summaries point to the relevant labeled artifact. The harness also stores sessions under `~/.claude/projects/<cwd-hash>/<session-id>.jsonl`, but those are unlabeled and mixed together; prefer these run artifacts. The playground stays outside the repository and old runs may be deleted.
+
+Repeated long-conversation testing showed routing still invokes after later turns where an earlier pointer-based workaround failed. Continue collecting evidence during real use rather than treating the observed depth as a universal limit.

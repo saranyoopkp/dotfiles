@@ -1,6 +1,6 @@
 # Focused regressions from observed raw Skill tool-use artifacts.
-docs-link	-	defect-docs-link	ตรวจ broken reference และ anchor หลังย้ายไฟล์เอกสารใน repository
-research research-security-advisories	-	defect-research-security	ตรวจว่า dependency versions ที่ resolve จริงได้รับผลจาก CVE หรือ advisory ปัจจุบันหรือไม่
-testing-strategy	-	defect-test-regression	ช่วยเลือก regression test สำหรับ bug ที่เคยเกิดซ้ำให้พิสูจน์ root cause
-ui-ux-baseline	-	defect-ui-list	วางแผน React component แสดง list ของ order ที่ fetch จาก API
-risk-review	-	defect-risk-production	วางแผน production data migration พร้อม rollback หรือ forward recovery และ health verification
+docs-link	-	defect-docs-link	Check broken references and anchors after moving documentation files in the repository.
+research research-security-advisories	-	defect-research-security	Determine whether actually resolved dependency versions are affected by current CVEs or advisories.
+testing-strategy	-	defect-test-regression	Choose a regression test for a recurring bug that proves the root cause.
+ui-ux-baseline	-	defect-ui-list	Plan a React component that displays an order list fetched from an API.
+risk-review	-	defect-risk-production	Plan a production data migration with rollback or forward recovery and health verification.

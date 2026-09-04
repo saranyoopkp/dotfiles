@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regex/tool_use lookback metrics per period (cutover before/after).
 
-Metrics per period: sessions, user turns, corrective-"ไม่" rate, continue-cmd rate,
+Metrics per period: sessions, user turns, corrective-negation rate, continue-command rate,
 edit-sessions, ACV usage (ground truth = Agent tool_use with subagent_type ~ ACV).
 
 Usage: python lookback.py [--cuts 2026-07-14T19:44 2026-07-16T09:10]  (UTC)
@@ -33,11 +33,10 @@ def parse(f):
                 txt = (txt or "").strip()
                 if txt and not txt.startswith(("<", "Caveat")):
                     turns += 1
-                    # กว้างโดยเจตนา (ตรง baseline CLAUDE.md 07-17) — จับ "ไม่..." ทุกแบบ
-                    # รวม noise (bug report "ไม่มีเสียง") — ตัวแม่นคือ semantic_classify
-                    if txt.startswith("ไม่"):
+                    # Intentionally broad baseline that includes noise; semantic_classify is precise.
+                    if re.match(r"^(no\b|not\b|don't\b|didn't\b|that isn't\b)", txt, re.I):
                         corrective += 1
-                    if re.match(r"^(ต่อเลย|ทำต่อ|ต่อได้เลย|ทำเลย|จัดการเลย|ต่อครับ)", txt):
+                    if re.match(r"^(continue|keep going|go ahead|do it|proceed)\b", txt, re.I):
                         cont += 1
             elif d.get("type") == "assistant" and isinstance(c, list):
                 for x in c:

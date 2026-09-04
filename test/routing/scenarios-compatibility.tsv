@@ -1,7 +1,7 @@
 # require	forbid	label	task
-api-design	-	compat-api	วางแผน rename response field ของ public REST API ที่ client เก่าและใหม่อาจรันพร้อมกัน โดยต้อง migrate แบบไม่ทำให้ client เก่าพัง
-api-design ui-ux-baseline	-	compat-api-ui	เปลี่ยนชื่อ response field ของ REST endpoint เดิมที่หน้า React admin ใช้แสดงสถานะอยู่ ช่วยวางแผนค้น consumer, migrate API กับ UI และ verify user flow ไม่ให้ drift
--	ui-ux-baseline	compat-api-no-ui	เพิ่ม endpoint ใหม่สำหรับ internal service-to-service health metadata โดยยืนยันว่าไม่มี frontend consumer และ scope นี้เป็น API-only
-data-design	-	compat-schema	วางแผนเพิ่ม required column ในฐานข้อมูลระหว่าง rolling deploy ที่ code เก่าและใหม่อยู่พร้อมกัน พร้อม backfill และ contract ภายหลัง
-ops	-	compat-infra	วางแผนเปลี่ยน infrastructure resource ที่ revision เก่าและใหม่ใช้ร่วมช่วง rollout พร้อม dependency, precondition และ consumer verification
--	api-design data-design ops	compat-local	rename local variable ภายในฟังก์ชันเดียวโดยคง behavior และไม่มี public, data หรือ deployment contract
+api-design	-	compat-api	Plan a public REST API response-field rename while old and new clients may run concurrently, migrating without breaking old clients.
+api-design ui-ux-baseline	-	compat-api-ui	Rename a response field on an existing REST endpoint used by a React admin status view. Plan consumer discovery, API and UI migration, and user-flow verification to prevent drift.
+-	ui-ux-baseline	compat-api-no-ui	Add an endpoint for internal service-to-service health metadata, confirming there is no frontend consumer and the scope is API-only.
+data-design	-	compat-schema	Plan a required database column addition during a rolling deployment where old and new code coexist, including backfill and later contraction.
+ops	-	compat-infra	Plan a change to an infrastructure resource shared by old and new revisions during rollout, including dependencies, preconditions, and consumer verification.
+-	api-design data-design ops	compat-local	Rename a local variable within one function, preserving behavior with no public, data, or deployment contract.

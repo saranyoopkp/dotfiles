@@ -1,29 +1,27 @@
 ---
 name: research:product-market-user
-description: วิจัย product opportunity, market/competitor และ user need/behavior ด้วยหลักฐานที่มี provenance. ใช้เมื่อจะอ้างว่าผู้ใช้ต้องการอะไร, เลือก feature/segment, วิเคราะห์ interview/survey/support/usage data, เปรียบเทียบ competitor/pricing/positioning หรือ recommendation จะเปลี่ยน product behavior; ห้ามใช้ persona หรือความเห็นของ model แทน user evidence
+description: Research product opportunities, markets, competitors, and user needs or behavior with provenance-bearing evidence. Use when claims about user demand inform features or segments, when analyzing interviews, surveys, support, or usage data, when comparing competitors, pricing, or positioning, or when a recommendation changes product behavior. Never substitute personas or model opinion for user evidence.
 ---
 
 # Product, Market & User
 
-ใช้ `research:research-control` กำหนด decision, segment, geography/time window และ evidence plan.
+Use `research:research-control` to define the decision, segment, geography, time window, and evidence plan.
 
-1. แยกคำถามก่อน: product outcome/constraint, market size/dynamics/competitor หรือ user
-   need/behavior. หลักฐานคนละชนิดห้ามใช้แทนกัน
-2. เริ่มจาก evidence ที่มีอยู่จริง: product analytics/experiment, support/sales feedback,
-   interview/research note, churn/request และ decision เดิม. ตรวจ definition, sample, time window,
-   instrumentation และ selection bias ก่อนตีความ
-3. User evidence ให้ค่าน้ำหนัก observed behavior และ direct research ที่มีบริบทเหนือ opinion;
-   interview/anecdote สร้าง hypothesis ได้แต่ไม่พิสูจน์ prevalence. Survey ต้องตรวจ wording,
-   sampling และ non-response bias
-4. Market/competitor claim ใช้ official product/pricing/changelog/filing หรือ source ที่เปิด
-   methodology พร้อม source date + checked date. Marketing copy ยืนยันได้เพียงสิ่งที่ผู้ขายประกาศ
-5. ห้ามสร้าง synthetic persona, fabricated quote, market size หรือ “ผู้ใช้ส่วนใหญ่” จาก intuition,
-   LLM output หรือ sample ที่ไม่รองรับ. แยก `Observed / Reported / Inferred / Unknown`
-6. รักษา consent, purpose, minimization และ privacy ของข้อมูลผู้ใช้; ห้ามรวบรวม PII, ติดต่อคน,
-   ส่ง survey หรือใช้ production data นอก authority/scope
-7. Triangulate เฉพาะเมื่อหลักฐานวัด claim เดียวกัน; ความเห็นหลายแหล่งไม่ชดเชย sample/method ที่ผิด.
-   Source ขัดกันให้แยก segment/time/method ก่อนคงเป็น unknown
+1. Separate product outcomes or constraints, market dynamics or competitors, and user needs or behavior. Their
+   evidence types are not interchangeable.
+2. Start from actual analytics or experiments, support or sales feedback, research notes, churn or requests, and
+   prior decisions. Check definitions, sample, time window, instrumentation, and selection bias.
+3. Weight observed behavior and contextual direct research above opinion. Interviews and anecdotes can generate
+   hypotheses but not prevalence. Review survey wording, sampling, and non-response bias.
+4. Support market and competitor claims with official product, pricing, changelog, filing, or methodology-bearing
+   sources and record source plus checked dates. Marketing copy proves only what a seller claims.
+5. Never fabricate personas, quotes, market size, or “most users” from intuition, model output, or unsupported
+   samples. Separate `Observed / Reported / Inferred / Unknown`.
+6. Preserve consent, purpose limitation, minimization, and privacy. Do not collect PII, contact people, issue
+   surveys, or use production data outside authority and scope.
+7. Triangulate only evidence measuring the same claim. Multiple opinions do not repair bad sampling or method.
+   Reconcile conflicts by segment, time, and method before retaining an unknown.
 
-ส่งมอบ opportunity/insight พร้อม segment, evidence, confidence limitation และ counter-evidence;
-แยก fact จาก recommendation. Research เสนอทางเลือกได้ แต่ product behavior, experiment หรือ
-การเก็บข้อมูลใหม่ต้องผ่าน intent และ authorization rules ใน `claude/rules/core/change-control.md` ก่อน.
+Deliver opportunities or insights with segment, evidence, confidence limitations, and counter-evidence. Separate
+facts from recommendations. Product changes, experiments, and new collection require authorization under
+`claude/rules/core/change-control.md`.

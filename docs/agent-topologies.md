@@ -1,44 +1,37 @@
 # Agent topologies — reader reference
 
-เอกสารนี้มีไว้ให้คนอ่านเพื่อเข้าใจกลไกการทำงานของ Claude Code เท่านั้น ไม่ใช่ active instruction
-และไม่ใช่ routing policy ของ repository. ปัจจุบัน repository นี้ไม่เลือกหรือเรียก topology อัตโนมัติ;
-ผู้ใช้เป็นผู้ manual-trigger เองเมื่อเห็นว่าจำเป็น.
+This reader reference explains Claude Code mechanisms. It is neither active instruction nor repository routing policy. The repository does not automatically select or invoke a topology; the user triggers one manually when needed.
 
-## Role กับ topology
+## Roles and topologies
 
-`SCC`, `Scout` และ `ACV` เป็น role ของผู้ปฏิบัติงาน ส่วน `subagent`, `fork`, `agent team`,
-`background session` และ `worktree` เป็นกลไกจัด context, coordination หรือ file isolation.
-การเพิ่ม topology ไม่ได้แปลว่าต้องสร้าง role ใหม่.
+`SCC`, `Scout`, and `ACV` are worker roles. Subagents, forks, agent teams, background sessions, and worktrees are mechanisms for context, coordination, or file isolation. Adding a topology does not require a new role.
 
-| รูปแบบ | ความหมายโดยย่อ | จุดที่ต้องระวัง |
+| Form | Meaning | Caution |
 |---|---|---|
-| Main session / SCC | session หลักที่คุยกับผู้ใช้และถือ objective | เหมาะกับงานที่ต้องตัดสินใจหรือแก้ต่อเนื่อง |
-| `subagent` | context แยกสำหรับงานย่อยที่ self-contained หรือ read-only | context ไม่ได้รู้สิ่งที่ parent รู้โดยอัตโนมัติ; ผลลัพธ์ต้องตรวจซ้ำ |
-| `fork` | แตก session จากบทสนทนาเดิมเพื่อทดลอง side task | เห็น context เดิมได้ แต่ไม่ใช่ security boundary และผลไม่ merge เอง |
-| `agent team` | หลาย agent ที่มี ownership แยกและประสานงานกัน | ไม่เหมาะกับงาน sequential, same-file หรือ dependency หนาแน่น |
-| `background session` | session อิสระที่ทำงานนานโดยไม่ต้องรอผลทันที | การรันจบไม่ได้แปลว่างานถูกรวม, verified หรือส่งมอบแล้ว |
-| `worktree` | checkout/branch แยกเพื่อป้องกันการแก้ไฟล์ชนกัน | เป็น file/branch isolation ไม่ใช่ role และต้อง reconcile diff ก่อนรวม |
+| Main session / SCC | Primary user-facing session owning the objective | Appropriate for decisions and continuous edits |
+| `subagent` | Separate context for self-contained or read-only subtasks | It does not automatically know parent context; recheck results |
+| `fork` | Branch a conversation to experiment with a side task | It sees prior context but is not a security boundary and does not merge results |
+| `agent team` | Coordinated agents with separate ownership | Poor fit for sequential, same-file, or tightly coupled work |
+| `background session` | Independent long-running session whose result is not immediately needed | Completion does not mean work was merged, verified, or delivered |
+| `worktree` | Separate checkout and branch preventing file collisions | Provides file and branch isolation, not a role; reconcile diffs before integration |
 
-`/branch` หรือ `--fork-session` คือการแตก conversation/session เพื่อเก็บต้นฉบับไว้ทดลอง
-ไม่ใช่การสร้าง worker ใน session เดิม.
+`/branch` and `--fork-session` branch a conversation while preserving the original; they do not create workers in the same session.
 
-## เมื่อ manual-trigger เอง
+## Manual triggering
 
-ควรส่งข้อมูลให้ session/agent ที่ถูกเรียกให้พอทำงานได้โดยไม่ต้องเดาบริบท:
+Provide enough information for the invoked session or agent to work without guessing:
 
-1. objective และผลลัพธ์ที่ต้องการ
-2. acceptance evidence
-3. scope, paths, revision/worktree และสิ่งที่ห้ามแตะ
-4. dependency หรือ assumption ที่จำเป็น
-5. รูปแบบผลลัพธ์ที่ต้องส่งกลับ
+1. Objective and desired outcome.
+2. Acceptance evidence.
+3. Scope, paths, revision or worktree, and prohibited changes.
+4. Necessary dependencies and assumptions.
+5. Required result format.
 
-ผลจาก session อื่นเป็น input สำหรับตรวจสอบ ไม่ใช่หลักฐานยอมรับงานโดยอัตโนมัติ. ก่อนรวมผล
-ให้ตรวจ changed paths, diff, test/output และ limitation กับ revision ปัจจุบัน.
+Results from another session are inputs to verify, not automatic acceptance evidence. Before integration, inspect changed paths, diffs, tests or outputs, limitations, and the current revision.
 
-หากจะต่อ session เดิม ควรแน่ใจว่า objective, acceptance, scope/owner, revision และ worktree
-ยังเป็นเรื่องเดียวกันจริง; ถ้าเป็นคนละ boundary ให้เริ่ม context ใหม่เพื่อกัน blast.
+Resume a session only when objective, acceptance criteria, scope and owner, revision, and worktree remain the same concern. Start new context across a different boundary to contain blast radius.
 
-## แหล่งอ้างอิงทางการ
+## Official references
 
 - [Subagents](https://code.claude.com/docs/en/sub-agents)
 - [Agent teams](https://code.claude.com/docs/en/agent-teams)

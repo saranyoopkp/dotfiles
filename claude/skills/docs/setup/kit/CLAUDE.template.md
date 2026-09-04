@@ -1,217 +1,163 @@
-<!-- 🔴 STANDARD บังคับ: CLAUDE.md ห้ามถือ "fact ที่นับ/ลิสต์เองได้" เป็นค่า hardcode —
-     จำนวนไฟล์/บรรทัด/table/migration, รายชื่อไฟล์, shape ของ schema/DTO
-     = ชี้คำสั่ง (`ls`, `wc -l`, `grep -c`) หรือชี้ source file แทนการพิมพ์เลข/ชื่อลงไป
-     เหตุผล: fact ที่ copy มาแปะ = fact ที่จะ stale แล้วถูกเชื่อ (CLAUDE.md โหลดทุก session
-     = ดูเป็นความจริงแต่ไม่มีใคร re-verify) เช่น เขียน "12 tables" ไว้ แล้วเพิ่ม table ที่ 13
-     โดยลืมแก้ → doc โกหกเงียบ ๆ. ถ้าจำเป็นต้องมีเลข → เขียนคำสั่งที่คำนวณมันกำกับข้าง ๆ -->
+<!-- REQUIRED STANDARD: CLAUDE.md must not hardcode facts that can be counted or listed.
+     For file, line, table, or migration counts; generated file lists; or schema/DTO shapes,
+     point to a command (`ls`, `wc -l`, `grep -c`) or owning source instead. Copied facts
+     become stale while CLAUDE.md keeps presenting them as truth. If a number is essential,
+     include the command that derives it. -->
 
-# <ProjectName> (<domain/one-liner>)
+# <ProjectName> (<domain/one-line purpose>)
 
-> สถานะ: **<LIVE / WIP / phase>** — <deploy target / สภาพปัจจุบันแบบย่อ>
-> <status ที่เป็น point-in-time จริง เช่น image tag/phase — **ไม่ใช่** จำนวนที่นับเองได้ (ดู STANDARD บน)>
-> **<quirk/การแก้ล่าสุดที่ต้องรู้ก่อนทำงาน — ใส่วันที่ + เหตุผล + วิธีแก้ เช่น:
-> "⚡ Edge cache (แก้ 2026-07-01): เดิม X เพราะ Y → แก้ด้วย Z. ยืนยัน: ...">**
+> Status: **<LIVE / WIP / phase>** — <deployment target or concise current state>
+> <genuine point-in-time status such as image tag or phase, not a derivable count>
+> **<recent quirk or fix needed before work, including date, reason, remedy, and verification>**
 
 ## Inventory / Modules
-<!-- สถานะปัจจุบันต่อ module: 1–3 บรรทัด/ตัว ถ้าโตกว่านั้น → แยกไป docs/<module>.md แล้วเหลือ pointer -->
-- **<module>** — <สรุป + ไฟล์หลัก + quirk สั้น ๆ>
+<!-- Current state per module in one to three lines. Promote longer detail to docs/<module>.md and leave a pointer. -->
+- **<module>** — <summary, primary files, and concise quirk>
 
 ## Deploy / Redeploy
-<!-- คำสั่ง copy-paste ได้จริง เรียงเป็นขั้น + เงื่อนไข "ถ้า X เปลี่ยน ทำแค่ Y" -->
+<!-- Copy-pasteable commands in order, plus conditions such as “when X changes, run only Y.” -->
 1. `<command>`
 2. `<command>`
 
-<!-- สามข้อล่างนี้เป็น *คุณสมบัติของระบบ* (เปลี่ยนนาน ๆ ครั้ง) ไม่ใช่ของ release รอบนี้ —
-     ห้ามกรอกชื่อ migration/ticket ของรอบปัจจุบัน (นั่นคือหน้าที่ของ PR/commit ไม่ใช่ที่นี่)
-     repo ที่ไม่ได้ deploy (library/CLI) → ลบ section นี้ทิ้งทั้งก้อน -->
-- **pipeline ไม่ทำให้เอง**: <ของที่ต้องทำมือทุกครั้งที่มีของใหม่ เช่น migration ไม่ auto-run,
-  table ใหม่ต้อง grant เอง, env ใหม่ต้องไปตั้งที่ <ที่ไหน> — หรือ "pipeline ทำครบ ไม่มีของทำมือ">
-- **Rollback**: <ย้อนยังไง (tag/image เดิม) + อะไรที่ย้อนไม่ได้ (data migration ฯลฯ)>
-- **Verify หลัง deploy**: <flow จริงที่ต้องยิงหนึ่งรอบถึงเรียกว่าขึ้นสำเร็จ — rollout เขียว ≠ ระบบทำงาน>
+<!-- The next items describe stable system properties, not one release. Do not record the
+     current migration or ticket here; commits and pull requests own that history. Remove this
+     entire section for repositories that are not deployed, such as libraries and local CLIs. -->
+- **Pipeline does not automate:** <manual work required when new items appear, or “pipeline is complete; no manual step”>
+- **Rollback:** <how to restore the prior tag/image and what state cannot be reversed>
+- **Post-deployment verification:** <one real flow that must pass; a green rollout alone is insufficient>
 
-### Compatibility (N / N-1 compatibility) — ระบบที่รันอยู่ มีของเก่ากับของใหม่อยู่ด้วยกันเสมอชั่วขณะ (ต้องเช็คทุกการเปลี่ยนแปลง)
-<!-- checklist นี้ใช้ได้ทุก repo — เก็บไว้แม้ยังไม่มีอะไรกรอก; เพิ่มข้อเฉพาะของระบบนี้ต่อท้ายได้ -->
-**ของใหม่ต้องทำงานกับของเก่าได้ และของเก่าต้องไม่พังเพราะของใหม่** (backward + forward compatible)
-→ ทำได้ = **ลำดับการปล่อยไม่สำคัญ** ใครขึ้นก่อน/ทีหลัง/ย้อนกลับ ก็ยังทำงาน
-"ของเก่ากับของใหม่" = อะไรก็ตามที่ถูกเปลี่ยนคนละเวลา ไม่ใช่แค่ตอน deploy: โค้ด↔schema ·
-server ใหม่↔tab/mobile app ที่ยังไม่รีเฟรช · producer ใหม่↔message เก่าที่ค้างในคิว↔consumer ที่ยังไม่ขึ้น
-(instance เก่า-ใหม่รันคู่กันระหว่าง rolling deploy อยู่แล้วโดยธรรมชาติ)
+### Compatibility: N / N-1 coexistence
 
-- **ลบ / rename / เปลี่ยนความหมาย / บังคับ required = แบ่ง 2 รอบเสมอ** (expand → contract)
-  (รอบ 1 `expand`: เพิ่มของใหม่ + เขียนทั้งเก่าใหม่ + อ่านจากใหม่ · รอบ 2 `contract`: ลบของเก่าเมื่อไม่มีใครใช้แล้ว)
-  — เพิ่มของใหม่อย่างเดียว = ปลอดภัย ทำรอบเดียวได้
-- **โค้ดใหม่พึ่งอะไรที่ยังไม่ถูกสร้าง?** (migration, grant/สิทธิ์, env, ไฟล์, table, event type)
-  → นั่นคือ dependency ไม่ใช่ "แค่ยังไม่ได้ทำ" — ไม่ครบ = ยังไม่ deploy
-- **rollback = ย้อนโค้ดอย่างเดียวพอไหม?** ถ้าต้องย้อน state ด้วย = การเปลี่ยนแปลงนี้ไม่ปลอดภัย ออกแบบใหม่
-- **precondition ไม่ครบ ต้อง fail loud ไม่ใช่ข้ามเงียบ** — พังเงียบบน production แย่กว่าหยุด deploy เสมอ
-- **สร้างของใหม่แล้วทดสอบ "การใช้งานจริง" ของมัน** — สร้างสำเร็จ ≠ ใช้งานได้ (เช่น สร้าง role แล้ว
-  ต้องลองเขียนจริงด้วย ไม่ใช่แค่เช็คว่ามี)
-- feature flag/dual-read/dual-write ต้องมี owner, default, telemetry และเงื่อนไข rollback/ลบ;
-  ใช้แทน compatibility ของ state/contract ไม่ได้
+Keep this checklist in every deployed repository. Add system-specific checks below it.
 
-## Research escalation — เริ่มที่ repo แต่ห้ามจมอยู่ใน repo
+**New components must work with old components, and old components must remain safe around new ones.** Backward and forward compatibility make deployment order and rollback non-critical. “Old and new” includes anything changed at different times: code and schema, a new server and stale browser tab or mobile app, and a new producer with queued old messages and not-yet-upgraded consumers.
 
-- ก่อนสรุปหรือสร้าง workaround จากพฤติกรรมของ platform/framework/runtime/browser/OS/protocol/third-party dependency ให้แยกว่าเป็น `repo-specific` หรือ `external constraint`
-- อ่าน code/config/runtime เพื่อรู้ integration และ version ก่อน; หากข้อสรุปขึ้นกับข้อจำกัดภายนอก ขัดกับมาตรฐานที่คาดไว้ หรือ workaround มีนัยสำคัญ ให้ค้น official documentation/specification/release note ที่ตรง version/context ก่อนตัดสินใจ
-- source ภายนอกพิสูจน์ข้อจำกัดทั่วไปเท่านั้น; ต้องใช้ code/config/runtime ยืนยันแยกว่ากระทบ repo นี้อย่างไร
-- หา source ไม่ได้หรือหลักฐานขัดกัน = ระบุสิ่งที่ยังไม่ยืนยันและทางเลือก; ห้ามเดาข้อจำกัดเพื่อปิดงาน
-- research ที่มีผลต่อ decision ต้องกำหนด question, context/version/segment, source hierarchy,
-  freshness, appetite และ stopping criteria; ถึงขอบเขตแล้วยังไม่พอให้รายงาน unknown/next probe
-- advisory/CVE ต้อง map exact component/version/config/reachability; dependency/vendor ต้องตรวจ
-  maintenance, security, license, compatibility, total cost, lock-in/exit; user/market claim ต้องมี
-  provenance + segment + methodology — persona, anecdote หรือ model opinion ไม่ใช่ user evidence
-- research/recommendation ไม่ใช่ approval ให้เปลี่ยน behavior, เพิ่ม dependency, เลือก vendor,
-  upgrade, ติดต่อผู้ใช้ หรือเก็บข้อมูลใหม่
+- **Deletion, rename, semantic changes, and new required fields use two releases:** expand, then contract. First add the new form, write both forms, and read the new one. Remove the old form only after no consumers remain. Pure additions may ship once.
+- Ask whether new code depends on an uncreated migration, grant, environment variable, file, table, or event type. An unmet dependency means the release is not deployable.
+- Rollback should require reverting code only. If state must also be reversed, redesign the change.
+- Missing preconditions fail loudly rather than skipping silently; silent production corruption is worse than a stopped deployment.
+- Test real use of newly created resources. Successful creation does not prove usability; for example, write through a new role rather than merely checking that it exists.
+- Feature flags, dual reads, and dual writes need an owner, default, telemetry, rollback conditions, and removal criteria. They do not replace state or contract compatibility.
 
-## Complexity proposal
+## Research escalation
 
-- ก่อนเพิ่ม abstraction/dependency/infra/operational burden ให้หา driver จาก repo/runtime/source.
-  ถ้าทาง minimum ตอบ outcome/correctness/safety/compatibility ครบ ให้เสนอพร้อม defer trigger;
-  driver ยังไม่ชัดให้ถามเฉพาะเมื่อเปลี่ยน behavior/risk/cost หรือย้อนกลับแพง นอกนั้นเลือกทางขั้นต่ำ
-  ที่ปลอดภัยพร้อม assumption. ห้ามตัด safety/compatibility ที่มี risk รองรับเพื่อให้ดูเรียบง่าย
+- Before explaining or working around platform, framework, runtime, browser, OS, protocol, or third-party behavior, distinguish repository-specific behavior from an external constraint.
+- Inspect code, configuration, runtime, integration, and version first. When a conclusion depends on external behavior, conflicts with an expected standard, or motivates a material workaround, consult official documentation, specifications, or release notes for the relevant version and context.
+- External sources establish general constraints; repository evidence separately proves their local impact.
+- When evidence is unavailable or conflicting, state what remains unverified and the alternatives. Never invent a constraint to finish the task.
+- Decision-relevant research defines its question, context/version/segment, source hierarchy, freshness, appetite, and stopping criteria. When the limit is reached without enough evidence, report the unknown and next probe.
+- Map advisories and CVEs to exact components, versions, configuration, and reachability. Evaluate dependencies and vendors for maintenance, security, licensing, compatibility, total cost, lock-in, and exit. User and market claims require provenance, segment, and methodology; personas, anecdotes, and model opinion are not user evidence.
+- Research and recommendations do not authorize behavior changes, dependencies, vendor selection, upgrades, user contact, or new data collection.
 
-## Local dev
-<!-- คำสั่งรัน dev + quirks ของเครื่อง/toolchain ที่เคยเจ็บมาแล้ว (ระบุ symptom + fix) -->
+## Complexity proposals
+
+- Before adding abstraction, dependencies, infrastructure, or operational burden, find the driver in repository, runtime, or source evidence. If a minimal approach satisfies outcome, correctness, safety, and compatibility, propose it with a trigger for deferred complexity. Ask only when uncertainty changes behavior, risk, cost, or reversibility; otherwise choose the smallest safe option and state the assumption. Do not remove evidence-backed safety or compatibility controls merely to look simpler.
+
+## Local development
+<!-- Development commands and painful machine or toolchain quirks, including symptom and remedy. -->
 
 ## Structure & Run
-<!-- โครง workspace, source of truth ของ schema/config, คำสั่งพื้นฐาน -->
+<!-- Workspace structure, schema/config sources of truth, and primary commands. -->
 
 ## Conventions
-<!-- ภาษา (เว็บ=EN, internal=TH ได้), naming, กติกาที่ตกลงแล้ว
-     optional product voice/tone: audience, บุคลิก 3–5 คำ, ระดับความเป็นทางการ และคำที่ควรใช้/เลี่ยง;
-     ถ้ารายละเอียดโต ให้ย้ายไป docs/content-voice-tone.md แล้วเหลือ pointer ที่นี่ -->
+<!-- Language, naming, and established rules. Optional product voice/tone may define audience,
+     three to five personality words, formality, and preferred or avoided terms. Move growing
+     detail to docs/content-voice-tone.md and leave a pointer. -->
 
 ## Mission / Boundary
-<!-- ทำอะไร ไม่ทำอะไร ทำไม — กัน scope creep + กัน re-litigate -->
+<!-- What the project does, does not do, and why, preventing scope creep and repeated debate. -->
 
-## Architecture Decisions (ตัดสินใจแล้ว)
-<!-- ทุกข้อมีเหตุผล: "เลือก X (ไม่ใช่ Y) เพราะ ..." รวม "ทำไมไม่" ของทางที่ไม่เลือก
-     รูปแบบ: **<หัวข้อสั้น> (YYYY-MM-DD)**: เลือก X เพราะ Y (ไม่ใช่ Z เพราะ W)
-     section นี้คือสถานะปัจจุบัน ไม่ใช่ changelog — decision ที่ถูกแทนที่ ให้แก้ entry เดิม
-     (ไม่ลบ) แล้วมาร์ค "superseded by <decision ใหม่, วันที่>"; โตเกิน ~15 บรรทัด/decision
-     → แยกไป docs/decisions/<topic>.md เหลือสรุป+ลิงก์ -->
+## Architecture Decisions
+<!-- Every decision includes rationale and rejected alternatives. Format:
+     **<concise topic> (YYYY-MM-DD):** Choose X because Y, not Z because W.
+     This records current state, not a changelog. Update superseded entries in place and mark
+     “superseded by <new decision, date>.” Promote decisions longer than roughly 15 lines to
+     docs/decisions/<topic>.md and retain a summary and link. -->
 
 ## Constraints
-<!-- งบ / infra / เวลา — สิ่งที่กำหนดว่าอะไรทำได้-ไม่ได้ -->
+<!-- Budget, infrastructure, and time constraints that determine feasible options. -->
 
-## ข้อควรระวัง
-<!-- กับดักเชิงกลยุทธ์/เทคนิคที่รู้แล้ว -->
+## Known pitfalls
+<!-- Established strategic or technical traps. -->
 
-## Future boundaries (จดเผื่อ ยังไม่ commit)
-<!-- ไอเดียที่ "ยังไม่ตัดสินใจ" — จดกัน design ปัจจุบัน block อนาคต -->
+## Future boundaries
+<!-- Undecided possibilities recorded so today's design does not unnecessarily block them. -->
 
 ## Execution tracking
-<!-- เมื่อ harness มี Task tools: งานที่มีหลายขั้น, ข้ามหลาย turn, มี verification/handoff หรือ blocker/decision
-     ต้องสร้าง task list ก่อน mutation และ update ตามหลักฐาน (in-progress / blocked / completed). งานตอบคำถาม,
-     read-only inspection หรือแก้จุดเดียวจบใน turn เดียวไม่ต้องสร้าง checklist เพื่อพิธีกรรม. ไม่มี tool ให้สรุป
-     แผน/สถานะแบบกระชับในคำตอบแทน; ห้ามอ้างว่าติดตามผ่าน tool ที่ไม่มี -->
+<!-- When task tools exist, create a task list before mutation for multi-step or multi-turn work,
+     verification or handoff, and blockers or decisions. Update it from evidence as in progress,
+     blocked, or completed. Questions, read-only inspection, and one-point edits do not need
+     ceremonial checklists. Without task tools, summarize plans and status concisely; never claim
+     tracking through unavailable tools. -->
 
 ## Report integrity
-<!-- ก่อนรายงานผล/finding/handoff ให้แยก claim สำคัญเป็น Verified/Inferred/Assumption/Unverified/
-     Contradicted. Verified ต้องมาจาก primary evidence ปัจจุบันที่ผู้รายงานตรวจโดยตรง พร้อม target,
-     probe/result และ coverage; command/test claim ต้องมีวิธีตรวจและ exit status เมื่อมี. ห้ามรายงาน
-     ผลค้าง คำบอกต่อ หรือการตรวจตัวอย่างเหมือนเป็นหลักฐานปัจจุบันของทั้งชุด -->
+<!-- Classify important claims as Verified, Inferred, Assumption, Unverified, or Contradicted before
+     reporting results, findings, or handoffs. Verified claims require current primary evidence
+     inspected directly by the reporter, with target, probe/result, and coverage. Command or test
+     claims include the method and exit status when available. Never present stale output, hearsay,
+     or sample inspection as current proof of the whole set. -->
 
 ## Durable findings
-<!-- report/summary/transcript/finding เดิมเป็น lead ไม่ใช่ fact. ก่อนเขียน finding ลง debt, audit, TODO,
-     decision, runbook, postmortem หรือเอกสารถาวร ให้ตรวจ primary evidence ปัจจุบันโดยตรงครบทุก atomic
-     finding ที่จะเขียน; การยืนยันบางข้อไม่รับรองทั้งชุด. บันทึก status (Verified/Unverified/Contradicted),
-     provenance (target + probe/evidence), checked date และ revision/worktree เมื่อ state อาจต่างกัน.
-     ก่อนใช้ finding ตัดสินใจหลัง state เปลี่ยน ให้ตรวจส่วนที่อาจ stale ซ้ำ -->
+<!-- Existing reports, summaries, transcripts, and findings are leads rather than facts. Before
+     recording a finding in debt, audits, TODOs, decisions, runbooks, postmortems, or durable docs,
+     directly verify every atomic claim against current primary evidence. Partial verification does
+     not validate the set. Record status, provenance, checked date, and revision/worktree when state
+     may differ. Recheck potentially stale portions before using a finding after state changes. -->
 
-## TODO ถัดไป
-- [ ] <งานถัดไปแบบ actionable>
+## Next TODOs
+- [ ] <next actionable task>
 
-## เอกสารเพิ่มเติม
-<!-- index ให้มองเห็นทุกชั้นจากไฟล์เดียว — ต้อง sync กับไฟล์จริงเสมอ (เพิ่ม/ย้าย/ลบ = อัปเดตที่นี่ใน commit เดียวกัน)
-     ชื่อไฟล์ = โดเมนไม่ใช่เวลา; docs/ เกิน ~7 ไฟล์ → จัด subfolder ตามโดเมนแล้ว group index ตามนั้น -->
-- `docs/<topic>.md` — <หนึ่งบรรทัดว่ามีอะไร + ทำไมต้องเปิด>
-- `memory/MEMORY.md` — index ของ fact สั้น ๆ ทั้งหมด
+## Documentation index
+<!-- Make every layer discoverable from this file and synchronize the index with additions, moves,
+     and deletions in the same commit. Name files by domain rather than date. When docs/ grows beyond
+     roughly seven flat files, organize by domain and group the index accordingly. -->
+- `docs/<topic>.md` — <what it contains and why to open it>
+- `memory/MEMORY.md` — index of concise shared facts
 
-## เส้นแบ่ง CLAUDE.md / docs/ / memory/ (มาตรฐาน — ใช้ตัดสินก่อนจดทุกครั้ง)
+## CLAUDE.md / docs / memory placement boundary
 
-เส้นแบ่งคือ**กลไกที่มันถูกอ่าน** ไม่ใช่หัวข้อของเนื้อหา:
+The boundary is **how content is read**, not its topic:
 
-| ชั้น | ถูกอ่านแบบ | หน่วย | เขียนเมื่อตอบ "ใช่" กับคำถามนี้ |
+| Layer | Reading mechanism | Unit | Write when this is true |
 |---|---|---|---|
-| `CLAUDE.md` | **push** — โหลดเต็มทุก session (ทุกบรรทัด = ภาษีทุก session) | ภาพรวม + operational | "ถ้าไม่เห็นทุก session จะทำงานผิดไหม" |
-| `docs/<topic>.md` | **pull** — เปิดเมื่อ*รู้ตัว*ว่าทำเรื่องนั้น | เรื่องละไฟล์ ยาวได้ | "จะถูกเปิดอ่านเมื่อลงมือทำเรื่องนั้นไหม" |
-| `memory/MEMORY.md` | **recall router** — auto-load ทุก session | pointer + hook ของ shared fact | "session หน้าต้องรู้ว่ามี fact นี้ไหม" |
-| `memory/<fact>.md` | **selective pull** — harness ไม่เปิดตาม pointer เอง | fact เม็ดเดียว/ไฟล์ สั้น | "index/task ชี้แล้วควรเปิดรายละเอียดไหม" |
+| `CLAUDE.md` | **Push:** loaded fully every session, so every line is a recurring cost | Overview and operational rules | “Missing this in any session would cause incorrect work” |
+| `docs/<topic>.md` | **Pull:** opened when someone deliberately works on the topic | One topic per file, any justified length | “Someone starting this topic will know to open it” |
+| `memory/MEMORY.md` | **Recall router:** auto-loaded every session | Pointer and hook for each shared fact | “A future session must know this fact exists” |
+| `memory/<fact>.md` | **Selective pull:** the harness does not open pointer targets automatically | One concise fact per file | “Once the index or task points here, the detail should open” |
 
-- **shared memory index lifecycle:** create/move/rename/delete `memory/<fact>.md` ต้อง
-  เพิ่ม/แก้/ลบ pointer + recall hook ใน `memory/MEMORY.md` commit เดียวกัน; edit leaf ให้
-  ตรวจว่า hook ยังตรงและแก้เฉพาะเมื่อความหมาย/relevance เปลี่ยน. `MEMORY.md` เก็บ index
-  เท่านั้น ห้ามคัดเนื้อ fact มาใส่
-- เนื้อเรื่องเดียวกันแยกสองบ้านได้ตาม*หน้าที่*: ประวัติ/เหตุผลเต็ม → docs/, fact ที่ต้องนึกออกเอง
-  (quirk, preference, กับดัก) → memory/, CLAUDE.md เหลือ 1-3 บรรทัด + pointer
-- ตัวเลข/ข้อมูลที่ reproduce ได้จาก script/คำสั่ง → ไม่จดที่ไหนเลย ชี้ไป source
-- **monorepo/submodule**: เอกสารของ module อยู่ในตัว module — root เก็บ pointer +
-  short info (1-3 บรรทัด/module); เฉพาะเรื่อง cross-cutting (deploy รวม, contract
-  ระหว่าง module) อยู่ root
+- Creating, moving, renaming, or deleting a shared memory leaf requires updating its pointer and recall hook in `memory/MEMORY.md` in the same commit. For edits, update the hook only when meaning or relevance changes. Keep the index free of copied leaf content.
+- One subject may use different homes for different reading purposes: full history and rationale in docs, proactively recalled quirks or preferences in memory, and only a one-to-three-line summary with pointers in CLAUDE.md.
+- Do not record numbers or data reproducible from scripts or commands; point to the source.
+- In monorepos and submodules, module documentation stays with the module. The root retains concise pointers, while only cross-cutting deployment and inter-module contracts remain at root.
 
-**สองชั้นในโค้ด (อยู่ใต้ตารางเดียวกัน — ถูกอ่านใกล้โค้ดที่สุด):**
-- **inline comment** = ถูกอ่านตอน*แก้บรรทัดนั้น* → เก็บเฉพาะ why/constraint ที่จำเป็นต่อ local context และ
-  code, type, test หรือชื่อที่ดีแสดงเองไม่ได้; ถ้า code อธิบายได้แล้วไม่ต้องเขียน comment. rationale,
-  history, experiment หรือ procedure ที่กว้างกว่าจุดนั้นให้ย้ายไป `docs/` พร้อม pointer
-  เมื่อช่วยให้ค้นและดูแลได้ดีขึ้น — จำนวนบรรทัดอย่างเดียวไม่ใช่เกณฑ์;
-  pointer ที่ commit ต้อง resolve จาก clone ของ repo ห้ามชี้ `~/.claude/` หรือ path เฉพาะเครื่อง;
-  ห้าม commented-out code (git จำให้) และห้ามเล่าว่าบรรทัดถัดไปทำอะไร;
-  **ขาอ่าน: เจอ comment ที่มี pointer ตอนแก้จุดนั้น = เปิด doc ตามก่อนแก้** ไม่ใช่ข้าม
-- **docstring** = ถูกอ่านตอน*จะเรียกใช้/แก้* function-module นั้น → interface contract
-  (ทำอะไร, input/output, invariant, side effect) ตามธรรมเนียมภาษา (PEP 257, JSDoc);
-  public interface ต้องมี — และ**ขาอ่านสำคัญเท่าขาเขียน**: ก่อนใช้/แก้ของเดิม อ่าน docstring
-  ก่อน ไม่เดาจากชื่อ; contract ขัดพฤติกรรมจริง = บั๊กที่ต้องแก้ในงานเดียวกัน;
-  **เปิดด้วย contract ถูกต้องแล้วต่อด้วยเรียงความ/postmortem/changelog = ผิดบ้าน** →
-  เนื้อนั้นไป docs/ (docstring บวมคือ comment ยาวที่ใส่เสื้อ JSDoc)
-- **codetag** (`TODO(scope):` — PEP 350) = เครื่องหมายงานค้าง ไม่ใช่คำอธิบายโค้ด —
-  **จุดต่างสำคัญคืออายุ**: comment/docstring อยู่ตราบที่โค้ดอยู่ แต่ codetag *ต้องตาย*
-  (ลบใน commit เดียวกับงานที่ปิดมัน — ค้าง = โกหกตารางสถานะ; แช่นาน = หนี้ระดับ feature
-  ต้องย้ายขึ้น TODO ของ CLAUDE.md ไม่ใช่ฝังในโค้ด)
+The closest-to-code layers follow the same table:
 
-(อิงหลักสากล: Clean Code/Ousterhout — comment=why · PEP 257/JSDoc — docstring=contract ·
-ADR สำหรับ decision · Diátaxis + SSOT สำหรับแยกเอกสารตามหน้าที่การอ่าน)
+- **Inline comments** are read while editing a line. Keep only local why or constraints that code, types, tests, and good names cannot express. If code explains it, do not write a comment. Move broader rationale, history, experiments, and procedures to docs with a pointer when that improves discovery and maintenance; line count alone is not the criterion. Committed pointers must resolve from a clone and cannot target machine-specific paths. Remove commented-out code and code narration. When editing code near a comment pointer, open its target first.
+- **Docstrings** are read before calling or changing a function or module. They state interface contracts—purpose, inputs/outputs, invariants, and side effects—using language conventions such as PEP 257 or JSDoc. Public interfaces require them. Read existing docstrings before inferring from names; a contract contradicting behavior is a documentation defect to fix in the same task. Tutorials, postmortems, and changelog essays belong in docs even when preceded by a correct contract.
+- **Codetags** such as `TODO(scope):` mark unfinished work under PEP 350; they do not explain code. Unlike durable comments and docstrings, a codetag must disappear in the same commit that completes the work. Persistent feature debt belongs in CLAUDE.md TODOs rather than one code file.
 
-## Memory policy (สำหรับ Claude — อ่านทุก session)
+These choices align with established principles: Clean Code and Ousterhout for comments as why, PEP 257 and JSDoc for contracts, ADRs for decisions, and Diátaxis plus SSOT for documentation organized by reading purpose.
 
-**`memory/` ของ tree ที่ session เปิดอยู่ คือ memory ตัวจริง** — ฝั่ง harness
-(`~/.claude/projects/<project-id>/memory`) เป็น **link** ชี้มาที่นี่ (junction บน Windows /
-symlink บน unix) เขียน/อ่าน memory ตามปกติได้เลย ไฟล์ลง repo อัตโนมัติ
-`docs-drift.sh` ตรวจ link แบบ read-only; `/docs:setup` เป็น owner ของการ merge/สร้าง/ซ่อม link.
-ใน git worktree link ต้องชี้ `memory/` ของ **worktree เอง** (ไม่ใช่ tree หลัก) เพื่อให้ fact
-อยู่กับ branch ที่สร้างมัน:
+## Memory policy
 
-- memory ใหม่ที่บันทึก = untracked file ใน repo → คัดกรองแล้ว commit พร้อมงาน:
-  **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
-- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — ใช้ `docs/private/` และ
-  `memory/private/` ของ repo นั้น ๆ (relative จาก Git root): โน้ต ops sensitive
-  (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`
-  (gitignored ทั้งคู่,
-  ห้าม index ลง `memory/MEMORY.md` ที่ commit). ไม่พบใน index ไม่ได้แปลว่าไม่มี private
-  memory; ถ้างานอาจพึ่งข้อมูลเฉพาะเครื่อง ให้ตรวจ `memory/private/` ก่อนสรุปหรือถาม
-- เจอข้อความ `[docs] Harness memory ...` หมายถึง link missing/broken/misdirected; อย่าซ่อมเป็น
-  detour เองถ้าไม่อยู่ใน scope ให้รายงานและขอ/ใช้ `/docs:setup` เมื่อได้รับ authorization:
-  - **มี dir เดิมที่ไม่ใช่ link** (มี fact ค้างอยู่ข้างใน) → **ห้ามลบ** merge ไฟล์เข้า
-    `memory/` ของ repo ก่อน แล้ว rename ของเดิมเป็น `.bak` ค่อยสร้าง link
-  - สร้าง link เอง: unix `ln -s <tree>/memory ~/.claude/projects/<id>/memory` ·
-    Windows `New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<id>\memory" -Target "<tree>\memory"`
-  - `<id>` = absolute path ของ **tree ที่เปิด session อยู่** (worktree ก็ path ของ worktree)
-    โดยแทนอักขระที่ไม่ใช่ a-z/0-9 ด้วย `-`
-- fact ที่ผิด/หมดอายุ → ลบไฟล์ + ลบบรรทัดใน `memory/MEMORY.md`
+**The active tree's `memory/` is the real copy.** The harness directory `~/.claude/projects/<project-id>/memory` links here through a Windows junction or Unix symlink. Read and write memory normally; files enter the repository directly. `docs-drift.sh` inspects the link without mutation, while `/docs:setup` owns merging, creation, and repair. In a Git worktree, the link must target that worktree's own `memory/`, not the primary tree, so facts remain with the branch that created them.
 
-**Task-close checklist (ทำทุกครั้งที่ปิดงานหนึ่งชิ้น ไม่ต้องรอจบ session):**
-1. CLAUDE.md/docs ยังตรงกับความจริงหลังงานนี้ไหม — ถ้าไม่ อัปเดตทันที:
-   feature ใหม่ = +1–3 บรรทัดใน Inventory (มีอะไร/ไฟล์หลัก/quirk) + decision พร้อมเหตุผลถ้ามี
-   — จดเฉพาะสิ่งที่**โค้ดเล่าเองไม่ได้** (ทำไม/ข้อจำกัด/กับดัก) ห้ามเล่า implementation ซ้ำ
-2. มี memory ใหม่ควรบันทึก/คัดกรองไหม (ลบ metadata ส่วนบุคคล, ไม่มี secret);
-   ถ้า shared leaf เปลี่ยน lifecycle ให้ sync `memory/MEMORY.md` และตรวจ pointer/hook
-3. เมื่อ mutation ที่ได้รับอนุญาตถึง cohesive verified checkpoint ให้สร้าง local commit เป็น default
-   และให้เอกสารอยู่ commit เดียวกับงาน; stage เฉพาะ paths/hunks ใน scope ห้ามรวม dirty work เดิม
-   และห้าม push หากผู้ใช้ไม่ได้สั่ง.
-   รวมถึงลบ `TODO(scope)` ในโค้ดที่งานนี้ปิดแล้ว
-   (TODO ที่จบแล้วแต่ยังอยู่ = โกหกตาราง)
-4. **section ไหนใน CLAUDE.md โตเกิน ~15 บรรทัด → promote ทันที**: ย้ายเนื้อไป
-   `docs/<topic>.md` (หรือ `memory/<fact>.md` ถ้าเป็น fact สั้น) แล้วเหลือสรุป 1–3 บรรทัด
-   + ลิงก์ — ห้ามปล่อยให้ CLAUDE.md เป็นที่กองเนื้อหา (มันถูกโหลดเต็มทุก session)
-_(lifecycle hooks ใน `.claude/settings.json` ตรวจเฉพาะ baseline/link, shared-memory index และ
-continuity; ไม่บังคับ docs disposition หรือ commit ของ source edit ปกติ)_
+- New memory is an untracked repository file. Review and commit it with related work, removing personal metadata such as `originSessionId` and checking for secrets.
+- Never commit private or sensitive content. Use Git-root-relative `docs/private/` for operational secrets, IPs, or server paths and `memory/private/` for personal or machine-specific facts. Both are ignored and must not be indexed in committed `memory/MEMORY.md`. Search private memory when the task may depend on machine-specific information before concluding it is absent.
+- A `[docs] Harness memory ...` message means the link is missing, broken, or misdirected. Do not detour into repair outside scope; report it and use `/docs:setup` after authorization.
+  - Never delete an existing real directory containing facts. Merge missing files into repository `memory/`, rename the original directory to `.bak`, then create the link.
+  - Unix: `ln -s <tree>/memory ~/.claude/projects/<id>/memory`
+  - Windows: `New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\projects\<id>\memory" -Target "<tree>\memory"`
+  - `<id>` is the active tree's absolute path, including a worktree path, with non-alphanumeric characters replaced by `-`.
+- Delete expired or false facts and their `memory/MEMORY.md` entries.
+
+### Task-close checklist
+
+Apply this after each completed unit of work rather than waiting for session end:
+
+1. Confirm CLAUDE.md and docs still describe reality. Update immediately when needed. A new feature typically adds one to three inventory lines covering existence, entry point, and quirks plus a reasoned decision when applicable. Record only why, constraints, and traps that code cannot explain; do not narrate implementation.
+2. Review potential new memory, remove personal metadata, and check for secrets. Synchronize `memory/MEMORY.md` whenever a shared leaf changes lifecycle, and verify its pointer and hook.
+3. At a cohesive verified checkpoint for authorized mutation, create a local commit by default. Commit related documentation with the work, stage only in-scope paths or hunks, preserve pre-existing dirty work, and never push unless requested. Remove codetags completed by the work.
+4. Promote any CLAUDE.md section exceeding roughly 15 lines into `docs/<topic>.md`, or a concise `memory/<fact>.md` when appropriate, leaving a one-to-three-line summary and link. Do not let an always-loaded file become a content dump.
+
+Lifecycle hooks in `.claude/settings.json` verify baseline and links, the shared-memory index, and continuity. They do not enforce documentation placement or commits for ordinary source edits.

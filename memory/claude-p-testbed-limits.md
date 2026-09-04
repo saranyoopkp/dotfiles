@@ -1,13 +1,10 @@
 ---
 name: claude-p-testbed-limits
-description: claude -p = fresh test bed ของ rules/skills/agent (รันเป็น agent จาก settings, ยิงขนานได้, วัดด้วย stream-json) — แต่ไม่ยิง Stop hook และห้ามแก้ script ที่กำลังรัน
+description: claude -p provides a fresh rules, skills, and agent test bed with parallel stream-json measurement, but it does not fire Stop hooks and a running script must not be edited.
 metadata:
   type: project
 ---
 
-`claude -p` ใช้ verify การเปลี่ยน rule/skill/agent โดยไม่ restart — subagent ใช้แทนไม่ได้
-(สืบทอด context ค้าง); วัด ground truth ด้วย `--output-format stream-json` ดู tool_use จริง
+Use `claude -p` to verify rule, skill, or agent changes without restarting. A subagent cannot substitute because it inherits existing context. Measure ground truth from actual tool use in `--output-format stream-json`.
 
-**ข้อจำกัด:** (1) ไม่ยิง Stop hook — hook ต้อง real session (2) ห้ามแก้ bash script
-ที่ process กำลังรัน (อ่าน incremental → ปนเวอร์ชัน crash) (3) LLM อาจตอบชื่อ skill จาก
-description ที่เห็น ไม่ใช่จาก registry — invoke จริงเท่านั้นที่เป็น ground truth
+**Limits:** It does not fire Stop hooks, which require a real session. Never edit a Bash script while its process runs because incremental reads can mix versions and crash. An LLM may repeat a visible skill description without invoking the registry; only actual invocation is ground truth.

@@ -1,25 +1,26 @@
 # Compatibility & Rollout
 
-ใช้เมื่อเปลี่ยน public contract, schema, event, persisted state หรือ deployment ที่ของเก่ากับ
-ของใหม่อาจอยู่พร้อมกัน.
+Apply this rule when changing a public contract, schema, event, persisted state, or deployment where old and new
+versions may coexist.
 
-## Invariant
+## Invariants
 
-- ของใหม่ต้องไม่ทำให้ consumer เก่าพัง และของเก่าต้องอยู่ร่วมกับ consumer ใหม่ได้ในช่วง migrate
-- old/new ครอบคลุม instance ที่ rolling พร้อมกัน, tab/mobile client ที่ยังไม่ refresh และ
-  message/event เก่าที่ค้างถึง consumer ใหม่; failure กลุ่มนี้อาจตายเงียบและโผล่ใน deploy ของคนอื่น
-- เป้าหมายคือ release order ไม่สำคัญ; หากมี dependency order จริง ให้ระบุ precondition และแยก
-  change ตามทิศทาง dependency ไม่ปนของที่ต้องมาก่อนกับของที่ต้องมาทีหลังใน boundary เดียว
-- additive change ต้องเริ่มแบบ optional; destructive change เช่น remove/rename/change meaning/
-  required ใช้ **Expand → Migrate → Contract** คนละ boundary และตรวจ consumer ก่อน contract
-- rollback code ไม่ได้ย้อน data/state; ออกแบบ forward compatibility หรือ mitigation ก่อน deploy
-- precondition ที่ขาดต้อง fail loud ห้าม skip แล้วรายงานเหมือน rollout สำเร็จ
-- resource/schema/config “ถูกสร้างแล้ว” ไม่พิสูจน์ rollout; ต้องตรวจ action จริงที่ consumer
-  จะใช้กับของนั้น รวมทั้ง old/new path ตาม compatibility window
-- destructive change ต้องมี staged migration plan ที่ CI/review มองเห็นและสะดุดเมื่อขาด;
-  ถ้า repo ยังบังคับอัตโนมัติไม่ได้ ให้รายงาน enforcement gap ห้ามพึ่งความจำเงียบ ๆ
-- feature flag, dual-read และ dual-write เป็น rollout mechanism: ต้องมี owner, default,
-  telemetry, rollback/removal condition และใช้แทน compatibility ของ state/contract ไม่ได้
+- New code must not break old consumers, and old code must coexist with new consumers during migration.
+- Old/new combinations include concurrently rolling instances, browser tabs or mobile clients that have not
+  refreshed, and old messages or events reaching a new consumer. These failures may remain silent and surface
+  during someone else's deployment.
+- Aim for release-order independence. When a real dependency order exists, state its preconditions and split
+  changes in dependency order rather than mixing prerequisites and dependents in one boundary.
+- Begin additive changes as optional. Put destructive changes—remove, rename, meaning changes, or required fields—
+  through separate **Expand → Migrate → Contract** boundaries and verify consumers before contraction.
+- Rolling back code does not reverse data or state. Design forward compatibility or mitigation before deployment.
+- Missing preconditions must fail loudly; never skip them and report the rollout as successful.
+- A resource, schema, or configuration being “created” does not prove rollout. Exercise the actual consumer action,
+  including old and new paths across the compatibility window.
+- Destructive changes require a staged migration plan visible to CI or review, with failure when a stage is absent.
+  If the repository cannot enforce this automatically, report the enforcement gap rather than relying on memory.
+- Feature flags, dual reads, and dual writes are rollout mechanisms. They need an owner, default, telemetry,
+  and rollback or removal conditions, and cannot replace state or contract compatibility.
 
-รายละเอียดตาม domain อยู่ใน `api-design:evolution`, `data-design:schema-migrations` และ
-`ops:infra-change`; invariant นี้เป็น safety floor และ skill ห้ามลดระดับ.
+Domain detail belongs in `api-design:evolution`, `data-design:schema-migrations`, and `ops:infra-change`.
+This invariant is the safety floor and skills must not weaken it.

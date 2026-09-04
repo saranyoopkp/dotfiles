@@ -1,28 +1,26 @@
 ---
 name: research:technology-vendor
-description: เปรียบเทียบ dependency, framework, database, infrastructure technology, SaaS/vendor หรือ build-vs-buy ด้วยหลักฐานปัจจุบัน. ใช้เป็น owner ของ external comparison และ recommendation ก่อนเพิ่ม dependency ใน brownfield, เลือกหรือเปลี่ยน vendor, ประเมิน maintenance/security/license/pricing/support/compatibility/lock-in หรือทำ recommendation ที่มีต้นทุนและ migration impact; shared inventory/contract ใช้ stack-contracts ร่วมเมื่อจำเป็น
+description: Compare dependencies, frameworks, databases, infrastructure technologies, SaaS vendors, or build-vs-buy options using current evidence. Own external comparison and recommendations before brownfield dependencies or vendor changes, including maintenance, security, licensing, pricing, support, compatibility, lock-in, total cost, and migration impact. Use stack-contracts for shared inventory or contracts when needed.
 ---
 
 # Technology & Vendor
 
-ใช้ `research:research-control` เพื่อกำหนด criteria และ stopping condition ก่อนเปิด comparison.
-Greenfield version chain ยังต้องใช้ `greenfield-foundation`; skill นี้เสริมการเปรียบเทียบ ไม่แทน gate นั้น.
+Use `research:research-control` to set criteria and stopping conditions. Use `greenfield-foundation` for a
+greenfield version chain; this skill supplements comparison rather than replacing that gate.
 
-1. กำหนด decision boundary: use case, must-have, scale/workload, deployment/data residency,
-   team capability, budget horizon, compliance, integration/consumer และ exit constraint.
-   ห้ามเลือก candidate ก่อนรู้ criteria
-2. Inventory ของเดิมใน repo และต้นทุน migration. การไม่มี direct import ไม่พิสูจน์ว่าไม่มี
-   integration; ตาม config, generated client, data, deployment และ operational dependency
-3. สร้าง shortlist เฉพาะตัวเลือกที่ผ่าน must-have แล้วตรวจจาก source ปัจจุบัน:
-   support/lifecycle, release/maintenance activity, compatibility, security/advisory process,
-   license, pricing/limits, SLA/support, data handling/residency, portability และ deprecation policy
-4. แยก vendor claim ออกจาก independent evidence. Official docs ยืนยัน contract/pricing/policy;
-   benchmark/review ยืนยันได้เฉพาะ workload, version และ methodology ที่เปิดเผยและใกล้บริบทจริง
-5. คิด total cost ไม่ใช่ราคาเริ่มต้น: implementation, migration, operations, observability,
-   training, usage growth, egress, support, lock-in และ exit/data export
-6. หาก source แยกผู้ชนะไม่ได้ ให้ทำ bounded proof-of-concept หรือ measurement ที่พิสูจน์
-   uncertainty สำคัญที่สุด; demo สำเร็จไม่เท่ากับ production fit
+1. Define use case, must-haves, scale and workload, deployment or residency, team capability, budget horizon,
+   compliance, consumers, and exit constraints before choosing candidates.
+2. Inventory existing repository use and migration cost. Lack of a direct import does not prove no integration;
+   trace configuration, generated clients, data, deployment, and operational dependencies.
+3. Shortlist only options meeting must-haves, then verify current support and lifecycle, maintenance, compatibility,
+   security process, license, prices and limits, SLA/support, data handling and residency, portability, and deprecation.
+4. Separate vendor claims from independent evidence. Official documentation proves contracts, prices, and policy;
+   benchmarks or reviews apply only to their disclosed workload, version, and methodology.
+5. Evaluate total cost: implementation, migration, operations, observability, training, growth, egress, support,
+   lock-in, and exit or export—not only entry price.
+6. When sources cannot distinguish options, run a bounded proof of concept or measurement against the most material
+   uncertainty. A successful demo is not production fit.
 
-ส่งมอบ criteria-weighted comparison โดยแยก fact/inference/unknown, source + checked date,
-repo applicability, risk และ exit cost. เสนอ recommendation พร้อมเหตุผลและ condition ที่ทำให้
-คำแนะนำเปลี่ยน แต่ห้ามเลือกซื้อ เพิ่ม dependency หรือ migration เองหาก scope ยังไม่ได้อนุมัติ.
+Deliver a criteria-weighted comparison separating fact, inference, and unknown, with source and checked date,
+repository applicability, risks, and exit cost. Recommend with rationale and conditions that would change the
+recommendation, but do not purchase, add dependencies, or migrate without authorized scope.

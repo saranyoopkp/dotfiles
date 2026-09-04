@@ -1,23 +1,22 @@
-# test/metrics — วัดพฤติกรรม agent จาก session corpus (`~/.claude/projects`)
+# test/metrics — Agent Behavior from Session Corpora
 
-มีสอง pipeline ที่มีหน้าที่ต่างกัน:
+This directory analyzes `~/.claude/projects` through two distinct pipelines:
 
-- **Trend metrics** ใช้ sample/aggregate เพื่อดู SCC cutover ตามเวลา
-- **Evidence-grade retro index** สำรวจ source ครบ, เก็บ provenance และสร้าง audit unit ต่อ human turn;
-  ใช้เมื่อ coverage และการเปิดกลับไปดูหลักฐานสำคัญ
+- **Trend metrics** sample and aggregate behavior across SCC cutovers.
+- **Evidence-grade retro indexing** inventories every source, preserves provenance, and creates one audit unit per human turn when coverage and traceability matter.
 
-| script | ทำอะไร | คำสั่ง |
+| Script | Purpose | Command |
 |---|---|---|
-| `lookback.py` | regex + tool_use ground truth: corrective-"ไม่", continue-cmd, ACV compliance ต่อ period | `python lookback.py --cuts <ts1> <ts2>` |
-| `extract_turns.py` | ดึง user turns → `data/turns.jsonl` | `python extract_turns.py --since 2026-07-01` |
-| `semantic_classify.py` | haiku fan-out classify 7 หมวด → `data/merged.jsonl` + `data/daily.csv` | `python semantic_classify.py [--sample 600]` |
-| `eval_groundtruth.py` | สร้าง/ประเมิน ground-truth set (precision/recall) | `--make` แล้ว label มือ แล้วรันเปล่า |
-| `index_transcripts.py` | สร้าง SQLite index, reconcile source/line/turn coverage และ export objective-audit queue | ดูคำสั่งด้านล่าง |
-| `test_index_transcripts.py` | synthetic regression ของ schema/branch/tool-result/coverage | `python test_index_transcripts.py` |
-| `prepare_audit.py` | สร้าง deterministic pilot manifest และ payload budget โดยไม่เรียก model | ดูคำสั่งด้านล่าง |
-| `test_prepare_audit.py` | regression ของ sampling, edge coverage และ budget | `python test_prepare_audit.py` |
-| `discover_events.py` | สร้าง event candidate manifest และ branch-aware evidence packets | ดูคำสั่งด้านล่าง |
-| `test_discover_events.py` | regression ว่า packet ตาม lineage และไม่ปน sibling branch | `python test_discover_events.py` |
+| `lookback.py` | Regex and tool-use trends: correction, continuation, and ACV compliance by period | `python lookback.py --cuts <ts1> <ts2>` |
+| `extract_turns.py` | Export user turns to `data/turns.jsonl` | `python extract_turns.py --since 2026-07-01` |
+| `semantic_classify.py` | Haiku fan-out into seven categories, producing `data/merged.jsonl` and `data/daily.csv` | `python semantic_classify.py [--sample 600]` |
+| `eval_groundtruth.py` | Create or evaluate a hand-labeled precision/recall set | Run `--make`, label manually, then run without it |
+| `index_transcripts.py` | Build the SQLite index, reconcile source/line/turn coverage, and export objective-audit queues | See below |
+| `test_index_transcripts.py` | Synthetic schema, branch, tool-result, and coverage regressions | `python test_index_transcripts.py` |
+| `prepare_audit.py` | Create a deterministic pilot manifest and payload budget without a model | See below |
+| `test_prepare_audit.py` | Sampling, edge-coverage, and budget regressions | `python test_prepare_audit.py` |
+| `discover_events.py` | Create event candidates and branch-aware evidence packets | See below |
+| `test_discover_events.py` | Verify packets follow lineage without mixing sibling branches | `python test_discover_events.py` |
 
 ## Evidence-grade retro index
 
@@ -25,26 +24,19 @@
 cd test/metrics
 python index_transcripts.py index
 python index_transcripts.py status
-python index_transcripts.py search 'ผมหมายถึง'
+python index_transcripts.py search 'I meant'
 python index_transcripts.py context <session-uuid> <turn-ordinal>
 python index_transcripts.py export --session <session-uuid>
 python index_transcripts.py import data/reviewed.jsonl --reviewer <name> --prompt-version <version>
 ```
 
-`index` catalog ทุก `*.jsonl` แบบ recursive แต่ default audit เฉพาะ main interactive sessions;
-subagent, Temp/harness และ `sdk-cli`/print sessions ถูกนับเป็น explicit exclusion ไม่ได้หายเงียบ.
-session ที่ `Edit`/`Write`/`NotebookEdit` ไฟล์ใน dotfiles repo นี้ (รวม path ผ่าน symlink
-`~/.claude/rules`, `skills`, `agents`) ถูก exclude ทั้ง session เป็น `dotfiles_self_modification`
-เพื่อไม่ใช้ข้อมูลที่ปรับตัว evaluator เองเป็นหลักฐานอิสระ. การอ่านหรือ invoke config ตามปกติไม่ถูกตัด.
-ฐานข้อมูลเก็บ full normalized conversation พร้อม `source file + line + UUID + raw hash`; raw JSONL
-ยังเป็นหลักฐานต้นฉบับและไม่ได้ copy ลงฐานข้อมูล.
+`index` recursively catalogs every JSONL file but audits only primary interactive sessions by default. Subagents, Temp or harness runs, and `sdk-cli` or print sessions are explicit exclusions. A session that uses Edit, Write, or NotebookEdit on this dotfiles repository—including paths through `~/.claude/rules`, skills, or agents symlinks—is excluded as `dotfiles_self_modification`, preventing evaluator changes from serving as independent evidence. Ordinary reads and config invocation remain included.
 
-หน่วย semantic coverage คือ auditable human input ไม่ใช่ session. `export` ใช้ session เป็น envelope
-เพื่อรักษาลำดับ แต่ reviewer ต้องแยกทุก objective/episode ภายในนั้นและจำแนกแต่ละ turn เป็น
-`CONTINUE | REFINE | QUESTION | PREREQUISITE | NEW | REPLACE | DEFER | RESUME | CANCEL |
-CORRECT | AMBIGUOUS`; topic change อย่างเดียวไม่พิสูจน์ว่า objective ถูก replace.
+The database stores normalized conversations with source file, line, UUID, and raw hash. Raw JSONL remains the primary evidence and is not copied into the database.
 
-`status` ต้องผ่าน reconciliation ทั้งสามชั้น:
+Semantic coverage uses auditable human inputs, not sessions. Export wraps turns in sessions to preserve order, but reviewers must separate objectives and episodes and classify each turn as `CONTINUE | REFINE | QUESTION | PREREQUISITE | NEW | REPLACE | DEFER | RESUME | CANCEL | CORRECT | AMBIGUOUS`. Topic change alone does not prove objective replacement.
+
+Status reconciles three layers:
 
 ```text
 discovered files = indexed + explicitly excluded + failed
@@ -52,23 +44,13 @@ indexed lines = parsed + malformed + blank
 auditable inputs = pending + classified + ambiguous + failed + input-only audit units
 ```
 
-`fallback_human_prompts` คือข้อความรุ่นเก่าที่ไม่มี `promptSource` แต่ผ่าน structural exclusion;
-`ambiguous_user_inputs` ยังไม่ถูกนับเป็น human input และต้อง review ก่อน claim ว่า human-input
-coverage สมบูรณ์. SQLite search ใช้ exact substring (`instr`) เพื่อไม่อ้าง Thai word segmentation
-จาก FTS5 เกินหลักฐาน. หาก ambiguous ไม่เป็นศูนย์ ให้ตรวจ shape, เพิ่ม deterministic disposition
-พร้อม fixture แล้ว re-index; ห้ามกดให้เป็น human/non-human เฉพาะ record เพื่อทำตัวเลขให้ครบ.
+`fallback_human_prompts` contains legacy messages lacking `promptSource` that pass structural exclusion. `ambiguous_user_inputs` do not count as human input until reviewed. SQLite search uses exact substring matching through `instr`; it makes no unsupported word-segmentation claim. If ambiguity remains, inspect the shape, add a deterministic disposition with a fixture, and reindex rather than coercing individual records to complete a count.
 
-shared-parent input ทุกอันยังอยู่ใน input coverage. รายการที่มี response เป็น
-`executed_branch` และต้อง audit แยกตาม lineage; รายการที่ไม่มี response เป็น `unanswered_edit`
-สถานะ `input_only` จึงไม่ถูกนำไปวัด agent alignment หรือปนเข้า objective ledger เส้นหลัก.
-ห้ามอ่าน shared-parent candidates ต่อกันเป็น timeline เดียวแม้อยู่ใน session envelope เดียวกัน.
+Every shared-parent input remains in input coverage. Responded alternatives are `executed_branch` and require lineage-specific audit; unresponded edits are `unanswered_edit` with `input_only` status and do not enter alignment metrics or the primary objective ledger. Never read sibling candidates as one timeline merely because they share a session envelope.
 
-ผล review ที่ import ต้องมีหนึ่งรายการต่อ alignment-auditable turn ของ session นั้น ห้าม partial และต้องส่ง
-`turn_id`, `input_sha256`, `relation`, `objective_before[]`, `objective_after[]`, `alignment`,
-`confidence`, `rationale`, `evidence[]`. Import จะ reject turn ที่ขาด/ซ้ำ, input stale, relation นอก
-taxonomy หรือ finding ที่ไม่มี source evidence; จึงเปลี่ยนสถานะ coverage จาก pending ได้โดยไม่กลบ gap.
+Imported reviews require one item for every alignment-auditable turn in a session and reject partial imports. Each includes `turn_id`, `input_sha256`, `relation`, `objective_before[]`, `objective_after[]`, `alignment`, `confidence`, `rationale`, and `evidence[]`. Imports reject omissions, duplicates, stale inputs, invalid relations, and findings without source evidence.
 
-## Semantic pilot planning (ไม่ใช้ model)
+## Semantic pilot planning
 
 ```bash
 python prepare_audit.py \
@@ -77,31 +59,15 @@ python prepare_audit.py \
   --context-turns 6
 ```
 
-planner เก็บ known sessions เป็น benchmark แยกจาก random holdout, เพิ่ม legacy fallback ทั้งหมด และ
-เลือก edge representatives จาก project/branch/confidence/session-size/risk strata. Signal และ strata
-ใช้เลือกตัวอย่างเพิ่มเท่านั้น ห้ามตัด interaction ออกจาก corpus หรือใช้คำนวณ prevalence แทน random
-holdout. Report แสดงจำนวน strata ที่มีตัวแทนและรายการที่ยังไม่ถูก represent; ห้ามเรียก edge coverage
-ว่า 100% หากยังมีรายการเหลือ. Default เลือกอย่างน้อยหนึ่งตัวแทนจากทุก stratum; ใช้ `--edge-size`
-เฉพาะเมื่อต้องการ cap และยอมรับ partial stratum coverage. Output อยู่ `data/audit-plan.json` และมีเฉพาะ
-manifest/provenance/ขนาด ไม่มี conversation text. Random holdout เป็น deterministic
-interaction-weighted sample จึงใช้ประมาณ prevalence ต่อ interaction ไม่ใช่ prevalence ต่อ session.
-selection reason อาจซ้อนกันได้; report จะแสดงทั้งจำนวนหลายเหตุผลและ pairwise intersections.
+The planner separates known benchmark sessions from random holdout, includes every legacy fallback, and selects edge representatives across project, branch, confidence, session-size, and risk strata. Signals and strata select additional examples only; they never remove interactions or replace random holdout for prevalence. The report identifies represented and missing strata. Default behavior covers each stratum; `--edge-size` deliberately caps it and accepts partial coverage.
 
-budget รายงาน normalized text chars/UTF-8 bytes และ token heuristic ช่วงกว้างเพื่อวางแผนเท่านั้น;
-ไม่ใช่ tokenizer หรือขอบเขตบนของ model และยังไม่รวม prompt, retry หรือ second reviewer. ห้ามเริ่ม
-semantic batch จาก heuristic โดยไม่กำหนด model, packing strategy และ hard budget ก่อน. Planner แสดง
-ทั้ง turn-only, bounded-context แบบ unique/repeated และ full-session envelope; bounded physical context
-อาจข้าม alternate branch จึงเป็นเพียง budget surface ไม่ใช่ payload ที่พร้อมส่งให้ model. Surface
-`objective-spine` เก็บ user inputs ทั้ง session แต่แนบ assistant response เฉพาะ target เพื่อรักษา
-long-range intent ในราคาต่ำกว่า full envelope; branch-aware packer ยังต้องแยก lineage ก่อนใช้งานจริง.
-Planner ทำงานแบบ fail-closed: `pilot_ready` ยังเป็น false จนกว่าจะมี branch-aware packer, ระบุ model/
-per-call budget และกำหนด hard input budget ด้วย `--max-planned-input-chars`.
+`data/audit-plan.json` contains manifest, provenance, and sizes without conversation text. Random holdout is a deterministic interaction-weighted sample and estimates prevalence per interaction, not per session. Selection reasons may overlap, so reports include multi-reason counts and pairwise intersections.
 
-การเลือกเป้าหมายใช้เฉพาะ pending alignment turns แต่ context/envelope รักษา classified และ input-only
-turns ที่อยู่รอบเป้าหมายไว้ ส่วน full-corpus denominator รวม alignment turns ทุกสถานะ. Sampling rank และ
-plan identity ผูกกับ seed, input hash และ database snapshot เพื่อให้ตรวจจับ corpus drift ได้.
+Budgets report normalized character and UTF-8 byte counts plus a broad planning heuristic, not model-token bounds. They exclude prompts, retries, and second reviewers. Do not start a semantic batch until model, packing strategy, per-call budget, and hard input budget are defined. Turn-only, bounded-context unique/repeated, full-session envelope, and objective-spine surfaces expose different costs. Physical context may cross alternate branches, so a branch-aware packer remains required. The planner fails closed with `pilot_ready: false` until packing, model budgets, and `--max-planned-input-chars` are present.
 
-## Event discovery (ผลลัพธ์หลักของ retrospective)
+Targets are pending alignment turns, while context preserves surrounding classified and input-only turns. Full-corpus denominators include every alignment status. Sampling rank and plan identity bind seed, input hash, and database snapshot to expose corpus drift.
+
+## Event discovery
 
 ```bash
 python discover_events.py \
@@ -113,27 +79,16 @@ python discover_events.py \
   --after 2
 ```
 
-`event-candidates.json` เก็บ provenance ของ pending alignment turns ทุกอันเพื่อให้รายการที่ยังไม่ได้เปิด
-ไม่หายไปจาก coverage. Signal เช่น explicit correction, objective/boundary control หรือคำถามที่ตามด้วย
-mutation ใช้จัดลำดับ review เท่านั้น ไม่ใช่คำตัดสินว่าเป็น incident. `event-packets.jsonl` เก็บข้อความ
-เฉพาะจุดที่จัดลำดับสูงสุดของ known benchmarks (cap ต่อ session) และ discovery frontier ที่เลือก
-โดย context เดินตาม UUID parent lineage;
-alternate sibling branch จะไม่ถูกนำมาต่อเป็น timeline เดียวกัน.
-`--discovery-since` จำกัดเฉพาะ discovery packets ที่เปิดอ่าน; candidate manifest และ backlog
-ยังครบทั้ง corpus จึงใช้แยก residual หลัง cutover โดยไม่ทำหลักฐานเก่าหาย.
+`event-candidates.json` preserves provenance for every pending alignment turn so unopened items remain visible in coverage. Signals such as explicit correction, objective or boundary control, and a question followed by mutation only prioritize review; they do not classify incidents. `event-packets.jsonl` contains selected known benchmarks and the discovery frontier, following UUID parent lineage without concatenating alternate siblings. `--discovery-since` limits opened discovery packets while keeping the full manifest and backlog.
 
-Reviewer ต้องตัดสินแต่ละ packet เป็น `incident | not_incident | insufficient_context`. Incident dossier
-ต้องระบุ intent ก่อนเกิดเหตุ, divergence point, agent action, user correction/impact, recovery, source
-evidence, dotfile mechanism hypothesis และ regression candidate. Trend/prevalence เป็น post-process หลัง
-มีการปรับ behavior ไม่ใช่ deliverable หลักของ event discovery.
+Review each packet as `incident | not_incident | insufficient_context`. An incident dossier records prior intent, divergence point, agent action, user correction or impact, recovery, source evidence, a dotfile-mechanism hypothesis, and a regression candidate. Trend and prevalence are post-processing after behavior changes, not the primary discovery deliverable.
 
-## กติกา
-- `data/` = **gitignored** (มีข้อความ conversation จริง อาจมี secret ปน — ห้าม commit)
-- แม้ `audit-plan.json` ไม่มี conversation text แต่มี local path, project และ UUID; ห้ามแชร์ออกนอกเครื่อง
-  โดยไม่ sanitize
-- เปลี่ยน `--sample`/`--since` = **ลบ `data/out/` ก่อน** (batch cache keyed ด้วย index จะปนชุดเก่า)
-- `--sample 600` แม่นพอสำหรับ trend, ถูกกว่า ~5x; full corpus ใช้เมื่อจะจดตัวเลขเป็น baseline
-- ห้ามแก้ script ระหว่าง batch รัน (bash/subprocess อ่าน incremental — CLAUDE.md quirk)
-- baseline ที่วัดแล้ว: CLAUDE.md §cutover marker (lookback 07-17 + semantic 07-17)
-- ห้ามใช้ trend extractor เป็นหลักฐาน exhaustive: มัน truncate text, ย่อ session ID และทิ้ง branch ผี
-  โดยออกแบบ; ใช้ retro index เมื่อต้อง audit ย้อนกลับ
+## Rules
+
+- `data/` is ignored because real conversations may contain secrets; never commit it.
+- Even text-free audit plans contain local paths, projects, and UUIDs. Sanitize before sharing outside the machine.
+- After changing `--sample` or `--since`, delete `data/out/` so index-keyed batch cache cannot mix populations.
+- A sample of 600 is appropriate for trends and about five times cheaper; use the full corpus before establishing a baseline.
+- Never edit scripts while a batch runs because Bash and subprocesses may read them incrementally.
+- Measured baselines are recorded at the CLAUDE.md cutover marker for the 07-17 lookback and semantic run.
+- Trend extractors are not exhaustive evidence: by design they truncate text, abbreviate session IDs, and remove abandoned branches. Use the retro index for traceable audits.

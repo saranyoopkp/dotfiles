@@ -59,8 +59,8 @@ def evaluate():
         print(f"{cat:18s} P={p:.2f} R={r_:.2f} (tp={tp} fp={fp} fn={fn})")
     acc = sum(1 for r in rows if r["predicted"] == r["label"]) / len(rows)
     print(f"overall accuracy: {acc:.2f}")
-    print("⚠️ recall ที่ได้คือ recall ภายใน sample ที่ stratified — "
-          "ใช้เทียบระหว่างหมวด ไม่ใช่ recall ของ corpus ทั้งหมด")
+    print("Warning: recall is measured within a stratified sample. "
+          "Use it to compare categories, not as whole-corpus recall.")
 
 
 def main():

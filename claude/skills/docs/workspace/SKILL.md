@@ -1,150 +1,122 @@
 ---
 name: docs:workspace
-description: จัด วาง หรือ audit ระบบเอกสารของ workspace ที่มีหลาย independent Git repositories โดยแยก authoritative owner ของ fact, ทำ query routing/inventory/pointer, แก้เอกสารหรือสถานะ environment/runtime ที่ขัดกันข้าม repo, จัด shared convention/cross-repo contract/rollout/handoff และตรวจว่า repo ยัง clone เดี่ยวได้ ใช้เมื่อโฟลเดอร์เดียวรวมหลาย repo, root/app/infra docs drift หรือกล่าวไม่ตรงกัน, เอกสารอ้างข้าม repo, ต้องวาง CLAUDE.md/docs ระดับ workspace, หรือกำลังย้ายความรู้ระหว่าง workspace root กับ sub-repo; ไม่ใช้กับ monorepo ที่มี Git root เดียว
+description: Organize, place, or audit documentation for a workspace containing multiple independent Git repositories. Establish authoritative fact owners, query routing, inventories and pointers; resolve conflicting repository or environment/runtime claims; organize shared conventions, cross-repo contracts, rollouts, and handoffs; and preserve standalone-clone usability. Use for folders containing several repositories, root/app/infra documentation drift, cross-repo references, workspace-level CLAUDE.md/docs placement, or moving knowledge between a workspace root and sub-repositories. Do not use for a monorepo with one Git root.
 ---
 
-# Docs Workspace — เอกสารหลาย repo โดยไม่สร้างบ้านซ้ำ
+# Documentation Workspace — Multiple Repositories without Duplicate Owners
 
-เป้าหมายคือให้ fact แต่ละชิ้นมี owner เดียว: repo ถือความจริงที่มันเปลี่ยนและตรวจเองได้;
-workspace ถือเฉพาะความจริงที่ต้องเห็นหลาย repo พร้อมกัน
+Each fact has one owner: a repository owns truths it can change and verify itself; the workspace owns only truths that require visibility across repositories.
 
 ## Scope gate
 
-1. หา Git root จริงก่อน:
+1. Find actual Git roots first:
    ```bash
    find <workspace> -name .git -prune -print
    ```
-   รองรับทั้ง `.git` directory และ file (worktree/submodule); ปรับ depth/exclude ให้ตรง tree จริง
-   และอย่าสรุป inventory จาก `find` query เดียวถ้ายังมี path ที่ prune หรือเข้าถึงไม่ได้
-2. มี Git root เดียวและ packages อยู่ใต้ root นั้น = **monorepo** ใช้ `/docs:setup` +
-   `/docs:placement`; ไม่สร้าง workspace layer
-3. มีหลาย independent Git roots = ใช้ skill นี้ แม้ workspace root จะไม่มี Git หรือมี repo
-   เล็กของตัวเองไว้ track เอกสารระดับบน
-4. ระบุ repo ที่ active/in-scope จากหลักฐานก่อน; การมี directory อย่างเดียวไม่พิสูจน์ว่า active
-   และห้ามย้าย/ลบเอกสารเพียงเพราะ repo ไม่อยู่ใน inventory ปัจจุบัน
+   Support both `.git` directories and files used by worktrees or submodules. Adapt depth and exclusions to the actual tree, and do not conclude the inventory from one query when paths were pruned or inaccessible.
+2. One Git root with packages beneath it is a **monorepo**. Use `/docs:setup` and `/docs:placement`; do not add a workspace layer.
+3. Several independent Git roots use this skill, whether or not the workspace root has no Git repository or a small repository that tracks top-level documentation.
+4. Establish active, in-scope repositories from evidence. A directory alone does not prove activity, and absence from the current inventory does not authorize moving or deleting its documentation.
 
 ## Owner test
 
-ถามตามลำดับ:
+Ask in order:
 
-1. Repo เดียวเปลี่ยนและ verify fact นี้ได้ครบหรือไม่?
-   - ได้ → อยู่ใน repo นั้น
-   - ไม่ได้ ต้องประสานตั้งแต่สอง independent repos ขึ้นไป → อยู่ workspace
-2. เมื่อ clone repo เดี่ยว เอกสารยังเข้าใจและทำงานได้โดยไม่มี sibling checkout หรือไม่?
-   - ไม่ได้ → ย้าย cross-repo part ไป workspace; repo เหลือ local interface/constraint ของตน
-3. เนื้อหาเป็น source of truth หรือ snapshot?
-   - living truth → owner doc
-   - audit/report/measurement ณ เวลาใดเวลาหนึ่ง → แยกเป็น point-in-time พร้อมวันที่,
-     scope, command/source และสถานะ Verified/Unverified/Contradicted
+1. Can one repository fully change and verify this fact? If yes, it belongs there. If correctness requires coordination across at least two independent repositories, it belongs to the workspace.
+2. Does a standalone clone remain understandable and usable without sibling checkouts? If not, move the cross-repo portion to the workspace and retain only that repository's local interface or constraint.
+3. Is the content a source of truth or a snapshot? Living truth belongs to its owner. An audit, report, or measurement belongs in a dated point-in-time artifact with scope, command/source, and Verified, Unverified, or Contradicted status.
 
-ชื่อระบบภายนอกที่เป็นส่วนหนึ่งของ interface ของ repo กล่าวได้ แต่ห้ามใช้ workspace-relative
-path, branch/commit, implementation detail หรือ decision ภายในของ sibling เป็น dependency
-ของเอกสารใน repo นั้น
+A repository may name external systems that form part of its interface, but its documentation must not depend on workspace-relative paths, branch or commit state, implementation details, or internal decisions of sibling repositories.
 
-## Authority และ query routing
+## Authority and query routing
 
-owner ของ fact ไม่ได้มีไว้แค่วางเอกสาร แต่กำหนดว่าจะต้องอ่านที่ใดก่อนตอบหรือเปลี่ยน fact นั้น:
+Fact ownership also determines where to look before answering or changing a fact:
 
-| คำถาม/claim | เริ่มตรวจที่ |
+| Question or claim | Inspect first |
 |---|---|
-| implementation, feature, build/release contract | repo ที่เป็นเจ้าของ code/contract |
-| current deploy, environment, host, database, backup, runtime health | infra/operations owner แล้วตรวจ live source เมื่อความสดมีผล |
-| rollout, dependency หรือ decision ที่ correctness อาศัยหลาย repo | workspace contract/plan/handoff แล้วตาม pointer ไป owner ที่เกี่ยวข้อง |
-| inventory/pointer ว่ามี repo หรือเอกสารใด | workspace root ก่อน แล้วเปิด owner source เพื่อยืนยันเนื้อหา |
+| Implementation, features, or build/release contracts | The repository owning the code or contract |
+| Current deployment, environment, host, database, backup, or runtime health | The infrastructure or operations owner, then a live source when freshness matters |
+| Rollout, dependency, or decision whose correctness spans repositories | The workspace contract, plan, or handoff, then pointers to relevant owners |
+| Which repositories or documents exist | The workspace inventory first, then owner sources for content verification |
 
-- cwd, root `CLAUDE.md` และเอกสารของ repo ที่กำลังเปิดเป็น routing context ไม่ใช่ authority
-  โดยอัตโนมัติ; ห้ามใช้ local absence หรือ stale assertion ปฏิเสธ state ที่ sibling/live owner ถือ
-- fact ที่เปลี่ยนตาม environment/runtime ห้าม mirror เป็น living claim ใน root หรือ sibling ที่
-  ตรวจมันเองไม่ได้; เหลือ pointer + วิธีหา owner. snapshot ทำได้เมื่อระบุวันที่/scope ชัด
-- เมื่อผู้ใช้ให้ข้อมูลที่ขัดกับเอกสารใกล้ตัว ให้ถือเป็น contradiction signal: ตรวจ authoritative
-  owner/current state ก่อนแก้ความเข้าใจผู้ใช้ แล้วรายงานเอกสารที่ stale แยกจากคำตอบหลัก
+- The current directory, root CLAUDE.md, and open repository docs provide routing context, not automatic authority. Do not use local absence or a stale assertion to reject state held by a sibling or live owner.
+- Environment- or runtime-dependent facts must not be mirrored as living claims in roots or siblings that cannot verify them. Keep a pointer and retrieval method; snapshots require explicit date and scope.
+- When user information conflicts with nearby documentation, treat it as a contradiction signal. Check the authoritative owner and current state before correcting the user, and report stale documentation separately from the primary answer.
 
-## บ้านของเอกสาร
+## Documentation homes
 
-| บ้าน | ถืออะไร | ห้ามถือ |
+| Home | Owns | Must not own |
 |---|---|---|
-| workspace `CLAUDE.md` | workspace boundary, pointer inventory สั้น, cross-repo risk/decision/TODO ที่ต้องเห็นทุก session | stack/status/decision ฉบับเต็มของแต่ละ repo, จำนวนหรือรายชื่อที่คำนวณจาก tree ได้แต่ไม่มีคำสั่งกำกับ |
-| workspace `docs/conventions/` | vocabulary หรือ delivery convention ที่ใช้ข้ามหลาย repo จริง | convention ของ repo เดียวหรือมาตรฐานเผื่ออนาคต |
-| workspace `docs/contracts/` | contract ที่ correctness ต้องอาศัยหลาย repo และไม่มี repo เดียวเป็น owner | API/schema ที่ provider repo เป็นเจ้าของได้ครบ |
-| workspace `docs/plans/` | rollout, migration, compatibility และ rollback ที่ต้องเรียงหลาย repo | implementation plan ภายใน repo เดียว |
-| workspace `docs/handoff/` | ช่องประสานชั่วคราว: owner section, pending decision, evidence, next action | transcript, activity log หรือ fact ถาวรที่ควร promote กลับบ้านจริง |
-| workspace `docs/audits/` | point-in-time cross-repo finding พร้อม provenance | living truth ที่ไม่มีวันตรวจ |
-| sub-repo `CLAUDE.md`/`docs/`/`memory/` | mission, stack, interface, decision, runbook, quirk และหลักฐานของ repo นั้น | path หรือ internal fact ของ sibling repo |
+| Workspace `CLAUDE.md` | Workspace boundary, concise pointer inventory, and cross-repo risks, decisions, or TODOs needed every session | Full per-repository stack/status/decisions, or derived counts and lists without reproduction commands |
+| Workspace `docs/conventions/` | Vocabulary or delivery conventions genuinely shared across repositories | Single-repository conventions or speculative future standards |
+| Workspace `docs/contracts/` | Contracts whose correctness spans repositories and has no single repository owner | APIs or schemas fully owned by a provider repository |
+| Workspace `docs/plans/` | Rollouts, migrations, compatibility, and rollback sequencing across repositories | Internal implementation plans for one repository |
+| Workspace `docs/handoff/` | Temporary coordination: owners, pending decisions, evidence, and next actions | Transcripts, activity logs, or permanent facts that should be promoted to their true owner |
+| Workspace `docs/audits/` | Point-in-time cross-repo findings with provenance | Undated living truth |
+| Sub-repository `CLAUDE.md`, `docs/`, or `memory/` | That repository's mission, stack, interface, decisions, runbooks, quirks, and evidence | Sibling paths or internal sibling facts |
 
-ไม่ต้องสร้างทุก directory: สร้างเมื่อมีเนื้อหาจริงเท่านั้น ใช้ชื่อโดเมนแทนวันที่สำหรับ living
-docs; ใช้วันที่กับ snapshot/audit ได้
+Create only directories with real content. Name living documents by domain; dates are appropriate for snapshots and audits.
 
 ## Workflow
 
-### 1. Inventory แบบ evidence-first
+### 1. Build an evidence-first inventory
 
-- อ่าน workspace `CLAUDE.md`, `docs/`, README และ config เดิมก่อน
-- map Git roots, remote, worktree/submodule state และไฟล์ entry ของแต่ละ repo
-- อ่าน `CLAUDE.md`/docs index ของ repo ที่ in-scope; อย่าเดา mission จากชื่อ directory
-- เทียบ inventory เดิมกับ tree จริง แล้วแยก `active`, `archived`, `unknown`; ถ้าหา intent
-  จาก repository/history ไม่ได้ ค่อยถาม user หลังรวบคำถามเป็นชุดเดียว
+- Read existing workspace CLAUDE.md, docs, README, and configuration.
+- Map Git roots, remotes, worktree or submodule state, and entry files for each repository.
+- Read CLAUDE.md and documentation indexes for in-scope repositories; never infer mission from directory names.
+- Compare existing inventory with the real tree and classify entries as `active`, `archived`, or `unknown`. Ask the user only after repository and history evidence cannot resolve intent, grouping questions once.
 
-### 2. ร่าง owner map ก่อน mutation
+### 2. Draft the owner map before mutation
 
-รายงานตาราง `fact/topic | current home | evidence | proposed owner | reason | action`
-ก่อนย้ายหรือสร้างเอกสารจำนวนมาก จุดที่เปลี่ยน ownership หรือทำให้ standalone clone contract
-เปลี่ยนต้องบอก user ก่อน mutation; finding ไม่ใช่ authorization
+Report `fact/topic | current home | evidence | proposed owner | reason | action` before moving or creating many documents. Explain any ownership change or standalone-clone contract change before mutation; a finding is not authorization.
 
-### 3. จัด root เป็น router ไม่ใช่ mirror
+### 3. Make the root a router, not a mirror
 
-- inventory ต่อ repo ใช้ pointer + short info 1–3 บรรทัด
-- local detail ชี้เข้า owner repo; ห้าม copy มาไว้ root
-- cross-repo decision ระบุเหตุผล, ทางที่ไม่เลือก และวันที่; โตแล้วแยกไป workspace docs
-- index ต้องพาไปถึงเอกสารสำคัญ แต่ห้าม hardcode fact ที่หาได้จาก source โดยไม่บอกวิธี reproduce
+- Keep each repository inventory entry to a pointer and one to three lines of context.
+- Point local detail into the owning repository rather than copying it into the root.
+- Cross-repo decisions record rationale, rejected alternatives, and date; move growing detail into workspace docs.
+- Indexes must lead to important documents without hardcoding derivable facts unless they explain how to reproduce them.
 
-### 4. แยกและย้ายทีละ fact
+### 4. Separate and move one fact at a time
 
-- local fact ที่รั่วขึ้น root → ย้ายกลับ owner repo แล้ว root เหลือ pointer
-- cross-repo fact ที่กระจายในหลาย repo → สร้าง workspace source หนึ่งบ้าน แล้วลบ assertion
-  ซ้ำจาก sub-repo; เก็บ local constraint ที่จำเป็นต่อ standalone clone
-- handoff ที่จบแล้ว → promote durable result ไป owner docs, ปิด pending item แล้วลบ log/noise
-- ห้าม big-bang rewrite; รักษา history ด้วย `git mv` ภายใน repo เดียวเมื่อเหมาะสม
+- Move local facts leaked into the root back to the owning repository and leave a root pointer.
+- Consolidate cross-repo facts duplicated across repositories into one workspace source, remove duplicate assertions, and preserve constraints needed by standalone clones.
+- Promote completed handoff results to durable owner docs, close pending items, and remove logs or noise.
+- Avoid big-bang rewrites. Use `git mv` within one repository when appropriate to preserve history.
 
-### 5. ปิดวงจรเมื่อ owner fact เปลี่ยน
+### 5. Close the loop when an owned fact changes
 
-- อัปเดต living doc ของ owner พร้อม mutation ที่ทำให้ fact เปลี่ยน
-- ค้น workspace root และ sibling docs หา assertion ของ fact เดียวกัน; ลบหรือเปลี่ยนเป็น pointer
-  ไม่ sync สำเนาให้พูดความจริงซ้ำ
-- ถ้า repo ที่ขัดกันอยู่นอก authorized scope ให้สร้าง/อัปเดต workspace handoff สั้น ๆ ระบุ
-  `owner | contradictory location | evidence | next action`; finding ไม่ขยาย authorization
-- ปิด handoff เมื่อ assertion ซ้ำถูกถอดและ owner/pointer ตรวจถึงกันได้; ห้ามเก็บ completed log
-  เป็น source of truth อีกชุด
+- Update the owner's living document with the mutation that changes the fact.
+- Search workspace and sibling documentation for duplicate assertions; remove them or convert them to pointers instead of synchronizing copies.
+- If a conflicting repository is outside authorized scope, create or update a concise workspace handoff containing `owner | contradictory location | evidence | next action`. Findings do not expand authorization.
+- Close the handoff once duplicate assertions are removed and owner/pointer paths resolve. Do not retain completed logs as another source of truth.
 
-### 6. Validate ตาม boundary จริง
+### 6. Validate real boundaries
 
-รัน deterministic audit:
+Run the deterministic audit:
 
 ```bash
 python "${CLAUDE_SKILL_DIR}/scripts/audit.py" <workspace>
 ```
 
-จากนั้น:
+Then:
 
-- รัน `/docs:link` แยกใน workspace docs repo และทุก sub-repo ที่แตะ
-- clone/inspect ในมุม repo เดี่ยว: link, command และ instruction ต้องไม่ต้องพึ่ง sibling checkout
-- เปิด source ที่เป็นเจ้าของทุก durable finding โดยตรง; report จาก agent/audit เป็น lead ไม่ใช่ proof
-- ทดลอง query สำคัญจาก workspace root และจาก sub-repo: เส้นทางต้องพาไป authoritative owner
-  และต้องไม่ตอบ current state จาก mirror ที่ stale
-- ตรวจ `git diff` แยกต่อ Git root และรายงาน repo ที่เปลี่ยนพร้อม validation ของ repo นั้น
+- Run `/docs:link` separately in the workspace documentation repository and every changed sub-repository.
+- Inspect from a standalone-clone perspective: links, commands, and instructions must not require sibling checkouts.
+- Open the owner source for every durable finding. Agent and audit reports are leads, not proof.
+- Test important queries from both the workspace root and sub-repositories. Routing must reach the authoritative owner and not answer current state from stale mirrors.
+- Inspect `git diff` separately for every Git root and report changed repositories with their own validation.
 
-script ตรวจ link escape, missing target และ absolute user-home path ที่ผูกกับเครื่องใดเครื่องหนึ่ง
-ใน Markdown ที่ Git track (`~` แบบ portable ไม่นับ);
-มันไม่ตัดสิน semantic ownership และไม่พิสูจน์ว่า mention ชื่อ repo อื่นผิด
+The script detects Markdown link escapes, missing targets, and absolute user-home paths tied to one machine; portable `~` paths are allowed. It cannot determine semantic ownership or prove that mentioning another repository is wrong.
 
 ## Report
 
-สรุป:
+Summarize:
 
-- Git roots ที่ตรวจและข้อจำกัดของ inventory
-- owner map ที่เปลี่ยน พร้อมไฟล์ต้นทาง/ปลายทาง
-- cross-repo contracts/risks/pending decisions
-- validation ต่อ repo พร้อมคำสั่งและผลจริง
-- `Unverified`/`Contradicted` และสิ่งที่ยังต้องถาม
+- Inspected Git roots and inventory limits.
+- Owner-map changes with source and destination files.
+- Cross-repo contracts, risks, and pending decisions.
+- Per-repository validation commands and actual results.
+- `Unverified` or `Contradicted` items and remaining questions.
 
-ห้ามรวม working tree ของหลาย repo เป็นก้อนเดียวหรือรายงาน workspace ว่าสะอาดจากการตรวจ
-เฉพาะ root repo
+Never combine working trees from several repositories into one status or report the workspace clean after checking only the root repository.

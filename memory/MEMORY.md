@@ -1,14 +1,14 @@
 # Memory Index
 
-## Feedback (preference/วิธีทำงานกับ user)
-- [Deliverable form: data first](deliverable-form-data-first.md) — รายงาน/ผลวัด = ตัวเลข+กราฟเป็นหลัก ไม่ใช่ความเรียง
-- [Audit questions = check evidence](audit-questions-mean-check-evidence.md) — คำถามสั้น "จริงหรอ/แม่นหรอ" = เปิดหลักฐานดิบ ไม่ใช่อธิบายเพิ่ม
-- [Code comments: local why, broader rationale in docs](code-comments-why-plus-pointer.md) — ใช้ scope/reader เป็นเกณฑ์; ความยาวอย่างเดียวไม่บังคับย้าย
-- [Validate whole file after edit](validate-whole-file-after-edit.md) — append/sed แล้วอ่านเต็มไฟล์ตรวจโครงก่อน commit
+## Feedback and collaboration preferences
+- [Deliverable form: data first](deliverable-form-data-first.md) — Reports and measurements lead with numbers and charts, not essays.
+- [Audit questions mean check evidence](audit-questions-mean-check-evidence.md) — Brief “is that true or inferred?” questions trigger inspection of raw evidence, not more explanation.
+- [Code comments: local why, broader rationale in docs](code-comments-why-plus-pointer.md) — Decide by scope and reader; length alone does not force a move.
+- [Validate whole file after edit](validate-whole-file-after-edit.md) — After append or replacement edits, inspect the complete structure before committing.
 
-## Project quirks/กับดัก
-- [Hook fix = verify via real restart](hook-fix-verify-real-restart.md) — Bash tool ≠ WSL hook runner
-- [claude -p test bed limits](claude-p-testbed-limits.md) — ไม่ยิง Stop hook; ห้ามแก้ script ที่กำลังรัน
-- [Metrics corpus: dedup first](metrics-corpus-dedup-first.md) — sibling ผี ~9%, main-only, time trend
-- [Deploy docs-drift in pairs](deploy-docs-drift-in-pairs.md) — script+settings ไปคู่กัน
-- [PowerShell commit: no quotes](powershell-commit-no-quotes.md) — here-string parse พัง
+## Project quirks and traps
+- [Hook fix means verify via real restart](hook-fix-verify-real-restart.md) — The agent Bash environment differs from the WSL hook runner.
+- [claude -p test-bed limits](claude-p-testbed-limits.md) — It does not fire Stop hooks; never edit a script while its process is running.
+- [Metrics corpus: deduplicate first](metrics-corpus-dedup-first.md) — Remove abandoned siblings, use primary sessions, and inspect time trends.
+- [Deploy docs-drift in pairs](deploy-docs-drift-in-pairs.md) — Keep script and settings deployments synchronized.
+- [PowerShell commits: avoid quotes](powershell-commit-no-quotes.md) — Here-string parsing can fail.

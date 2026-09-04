@@ -1,13 +1,18 @@
 ---
 name: api-design:caching-concurrency
-description: ออกแบบ HTTP cache semantics, ETag, conditional request และ optimistic concurrency ใช้เมื่อ endpoint cacheable, ต้องตอบ 304, ต้องกัน stale write หรือมีหลาย client แก้ resource เดียวกัน
+description: Design HTTP caching semantics, ETags, conditional requests, and optimistic concurrency. Use for cacheable endpoints, 304 responses, stale-write prevention, or concurrent clients editing one resource.
 ---
 
 # Caching & Concurrency
 
-- ประกาศ cacheability จาก data sensitivity, audience และ freshness requirement; ใช้ `Cache-Control` ที่ตรง policy จริง ไม่ mark response เป็น public/cacheable เพียงเพื่อ performance
-- ใช้ ETag/conditional GET เมื่อ client/CDN ได้ประโยชน์จาก validation; `If-None-Match` ที่ตรง ETag คืน 304 โดยไม่มี representation body และรักษา header ที่จำเป็นต่อ cache
-- ใช้ `If-Match`/version precondition เมื่อ stale write ทำให้ข้อมูลสูญหาย; precondition ที่ไม่ตรงคืน 412, ส่วน 409 เก็บไว้สำหรับ domain conflict ที่แม้ใช้ version ล่าสุดก็ทำไม่ได้
-- cache invalidation, CDN behavior และ persistence consistency เป็น owner ของ caching/data/ops ที่เกี่ยวข้อง; API contract ต้องบอกสิ่งที่ client พึ่งได้ ไม่ใช่บอกรายละเอียด infra ที่เปลี่ยนได้
+- Determine cacheability from sensitivity, audience, and freshness requirements. Use `Cache-Control` that matches
+  actual policy; never mark a response public or cacheable merely for performance.
+- Use ETags and conditional GET when client or CDN validation is valuable. A matching `If-None-Match` returns 304
+  without a representation body while retaining headers required by the cache.
+- Use `If-Match` or a version precondition when stale writes can lose data. Return 412 for a failed precondition;
+  reserve 409 for a domain conflict that remains invalid against the latest version.
+- Caching, data, and operations owners govern invalidation, CDN behavior, and persistence consistency. The API
+  contract states what clients may rely on, not mutable infrastructure detail.
 
-ตรวจ cache hit/revalidation หรือ concurrent update อย่างน้อยหนึ่ง flow ที่ contract อ้างว่ารองรับ รวมทั้ง response status/header/body จริง.
+Verify at least one claimed cache hit or revalidation flow, or one concurrent update, including real status,
+headers, and body.

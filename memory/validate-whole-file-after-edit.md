@@ -1,16 +1,12 @@
 ---
 name: validate-whole-file-after-edit
-description: แก้ไฟล์เอกสาร/skill แบบ append/sed แล้ว ต้องอ่านเต็มไฟล์ตรวจโครงก่อน commit — spot-check เฉพาะจุดแก้จับ defect เชิงโครงไม่ได้
+description: After append, sed, or string-replacement edits to documentation or skills, inspect the entire file structure before committing; local spot checks miss structural defects.
 metadata:
   type: feedback
 ---
 
-หลังแก้ไฟล์ (โดยเฉพาะ append ท้ายไฟล์ / sed / string-replace) → **อ่านเต็มไฟล์** ตรวจ:
-โครง/ลำดับ section, ของที่ควรอัปเดตตามกัน (สรุป/ตาราง/shortcut ที่อ้างเนื้อที่เพิ่ม), footer ยังอยู่ท้าย
+After editing a file—especially appending, sed replacement, or string replacement—inspect the full structure: section order, summaries, tables and shortcuts coupled to new content, and whether the footer remains last.
 
-**Why:** 2026-07-18 user สั่ง "แก้แล้ว validate เต็มไฟล์ด้วย" — อ่านเต็มแล้วเจอ 2 defect ทันที
-(shortcut ตกชั้นใหม่, footer ค้างกลางไฟล์) ทั้งคู่เกิดจาก append โดยไม่มองทั้งไฟล์;
-วันเดียวกันยังมีบทเรียนพี่น้อง: heredoc string-replace fail เงียบ 3 ครั้ง → ไฟล์สำคัญใช้ Edit tool
+**Why:** On 2026-07-18, full-file review immediately exposed two defects after an append: a shortcut omitted the new layer and the footer remained in the middle. The same day, heredoc string replacement failed silently three times, reinforcing use of a structured edit tool for important files.
 
-**How to apply:** แก้เสร็จ → Read เต็มไฟล์ (หรือ tail ส่วนโครง) → เช็คลำดับ+ความสอดคล้อง →
-ถ้าเป็นเอกสาร ปิดด้วย /docs:link
+**How to apply:** After editing, read the full file or its complete structural tail, verify order and consistency, and finish documentation work with `/docs:link`.

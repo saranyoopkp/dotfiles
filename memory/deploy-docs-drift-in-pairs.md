@@ -1,10 +1,10 @@
 ---
 name: deploy-docs-drift-in-pairs
-description: แก้ kit docs-drift.sh แล้ว deploy ต้องไปคู่ settings.json เสมอ (ยกเว้นแก้ script อย่างเดียวโดย settings ไม่เปลี่ยน) — เคย desync ที่ repo อื่นมาแล้ว
+description: When changing the kit's docs-drift.sh, always check whether settings.json must deploy with it; these files have previously become desynchronized across repositories.
 metadata:
   type: project
 ---
 
-docs-drift.sh + settings.json = คู่ deploy — แก้ตัวใดตัวหนึ่งให้เช็คอีกตัวว่าต้องตามไหม
-**Why:** เคย deploy แค่ settings.json ตอนตัด FileChanged → comment ค้างเวอร์ชันเก่าที่
-repo อื่น (macOS จับได้ 2026-07-12) — ดู docs/hook-saga.md §deploy checklist
+Treat `docs-drift.sh` and `settings.json` as a deployment pair. A change to either requires checking whether the other must follow.
+
+**Why:** When FileChanged was removed, only settings.json was deployed, leaving stale script comments in another repository. macOS exposed the mismatch on 2026-07-12. See the deployment checklist in `docs/hook-saga.md`.

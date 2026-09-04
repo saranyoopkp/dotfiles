@@ -1,6 +1,6 @@
 # require	forbid	label	task
-performance	-	perf-query	Endpoint รายการใช้เวลา 2.8 วินาทีและพบ query ซ้ำต่อ row ช่วยวิเคราะห์ bottleneck และวางแนวแก้พร้อมวิธีวัดก่อนหลัง
-performance	-	perf-cache	ข้อมูลเดิมถูกคำนวณซ้ำจำนวนมาก ช่วยตัดสินว่าควร cache หรือไม่และต้อง invalidate เมื่อใด
-performance	-	perf-render	ตาราง 5,000 รายการกระตุกตอน scroll ช่วยวางแผนแก้โดยยึด measurement และ workload จริง
-api-design	performance	perf-small-list	ออกแบบ endpoint สำหรับรายการคงที่ไม่เกิน 10 รายการ ไม่มี evidence เรื่อง latency หรือ scale
--	performance	perf-typo	วางแผนแก้ typo ในข้อความ log โดยไม่เปลี่ยน behavior
+performance	-	perf-query	A list endpoint takes 2.8 seconds and repeats a query for every row. Analyze the bottleneck and plan a fix with before-and-after measurements.
+performance	-	perf-cache	The same data is recomputed frequently. Decide whether to cache it and when invalidation is required.
+performance	-	perf-render	A table with 5,000 rows stutters while scrolling. Plan a fix grounded in measurements and the actual workload.
+api-design	performance	perf-small-list	Design an endpoint for a fixed list of at most 10 items with no latency or scale evidence.
+-	performance	perf-typo	Plan to fix a typo in a log message without changing behavior.

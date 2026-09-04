@@ -43,10 +43,10 @@ class PrepareAuditTest(unittest.TestCase):
             "'source-hash', 'indexed')"
         )
         fixtures = [
-            (1, "known", 0, 1, None, "strong", "เริ่มงาน", "รับทราบ", ["Read"], "pending"),
-            (2, "known", 1, 1, None, "strong", "กลับมางานเดิม", "ทำต่อ", ["Bash"], "pending"),
-            (3, "normal", 0, 1, None, "strong", "คำถามนี้ได้ไหม?", "แก้ไฟล์", ["Edit"], "pending"),
-            (4, "normal", 1, 1, None, "strong", "ข้อมูลเพิ่ม", "รับทราบ", [], "pending"),
+            (1, "known", 0, 1, None, "strong", "Start the task", "Acknowledged", ["Read"], "pending"),
+            (2, "known", 1, 1, None, "strong", "Go back to the original task", "Continuing", ["Bash"], "pending"),
+            (3, "normal", 0, 1, None, "strong", "Can you answer this?", "Edited the file", ["Edit"], "pending"),
+            (4, "normal", 1, 1, None, "strong", "More information", "Acknowledged", [], "pending"),
             (5, "branch", 0, 1, "executed_branch:1/2", "fallback",
              "legacy prompt", "branch answer", ["Read"], "pending"),
             (6, "branch", 1, 0, "unanswered_edit:1/2", "strong",

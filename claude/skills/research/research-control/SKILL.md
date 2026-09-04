@@ -1,47 +1,45 @@
 ---
 name: research:research-control
-description: ควบคุม research ที่มีผลต่อ decision ให้มีคำถาม, scope, source hierarchy, freshness, budget/appetite, stopping criteria และวิธีจัดการหลักฐานขัดกัน. ใช้กับ research ที่กว้าง, ใช้หลาย source, มีความไม่แน่นอนหรือความเสี่ยงสูง และใช้ร่วมกับ child research อื่นก่อนค้นหรือสรุป
+description: Control decision-relevant research through explicit questions, scope, source hierarchy, freshness, effort appetite, stopping criteria, and treatment of conflicting evidence. Use for broad, multi-source, uncertain, or high-risk research together with the relevant research child before searching or concluding.
 ---
 
 # Research Control
 
-## 1. กำหนด decision ก่อนค้น
+## 1. Define the decision before searching
 
-- เขียน decision และ research question ที่ตอบได้ชัด; แยก must-know ออกจาก nice-to-know
-- ระบุผู้ได้รับผล, context/version/segment/time window, criteria และสิ่งที่ผล research
-  จะเปลี่ยน. คำถามกว้างเกินตัดสินใจต้องแบ่งก่อน
-- ตรวจ repo, เอกสาร, runtime และข้อมูลที่เข้าถึงได้ก่อนถาม; จากนั้นถามเฉพาะ missing decision
-  ที่เปลี่ยน scope, risk, cost, behavior หรือวิธีเก็บหลักฐานอย่างมีนัยสำคัญ
+- Write an answerable decision and research question; separate must-know from nice-to-know.
+- Identify affected parties, context, version, segment, time window, criteria, and what the result could change.
+  Split questions too broad to support a decision.
+- Inspect repository, documentation, runtime, and accessible evidence before asking; request only missing decisions
+  that materially change scope, risk, cost, behavior, or evidence collection.
 
-## 2. วาง evidence plan
+## 2. Plan evidence
 
-- แตกคำถามเป็น atomic claim และระบุ evidence ที่จะพิสูจน์/หักล้างแต่ละ claim ก่อนค้น
-- เรียง source ตาม claim: authoritative primary source → primary observation/data →
-  independent source ที่เปิด methodology → secondary summary → anecdote. ชั้นท้ายใช้หา lead
-  แต่ห้ามยกระดับเป็น fact แทน source ที่เหมาะกว่า
-- กำหนด freshness จากความผันผวนของเรื่อง; ราคา, support, advisory, regulation และ current
-  behavior ต้องตรวจใหม่ พร้อม source date และ checked date
+- Break the question into atomic claims and identify evidence that could prove or disprove each one.
+- Rank sources per claim: authoritative primary source → primary observation or data → independent source with
+  disclosed methodology → secondary summary → anecdote. Lower tiers can provide leads but not replace proper evidence.
+- Set freshness from volatility. Recheck prices, support status, advisories, regulation, and current behavior,
+  preserving both source date and checked date.
 
-## 3. กำหนด appetite และ stopping criteria
+## 3. Set appetite and stopping criteria
 
-- ตั้ง effort ตาม reversibility และผลกระทบ: decision ที่ย้อนกลับง่ายใช้หลักฐานเท่าที่แยกทางเลือกได้;
-  security, legal/data, recurring cost, lock-in หรือ migration แพงต้องใช้หลักฐานเข้มกว่า
-- กำหนด stop ก่อนค้น: decision criteria สำคัญมี evidence เพียงพอ, source ใหม่ไม่เปลี่ยนข้อสรุป
-  หรือถึง appetite แล้ว. ห้ามใช้จำนวนลิงก์เป็น stopping criterion
-- ถึง appetite แต่ claim สำคัญยังไม่ยืนยัน ให้หยุดพร้อม `Unknown`, ผลกระทบ และ next probe;
-  timebox ห้ามแปลงความไม่รู้เป็นคำตอบ
+- Scale effort to reversibility and impact. Reversible choices need enough evidence to distinguish options;
+  security, legal or data risk, recurring cost, lock-in, and expensive migration require stronger evidence.
+- Define stopping conditions before searching: material criteria have adequate evidence, new sources no longer
+  change the conclusion, or the effort appetite is reached. Link count is not a stopping criterion.
+- If appetite is exhausted while a material claim remains unverified, stop with `Unknown`, its impact, and the
+  next probe. A timebox never converts uncertainty into an answer.
 
-## 4. จัดการหลักฐานขัดกัน
+## 4. Handle conflicting evidence
 
-- ตรวจ version/date, definition, population/segment, geography, methodology, incentive และ
-  measurement ก่อนสรุปว่า source ขัดกันจริง
-- อย่าเฉลี่ยหรือโหวตตามจำนวน source. ให้ source ที่มี authority ตรง claim ยืนยัน contract/policy;
-  ใช้ observation หรือ independent evidence ยืนยันผลในโลกจริง
-- ถ้ายัง reconcile ไม่ได้ ให้เก็บทั้งสอง claim, ระบุเงื่อนไขที่แต่ละข้ออาจจริง และบอกว่า decision
-  ใดปลอดภัยภายใต้ความไม่แน่นอน; ห้ามเลือก source ที่เข้ากับข้อสรุปเดิมเงียบ ๆ
+- Compare version and date, definitions, population or segment, geography, methodology, incentives, and measurement
+  before declaring a conflict.
+- Do not average or vote by source count. Use claim-authoritative sources for contracts or policy and observation
+  or independent evidence for real-world outcomes.
+- If evidence cannot be reconciled, retain both claims, state when each may hold, and identify decisions safe under
+  uncertainty. Never silently choose the source matching a prior conclusion.
 
-## 5. ส่งมอบ
+## 5. Deliver
 
-สรุป `decision/question → claim → status → source + checked date → applicability → limitation`
-และแยก recommendation ออกจาก fact. ระบุสิ่งที่ไม่ได้ค้นและเหตุผล เพื่อให้ผู้อ่านรู้ coverage
-และตรวจซ้ำได้โดยไม่เริ่มใหม่ทั้งหมด.
+Summarize `decision/question → claim → status → source + checked date → applicability → limitation`. Separate
+recommendations from facts and state what was not researched and why, so coverage can be reviewed and repeated.

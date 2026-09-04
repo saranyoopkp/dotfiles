@@ -1,13 +1,13 @@
 ---
 name: <short-kebab-case-slug>
-description: <one-line summary — ใช้ตัดสินความ relevant ตอน recall>
+description: <one-line summary used to judge relevance during recall>
 metadata:
   type: user | feedback | project | reference
 ---
 
-<ตัว fact — สั้น ตรงประเด็น>
+<the fact, concise and direct>
 
-**Why:** <เหตุผล/ที่มา — สำคัญสุด อย่าข้าม>
-**How to apply:** <ใช้ยังไงในทางปฏิบัติ>
+**Why:** <reason or origin; this is essential>
+**How to apply:** <practical application>
 
-<ลิงก์ fact ที่เกี่ยวด้วย [[other-fact-name]]>
+<link related facts with [[other-fact-name]]>

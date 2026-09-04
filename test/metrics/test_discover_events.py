@@ -51,10 +51,10 @@ class DiscoverEventsTest(unittest.TestCase):
                 (record_id, 1, uuid, parent, logical, f"2026-08-01T00:00:0{line}Z", line),
             )
         turns = [
-            (1, 0, 1, None, "เริ่มงาน", "เริ่มทำ", ["Read"]),
-            (2, 1, 3, "executed_branch:1/2", "ไม่ใช่ครับ กลับมางานเดิม", "แก้ให้", ["Edit"]),
-            (3, 2, 5, "executed_branch:2/2", "อีกทางหนึ่ง", "คำตอบอีก branch", []),
-            (4, 3, 7, None, "โอเค ทำต่อ", "ทำต่อแล้ว", ["Bash"]),
+            (1, 0, 1, None, "Start the task", "Starting", ["Read"]),
+            (2, 1, 3, "executed_branch:1/2", "No, go back to the original task", "Fixed it", ["Edit"]),
+            (3, 2, 5, "executed_branch:2/2", "Another approach", "Alternate branch answer", []),
+            (4, 3, 7, None, "Okay, continue", "Continued", ["Bash"]),
         ]
         for turn_id, ordinal, record_id, branch, user, assistant, tools in turns:
             conn.execute(

@@ -1,26 +1,26 @@
-# skill<TAB>label<TAB>task — skill ที่คาดว่า auto-invoke (ชื่อ skill / NONE)
-# NONE = ไม่ควร invoke on-demand skill ตัวไหนเลย (domain เป็น always-on หรือไม่เข้า domain)
-# expect = skill *หลัก* ที่ต้อง auto-invoke; related skill co-fire เพิ่มได้ (PASS ไม่นับ over-invoke)
-# เกณฑ์: primary fire = PASS (miss = FAIL), NONE ต้องไม่ fire on-demand skill ตัวไหนเลย
-ui-ux-baseline	ui-list	วางแผน React component แสดง list ของ order ที่ fetch จาก API
-ui-ux-baseline	ui-tooltip	implement hover tooltip บนไอคอนใน navbar React ให้ครอบ interaction + accessibility
-ui-ux-baseline	ui-form	เพิ่มปุ่ม submit ในฟอร์ม React ที่ disable ตอนกำลังส่งและแสดง error
-ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction	ออกแบบ landing page ใหม่สำหรับ studio ทำเครื่องดนตรี analogue โดยต้องมี visual identity ที่ไม่เหมือน SaaS template
-ui-ux-baseline ui-ux-baseline-visual-polish	ui-ux-baseline-visual-direction	ui-visual-polish	ปรับ spacing, typography และ visual hierarchy ของหน้า settings เดิมให้สแกนง่ายขึ้น โดยไม่เปลี่ยน flow หรือ brand
-ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction-existing	หน้า account เดิมยังไม่สวย ช่วยเสนอ design ให้ดู modern และมี character โดยยังไม่ต้องลงมือแก้ code
-ui-ux-baseline	ui-motion	เพิ่ม microinteraction ตอนบันทึกค่า และ transition ของ panel ที่เปิด/ปิด โดยต้องไม่รบกวน keyboard user
-ui-ux-baseline	ui-foundations	ปรับ semantic color token และ typography scale ที่ใช้ร่วมทั้ง product พร้อมตรวจ contrast
-ui-ux-baseline	ui-localization	เพิ่มคำแปลภาษาอาหรับให้ form พร้อม pluralization, locale formatting, ข้อความยาว และ RTL
-ui-ux-baseline	ui-icons	ปรับหน้า settings ที่ใช้ emoji ตกแต่งให้เสนอ icon จาก library เดิมโดยรักษา accessible label
-data-design	db-schema	ออกแบบ schema ตาราง orders + index ใน Postgres
-data-design	db-cache	เพิ่ม cache layer ให้ query ที่อ่านบ่อย พร้อม invalidation
-data-design	db-queue	ทำ message queue consumer ประมวลผล order แบบ idempotent
-data-design	db-transaction	โอนเครดิตระหว่างสองบัญชีให้ถูกต้องแม้มี request พร้อมกัน และส่ง event หลัง commit
-data-design	db-lifecycle	ออกแบบ retention และ deletion ของข้อมูลลูกค้า รวม cache, search index และ audit trail
-api-design	api-contract	ออกแบบ REST API contract สำหรับ resource users — method, status code, response envelope
-api-design	api-error	กำหนด error response shape ให้ทั้ง API consistent (machine + human readable)
-greenfield-foundation	greenfield-stack	เริ่ม backend service ใหม่จากศูนย์ ช่วยเลือก runtime, framework และ database version ที่เหมาะสำหรับดูแลระยะยาว แล้ววาง minimum vertical slice
-greenfield-foundation	greenfield-scaffold	สร้าง repository ใหม่สำหรับ web application ที่ยังไม่มี stack หรือ architecture decision ช่วยวาง foundation ก่อน scaffold
-greenfield-foundation	greenfield-version-chain	เริ่ม service ใหม่โดยกำหนดให้ใช้ Node.js, Fastify และ PostgreSQL ช่วยตรวจ official LTS/support/EOL และเลือก version line ที่รองรับกันในปัจจุบันก่อนวางแผน
-NONE	csv-parse	เขียนฟังก์ชัน parse CSV เป็น array of object ใน Node.js
-NONE	util-date	แก้ฟังก์ชัน util formatDate ที่หลาย component เรียกไปแสดงผลวันที่
+# require<TAB>forbid<TAB>label<TAB>task — expected automatically invoked skills
+# NONE means no on-demand skill should be invoked; the concern is always-on or outside these domains.
+# require lists primary skills that must fire. Related skills may co-fire without counting as over-invocation.
+# A required primary invocation passes; a miss fails. NONE fails if any on-demand skill fires.
+ui-ux-baseline	-	ui-list	Plan a React component that displays an order list fetched from an API.
+ui-ux-baseline	-	ui-tooltip	Implement a hover tooltip on an icon in a React navbar, covering interaction and accessibility.
+ui-ux-baseline	-	ui-form	Add a submit button to a React form that disables while submitting and displays errors.
+ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction	Design a new landing page for an analogue instrument studio with a visual identity unlike a generic SaaS template.
+ui-ux-baseline ui-ux-baseline-visual-polish	ui-ux-baseline-visual-direction	ui-visual-polish	Refine spacing, typography, and visual hierarchy on an existing settings page for easier scanning without changing flow or brand.
+ui-ux-baseline ui-ux-baseline-visual-direction	ui-ux-baseline-visual-polish	ui-visual-direction-existing	The existing account page is unattractive. Propose a modern design with character, without implementing it yet.
+ui-ux-baseline	-	ui-motion	Add a save microinteraction and an opening or closing panel transition without disrupting keyboard users.
+ui-ux-baseline	-	ui-foundations	Change semantic color tokens and typography scales shared across the product and verify contrast.
+ui-ux-baseline	-	ui-localization	Add Arabic translations to a form, including pluralization, locale formatting, long text, and RTL.
+ui-ux-baseline	-	ui-icons	For a settings page using decorative emoji, propose icons from the existing library while preserving accessible labels.
+data-design	-	db-schema	Design an orders table schema and indexes in PostgreSQL.
+data-design	-	db-cache	Add a cache layer to a frequently read query with invalidation.
+data-design	-	db-queue	Build an idempotent message-queue consumer that processes orders.
+data-design	-	db-transaction	Transfer credit between two accounts correctly under concurrent requests and emit an event after commit.
+data-design	-	db-lifecycle	Design retention and deletion for customer data across cache, search indexes, and audit trails.
+api-design	-	api-contract	Design a REST API contract for a users resource, including methods, status codes, and response envelope.
+api-design	-	api-error	Define a consistent API error-response shape that is machine-readable and human-readable.
+greenfield-foundation	-	greenfield-stack	Start a backend service from scratch. Select maintainable runtime, framework, and database versions, then plan a minimum vertical slice.
+greenfield-foundation	-	greenfield-scaffold	Create a new web-application repository with no existing stack or architecture decisions. Establish the foundation before scaffolding.
+greenfield-foundation	-	greenfield-version-chain	Start a service using Node.js, Fastify, and PostgreSQL. Verify official LTS, support, and EOL information and select currently compatible version lines before planning.
+NONE	-	csv-parse	Write a Node.js function that parses CSV into an array of objects.
+NONE	-	util-date	Modify a `formatDate` utility used by several components to display dates.

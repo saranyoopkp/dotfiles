@@ -1,9 +1,9 @@
 # Memory Index
 
-> หนึ่งบรรทัดต่อไฟล์ — format: `- [Title](<fact-file>.md) — hook สั้น ๆ ว่าทำไมต้องเปิด`
-> index นี้ auto-load และครอบเฉพาะ shared memory; ไม่รวม `memory/private/`
-> เก็บเฉพาะ pointer + recall hook — ห้ามคัดเนื้อ fact จาก leaf มาใส่ใน index
-> create/move/rename/delete shared leaf = sync entry ใน commit เดียวกัน; edit = ตรวจว่า hook ยังตรง
-> ไม่พบใน index ≠ ไม่มี private memory — ถ้าเรื่องอาจเฉพาะเครื่อง ให้ตรวจ private แยก
+> One line per file, formatted as `- [Title](<fact-file>.md) — a concise hook explaining when to open it`.
+> This index auto-loads and covers shared memory only; it excludes `memory/private/`.
+> Keep only pointers and recall hooks here. Never copy fact content from leaf files into the index.
+> Create, move, rename, or delete a shared leaf: synchronize its entry in the same commit. Edit a leaf: verify that its hook still matches.
+> Absence from this index does not mean private memory is absent. Search private memory separately for machine-specific topics.
 
-- [<Title>](<fact>.md) — <hook>
+- [<Title>](<fact>.md) — <recall hook>

@@ -1,19 +1,16 @@
 ---
 name: data-design:lifecycle-governance
-description: ออกแบบ data lifecycle และ governance เช่น retention, archival, soft/hard delete, anonymization, audit/history, PII classification และ erasure ใช้เมื่อข้อมูลต้องมีอายุ, ต้องลบ/เก็บต่อ, ต้องตรวจย้อนหลัง หรือมีข้อมูลอ่อนไหว
+description: Design data lifecycle and governance, including retention, archival, soft or hard deletion, anonymization, audit/history, PII classification, and erasure. Use when data expires, must be deleted or retained, requires traceability, or is sensitive.
 ---
 
 # Data Lifecycle & Governance
 
-- ก่อนเก็บข้อมูล ให้ระบุ purpose, source of truth, data class, owner, retention/expiry และสิ่งที่ต้องเกิดเมื่อหมดอายุ; หากข้อกำหนดทางธุรกิจหรือกฎหมายไม่ชัด ให้ถาม owner แทนการเดาระยะเวลา
-- แยก soft delete, hard delete, archive และ anonymization ตามความหมายจริง: soft delete ไม่ใช่ privacy erasure, hard delete อาจทำลาย referential/audit need, archive ต้องยังค้น/restore ได้ตาม contract ที่ระบุ
-- deletion ต้องครอบคลุม primary store, derived data, search index, cache, attachment และ downstream copy ที่ระบบควบคุมได้; ระบุ asynchronous completion และข้อยกเว้นที่เก็บต่ออย่างชัดเจน
-- audit/history ต้องตอบได้ว่าใครทำอะไรกับ target ใด เมื่อไร และผลคืออะไร โดยไม่ใส่ secret หรือ PII เกินจำเป็น; อย่าใช้ audit log แทน source of truth หรือเหตุผลรองรับการเก็บข้อมูลทุกอย่างตลอดไป
-- แยก access/retention ของ PII จากข้อมูลทั่วไป, ลดการเก็บและการคัดลอก, และตรวจ tenant scope ทุกทางที่ read/export/delete; authorization อยู่ `risk-review`
+- Before collecting data, define purpose, source of truth, classification, owner, retention or expiry, and expiry behavior. Ask the owner when business or legal requirements are unclear instead of inventing a period.
+- Distinguish soft deletion, hard deletion, archival, and anonymization by real semantics. Soft deletion is not privacy erasure; hard deletion may destroy referential or audit needs; archives must remain searchable or restorable only as promised.
+- Deletion covers authoritative stores, derived data, search indexes, caches, attachments, and controlled downstream copies. State asynchronous completion and justified retention exceptions.
+- Audit history must answer who acted on which target, when, and with what result without retaining unnecessary secrets or PII. It is neither a source of truth nor justification for indefinite collection.
+- Separate PII access and retention from ordinary data, minimize copies, and verify tenant scope across read, export, and delete paths. Authorization belongs to `risk-review`.
 
-backup/restore และ retention ของ telemetry อยู่ `risk-review`; privileged-action audit อยู่
-ใน reference authorization/money ตามโดเมน. Skill นี้เป็น owner ของ lifecycle semantics ของ data และ
-ผลของ deletion/retention ที่ consumer พึ่งพาได้.
-
-ตรวจอย่างน้อย create → retain → access → delete/expire และ recovery/audit path ที่มีจริง; ถ้า
-downstream erasure หรือ archive ยังทำไม่ได้ ให้รายงานเป็น gap ไม่อ้างว่า delete จบแล้ว.
+Backup, restore, telemetry retention, and privileged-action risk retain their risk owners. This skill owns
+consumer-visible lifecycle semantics. Verify create → retain → access → delete or expire and any real recovery
+or audit path. Report incomplete downstream erasure or archival as a gap.

@@ -1,18 +1,17 @@
 ---
 name: ui-ux-baseline:motion-microinteractions
-description: ออกแบบหรือแก้ motion design, transition, animation, progress, reveal, scroll behavior และ microinteraction ที่สื่อ state/feedback ใช้เมื่อการเคลื่อนไหวเป็นส่วนหนึ่งของ UI behavior ไม่ใช่เพียง static Visual Design
+description: Design or modify motion, transitions, animation, progress, reveals, scrolling behavior, and microinteractions that communicate state or feedback. Use when movement is part of UI behavior rather than merely static visual design.
 ---
 
 # Motion Design & Microinteractions
 
-motion ต้องสื่อ hierarchy, spatial continuity, state transition, pending/progress หรือผลของ action; decoration
-ที่ไม่รับใช้สิ่งใดให้ตัดออก. กำหนดก่อนเขียนว่า `trigger → state ที่สื่อ → motion → จบ/ถูกขัดจังหวะอย่างไร`.
+Motion must communicate hierarchy, spatial continuity, state transitions, pending/progress, or action results; remove decoration that serves none of these. Before implementation, define `trigger → communicated state → motion → completion/interruption`.
 
-- user action ต้องเริ่มตอบสนองทันที; animation ห้ามบัง pending, error หรือทำให้ผู้ใช้เข้าใจว่างานเสร็จแล้วก่อน server ยืนยัน
-- microinteraction หนึ่งชิ้นควรตอบคำถามเดียว เช่น กดได้ไหม, กำลังทำอะไร, สำเร็จหรือไม่; อย่าให้หลาย element ขยับแข่งกันจน attention กระจาย
-- motion จาก event ที่เข้ามาเองห้ามขโมย focus, เปลี่ยน scroll position หรือรบกวนการอ่าน; chat/feed/realtime อ่าน `realtime-conversation` เพิ่ม
-- เคารพ `prefers-reduced-motion`: ลดหรือแทน movement ด้วย state/opacity/instant change โดยยังคงข้อมูล, progress และทางสั่งงานครบ; accessibility semantics/focus อยู่ `interaction-a11y`
-- เลี่ยง animation ที่ทำให้ layout shift หรือ interaction target เคลื่อนใต้ pointer/focus; ใช้ implementation ที่ลื่นตาม stack เมื่อพิสูจน์ได้ ไม่ optimize จากความเชื่อ
-- duration/easing ที่ใช้ร่วมกันเป็น token อยู่ `design-foundations`; skill นี้เป็น owner ของเหตุผล, trigger และ behavior ของ motion ไม่ใช่แค่ค่าตัวเลข
+- User actions must receive immediate feedback. Animation must not obscure pending or error states or imply completion before the server confirms it.
+- Each microinteraction should answer one question, such as whether an item is actionable, what is happening, or whether it succeeded. Do not make several elements compete for attention through motion.
+- Motion caused by incoming events must not steal focus, change scroll position, or disrupt reading. For chat, feeds, or realtime UI, also read `realtime-conversation`.
+- Respect `prefers-reduced-motion`: reduce or replace movement with state, opacity, or instant changes while preserving information, progress, and controls. Accessibility semantics and focus belong to `interaction-a11y`.
+- Avoid animations that cause layout shifts or move interaction targets beneath the pointer or focus. Use implementations shown to perform smoothly on the current stack; do not optimize from assumptions.
+- Shared duration and easing tokens belong to `design-foundations`. This skill owns the purpose, trigger, and behavior of motion, not merely numeric values.
 
-ตรวจ interaction จริงหรือ recording เมื่อทำได้ เพราะ screenshot ยืนยัน timing, interruption และ reduced-motion ไม่ได้. pending/success/failure อ่าน `task-flows` หรือ `feedback-notifications`; skill นี้ไม่เป็น owner ของ business flow.
+Verify real interactions or recordings when possible, because screenshots cannot prove timing, interruption, or reduced-motion behavior. For pending, success, and failure states, read `task-flows` or `feedback-notifications`; this skill does not own business flows.

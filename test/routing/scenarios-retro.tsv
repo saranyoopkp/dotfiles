@@ -1,5 +1,5 @@
 # Retro routing cases: explicit retrospective, behavioral surprise, and recurring session friction.
-retro	retro-session	ย้อนดู session นี้แล้วสกัดสิ่งที่ผมต้องบอกซ้ำ pain ที่คุณเจอ และ near miss ที่ควรนำไป improve dotfiles โดยยังไม่ต้องแก้ไฟล์
-retro	retro-owner	จาก feedback และคำท้วงในบทสนทนานี้ ช่วยทำ retrospective ว่าควรปรับ Agent Rule Skill Test หรือ Memory ตรงไหน พร้อมหลักฐาน
-retro	retro-objective-drift	เทียบหลาย session แล้วดูว่า agent ทำ objective เดิมหล่นหลังผมถามแทรก, reopen เรื่องที่บอกว่าไว้รอบหน้า หรือเป็นการขุด dependency ที่จำเป็นจริง จากนั้นเสนอ owner ใน agents/rules/skills โดยยังไม่แก้ไฟล์
-retro	retro-behavioral-surprise	พฤติกรรม agent ใน session นี้รู้สึกแปลกและขัด ๆ แต่ผมยังบอกไม่ได้ว่าเป็นปัญหาหรือควรแก้อะไร ช่วยดูเหตุการณ์กับหลักฐานแล้วอธิบายว่ามันเกิดจากอะไร
+retro	retro-session	Review this session and extract repeated corrections, user pain, and near misses worth improving in dotfiles, without editing files yet.
+retro	retro-owner	From feedback and objections in this conversation, conduct a retrospective identifying whether Agent, Rule, Skill, Test, or Memory should change, with evidence.
+retro	retro-objective-drift	Compare sessions to determine whether the agent dropped the original objective after an interruption, reopened deferred work, or uncovered a necessary dependency. Propose an owner in agents, rules, or skills without editing files.
+retro	retro-behavioral-surprise	The agent's behavior in this session feels surprising and awkward, but I cannot yet name the defect or fix. Inspect the events and evidence and explain what caused it.

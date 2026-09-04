@@ -1,16 +1,16 @@
 ---
 name: ui-ux-baseline:task-flows
-description: ออกแบบ user-initiated task flow เช่น form submit, inline edit, toggle, delete, confirm, retry และ async mutation ใช้เมื่อผู้ใช้สั่งให้ระบบสร้าง แก้ เปลี่ยนสถานะ หรือดำเนินการกับข้อมูล
+description: Design user-initiated task flows such as form submission, inline editing, toggles, deletion, confirmation, retry, and asynchronous mutation. Use when users ask the system to create, edit, change the state of, or act on data.
 ---
 
 # Task Flows
 
-ออกแบบ flow เป็น `intent → validation/confirmation → pending → result → recovery` ไม่ใช่แค่ปุ่มที่เรียก mutation
+Design the flow as `intent → validation/confirmation → pending → result → recovery`, not merely as a button that invokes a mutation.
 
-- ก่อนส่ง แสดง validation ใกล้จุดที่แก้ได้ และรักษาค่าที่ผู้ใช้กรอกไว้เมื่อ server ปฏิเสธ
-- ระหว่าง pending ป้องกัน duplicate submission ตาม semantics ของ action; อย่าปิดทุกอย่างจนผู้ใช้ไม่รู้ว่ายังเกิดอะไรขึ้น
-- success ต้องสะท้อนผลที่เกิดขึ้นจริงใน UI; failure ต้องบอกผลกระทบและทาง recover/retry โดยไม่ทำให้ผู้ใช้เดาว่างานสำเร็จหรือไม่ — เลือก channel ตาม `ui-ux-baseline:feedback-notifications`
-- optimistic update ใช้ได้เมื่อ rollback/reconciliation ชัดเจน; ผลลัพธ์จาก server คือ source of truth เมื่อมีความขัดแย้ง
-- action ที่ destructive, irreversible หรือเปลี่ยนสถานะสำคัญ ต้องบอก consequence และขอ confirm ในจังหวะที่ผู้ใช้ยังยกเลิกได้
+- Before submission, show validation near the place where it can be corrected, and preserve entered values when the server rejects the request.
+- While pending, prevent duplicate submissions according to the action's semantics; do not disable everything so completely that users cannot tell what is happening.
+- Success must reflect the result that actually occurred in the UI. Failure must state the impact and a recovery or retry path without making users guess whether the task succeeded; choose the channel according to `ui-ux-baseline:feedback-notifications`.
+- Optimistic updates are appropriate when rollback and reconciliation are clear; the server result is the source of truth when there is a conflict.
+- Destructive or irreversible actions, and actions that change important state, must explain the consequence and ask for confirmation while the user can still cancel.
 
-ทุก flow ที่ทำ mutation ต้องทดสอบอย่างน้อย happy path, pending/duplicate intent และ failure/retry ที่เกิดได้จริง
+For every mutation flow, test at least the happy path, pending or duplicate intent, and realistic failure and retry paths.

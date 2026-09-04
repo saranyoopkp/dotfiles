@@ -1,34 +1,31 @@
 ---
 name: ui-ux-baseline:feedback-notifications
-description: เลือกและออกแบบ toast, banner, inline error, alert, success/failure message, status announcement และ recovery feedback รวมถึง voice/tone ของ feedback ใช้เมื่อ UI ต้องบอกผลของ action, error, warning, background completion หรือสถานะที่ผู้ใช้ต้องรับรู้
+description: Select and design toasts, banners, inline errors, alerts, success/failure messages, status announcements, and recovery feedback, including feedback voice and tone. Use when UI must communicate action results, errors, warnings, background completion, or any state users need to know about.
 ---
 
 # Feedback & Notifications
 
-เลือก channel จากความเร่งด่วน, ความคงอยู่ของผล, ตำแหน่งที่ผู้ใช้แก้ได้ และว่าผู้ใช้ต้องลงมืออะไรต่อ — อย่าเริ่มด้วย Toast เพราะทำง่าย
+Choose a channel based on urgency, how persistent the result is, where users can correct it, and whether they need to act next. Do not default to a toast merely because it is easy to implement.
 
-| สถานการณ์ | Channel ที่เหมาะเป็น default |
+| Situation | Appropriate default channel |
 |---|---|
-| ผู้ใช้ต้องแก้ field หรือเข้าใจ context เฉพาะจุด | inline validation/error ใกล้จุดนั้น |
-| resource หรือหน้าทั้งส่วนใช้ไม่ได้ แต่ยังอยู่ใน context เดิม | inline state หรือ banner ใน context นั้น |
-| ผลสั้น, reversible, ไม่ต้องจำ และไม่บล็อก flow | toast/status message |
-| warning สำคัญที่ต้องเห็นขณะทำงานข้ามหน้า/ส่วน | persistent banner หรือ notification center ตาม product pattern |
-| ต้องตัดสินใจก่อนทำต่อ หรือมีผล destructive/irreversible | dialog/confirmation ก่อน action ไม่ใช่ toast หลังเกิดเหตุ |
+| Users must correct a field or understand local context | Inline validation/error near that point |
+| A resource or entire section is unavailable while the user remains in the same context | Inline state or banner within that context |
+| A brief, reversible result that need not be remembered and does not block the flow | Toast/status message |
+| An important warning that must remain visible across pages or sections | Persistent banner or notification center, following the product pattern |
+| A decision is required before continuing, or the effect is destructive/irreversible | Dialog/confirmation before the action, not a toast afterward |
 
 ## Voice & tone
 
-- User-facing copy ใช้ **professional-neutral** เป็น default: clear, calm, respectful, concise และ actionable;
-  หลีกเลี่ยงภาษากันเองเกินไป, slang, มุก หรือ filler เว้นแต่ project convention อนุญาตชัดเจน
-- ก่อนเปลี่ยน wording ให้ตรวจ project-owned voice/tone convention ใน `CLAUDE.md` หรือเอกสารที่ชี้ไว้;
-  convention ปรับบุคลิกและระดับความเป็นทางการได้ แต่ห้ามลด safety, accuracy, accessibility, consent หรือ recovery ที่จำเป็น
-- ปรับน้ำเสียงตาม state: error ต้อง factual/non-blaming/actionable, validation ต้องสั้น, success ยืนยันผลจริง,
-  destructive/security/money ต้องชัดและจริงจัง, empty/help เป็นมิตรแต่กระชับ, internal/admin ใช้ศัพท์เทคนิคได้เมื่อ audience เข้าใจ
+- Use **professional-neutral** user-facing copy by default: clear, calm, respectful, concise, and actionable. Avoid excessive familiarity, slang, jokes, or filler unless the project convention explicitly permits them.
+- Before changing wording, inspect the project-owned voice and tone convention in `CLAUDE.md` or its linked documentation. A convention may adjust personality and formality, but must not weaken necessary safety, accuracy, accessibility, consent, or recovery information.
+- Adapt tone to state: errors are factual, non-blaming, and actionable; validation is brief; success confirms actual results; destructive, security, or money-related actions are explicit and serious; empty/help states may be friendly but concise; internal/admin surfaces may use technical terms when the audience understands them.
 
-- map error ตามขอบเขตที่ผู้ใช้แก้ได้เล็กที่สุด: field error → inline ที่ field, cross-field/domain validation → form-level, resource/global failure → context-level; ถ้า response ไม่ระบุ field ห้ามเดา field เอง และอย่าใช้ transient toast แทน feedback ที่ต้องแก้หรือย้อนกลับมาอ่าน
-- toast เป็น transient feedback ไม่ใช่ที่ซ่อน error ที่ผู้ใช้ต้องแก้, ผลลัพธ์ที่มีรายละเอียดสำคัญ หรือ failure ที่ต้อง retry; ข้อความที่ต้องอ้างอิงภายหลังต้องมีบ้านที่คงอยู่กว่า
-- toast ต้องระบุผลและ object/action ที่เกี่ยวข้องอย่างกระชับ, ไม่หายก่อนอ่าน, มี action/retry เฉพาะเมื่อทำได้จริง และต้อง dedupe/batch เหตุการณ์ burst เพื่อไม่ spam ผู้ใช้
-- error ต้องแยกว่าอะไรล้มเหลว, อะไรยังสำเร็จ, ผลต่อข้อมูลคืออะไร และผู้ใช้ทำอะไรต่อได้; partial failure ห้ามสรุปว่า “สำเร็จ” รวม ๆ
-- success จาก optimistic UI หรือ background job ต้องไม่สื่อว่า server ยืนยันแล้วจนกว่าจะยืนยันจริง; แสดง pending/reconciliation ให้เหมาะกับความเสี่ยง
-- ใช้ semantic status/alert และ announcement ให้เหมาะกับความเร่งด่วน; อย่าพึ่งสี, motion หรือ toast ที่หายเองเป็นช่องทางเดียว และอย่าขโมย focus จากงานที่ผู้ใช้กำลังทำโดยไม่มีเหตุผล
+- Map errors to the smallest scope users can correct: field errors → inline at the field; cross-field/domain validation → form level; resource/global failures → context level. If a response does not identify a field, do not guess one. Do not substitute a transient toast for feedback users must fix or revisit.
+- Toasts are transient feedback, not a hiding place for correctable errors, results with important detail, or failures requiring retry. Messages users may need later require a more persistent home.
+- A toast must concisely identify the result and relevant object or action, remain long enough to read, offer an action or retry only when it actually works, and deduplicate or batch burst events to avoid spam.
+- Errors must distinguish what failed, what still succeeded, the effect on data, and what users can do next. Never summarize a partial failure simply as “Success.”
+- Success from optimistic UI or background jobs must not imply server confirmation before it exists. Present pending and reconciliation states according to risk.
+- Use semantic status/alert roles and announcements appropriate to urgency. Do not rely solely on color, motion, or self-dismissed toasts, and do not steal focus from the user's current work without reason.
 
-Toast/Banner component API และ visual variant อยู่ที่ `ui-ux-baseline:design-system`; token อยู่ที่ `ui-ux-baseline:design-foundations`; accessibility pattern เชิง interaction อยู่ที่ `ui-ux-baseline:interaction-a11y`; wording ของ UI ทั่วไปอยู่ที่ `ui-ux-baseline:content-copy`. Skill นี้เป็นเจ้าของ **policy การเลือกและเนื้อหาของ feedback**.
+Toast and banner component APIs and visual variants belong to `ui-ux-baseline:design-system`; tokens belong to `ui-ux-baseline:design-foundations`; interactive accessibility patterns belong to `ui-ux-baseline:interaction-a11y`; general UI wording belongs to `ui-ux-baseline:content-copy`. This skill owns the **policy for selecting feedback channels and content**.

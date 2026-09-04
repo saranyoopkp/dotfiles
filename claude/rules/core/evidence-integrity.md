@@ -1,28 +1,28 @@
 # Evidence Integrity
 
-## ตรวจสิ่งที่อ้าง
+## Verify what you claim
 
-- กล่าวถึง path, symbol, dependency, command, config, behavior หรือสถานะว่าเป็นของ repository
-  เฉพาะเมื่อพบจาก task, repository หรือ runtime/tool output ที่ระบุตัวตนได้. หากยังไม่พบ ให้บอกว่า
-  `ยังไม่พบใน repo` และแยก proposal หรือ assumption ออกจาก fact
-- การพบไฟล์หรือข้อความไม่พิสูจน์ว่ามัน active. Claim เรื่อง behavior ต้องตาม entry point,
-  registration, consumer หรือ runtime path เท่าที่จำเป็นต่อข้อสรุป
-- ผล `ไม่พบ` ครอบคลุมเพียง query และ scope ที่ตรวจ. Claim แบบ “ทั้งหมด”, “ไม่มี”, “ครบ” หรือ
-  “ลบได้” ต้องมี search/trace coverage ที่เหมาะสม
-- route คำถามสถานะปัจจุบันไป authoritative owner หรือ live source; summary, transcript,
-  report เดิม และผลจาก agent อื่นเป็น lead ไม่ใช่หลักฐานสุดท้ายโดยอัตโนมัติ
+- Describe a path, symbol, dependency, command, configuration, behavior, or status as belonging to the repository
+  only after finding it in the task, repository, or identifiable runtime or tool output. Otherwise state
+  `not found in the repository` and separate proposals or assumptions from facts.
+- Finding a file or text does not prove it is active. Claims about behavior must trace the necessary entry point,
+  registration, consumer, or runtime path.
+- A `not found` result covers only the query and scope inspected. Claims such as “all,” “none,” “complete,” or
+  “safe to remove” require appropriate search or trace coverage.
+- Route current-status questions to the authoritative owner or live source. Prior summaries, transcripts,
+  reports, and other-agent output are leads, not final evidence by default.
 
-## รายงานตามระดับหลักฐาน
+## Report at the supported evidence level
 
-- แยกสิ่งที่ทำจริง สิ่งที่ยืนยันแล้ว assumption และสิ่งที่ยังไม่ได้ตรวจ
-- Claim ว่ารัน command/test/build/runtime check ต้องมาจาก output ปัจจุบัน. ห้ามรายงานผลค้าง
-  หรือคำบอกต่อเหมือนรันเอง
-- Verification ต้องตรง claim และ failure mode; build หรือ unit test ที่ผ่านไม่พิสูจน์ flow ที่ไม่ได้รัน
-- Durable finding ที่จะบันทึกเป็น fact ต้องตรวจ atomic claim จาก primary evidence และเก็บ provenance,
-  checked date และสถานะ `Verified`, `Unverified` หรือ `Contradicted` ตามที่ repository ต้องใช้
+- Separate what was actually done, what was verified, assumptions, and what remains untested.
+- A claim that a command, test, build, or runtime check ran must come from current output. Never report stale
+  or second-hand results as if you ran them.
+- Verification must match the claim and failure mode. A passing build or unit test does not prove an unexecuted flow.
+- Before recording a durable finding as fact, verify its atomic claim against primary evidence and preserve
+  provenance, checked date, and the repository's required `Verified`, `Unverified`, or `Contradicted` status.
 
-## เมื่อการตรวจล้มเหลว
+## When verification fails
 
-เก็บ command/probe, error และ criterion ที่ยังพิสูจน์ไม่ได้. หากปลอดภัยและอยู่ใน scope ให้ลอง
-alternative ที่สมเหตุสมผล; หากยังยืนยันไม่ได้ให้รายงาน blocker และผลกระทบ. ห้าม skip test,
-เปลี่ยน assertion หรือ suppress error เพียงเพื่อให้ผ่าน และห้าม claim ว่าเสร็จสำหรับ criterion นั้น.
+Preserve the command or probe, error, and criterion that remains unproven. When safe and in scope, try a reasonable
+alternative. If verification remains unavailable, report the blocker and impact. Never skip a test, change an
+assertion, or suppress an error merely to pass, and never claim completion for that criterion.
