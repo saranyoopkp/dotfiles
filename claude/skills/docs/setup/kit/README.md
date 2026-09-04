@@ -1,141 +1,98 @@
-# Docs Setup — ระบบเอกสารสำหรับทุก repo
+# Documentation Setup — A System for Every Repository
 
-> ใช้ได้กับทุก project ที่ทำงานร่วมกับ Claude Code (solo dev, long-running)
-> มี user-level skill `/docs:setup` (`~/.claude/skills/docs/setup/SKILL.md`) ชี้มาที่ kit นี้ —
-> ใน repo ไหนก็พิมพ์ `/docs:setup` เพื่อให้ session เข้าใจระบบ + ลงมือ setup/refactor ได้ทันที
+> Intended for projects developed with Claude Code, including solo and long-running work.
+> The user-level `/docs:setup` skill points to this kit and can install or refactor the system from any repository.
 
-## หลักการ
+## Principles
 
-**safety invariant อยู่ `claude/rules/engineering/documentation-discipline.md`; procedure อยู่
-`docs:setup`/`docs:placement`** ใน dotfiles นี้. README อธิบายกลไกของ kit: โครงสร้าง, init,
-hooks และ junction; artifact ที่ copy ออกไปต้องถือหลักการจำเป็นได้เองโดยไม่พึ่ง path เหล่านี้.
+Safety invariants live in `claude/rules/engineering/documentation-discipline.md`; procedures live in `docs:setup` and `docs:placement`. This README explains kit mechanics: structure, initialization, hooks, and memory links. Artifacts copied into another repository must remain usable without these dotfiles paths.
 
-**Invariant: artifact ที่ถูก copy เข้า repo ปลายทางต้อง self-contained** — ได้แก่
-`CLAUDE.md` (จาก `CLAUDE.template.md`), `memory/*`, `.claude/hooks/docs-drift.sh`,
-`.claude/settings.json` — ห้ามอ้าง `claude/rules/*`, path ของ kit, หรือ init script
-(repo ปลายทางอาจอยู่คนละเครื่อง/คนละคน ที่ไม่มีของพวกนั้นและหาไม่เจอ = pointer ตาย)
-เขียน**คำถาม/คำสั่งที่ต้องทำ**ลงไปตรง ๆ แทนการชี้ไปหาแหล่ง — ส่วน `README.md`/`init.sh`
-ของ kit ไม่ถูก copy จึงอ้างได้ตามสบาย
+**Invariant: every copied artifact is self-contained.** This includes CLAUDE.md generated from `CLAUDE.template.md`, `memory/*`, `.claude/hooks/docs-drift.sh`, and `.claude/settings.json`. They must not point to kit paths, init scripts, or `claude/rules/*`, which may not exist for another machine or user. Include required questions or commands directly. This README and `init.sh` are not copied and may reference kit internals.
 
-ส่วนที่เป็นกลไกเฉพาะระบบนี้ (ไม่อยู่ใน rule):
-- **`*/private/` ไม่ sync ข้ามเครื่อง** (ไม่อยู่ใน git) และห้ามใส่บรรทัดของมันใน
-  `memory/MEMORY.md` ที่ commit (index จะชี้ไฟล์ที่เครื่องอื่นไม่มี)
-- shared memory create/move/rename/delete ต้อง sync pointer + recall hook ใน `MEMORY.md`
-  commit เดียวกัน; edit leaf ให้ตรวจ hook และแก้เมื่อความหมาย/relevance เปลี่ยน
-- ก่อน commit memory ใหม่: ลบ metadata ส่วนบุคคล (`originSessionId` ฯลฯ) ออกจาก frontmatter
+System-specific mechanics:
 
-## จดอะไรเมื่อทำ feature เสร็จ (กติกากัน drift)
+- Private directories do not synchronize because Git ignores them. Never index private files in committed `memory/MEMORY.md`.
+- Creating, moving, renaming, or deleting shared memory requires updating its pointer and recall hook in `MEMORY.md` in the same commit. Edit hooks when leaf meaning or relevance changes.
+- Before committing memory, remove personal metadata such as `originSessionId` from frontmatter.
 
-drift risk แปรผันตามความเร็วที่ fact เปลี่ยน → จดเฉพาะชนิดที่ drift ช้าและโค้ดเล่าเองไม่ได้:
+## What to record after a feature
 
-| ชนิด | ตัวอย่าง | drift | จด? |
+Drift risk increases with how quickly a fact changes. Record slow-changing knowledge that code cannot explain:
+
+| Kind | Example | Drift | Record? |
 |---|---|---|---|
-| การมีอยู่ + จุดเข้า | "feature X อยู่ที่ `src/foo/`, endpoint `/api/x`" | ต่ำ | ✅ 1–3 บรรทัดใน inventory |
-| ทำไม + ข้อจำกัด + quirk | "เลือก A ไม่ใช่ B เพราะ...", "ลืม flag Y แล้วพัง" | ~ศูนย์ | ✅ มีค่าสุด |
-| ทำงานยังไงข้างใน | step-by-step, รูปร่าง params | สูงมาก | ❌ ให้โค้ด/type/test เล่า |
+| Existence and entry point | “Feature X begins in `src/foo/`; endpoint `/api/x`” | Low | Yes, one to three inventory lines |
+| Rationale, constraints, and quirks | “Choose A rather than B because...”; “missing flag Y fails” | Near zero | Yes, highest value |
+| Internal implementation | Step-by-step behavior or parameter shape | Very high | No; let code, types, and tests explain it |
 
-กติกาข้อเดียว: ก่อนเขียนแต่ละบรรทัดถามว่า **"โค้ดเล่าสิ่งนี้เองได้ไหม?"** — ได้ = อย่าเขียนซ้ำ
-ต้นทุนต่อ feature ควรอยู่ที่ 1–2 นาที: inventory 1–3 บรรทัด + decision ถ้ามี + quirk ถ้าเจอ
+Ask one question before every line: **Can the code explain this itself?** If yes, do not duplicate it. Typical feature cost should remain one or two minutes: a concise inventory update, a decision when one was made, and a quirk when discovered.
 
-## โครงสร้าง
+## Structure
 
-```
-CLAUDE.md          ← เริ่มจาก CLAUDE.template.md
-docs/              ← ไฟล์ละเรื่อง เกิดเมื่อ section ใน CLAUDE.md โตเกิน ~15 บรรทัด
-docs/private/      ← sensitive ops notes (gitignored — init เพิ่มให้ใน .gitignore)
-memory/            ← เริ่มจาก memory/ ใน template นี้
-memory/private/    ← fact ส่วนตัว/เฉพาะเครื่อง (gitignored)
+```text
+CLAUDE.md          # Starts from CLAUDE.template.md
+docs/              # One topic per file; created as CLAUDE.md sections grow
+docs/private/      # Sensitive operational notes, ignored by Git
+memory/            # Starts from this kit's memory directory
+memory/private/    # Personal or machine-specific facts, ignored by Git
   README.md
-  MEMORY.md        ← index หนึ่งบรรทัดต่อไฟล์
-  <fact>.md        ← ตาม _fact.template.md
+  MEMORY.md        # One-line index entry per file
+  <fact>.md        # Follows _fact.template.md
 ```
 
-`docs/private/` และ `memory/private/` เป็นของ repo นั้น ๆ (relative จาก Git root);
-monorepo ใช้ Git root เดียว ส่วน workspace ที่มีหลาย independent Git roots ให้แต่ละ repo
-ถือ private directory ของตนเอง.
+Private directories are relative to each Git root. A monorepo has one root; in a workspace with independent Git roots, each repository owns its private directories.
 
-ฝั่ง harness (`~/.claude/projects/<id>/memory`) เป็น **link** (junction/symlink) ชี้มาที่ `memory/` ใน repo
-— ไฟล์ชุดเดียวกันจริง ๆ (harness recall/auto-load ทำงานบนไฟล์ใน repo โดยตรง ไม่ต้อง sync)
+The harness directory `~/.claude/projects/<id>/memory` is a junction or symlink to repository `memory/`. Harness recall and auto-loading operate on the same files, so no synchronization step exists.
 
-## การจัดระเบียบ docs/
+## Organizing docs
 
-กติกา self-contained ของ kit อยู่ใน `CLAUDE.template.md` §Documentation index:
-ชื่อไฟล์ตามโดเมน, >~7 ไฟล์ → subfolder และ index ต้อง sync กับไฟล์จริง. ทำ subfolder
-ตอน promote ไฟล์ที่ 8 เลย (อย่ารอถึง 20); index ใน CLAUDE.md ใช้รูปแบบหนึ่งบรรทัด/ไฟล์
-(ชื่อ + hook ว่าทำไมต้องเปิด) เช่นเดียวกับ `memory/MEMORY.md`.
+The Documentation Index section in `CLAUDE.template.md` is self-contained: use domain-based filenames, introduce subfolders when a flat directory grows beyond roughly seven files, and keep its index synchronized. Organize when adding the eighth file rather than waiting for a large pile. Like `memory/MEMORY.md`, use one line per file containing a name and a hook explaining when to open it.
 
-## วิธี adopt กับ repo ใหม่
+## Adopting the kit
 
 ```bash
-bash <path-to-kit>/init.sh /path/to/repo   # ทุก OS — Windows รันผ่าน Git Bash (มากับ Git อยู่แล้ว)
+bash <path-to-kit>/init.sh /path/to/repo   # Use Git Bash on Windows
 ```
 
-สคริปต์จะ: สร้าง `CLAUDE.md` จาก template + copy `memory/` + สร้าง `docs/` +
-สร้าง **link** `~/.claude/projects/<id>/memory` → `<repo>/memory` (junction บน Windows,
-symlink บน unix — memory ตัวจริงชุดเดียวอยู่ใน repo, harness อ่าน/เขียนไฟล์เดียวกัน
-ไม่ต้อง sync มือ; ถ้ามี harness memory เดิมจะ merge เข้า repo แล้ว backup เป็น `.bak-*` ให้)
-จากนั้นเติม CLAUDE.md ตาม placeholder แล้วเขียน fact แรก ๆ (mission, stack decision, quirks)
+The script creates CLAUDE.md from the template, copies initial memory, creates public and private documentation directories, and links harness memory to repository memory. On Windows it uses a junction; on Unix, a symlink. Existing harness memory is merged into the repository and backed up as `.bak-*`. Then fill CLAUDE.md placeholders and add initial mission, stack-decision, and quirk facts.
 
-ข้อแลกเปลี่ยนของ link: memory ใหม่ที่ harness บันทึกจะโผล่ใน repo เป็น untracked file
-→ ต้องคัดกรอง+commit เป็นระยะ และถ้าย้าย repo ไปเครื่องอื่น ให้รัน init อีกครั้ง (idempotent)
-(section "Memory policy" ใน `CLAUDE.template.md` สอน Claude ให้ตรวจและ route การซ่อมผ่าน
-`/docs:setup` แล้ว — อย่าลบ section นั้น)
+New harness memory appears as untracked repository files, so review and commit it periodically. After moving the repository to another machine, rerun the idempotent init script. Keep the template's “Memory policy” section so later sessions can detect and route link repair through `/docs:setup`.
 
-## Lifecycle hooks (กัน docs drift — ต้น/กลาง/ปลาย session)
+## Lifecycle hooks
 
-init ติดตั้ง `.claude/hooks/docs-drift.sh` + `.claude/settings.json` ให้ (ติด git → ทุกเครื่อง ทุก OS):
+Init installs `.claude/hooks/docs-drift.sh` and `.claude/settings.json` as tracked, cross-platform files.
 
-| Event | หน้าที่ |
+| Event | Responsibility |
 |---|---|
-| `SessionStart` | บันทึก baseline ตาม `session_id`, แยก dirty path เดิมเป็นของ user/previous session, ตรวจ memory link แบบ read-only และ register watchPaths; การ merge/ซ่อม link อยู่ใน `/docs:setup` |
-| `PostToolUse(Edit\|Write)` | แจ้ง changed line-comment block ที่ยาวในไฟล์ซึ่ง session เป็นเจ้าของ เป็น audit candidate พร้อมตำแหน่ง; ไม่ถือ comment เป็น authority, ไม่ตัดสิน placement และไม่ block |
-| `TaskCompleted` | เมื่อมี session-owned mutation ให้เตือนสั้นเรื่อง acceptance evidence/gap, independent acceptance ตาม active workflow และ scoped local commit; ไม่ infer ACV จาก path และไม่ block |
-| `Stop` | บล็อกเฉพาะ shared-memory lifecycle ที่ session นี้ทำให้ pointer/index ไม่ตรง; source/docs edit ปกติไม่สร้าง ceremony เพิ่ม |
-| `PreCompact` | ส่ง objective, deferred scope, authorization และ verification gap เข้า summary; ไม่สร้าง repository work เพราะ compaction อย่างเดียว |
+| `SessionStart` | Store a baseline by `session_id`, classify already-dirty paths as user or previous-session work, inspect the memory link without changing it, and register watch paths; `/docs:setup` owns merging and repair |
+| `PostToolUse(Edit\|Write)` | Report long changed-line comment blocks in session-owned files as audit candidates with locations; never treat comments as authority, decide placement, or block work |
+| `TaskCompleted` | After session-owned mutation, briefly suggest acceptance evidence or gaps, independent acceptance under the active workflow, and a scoped local commit; never infer ACV from paths and never block |
+| `Stop` | Block only shared-memory lifecycle inconsistencies created by this session; ordinary source and documentation edits add no ceremony |
+| `PreCompact` | Carry objective, deferred scope, authorization, and verification gaps into the summary; compaction alone creates no repository work |
 
-> `FileChanged` เคย wire ไว้แต่**ตัดออกแล้ว** (2026-07-12) — ทดสอบยิงจริงพบว่า harness
-> ไม่ fire event นี้เลยแม้ documented ไว้ จึงถอดทั้ง wiring และ dead branch ออกจาก
-> `docs-drift.sh` — งานที่มันควรทำ (เตือนไฟล์ถูกแก้นอก session) ถูกครอบด้วย reminder ของ harness
-> เองอยู่แล้ว (system-reminder "modified by
-> the user or a linter") จึงไม่มี gap จริง
+`FileChanged` wiring was removed on 2026-07-12 after real harness testing showed the documented event never fired. The harness's own external-modification reminder covers the intended behavior, so no effective gap remains.
 
-Baseline เก็บใน temp state แยกด้วย repo + `session_id`; path ที่ dirty ก่อน SessionStart เป็น
-report-only และ hook จะไม่สั่ง edit/stage/commit. Path ที่ clean ตอนเริ่มแล้ว dirty ภายหลังจึงเป็น
-session-owned. ถ้า session แก้ไฟล์ที่ dirty อยู่ก่อน provenance ยังคลุมเครือและคงเป็น advisory.
-`Stop` ใช้ `decision:block` หนึ่งครั้งเพื่อให้ Claude รับ feedback แล้วอ่าน
-`stop_hook_active=true` และออกทันทีใน continuation; state เดิมถูก dedup. Hook เป็น
-self-contained. `PostToolUse` และ `TaskCompleted` เป็น advisory ที่ dedup ตาม session state;
-`Stop` ตรวจเฉพาะ invariant ของ shared-memory index ที่พิสูจน์แบบ deterministic ได้.
+Temporary baseline state is separated by repository and `session_id`. Paths dirty before SessionStart are report-only and hooks never edit, stage, or commit them. A clean-at-start path that later becomes dirty is session-owned; edits to already-dirty paths remain advisory because provenance is ambiguous.
 
-## Inline work-notes (TODO ในโค้ด → ตารางสถานะ)
+`Stop` uses one `decision:block` so Claude can receive feedback, observe `stop_hook_active=true`, and exit immediately on continuation; state deduplicates repeats. `PostToolUse` and `TaskCompleted` are advisory and session-deduplicated. `Stop` checks only deterministically provable shared-memory index invariants.
 
-รูปแบบนี้คือ **codetag** (PEP 350; รูปวงเล็บดัดแปลงจาก Google convention `TODO(username)` —
-เราใช้ scope/โดเมนแทนผู้รับผิดชอบส่วนบุคคล เพื่อให้ grep และ join ตารางสถานะได้สม่ำเสมอ)
+## Inline work notes
 
-- **format ตายตัว greppable**: `TODO(scope): ข้อความ` / `FIXME(scope):` / `HACK(scope): เหตุผล`
-  — ห้าม TODO เปล่าไร้ scope/บริบท (โน้ตที่ grep ไม่เจอ = โน้ตที่ไม่มีอยู่)
-- **จุดต่างจาก comment/docstring คือ*อายุ***: comment/docstring อยู่ตราบที่โค้ดอยู่ —
-  codetag **ต้องตาย**: ลบใน commit เดียวกับงานที่ปิดมัน (ค้าง = โกหกตารางสถานะ);
-  codetag ที่อายุเกิน ~2 สัปดาห์ = สัญญาณว่ามันคือหนี้ระดับ feature ที่ควรย้ายขึ้น
-  CLAUDE.md TODO/Future boundaries ไม่ใช่แช่ในโค้ด
-- **ตารางสถานะ = ผลของคำสั่ง ไม่ใช่ไฟล์** — ห้ามทำ docs/status.md เขียนมือ (drift แน่นอน);
-  จดคำสั่ง scan ไว้ใน CLAUDE.md ของ repo เช่น `grep -rn "TODO(\|FIXME(\|HACK(" src/`
-- **เส้นแบ่งระดับ**: โน้ตในโค้ด = หนี้ระดับจุด (บรรทัด/function) · CLAUDE.md TODO +
-  Future boundaries = หนี้ระดับ feature — อย่าเอา feature ทั้งตัวไปฝังเป็น TODO ในไฟล์เดียว
-- คำถาม "ระบบมีอะไร/ค้างอะไร" ตอบจาก: Inventory (มี+ทำแล้ว) + grep (ค้างระดับจุด) +
-  Future boundaries (เลื่อนระดับ feature)
+Codetags follow PEP 350, using scopes or domains rather than personal assignees:
 
-## Re-apply / upgrade repo ที่ setup แล้ว
+- Fixed greppable forms: `TODO(scope): message`, `FIXME(scope): message`, and `HACK(scope): reason`. Never leave context-free TODOs.
+- Codetags differ from comments and docstrings by **lifetime**. Remove one in the same commit that completes its work. A tag older than roughly two weeks suggests feature-level debt that belongs in CLAUDE.md TODOs or future boundaries.
+- Status tables are command output, not handwritten files. Record a scan command such as `grep -rn "TODO(\|FIXME(\|HACK(" src/` in CLAUDE.md instead of maintaining `docs/status.md`.
+- Code notes represent line- or function-level debt; CLAUDE.md TODOs and future boundaries represent feature-level debt.
+- Answer “what exists and what remains?” from inventory, codetag search results, and future boundaries together.
 
-รัน `/docs:setup` ซ้ำได้เสมอ — init จะอัปเดต hooks script + ซ่อม link ให้ แต่ **CLAUDE.md
-และ settings.json เดิมจะไม่ถูกทับ** (repo เป็นเจ้าของ) ส่วนที่เป็นเนื้อหา (Memory policy,
-checklist, convention ใหม่) ตัว skill จะ merge ให้แบบรักษา customization ของ repo —
-ดูขั้นตอนใน SKILL.md section "Re-apply / upgrade"
+## Reapply or upgrade
 
-## วิธี refactor repo เดิมที่เป็น changelog ยักษ์
+Run `/docs:setup` again at any time. Init updates hook scripts and repairs links but preserves repository-owned CLAUDE.md and settings. The skill deliberately merges new content conventions while retaining repository customization; follow its “Reapply or upgrade” procedure.
 
-1. ไล่ Status bullets: แยก "ความรู้ถาวร" (config, formula, quirk, การตัดสินใจ) ออกจาก
-   "ประวัติ" (ลำดับ debug, ตัวเลขชั่วคราว) — อย่างหลังทิ้งได้ (อยู่ใน git แล้ว)
-2. ความรู้ถาวรก้อนใหญ่ → `docs/<topic>.md`; fact สั้น → `memory/<fact>.md`
-3. ย่อ Status ใน CLAUDE.md เหลือ 1 บรรทัด/module + ลิงก์ไปไฟล์ที่แยกออก
-4. เพิ่ม index ของ docs/ + memory/ ไว้ท้าย CLAUDE.md ให้มองเห็นตั้งแต่เปิดไฟล์
+## Refactoring a changelog-style repository
+
+1. Separate durable knowledge such as configuration, formulas, quirks, and decisions from debugging history and temporary measurements already preserved by Git.
+2. Move substantial durable knowledge to `docs/<topic>.md` and concise facts to `memory/<fact>.md`.
+3. Reduce CLAUDE.md status to one concise line per module with links to promoted material.
+4. Add synchronized docs and memory indexes so all layers are discoverable from CLAUDE.md.

@@ -3,126 +3,73 @@ name: docs:setup
 description: Set up, adopt, or re-apply the repo documentation system (CLAUDE.md + docs/ + linked repository memory + lifecycle hooks) using the docs-setup kit. Use for kit installation/upgrade or refactoring those surfaces as one system; not for reorganizing an established docs tree or index alone.
 ---
 
-# Docs Setup — ระบบเอกสารมาตรฐานของ user
+# Documentation Setup — Standard Repository Documentation System
 
-User ใช้ระบบเอกสารแบบเดียวกันทุก repo — **kit ตัวจริงอยู่ที่ `${CLAUDE_SKILL_DIR}/kit/`**
+The user applies one documentation system across repositories. The canonical kit is `${CLAUDE_SKILL_DIR}/kit/`.
 
-อ่าน `kit/README.md` ก่อนเสมอ (กลไก + วิธี adopt + วิธี refactor) — นั่นคือ source of truth
-ของ*กลไก*; ส่วน*หลักการ*อยู่ที่ rule `documentation-discipline` (โหลดทุก session อยู่แล้ว)
-ไฟล์นี้เป็นแค่ตัวนำทาง
+Always read `kit/README.md` first. It is the source of truth for mechanisms, adoption, and refactoring. The always-loaded `documentation-discipline` rule owns principles; this file only routes the work.
 
-## ระบบโดยย่อ (เพื่อให้เข้าใจบริบทว่ากำลังทำอะไร)
+## System summary
 
-- `CLAUDE.md` = **สถานะปัจจุบัน** ไม่ใช่ changelog; ทุก decision มีวันที่ + เหตุผล
-- `docs/<topic>.md` = เจาะลึกรายเรื่อง (section ใน CLAUDE.md โตเกิน ~15 บรรทัด → แยกออกมา)
-- **monorepo/submodule**: setup แล้วเอกสาร module อยู่ในตัว module, root = pointer +
-  short info (ดู template §เส้นแบ่ง) — submodule ต้องพกเอกสารตัวเองไปทุก super-repo
-- **เกณฑ์เลือกบ้านของทุกเนื้อหา = กลไกที่ถูกอ่าน (push/pull/recall)** — ตารางเต็ม +
-  คำถามทดสอบอยู่ใน `kit/CLAUDE.template.md` §เส้นแบ่ง — **ทุกขั้นที่จัด/ย้ายเนื้อหา
-  (setup ใหม่ ข้อ 2-3, re-apply ข้อ 3) ต้องตัดสินด้วยเกณฑ์นี้** ไม่ใช่ตามหัวข้อ/ความยาวอย่างเดียว
-- `memory/` ใน repo = memory ตัวจริงชุดเดียว (version-controlled); ฝั่ง harness
-  `~/.claude/projects/<id>/memory` เป็น **link** (junction บน Windows / symlink บน unix)
-  ชี้เข้า repo — harness auto-load `MEMORY.md`; leaf เปิดเมื่อ index/task ชี้ ไม่ต้อง sync มือ
-- shared memory lifecycle: create/move/rename/delete leaf ต้อง sync pointer + recall hook ใน
-  `memory/MEMORY.md` commit เดียวกัน; edit leaf ให้ตรวจ hook และแก้เฉพาะเมื่อความหมาย/relevance เปลี่ยน
-- **private/sensitive ห้ามลงไฟล์ที่ track ด้วย git** — ใช้ `docs/private/` และ
-  `memory/private/` ของ repo นั้น ๆ (relative จาก Git root): โน้ต ops sensitive
-  (secret/IP/server path) → `docs/private/`; fact ส่วนตัว/เฉพาะเครื่อง → `memory/private/`
-  (gitignored ทั้งคู่,
-  init สร้างให้; ห้าม index ลง `MEMORY.md`). ไม่พบใน index ต้องยังไม่สรุปว่าไม่มี private
-- เมื่อ mutation ที่ได้รับอนุญาตถึง cohesive verified checkpoint ให้สร้าง local commit เป็น default
-  และให้เอกสารที่เปลี่ยนพร้อมงานอยู่ใน commit เดียวกัน; stage เฉพาะ paths/hunks ใน scope
-  และห้าม push หากไม่ได้สั่ง;
-  internal docs ภาษาไทยได้, โค้ด/commit เป็นอังกฤษ
-- **lifecycle hooks** (`.claude/hooks/` + `.claude/settings.json`, init ติดตั้งให้) ตรวจ baseline/link
-  ที่ SessionStart, แจ้ง comment audit lead หลัง Edit/Write, เตือน acceptance/commit checkpoint ที่
-  TaskCompleted, ตรวจ shared-memory index ที่ Stop และรักษา continuity ที่ PreCompact. Reminder
-  เป็น advisory; ไม่ตัดสิน comment placement หรือ block source edit ปกติ
+- `CLAUDE.md` describes **current state**, not a changelog. Every decision records its date and rationale.
+- `docs/<topic>.md` holds deep topic material. Promote a CLAUDE.md section once it exceeds roughly 15 lines.
+- In monorepos and submodules, module documentation lives with the module; the root retains a pointer and concise context. Submodules must carry their own documentation into every superproject.
+- Choose every content home by how it is read: push, pull, or recall. The full table and decision questions are in the placement boundary section of `kit/CLAUDE.template.md`. Apply this criterion whenever setup or reapplication organizes or moves content; topic and length alone are insufficient.
+- Repository `memory/` is the single version-controlled copy. The harness path `~/.claude/projects/<id>/memory` is a Windows junction or Unix symlink to it. The harness auto-loads `MEMORY.md`; leaf files open when an index or task points to them, with no manual synchronization.
+- Creating, moving, renaming, or deleting a shared memory leaf requires synchronizing its pointer and recall hook in `memory/MEMORY.md` in the same commit. For edits, update the hook only when meaning or relevance changes.
+- **Never commit private or sensitive material.** Use Git-root-relative `docs/private/` for sensitive operational notes such as secrets, IPs, or server paths, and `memory/private/` for personal or machine-specific facts. Both are ignored and excluded from `MEMORY.md`. Absence from the shared index does not prove private memory is absent.
+- At a cohesive verified checkpoint for authorized mutations, create a local commit by default and include corresponding documentation. Stage only in-scope paths or hunks and never push unless requested. This repository is English-only.
+- Lifecycle hooks under `.claude/hooks/` and `.claude/settings.json` check baseline and links at SessionStart, report comment-audit leads after Edit/Write, suggest acceptance and commit checkpoints at TaskCompleted, check the shared-memory index at Stop, and preserve continuity at PreCompact. Reminders are advisory; they do not decide comment placement or block ordinary source edits.
 
-## Context gathering (ทำก่อนเติม/refactor CLAUDE.md เสมอ)
+## Context gathering
 
-รวบรวมจากแหล่งจริง ห้ามเดา — เรียงตามลำดับ:
+Complete this before filling or refactoring CLAUDE.md. Gather evidence rather than guessing:
 
-1. **ของเดิมที่มีอยู่**: CLAUDE.md เดิม, `docs/`, `memory/`, README, ADR — อะไรจดไว้แล้วบ้าง
-   (จะได้ไม่เขียนทับ/ซ้ำ และเห็นว่า drift ตรงไหน)
-2. **โครงจริงของ repo**: manifest (package.json / pyproject / go.mod ฯลฯ), workspace
-   layout, docker-compose / k8s / CI config → stack + services + จุด entry จริง
-3. **git history**: `git log --oneline -30` → งานล่าสุดคืออะไร, commit style เดิม,
-   สัญญาณ drift (fix ซ้ำที่เดิม = quirk ที่ควรจด)
-4. **หนี้ที่ประกาศไว้**: scan `TODO(\|FIXME(\|HACK(` → ของค้างระดับจุด
-5. **ถาม user เฉพาะที่หาไม่ได้จากโค้ด**: mission/boundary, stage (MVP/production),
-   decision ที่ยังไม่ถูกจด — คำถามสั้น รวบเป็นชุดเดียว
+1. **Existing material:** CLAUDE.md, `docs/`, `memory/`, README, and ADRs. Identify existing knowledge, duplication, and drift.
+2. **Actual repository structure:** manifests such as package.json, pyproject, or go.mod; workspace layout; Docker, Kubernetes, and CI configuration. Derive the real stack, services, and entry points.
+3. **Git history:** `git log --oneline -30` to identify recent work, commit style, and repeated fixes that may indicate a durable quirk.
+4. **Declared debt:** scan `TODO(`, `FIXME(`, and `HACK(` markers for local unfinished work.
+5. **Ask only what code cannot establish:** mission and boundaries, product stage, and undocumented decisions. Group concise questions once.
 
-จากนั้นค่อยเติม template: Inventory จากข้อ 2, quirks จากข้อ 3, TODO จากข้อ 4,
-Mission/Constraints จากข้อ 5 — **ทุกบรรทัดใน CLAUDE.md ต้องชี้กลับไปหาหลักฐานข้อใดข้อหนึ่งได้**
+Then populate the template: inventory from repository structure, quirks from history, TODOs from markers, and mission or constraints from user input. Every CLAUDE.md line must trace to one of these evidence sources.
 
-**Coverage gap (ทำก่อนสรุปว่า context gathering เสร็จ)**: ข้อ 1 กับข้อ 2 เก็บมาแยกกัน
-ต้อง **cross-reference** ว่าตรงกันไหม — list module/service/route ที่เจอจากโครงสร้างจริง
-(ข้อ 2) แล้วเทียบกับที่ถูก mention ในเอกสารเดิม (ข้อ 1) ทีละตัว: อะไรมีในโค้ดแต่ **ไม่ถูก
-พูดถึงเลย** ในเอกสารเดิม = documentation gap ที่ต้องเติม ไม่ใช่ปล่อยผ่านเพราะ "ของเดิมไม่ได้
-พูดถึงก็แปลว่าไม่สำคัญ" — เอกสารเดิมอาจแค่ตกหล่น (module เกิดทีหลัง, คนเขียนลืม) ไม่ใช่
-สัญญาณว่าไม่ต้องจด
+Before declaring context gathering complete, cross-reference existing documentation with the actual module, service, and route inventory. Code absent from existing docs is a documentation gap, not evidence that it is unimportant. Existing documentation may simply predate the module or omit it.
 
-**gap ที่ใหญ่ = ยกระดับข้อ 5**: ถ้า gap ครอบหลาย/ทุก module (ข้อ 1 ว่างเปล่าเกือบสนิท —
-ไม่มี README/ADR/comment อธิบายเจตนาเลย) แปลว่าข้อ 2-4 ให้ได้แค่ fact (มีอะไร) ไม่มีทาง
-ได้ intent (ทำไมถึงออกแบบแบบนี้) มาจากที่ไหนนอกจากถาม — คำถามในข้อ 5 ต้องลึกกว่าปกติ
-(เจตนา/design rationale ของ module สำคัญ ไม่ใช่แค่ mission/stage สั้น ๆ) ก่อนเขียน
-CLAUDE.md ฉบับแรก
+When the gap spans many modules and existing rationale is nearly absent, structural evidence can establish what exists but not why. Expand the final question set to cover intent and design rationale for important modules before writing the first CLAUDE.md.
 
-## วิธีใช้
+## Usage
 
-**Repo ใหม่:**
-1. รัน init: `bash ${CLAUDE_SKILL_DIR}/kit/init.sh <repo>` (ทุก OS — Windows ผ่าน Git Bash)
-   (idempotent — สร้าง CLAUDE.md, memory/, docs/, docs/private/, memory/private/ ที่ Git root
-   + .gitignore, link ฝั่ง harness;
-   ของเดิม backup เป็น `.bak-*`; **repo เดิมบนเครื่องใหม่ก็รันแบบเดียวกัน** เพื่อสร้าง link ของเครื่องนั้น)
-2. เติม CLAUDE.md ตาม placeholder จากสิ่งที่เห็นใน codebase
-3. เขียน fact แรก ๆ ลง `memory/` (mission, stack decision, quirks) + อัปเดต `memory/MEMORY.md`
+### New repository
 
-**Repo เดิมที่มี CLAUDE.md แล้ว:**
-1. รัน init (จะข้าม CLAUDE.md เดิม แต่สร้าง link + merge harness memory เข้า repo ให้)
-2. merge section "Memory policy" จาก `kit/CLAUDE.template.md` เข้า CLAUDE.md เดิม
-3. refactor ตาม playbook ใน `kit/README.md`: แยกความรู้ถาวรออกจากประวัติ →
-   ก้อนใหญ่ไป `docs/`, fact สั้นไป `memory/` → ย่อ Status เหลือ 1 บรรทัด/module + ลิงก์
-4. **กวาด sensitive data** (IP, server path, credential, procedure ที่แลกกับความปลอดภัย)
-   ออกจาก CLAUDE.md/docs → ย้ายไป `docs/private/` ของ repo นั้นแล้วแทนที่ด้วย pointer
+1. Run `bash ${CLAUDE_SKILL_DIR}/kit/init.sh <repo>` using Git Bash on Windows. It is idempotent and creates CLAUDE.md, memory, docs, private ignored directories, `.gitignore` entries, and the harness link. Existing files are backed up as `.bak-*`. Run the same command for an existing repository on a new machine to create that machine's link.
+2. Fill CLAUDE.md placeholders from codebase evidence.
+3. Add initial facts such as mission, stack decisions, and quirks under `memory/`, then update `memory/MEMORY.md`.
 
-**Re-apply / upgrade (repo ที่ setup ไปแล้ว — รัน `/docs:setup` ซ้ำเพื่อรับของใหม่จาก kit):**
+### Existing repository with CLAUDE.md
 
-มีสองชั้นที่**ความเร็วต่างกันจริง** อย่าคาดหวังว่าทั้งคู่เร็วเท่ากัน:
+1. Run init; it preserves CLAUDE.md while creating the link and merging harness memory into the repository.
+2. Merge the “Memory policy” section from `kit/CLAUDE.template.md` into the existing CLAUDE.md.
+3. Follow the `kit/README.md` refactoring playbook: separate durable knowledge from history, move deep material into `docs/`, short facts into `memory/`, and reduce status to a concise per-module summary with links.
+4. Sweep sensitive data such as IPs, server paths, credentials, and security-sensitive procedures out of tracked documentation into repository `docs/private/`, leaving a pointer.
 
-1. **ชั้น mechanical** (ไฟล์ที่ kit เป็นเจ้าของทั้งไฟล์ — `docs-drift.sh`, `settings.json`)
-   — รัน init ซ้ำ ทำให้อัตโนมัติจริง: อัปเดต hooks script (atomic write), migrate
-   settings.json เวอร์ชันเก่า (ps1→bash, path resolution รุ่นก่อน — init เตือน
-   MIGRATION NEEDED ถ้าต้องทำมือ), ซ่อม memory link — ปลอดภัยเพราะไม่มี customization
-   ของ repo ปนอยู่ในไฟล์พวกนี้ (ที่มาของแต่ละ fix ดู `dotfiles/CLAUDE.md` decision log)
-2. **ชั้นเนื้อหาใน CLAUDE.md** (Memory policy, checklist, Architecture Decisions ที่
-   repo อาจ customize ปนอยู่) — **ไม่มีทางลัด ต้องทำ Context gathering เต็มรูปแบบ
-   เหมือน setup ใหม่** (อ่าน CLAUDE.md เดิมทั้งไฟล์ + `kit/CLAUDE.template.md` ปัจจุบัน
-   เทียบด้วยตาจริง ไม่ใช่ diff อัตโนมัติ) — นี่ไม่ใช่ข้อจำกัดของเครื่องมือ แต่เป็น
-   ทางเลือกที่ตั้งใจ: auto-merge เนื้อหาที่ repo customize ไปแล้วเสี่ยงทับของจริงเกินกว่า
-   จะไว้ใจ ให้เวลาทำเต็มที่ อย่ารีบสรุปว่า merge ครบ
+### Reapply or upgrade
 
-ขั้นตอน:
-1. รัน init ซ้ำ (จัดการชั้น mechanical ให้)
-2. Context gathering ตามหัวข้อด้านบน แล้ว merge เนื้อหาที่ template มีใหม่เข้า CLAUDE.md
-   ของ repo (รักษา customization ไว้ อย่าทับทั้ง section)
-3. ไล่ convention ใหม่ใน `kit/README.md` ที่ repo ยังไม่ conform. งานจัด topology/subfolder/index
-   ของ docs tree เดิมให้ invoke `/docs:placement`; setup ยังคงเป็น owner ของ kit adoption/upgrade
-3.5 ปิดท้ายด้วยรอบตรวจ: `/docs:link` (reference) แล้วถ้าเอกสารเก่ามีอายุ/สงสัย drift
-   → `/docs:stale` (เนื้อหา vs โค้ด live — scope ตามที่ตกลงกับ user)
-4. สรุปให้ user ว่า upgrade อะไรไปบ้าง
+Two layers have genuinely different costs:
 
-## ข้อควรระวัง
+1. **Mechanical files** fully owned by the kit, such as `docs-drift.sh` and `settings.json`, update through init. It writes hook scripts atomically, detects legacy PowerShell or path-resolution settings that need manual migration, and repairs the memory link. These files intentionally contain no repository customization.
+2. **CLAUDE.md content** may mix kit policy with repository customization. There is no safe shortcut: repeat full context gathering, read the entire existing CLAUDE.md and current template, and merge deliberately. Automatic section replacement could overwrite repository truth.
 
-- 🔴 **CLAUDE.md ห้ามถือ fact ที่นับ/ลิสต์เองได้เป็นค่า hardcode** — จำนวนไฟล์/บรรทัด/rule/
-  table/migration, รายชื่อไฟล์, shape ของ schema/DTO → **ชี้คำสั่ง (`ls`/`wc -l`/`grep -c`)
-  หรือชี้ source แทน** ไม่ใช่พิมพ์เลข/ชื่อลงไป (fact ที่ copy = จะ stale แล้วถูกเชื่อ เพราะ
-  CLAUDE.md โหลดทุก session = ดูเป็นความจริงแต่ไม่มีใคร re-verify). **ตอน setup/refactor/audit
-  ทุกครั้ง**: ไล่หา number/filename ที่ hardcode ไว้ → แปลงเป็นคำสั่ง หรือถ้าจำเป็นต้องมีเลข
-  ให้เขียนคำสั่งที่คำนวณมันกำกับข้าง ๆ (นี่คือ single-source ตาม
-  `rules/engineering/documentation-discipline.md`)
-- ห้ามลบ section "Memory policy" ออกจาก CLAUDE.md — เป็นช่องทางเดียวที่ session อื่นรู้กติกา memory
-- memory ใหม่ที่บันทึกระหว่างทำงาน = untracked file ใน repo → คัดกรองก่อน commit:
-  **ลบ metadata ส่วนบุคคล** (`originSessionId` ฯลฯ) ออกจาก frontmatter และเช็คว่าไม่มี secret
-- ถ้าเจอ harness memory dir ที่ไม่ใช่ link (repo ย้ายเครื่อง/เครื่องใหม่) → รัน init ซ้ำ
+Upgrade steps:
+
+1. Run init again for the mechanical layer.
+2. Gather context, then merge newly introduced template content while preserving repository customization.
+3. Apply new conventions from `kit/README.md` that the repository does not yet follow. Invoke `/docs:placement` for established docs topology, subfolders, or indexes; setup continues to own kit adoption and upgrades.
+4. Finish with `/docs:link`; when older documentation may have drifted, run `/docs:stale` within the user-agreed scope.
+5. Summarize the upgrade for the user.
+
+## Guardrails
+
+- **CLAUDE.md must not hardcode derivable facts** such as file, line, rule, table, or migration counts; generated filename lists; or schema and DTO shapes. Point to a command such as `ls`, `wc -l`, or `grep -c`, or to the owning source. Copied facts become stale while still looking authoritative because CLAUDE.md loads every session. During every setup, refactor, or audit, replace hardcoded derived values with a source or an adjacent reproduction command.
+- Never remove the “Memory policy” section; it is how later sessions discover memory behavior.
+- New harness memory appears as untracked repository files. Review it before committing, remove personal metadata such as `originSessionId`, and check for secrets.
+- If the harness memory directory is not a link after moving repositories or machines, rerun init. Never delete an existing real directory before its facts are merged and backed up.
