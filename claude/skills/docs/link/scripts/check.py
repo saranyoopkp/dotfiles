@@ -4,20 +4,20 @@
 Usage: python check.py [repo_root]   (default: git root of cwd)
 Exit: 0 clean, 1 broken refs found. Output: one line per finding, grouped.
 
-Shorthand resolution (กัน false positive จม signal):
-  1. per-file base:  <!-- linkcheck-base: path/one path/two -->  ใน md ไหนก็ได้
-     = เพิ่ม base dir ให้ทุก reference ในไฟล์นั้น
-  2. unique-suffix:  target ที่ match หางไฟล์ tracked เพียงไฟล์เดียว = ถือว่า resolve ได้
-     (match หลายไฟล์ = ยัง BROKEN — ambiguous ต้องเขียนเต็ม)
-  3. per-file branch: <!-- linkcheck-branch: feature/x -->  = ไฟล์ที่อยู่บน branch นั้น
-     (git ls-tree) รายงานเป็น [INFO] on-branch แทน BROKEN (งานยังไม่ merge — ไม่ใช่ลิงก์ผี)
+Shorthand resolution (to keep false positives from obscuring the signal):
+  1. per-file base: <!-- linkcheck-base: path/one path/two --> in any Markdown file
+     adds base directories for every reference in that file.
+  2. unique suffix: a target matching the suffix of exactly one tracked file resolves.
+     Multiple matches remain BROKEN and must use the full unambiguous path.
+  3. per-file branch: <!-- linkcheck-branch: feature/x --> identifies files on that branch.
+     git ls-tree reports them as [INFO] on-branch rather than BROKEN while work is unmerged.
 
-Anchor check: md link ที่มี #fragment ไปไฟล์ .md → heading ที่ slug ตรงต้องมีจริง
-ในไฟล์ปลายทาง (GitHub-style slug, unicode ok) — ไม่มี = BROKEN bad-anchor
+Anchor check: a Markdown link with a #fragment targeting a .md file must match a heading
+slug in the target file (GitHub-style slug, Unicode supported), or it is BROKEN bad-anchor.
 """
 import os, re, subprocess, sys
 
-# Windows console (cp874) พิมพ์อักขระนอก charset ไม่ได้ — บังคับ utf-8
+# A Windows cp874 console cannot print every character, so force UTF-8.
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 
@@ -29,14 +29,14 @@ def git_files(root):
 
 
 BASE_DECL = re.compile(r"<!--\s*linkcheck-base:\s*([^>]+?)\s*-->")
-# per-file: อ้างไฟล์ที่อยู่บน branch อื่น (เช่น doc ของงานใน feature branch ที่ยังไม่ merge)
+# Per-file declaration for a target on another branch, such as an unmerged feature document.
 BRANCH_DECL = re.compile(r"<!--\s*linkcheck-branch:\s*([^>\s]+)\s*-->")
-PLACEHOLDER = re.compile(r"[<>*{}]|\.\.\.|ฯลฯ|x{2,}|<topic>|<id>|<name>|<scope>")
+PLACEHOLDER = re.compile(r"[<>*{}]|\.\.\.|etc\.|x{2,}|<topic>|<id>|<name>|<scope>")
 MD_LINK = re.compile(r"\[[^\]]*\]\(([^)#\s]+)(#[^)\s]*)?\)")
 WIKI = re.compile(r"\[\[([a-z0-9-]+)\]\]")
-# path-like token ใน backtick: มี / และลงท้ายดูเป็นไฟล์/dir ที่ควรมีจริง
+# A path-like backtick token contains / and ends like a real file or directory.
 TICK = re.compile(r"`([A-Za-z0-9_.~/\\-]+/[A-Za-z0-9_.\\-]+(?:\.[A-Za-z0-9]+|/))`")
-# pointer ใน comment ของ code: docs/... หรือ *.md
+# A pointer in a code comment: docs/... or *.md.
 CODE_PTR = re.compile(r"(?:#|//|<!--)\s*.*?((?:docs|memory)/[A-Za-z0-9_./-]+\.md)")
 
 
@@ -45,7 +45,7 @@ def norm(base_dir, target):
     # eats the dot of ".claude/..." -> false broken on dotdirs
     t = re.sub(r"^(\./)+", "", target.replace("\\", "/"))
     cand = os.path.normpath(os.path.join(base_dir, t)).replace("\\", "/")
-    return [cand, t]  # ลองทั้ง relative-to-file และ relative-to-root
+    return [cand, t]  # Try both relative-to-file and relative-to-root.
 
 
 def main():
@@ -53,7 +53,7 @@ def main():
         ["git", "rev-parse", "--show-toplevel"], capture_output=True,
         text=True).stdout.strip()
     files = git_files(root)
-    # .linkcheck-ignore ที่ root: regex ต่อบรรทัด match กับ "file -> target" (# = comment)
+    # Root .linkcheck-ignore: one regex per line matching "file -> target" (# is a comment).
     ig_path = os.path.join(root, ".linkcheck-ignore")
     ignores = []
     if os.path.exists(ig_path):
@@ -71,7 +71,7 @@ def main():
         line = f"{file} -> {target}"
         return any(p.search(line) for p in ignores)
 
-    # index หางไฟล์+dir สำหรับ unique-suffix resolution
+    # Index file and directory suffixes for unique-suffix resolution.
     suffix_count = {}
     for fp in fileset | dirset:
         parts = [p for p in fp.split("/") if p]
@@ -81,11 +81,9 @@ def main():
 
     _ign_cache = {}
     def gitignored(t):
-        # path ที่ .gitignore ครอบ = จงใจไม่ track (docs/private, coverage ฯลฯ)
-        # การมีอยู่ขึ้นกับเครื่อง → ไม่นับ broken
+        # Gitignored paths are intentionally untracked and may be machine-specific.
         if t not in _ign_cache:
-            # ลองทั้งแบบมี/ไม่มี trailing slash — pattern dir-only (`x/`) จะ match
-            # เฉพาะแบบมี slash เมื่อ dir ไม่มีอยู่จริงบนดิสก์
+            # Try with and without a trailing slash; directory-only patterns may require it.
             ok = False
             for v in (t, t + "/"):
                 if subprocess.run(["git", "-C", root, "check-ignore", "-q", v]).returncode == 0:
@@ -96,7 +94,7 @@ def main():
 
     def exists(base_dir, target, extra_bases=()):
         if target.startswith(("http://", "https://", "mailto:", "/")):
-            return True  # leading "/" = URL route ไม่ใช่ path ในไฟล์ระบบของ repo
+            return True  # A leading / is a URL route, not a repository filesystem path.
         if PLACEHOLDER.search(target):
             return True
         t = re.sub(r"^(\./)+", "", target.replace("\\", "/")).rstrip("/")
@@ -112,7 +110,7 @@ def main():
     _slug_cache = {}
 
     def slugs_of(md):
-        """set ของ GitHub-style heading slugs ในไฟล์ md (fence ไม่นับ, dup ได้ -1 -2)"""
+        """Return GitHub-style heading slugs in a Markdown file, excluding fences."""
         if md not in _slug_cache:
             s, seen, fence = set(), {}, False
             try:
@@ -127,13 +125,12 @@ def main():
                 m = HEADING.match(l)
                 if not m or fence:
                     continue
-                # ตัด formatting markers — เก็บ "_" (GitHub เก็บ literal _ เช่น snake_case;
-                # trade-off: heading แบบ _emphasis_ จะ slug ต่างจาก GitHub — พบน้อยกว่ามาก)
+                # Remove formatting markers but preserve _, as GitHub does for snake_case.
                 t = re.sub(r"[`*]|\[|\]|\(|\)", "", m.group(1).strip()).lower()
-                # ตัดเฉพาะ ASCII punct — \w ไม่รวม combining mark (วรรณยุกต์ไทย) ห้ามใช้กรอง
+                # Remove only ASCII punctuation; keep Unicode combining marks.
                 t = "".join(c for c in t if not c.isascii() or c.isalnum()
                             or c.isspace() or c in "-_")
-                # GitHub slugger: แต่ละ space → dash ไม่ collapse; รับแบบ collapse ด้วย (คนเขียนมือ)
+                # GitHub maps each space to a dash; also accept manually collapsed spaces.
                 slug = re.sub(r"\s", "-", t)
                 n = seen.get(slug, 0)
                 seen[slug] = n + 1
@@ -143,7 +140,7 @@ def main():
         return _slug_cache[md]
 
     def resolve_md(base_dir, target, extra_bases):
-        """path จริงใน fileset ของ target (รวม unique-suffix) — None ถ้าไม่เจอ"""
+        """Resolve a target in the fileset, including unique suffixes, or return None."""
         t = re.sub(r"^(\./)+", "", target.replace("\\", "/")).rstrip("/")
         for c in norm(base_dir, target) + [
                 os.path.normpath(os.path.join(b, t)).replace("\\", "/") for b in extra_bases]:
@@ -157,7 +154,7 @@ def main():
 
     _branch_cache = {}
     def branch_files(branch):
-        """set path บน branch นั้น (git ls-tree) — branch ไม่มีจริง → set ว่าง (decl เงียบ)"""
+        """Return paths on a branch via git ls-tree, or an empty set if absent."""
         if branch not in _branch_cache:
             r = subprocess.run(["git", "-C", root, "ls-tree", "-r", "--name-only", branch],
                                capture_output=True, text=True, encoding="utf-8")
@@ -168,7 +165,7 @@ def main():
                               capture_output=True, text=True).stdout.strip()
 
     def line_author(f, i):
-        """email ของคนเขียนบรรทัดนั้น (None ถ้า untracked/blame ไม่ได้)"""
+        """Return the line author's email, or None when blame is unavailable."""
         r = subprocess.run(["git", "-C", root, "blame", "-L", f"{i},{i}",
                             "--line-porcelain", f], capture_output=True,
                            text=True, encoding="utf-8", errors="replace")
@@ -180,8 +177,7 @@ def main():
     def record(kind, f, i, target, extra=(), branches=()):
         if ignored(f, target):
             return
-        # pointer ชี้ home dir ส่วนตัว (~/.claude ฯลฯ) ลง repo = เครื่องอื่น/CI ไม่มี
-        # → WARN เสมอ (repo ที่อ้างได้ถูกต้อง เช่น dotfiles เอง ใช้ .linkcheck-ignore)
+        # Personal home-directory pointers do not exist on other machines or in CI.
         if target.replace("\\", "/").startswith(("~", "$HOME", "C:/Users", "/home/", "/Users/")):
             findings.append(("home-path", f, i, target))
             return
@@ -195,9 +191,8 @@ def main():
                 findings.append(("on-branch", f, i, f"{target} (branch: {b})"))
                 return
         if gitignored(t):
-            # private/gitignored: มีจริงหรือไม่ขึ้นกับเครื่อง — ไม่นับพัง
-            # author ของบรรทัด = user ปัจจุบัน → ของตัวเองที่ไม่อยู่ = ยกเป็น WARN
-            # (แยก "เครื่องไหน" ไม่ได้ — email เดียวข้ามเครื่อง — แยกได้แค่ ของคุณ/ของคนอื่น)
+            # Private or ignored paths may be machine-specific and are not broken.
+            # Warn when the current Git identity authored the missing reference.
             a = line_author(f, i)
             if a and my_email and a == my_email:
                 findings.append(("private-yours", f, i, target))
@@ -235,7 +230,7 @@ def main():
                             findings.append(("bad-anchor", f, i, m.group(1) + a))
                 for m in WIKI.finditer(line):
                     if m.group(1) not in mem_names:
-                        # wiki-link ที่ยังไม่มีไฟล์ = อนุญาตตามกติกา memory แต่รายงานเป็น info
+                        # Missing wiki-link targets are allowed by memory policy but reported.
                         findings.append(("wiki-pending", f, i, m.group(1)))
                 if in_fence:
                     continue
@@ -258,10 +253,11 @@ def main():
     n_br = sum(1 for x in findings if x[0] == "on-branch")
     n_home = sum(1 for x in findings if x[0] == "home-path")
     if n_home:
-        print(f"\n[!] {n_home} home-path: pointer ชี้ path ส่วนตัว (~/.claude ฯลฯ) — "
-              "เครื่องอื่น/CI ไม่มี; แทนด้วยสาระหรือ docs ใน repo (จงใจ = .linkcheck-ignore)")
-    print(f"\n{len(hard)} broken, {n_yours} private-yours (คุณอ้างเองแต่ไม่อยู่เครื่องนี้), "
-          f"{n_priv} private (ของคนอื่น), {n_br} on-branch (อยู่ branch อื่น ยังไม่ merge), "
+        print(f"\n[!] {n_home} home-path: personal pointers (~/.claude, etc.) are unavailable "
+              "on other machines and CI; replace them with content or repository docs "
+              "(.linkcheck-ignore for intentional cases)")
+    print(f"\n{len(hard)} broken, {n_yours} private-yours (authored by you but absent locally), "
+          f"{n_priv} private (authored by others), {n_br} on-branch (not yet merged), "
           f"{n_wiki} pending wiki-links, {len(files)} files scanned")
     sys.exit(1 if hard else 0)
 

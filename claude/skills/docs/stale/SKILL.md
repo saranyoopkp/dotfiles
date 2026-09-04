@@ -1,54 +1,39 @@
 ---
 name: docs:stale
-description: ตรวจว่าเนื้อหาเอกสาร (CLAUDE.md/docs/memory/docstring) ยังตรงกับโค้ดที่ live จริงไหม — claim ที่ขัดกับโค้ด = เอกสาร stale ต้องแก้ (live code priority สูงกว่าเสมอ) ใช้เมื่อ สงสัยว่าเอกสารล้าสมัย, หลัง refactor/แก้พฤติกรรมโค้ดครั้งใหญ่, ก่อน onboard/ส่งมอบ, หรือถูกขอให้ตรวจ docs stale/drift — คนละเรื่องกับ /docs:link (นั่นตรวจว่า reference ชี้ถึงไฟล์ที่มีอยู่ ไม่ตรวจเนื้อหา)
+description: Check whether documentation content in CLAUDE.md, docs, memory, or docstrings still matches live code. Claims that contradict live code are stale and must be corrected; live code has priority by default. Use when documentation may be outdated, after major refactors or behavior changes, before onboarding or handoff, or when asked to audit docs for staleness or drift. This differs from /docs:link, which checks that references resolve rather than whether their content remains true.
 ---
 
-# Doc Stale Check — เอกสารต้องเล่าความจริงของโค้ดที่ live อยู่
+# Documentation Staleness Check — Describe Live Reality
 
-**หลักตัดสิน: โค้ดที่ live/deploy จริง = source of truth** — เอกสารขัดกับโค้ด → เอกสารผิด
-โดย default; ข้อยกเว้นเดียวคือพิสูจน์ได้ว่าโค้ดคือบั๊ก (เอกสารบันทึกเจตนา + มีหลักฐาน
-เช่น test/history ยืนยัน) → นั่นคือ**บั๊กโค้ด** เปิดเป็นงาน ไม่ใช่แก้เอกสารตาม
+**Decision rule: code that is actually live or deployed is the source of truth.** When documentation contradicts that code, the documentation is wrong by default. The sole exception is evidence that the code is defective while the documentation records the intended behavior, such as tests or history confirming the intent. In that case, open a **code defect** instead of rewriting the documentation to match.
 
-## ลำดับความสำคัญ (จำกัดแรงตามผลกระทบ)
+## Priority by impact
 
-1. **เอกสารของโค้ดที่ live production** — stale แล้วคนเชื่อ = เจ็บจริง (deploy ผิด, ops ผิด)
-2. เอกสาร operational ที่ถูกอ่านทุก session (CLAUDE.md, Memory policy, deploy steps)
-3. docs/ เชิงลึกของ module ที่ยัง active
-4. **ข้าม**: point-in-time docs ที่ระบุวันที่ (snapshot — drift-exempt ตามกติกา) ·
-   ของที่ archive แล้ว
+1. **Documentation for live production code** — trusting stale information can cause real deployment or operational harm.
+2. Operational documentation read every session, including CLAUDE.md, memory policy, and deployment steps.
+3. Deep documentation for active modules.
+4. **Skip** explicitly dated point-in-time snapshots, which are drift-exempt by policy, and archived material.
 
-## วิธีตรวจ (LLM-judgment งาน — ไม่มี script เดียวจบ แต่ต้องยึดหลักฐาน)
+## Method
 
-ต่อไฟล์เอกสาร:
-1. **สกัด claim ที่ตรวจได้** — ประโยคที่อ้างความจริงของระบบ: คำสั่งรัน/deploy, บทบาทไฟล์,
-   shape ของ config/schema, "X ทำ Y", ขั้นตอน, จำนวน/รายชื่อ (อันหลังควรเป็นคำสั่งอยู่แล้ว
-   ตามกติกา no-hardcoded-facts — เจอ hardcode = finding ทันที)
-2. **verify ทีละ claim กับของจริง** ตามลำดับหลักฐาน: รันคำสั่งที่เอกสารอ้าง (read-only) >
-   อ่านโค้ด/config จริง > grep — ห้ามตัดสินจากความจำ
-3. **จำแนกผล**:
-   - ตรง → ผ่าน
-   - **stale** → แก้เอกสารทันทีในรอบเดียวกัน (ไม่จดว่า "ควรแก้" — แก้เลย)
-   - **โค้ดผิดจากเจตนาที่เอกสารบันทึก** (ต้องมีหลักฐานเจตนา ไม่ใช่เดา) → เปิด `TODO(scope):`
-     หรือแจ้ง user — ห้ามแก้โค้ดเงียบ ๆ ในนามการซ่อมเอกสาร
-   - **ตัดสินไม่ได้ / ก้ำกึ่งว่าโค้ดหรือเอกสารถูก → พักไว้ก่อน ทำตัวอื่นต่อให้จบ** —
-     ถามเจ้าของ repo ได้ แต่**ถามตอนท้ายรอบเดียว** หลังจัดทุกอย่างที่ตัดสินเองได้เสร็จ
-     แล้วเหลือเฉพาะที่ต้อง clear จริง ๆ: รวบเป็นชุดคำถามสั้น พร้อมหลักฐานสองฝั่งต่อข้อ
-     ("เอกสารว่า X (path:line) / โค้ดทำ Y (path:line) — อันไหนคือเจตนา?") —
-     อย่าเดาแทน owner เรื่องเจตนา และอย่า drip คำถามระหว่างทาง;
-     จนกว่าจะได้คำตอบ = "ยังไม่ verify" ห้ามนับเป็นผ่าน
-4. docstring ก็เข้าข่าย: contract ขัดพฤติกรรมจริง = บั๊กเอกสารต้องแก้ในงานเดียวกัน
-   (กติกาเดียวกับ /docs:placement ฝั่งอ่าน)
-5. ปิดท้าย: รายงานสรุป ตรง/แก้แล้ว/เปิดงานโค้ด/ยังไม่ verify + commit การแก้เอกสาร
-   พร้อมอ้างหลักฐานต่อ claim (path:line หรือ output คำสั่ง)
+This requires LLM judgment rather than one all-purpose script, but every judgment must use evidence. For each documentation file:
+
+1. **Extract verifiable claims.** Find statements about system reality: run or deployment commands, file roles, config or schema shapes, “X does Y,” procedures, counts, and enumerations. Counts and enumerations should usually be commands under the no-hardcoded-facts rule; treat hardcoded instances as immediate findings.
+2. **Verify each claim against reality** in evidence order: run the documented read-only command, inspect actual code or configuration, then search. Never decide from memory.
+3. **Classify the result:**
+   - Matches → pass.
+   - **Stale** → correct the documentation in the same pass; do not merely record that it should be fixed.
+   - **Code differs from documented intent** with evidence of intent → open a scoped `TODO` or tell the user. Never silently change code in the name of documentation repair.
+   - **Undetermined or ambiguous whether code or documentation is correct** → defer that item and finish everything else first. Ask the repository owner only once at the end, grouping concise questions with evidence from both sides: “Documentation says X (path:line); code does Y (path:line). Which is intended?” Do not guess intent or drip questions during the audit. Until answered, classify it as not verified, never passed.
+4. Docstrings are in scope. A contract that contradicts actual behavior is a documentation defect and must be fixed in the same task, following the same placement rules.
+5. Finish with counts for matching, corrected, code work opened, and unverified claims; commit documentation corrections and cite evidence for each claim using paths and lines or command output.
 
 ## Scope discipline
 
-เหมือน remediation ของ /docs:placement: ทำตามที่ถูกสั่ง/เอกสารของ module ที่งานแตะ —
-กวาดทั้ง repo ต้องถูกสั่งชัด; เจอ stale นอก scope → จดเสนอ ไม่ลามเงียบ ๆ
+Use the same remediation scope as `/docs:placement`: handle what the user requested and documentation for modules touched by the task. A repository-wide sweep requires an explicit request. Record and suggest stale content found outside scope instead of expanding silently.
 
-## ความสัมพันธ์กับเครื่องมืออื่น
+## Relationship to other tools
 
-- `/docs:link` = reference มีอยู่จริงไหม (deterministic, รันก่อน — เอกสารที่ชี้ไฟล์ผี
-  มักจะ stale เชิงเนื้อหาด้วย)
-- docs-drift hook = เตือน*จังหวะ*ที่ docs กับงานแยกจากกัน (จุดเกิด stale)
-- `/docs:stale` = ชั้นเนื้อหา ลึกสุด แพงสุด — ใช้เป็นรอบตรวจ ไม่ใช่ทุก commit
+- `/docs:link` checks whether references resolve. Run it first; documentation pointing to missing files is often stale in content too.
+- The docs-drift hook warns at moments when documentation and implementation may separate, where staleness begins.
+- `/docs:stale` performs the deepest and most expensive content review. Use it for deliberate audits, not every commit.
